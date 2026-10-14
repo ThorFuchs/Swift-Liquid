@@ -83,6 +83,15 @@ public tests qualify Swift name validation, value conversion, cumulative budgets
 explicit failure recovery, cancellation and concurrent engine isolation. Those
 host policies do not add Shopify core conformance cases. See [custom filters](CustomFilters.md).
 
+### Inspection API
+
+Eight authored inspection cases run in lax, strict and strict2 modes. Additional
+public regressions cover exact Unicode ordering/equality, callback nonexecution,
+parser errors, source/depth limits, cancellation and concurrent rendering with
+inspection. A separate public consumer and CLI checks exercise the released-style
+module boundary and versioned JSON. These are Swift API contracts; they add no
+Shopify render-conformance cases and change none of the pinned corpora.
+
 ### Core and platform boundaries
 
 The Ruby recognition pipeline and Time.parse defaults are now implemented in

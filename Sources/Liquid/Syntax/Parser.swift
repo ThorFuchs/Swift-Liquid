@@ -1977,7 +1977,7 @@ internal final class Parser {
         }
 
         try consumeTagEnd()
-        return .include(template: templateStr, with: variables.isEmpty ? nil : variables, as: alias)
+        return .include(template: templateStr, reference: templateName, with: variables.isEmpty ? nil : variables, as: alias)
     }
     
     private func parseRenderTag() throws ->ASTNode {
@@ -2048,7 +2048,7 @@ internal final class Parser {
         var renderVars = variables
         renderVars["__render_isolated__"] = .literal(.boolean(true))
         
-        return .include(template: templateStr, with: renderVars, as: alias)
+        return .include(template: templateStr, reference: templateName, with: renderVars, as: alias)
     }
     
 

@@ -70,6 +70,34 @@ struct Benchmarks {
                                 "outputBytes": workload.expected.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
             }
         }
+        // Inspection is measured separately from rendering. Its stable payload includes
+        // every summary field; no callbacks or partial sources are supplied.
+        let inspectionSource = "{% for item in items limit: maximum %}{{ item[key] | host: prefix, suffix: ending | escape }}{% render 'card', title: item.title %}{% endfor %}{% include selected %}"
+        let inspectionTemplate = try LiquidTemplate(inspectionSource)
+        let expectedInspection = "ending,item,items,key,maximum,prefix,selected|escape,host|card|true"
+        for reuse in [false, true] {
+            var timings: [Double] = []
+            var checksum: UInt64 = 14_695_981_039_346_656_037
+            for sample in -10..<samples {
+                let start = clock.now
+                for _ in 0..<repetitions {
+                    let summary = try reuse ? engine.inspect(inspectionTemplate) : engine.inspect(template: inspectionSource)
+                    let payload = summary.variableRoots.joined(separator: ",") + "|"
+                        + summary.filterNames.joined(separator: ",") + "|"
+                        + summary.literalPartialNames.joined(separator: ",") + "|" + String(summary.hasDynamicPartials)
+                    guard payload == expectedInspection else { throw BenchmarkFailure("Inspection summary mismatch") }
+                    for byte in payload.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+                }
+                let duration = start.duration(to: clock.now).components
+                if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
+            }
+            timings.sort()
+            records.append(["name": "inspection", "mode": reuse ? "inspect-reused-template" : "parse-and-inspect",
+                "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
+                "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
+                "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
+                "outputBytes": expectedInspection.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
+        }
         let result: [String: Any] = ["schemaVersion": 1, "platform": ProcessInfo.processInfo.operatingSystemVersionString,
                                      "configuration": "release", "workloads": records]
         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])

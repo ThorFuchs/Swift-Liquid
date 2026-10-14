@@ -17,6 +17,11 @@ continue to use an engine with no application filters, so their output checksums
 remain comparable. An empty registry is not inferred to have zero cost; matched
 measurements against 1.0.0 are required for a performance claim.
 
+A separate inspection workload measures parsing plus inspection and inspecting a
+reused template. It checks all summary fields through a stable payload/checksum;
+its timings include payload verification and hashing. These records are not render
+latencies and do not execute callbacks or load partials.
+
 Measurements describe this host and workload. They do not establish superiority
 over Ruby, Liquid-C, or another Swift implementation, and latency does not imply
 process-memory usage. A matched reference comparison needs the same fixtures,

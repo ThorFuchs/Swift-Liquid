@@ -9,8 +9,9 @@ guides that are compiled from the public Swift symbol graph.
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
 | [Custom filters](CustomFilters.md) | Unreleased typed engine-scoped callbacks, arguments, admission and failures |
+| [Inspection](Inspection.md) | Unreleased AST summary, syntactic references, limits and CLI JSON schema |
 | [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
-| [CLI](CLI.md) | Rendering files and JSON input, validation, options, and exit behavior |
+| [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |

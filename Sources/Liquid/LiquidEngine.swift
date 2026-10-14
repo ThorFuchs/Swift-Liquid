@@ -30,6 +30,25 @@ public struct LiquidEngine: Sendable {
         self.filters = try LiquidFilter.validated(filters)
     }
 
+    /// Parses and inspects one source without evaluating expressions or loading partials.
+    /// - Parameters:
+    ///   - template: Standard Liquid source.
+    ///   - syntaxMode: The same parser mode used for rendering.
+    /// - Returns: Unique syntactic references, ordered by their exact UTF-8 spelling.
+    /// - Throws: Syntax, source/nesting capacity, invalid-limit, or cancellation errors.
+    public func inspect(template: String, syntaxMode: LiquidSyntaxMode = .lax) throws -> LiquidTemplateInspection {
+        try inspect(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits))
+    }
+
+    /// Inspects a reusable template under this engine's source and syntax-depth limits.
+    /// Variable roots include local reads and unreachable branches, not just required inputs.
+    /// Filters are reported regardless of registration; callbacks are never invoked.
+    public func inspect(_ template: LiquidTemplate) throws -> LiquidTemplateInspection {
+        try Task.checkCancellation()
+        try checkSources(template.source, partials: [])
+        return try inspectTemplate(template.ast, limits: limits)
+    }
+
     /// Parses and renders a template with explicit variables and partial sources.
     /// - Parameters:
     ///   - template: Standard Liquid source.

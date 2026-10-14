@@ -16,6 +16,7 @@ struct LiquidCommand {
     Usage:
       liquid render TEMPLATE [--data JSON] [--partials DIRECTORY] [--output FILE]
       liquid validate TEMPLATE
+      liquid analyze TEMPLATE [--format text|json]
       liquid --help
       liquid --version
 
@@ -26,6 +27,7 @@ struct LiquidCommand {
       --data JSON                       Context file with a JSON object root
       --partials DIRECTORY              Explicit directory of .liquid partials
       --output FILE                     Atomically write complete rendered output
+      --format text|json                Inspection output format (default: text)
     """
 
     static func main() async {
@@ -39,15 +41,15 @@ struct LiquidCommand {
     static func run(_ arguments: [String]) async throws {
         if arguments.isEmpty || arguments == ["--help"] || arguments == ["-h"] { print(help); return }
         if arguments == ["--version"] { print("Swift-Liquid \(version)"); return }
-        guard let command = arguments.first, ["render", "validate"].contains(command) else {
-            throw CLIError("Expected render or validate; use --help for usage")
+        guard let command = arguments.first, ["render", "validate", "analyze"].contains(command) else {
+            throw CLIError("Expected render, validate, or analyze; use --help for usage")
         }
         if arguments.dropFirst().contains("--help") { print(help); return }
         var path: String?
         var options: [String: String] = [:]
         var strictFilters = false
         var index = 1
-        let valueOptions: Set<String> = ["--data", "--partials", "--output", "--syntax-mode"]
+        let valueOptions: Set<String> = ["--data", "--partials", "--output", "--syntax-mode", "--format"]
         while index < arguments.count {
             let argument = arguments[index]
             if argument == "--strict-filters" {
@@ -73,9 +75,23 @@ struct LiquidCommand {
         if command == "validate", options.keys.contains(where: { $0 != "--syntax-mode" }) || strictFilters {
             throw CLIError("validate accepts only --syntax-mode")
         }
+        if command == "render", options["--format"] != nil { throw CLIError("render does not accept --format") }
+        if command == "analyze" {
+            guard !strictFilters, options.keys.allSatisfy({ ["--syntax-mode", "--format"].contains($0) }) else {
+                throw CLIError("analyze accepts only --syntax-mode and --format")
+            }
+            guard ["text", "json"].contains(options["--format"] ?? "text") else {
+                throw CLIError("Format must be text or json")
+            }
+        }
         let source = try readText(path, maximumBytes: LiquidLimits.default.sourceBytes)
         let template = try LiquidTemplate(source, syntaxMode: mode)
         if command == "validate" { print("Valid Liquid template."); return }
+        if command == "analyze" {
+            let result = try LiquidEngine().inspect(template)
+            try writeInspection(result, format: options["--format"] ?? "text")
+            return
+        }
 
         let context: LiquidObject
         if let dataPath = options["--data"] {
@@ -89,6 +105,29 @@ struct LiquidCommand {
         let bytes = Data(output.utf8)
         if let destination = options["--output"] { try bytes.write(to: URL(fileURLWithPath: destination), options: .atomic) }
         else { try FileHandle.standardOutput.write(contentsOf: bytes) }
+    }
+
+    private static func writeInspection(_ result: LiquidTemplateInspection, format: String) throws {
+        let output: String
+        if format == "json" {
+            let object: [String: Any] = ["schemaVersion": 1, "variableRoots": result.variableRoots,
+                "filterNames": result.filterNames, "literalPartialNames": result.literalPartialNames,
+                "hasDynamicPartials": result.hasDynamicPartials]
+            output = String(decoding: try JSONSerialization.data(withJSONObject: object,
+                options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]), as: UTF8.self)
+        } else {
+            func list(_ names: [String]) throws -> String {
+                String(decoding: try JSONSerialization.data(withJSONObject: names,
+                    options: [.withoutEscapingSlashes]), as: UTF8.self)
+            }
+            output = """
+            Variable roots: \(try list(result.variableRoots))
+            Filter names: \(try list(result.filterNames))
+            Literal partial names: \(try list(result.literalPartialNames))
+            Dynamic partial references: \(result.hasDynamicPartials ? "yes" : "no")
+            """
+        }
+        try FileHandle.standardOutput.write(contentsOf: Data((output + "\n").utf8))
     }
 
     private static func readText(_ path: String, maximumBytes: Int) throws -> String {

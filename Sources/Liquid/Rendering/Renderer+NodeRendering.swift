@@ -99,7 +99,7 @@ extension Renderer {
         case .liquid(let nodes):
             return try await renderTemplate(nodes)
 
-        case .include(let template, let withVars, let asVar):
+        case .include(let template, _, let withVars, let asVar):
             return try await renderInclude(template: template, with: withVars, as: asVar)
 
         }
