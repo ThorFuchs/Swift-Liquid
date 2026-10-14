@@ -102,81 +102,24 @@ extension Renderer {
         return unique
     }
     
-    internal func formatDate(_ value: Any, format: String?, allowNilFormat: Bool = false) throws -> String {
-        guard let dateFormat = format else {
-            if allowNilFormat {
-                return stringify(value)
-            }
-            throw RenderError.undefinedFilter("date: missing required format argument")
-        }
-
-        let date: Date
-        if let d = value as? Date {
-            date = d
-        } else if let str = value as? String, str.lowercased() == "now" || str.lowercased() == "today" {
-            date = Date()
-        } else if let num = value as? Int {
-            date = Date(timeIntervalSince1970: Double(num))
-        } else if let num = value as? Double {
-            date = Date(timeIntervalSince1970: num)
-        } else if let str = value as? String {
-            // Try parsing as epoch timestamp string first — only accept positive numbers
-            if let epoch = Double(str), epoch >= 0, str.first?.isNumber == true {
-                date = Date(timeIntervalSince1970: epoch)
-            } else {
-                // Try common date string formats; if unparseable, return original string
-                if let parsed = parseKnownDateString(str) {
-                    date = parsed
-                } else {
-                    return str
-                }
-            }
-        } else {
-            return stringify(value)
-        }
-
-        var offset = 0
-        var zoneName = "UTC"
-        if let text = value as? String, let range = text.range(of: #"[+-][0-9]{2}:?[0-9]{2}$"#, options: .regularExpression) {
-            let spelling = String(text[range]).replacingOccurrences(of: ":", with: "")
-            let digits = spelling.dropFirst()
-            if let hours = Int(digits.prefix(2)), let minutes = Int(digits.suffix(2)), hours <= 23, minutes < 60 {
-                offset = (hours * 3600 + minutes * 60) * (spelling.first == "-" ? -1 : 1)
-                zoneName = ""
-            }
-        }
-        return try renderStrftime(dateFormat, date: date, offset: offset, zoneName: zoneName)
+    internal func formatDate(_ value: Any, format: String) throws -> Any {
+        guard !format.isEmpty else { return value }
+        let date: LiquidDate
+        if let integer = value as? Int {
+            date = try LiquidDate(seconds: integer)
+        } else if let text = value as? String {
+            if text.lowercased() == "now" || text.lowercased() == "today" {
+                date = try LiquidDate.now()
+            } else if !text.isEmpty && text.utf8.allSatisfy({ (48...57).contains($0) }) {
+                guard let seconds = Int(text) else { throw LiquidError.invalidValue("Date epoch is outside the supported range") }
+                date = try LiquidDate(seconds: seconds)
+            } else if let parsed = try parseLiquidDate(text) {
+                date = parsed
+            } else { return value }
+        } else { return value }
+        return try renderStrftime(format, date: date, budget: budget)
     }
 
-    internal func parseKnownDateString(_ str: String) -> Date? {
-        let formats = [
-            "yyyy-MM-dd'T'HH:mm:ssXXXXX",
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXXXX",
-            "yyyy-MM-dd HH:mm:ss Z",
-            "EEE, dd MMM yyyy HH:mm:ss Z",
-            "MMMM d, yyyy",
-            "MMMM dd, yyyy",
-            "MMM d, yyyy",
-            "MMM dd, yyyy",
-            "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd",
-            "MM/dd/yyyy",
-            "dd/MM/yyyy",
-        ]
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        for fmt in formats {
-            formatter.dateFormat = fmt
-            if let date = formatter.date(from: str) {
-                return date
-            }
-        }
-        return nil
-    }
-
-
-    
     internal func whereFilter(_ value: Any, args: [Any]) throws -> Any {
         // where filter: filters an array to elements where a property equals a value
         // Usage: {{ products | where: 'available', true }}

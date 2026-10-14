@@ -42,7 +42,8 @@ def source_snapshot():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference'], default='native')
+    parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference lane only)')
     args = parser.parse_args()
     output = ROOT / 'Artifacts' / args.lane
     output.mkdir(parents=True, exist_ok=True)
@@ -79,22 +80,28 @@ def main():
                 log = (output / (name + '.log')).read_text()
                 if not re.search(r'Golden Liquid.*1098 test cases passed', log):
                     raise RuntimeError(f'{name} did not report all 1098 passing golden cases')
-                if not re.search(r'Native compatibility probes.*63 test cases passed', log):
-                    raise RuntimeError(f'{name} did not report all 63 passing compatibility probes')
+                if not re.search(r'Native compatibility probes.*185 test cases passed', log):
+                    raise RuntimeError(f'{name} did not report all 185 passing compatibility probes')
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 21:
+                if not summary or int(summary.group(1)) < 22:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
-                receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 63, 'testFunctions': int(summary.group(1)), 'skipped': 0})
+                receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 185, 'testFunctions': int(summary.group(1)), 'skipped': 0})
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
         elif args.lane == 'safety':
             run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
+            if not re.search(r'Native compatibility probes.*185 test cases passed', (output / 'address.log').read_text()):
+                raise RuntimeError('AddressSanitizer did not execute every compatibility probe')
             if not re.search(r'Golden Liquid.*1098 test cases passed', (output / 'address.log').read_text()):
                 raise RuntimeError('AddressSanitizer did not execute the complete corpus')
             if not re.search(r'Test run with 1 test .* passed', (output / 'thread.log').read_text()):
                 raise RuntimeError('ThreadSanitizer did not execute the concurrency test')
+        elif args.lane == 'reference':
+            if not args.reference_path:
+                raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')
+            run(['ruby', '-I', str(args.reference_path.resolve() / 'lib'), 'Scripts/check_reference.rb', str(output / 'reference.json')], 'reference')
         elif args.lane == 'docs':
             run([sys.executable, '-B', 'Scripts/build_documentation.py'], 'documentation')
         else:

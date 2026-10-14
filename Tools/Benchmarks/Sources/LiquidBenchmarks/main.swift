@@ -13,11 +13,15 @@ private struct Workload {
 @main
 struct Benchmarks {
     static func main() async throws {
+        #if DEBUG
+        throw BenchmarkFailure("Benchmarks require a release build")
+        #else
         let workloads = [
             Workload(name: "interpolation", source: "Hello, {{ name }}!", context: ["name": "Swift"], partials: [:], expected: "Hello, Swift!"),
             Workload(name: "filter-chain", source: "{{ title | strip | upcase | escape }}", context: ["title": " <Swift> "], partials: [:], expected: "&lt;SWIFT&gt;"),
             Workload(name: "loop", source: "{% for item in items %}{{ forloop.index }}:{{ item.title }};{% endfor %}", context: ["items": [["title": "A"], ["title": "B"], ["title": "C"]]], partials: [:], expected: "1:A;2:B;3:C;"),
-            Workload(name: "partial", source: "{% render 'card', title: title %}", context: ["title": "Swift"], partials: ["card": "<h2>{{ title | escape }}</h2>"], expected: "<h2>Swift</h2>")
+            Workload(name: "partial", source: "{% render 'card', title: title %}", context: ["title": "Swift"], partials: ["card": "<h2>{{ title | escape }}</h2>"], expected: "<h2>Swift</h2>"),
+            Workload(name: "date", source: "{{ stamp | date: '%F %T %:z %N' }}", context: ["stamp": "2024-02-03T04:05:06.123456789+05:30"], partials: [:], expected: "2024-02-03 04:05:06 +05:30 123456789")
         ]
         let engine = LiquidEngine()
         let clock = ContinuousClock()
@@ -55,6 +59,7 @@ struct Benchmarks {
         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
         if CommandLine.arguments.count > 1 { try data.write(to: URL(fileURLWithPath: CommandLine.arguments[1]), options: .atomic) }
         print(String(decoding: data, as: UTF8.self))
+        #endif
     }
 }
 

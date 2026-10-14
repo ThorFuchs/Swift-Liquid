@@ -15,7 +15,9 @@ assert len({case['name'] for case in cases}) == len(cases), 'Duplicate fixture n
 probe_pin = pins['authoredProbes']
 probes = ROOT / probe_pin['path']
 assert hashlib.sha256(probes.read_bytes()).hexdigest() == probe_pin['sha256'], 'Probe hash changed'
-assert len(json.loads(probes.read_text())['tests']) == probe_pin['cases'] == 63, 'Probe count changed'
+probe_cases = json.loads(probes.read_text())['tests']
+assert len(probe_cases) == probe_pin['cases'] == 185, 'Probe count changed'
+assert len({case['name'] for case in probe_cases}) == len(probe_cases), 'Duplicate probe names'
 assert 'MIT License' in (fixture.parent / 'LICENSE').read_text(), 'Missing corpus license'
 manifest = (ROOT / 'Package.swift').read_text()
 assert 'dependencies: []' in manifest, 'Root dependency graph must be empty'
@@ -24,4 +26,4 @@ for path in (ROOT / 'Sources').rglob('*.swift'):
     source = path.read_text()
     assert '@unchecked' not in source, f'Unchecked concurrency: {path}'
     assert 'SPDX-License-Identifier: Apache-2.0' in source, f'Missing license: {path}'
-print(f'Public checks passed; {len(cases)} intact independent fixtures.')
+print(f'Public checks passed; {len(cases)} intact independent fixtures and {len(probe_cases)} authored probes.')

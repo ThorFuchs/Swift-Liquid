@@ -117,7 +117,7 @@ extension Renderer {
             let a = abs(numericValue(value) ?? 0)
             return a == a.rounded(.towardZero) ? try checkedInteger(a) : a
         case .date:
-            return try formatDate(value, format: nil)
+            throw RenderError.undefinedFilter("date: missing required format argument")
         case .json:
             return try jsonEncode(value)
         case .sum:
@@ -167,7 +167,7 @@ extension Renderer {
             if result == result.rounded(.towardZero) { return try checkedInteger(result) }
             return result
         case .date:
-            return try formatDate(value, format: argument as? String, allowNilFormat: argument is NSNull)
+            return try formatDate(value, format: stringify(argument))
         case .map:
             return try mapFilter(value, args: [argument])
         case .sort:
@@ -459,8 +459,8 @@ extension Renderer {
             return r == r.rounded(.towardZero) ? try checkedInteger(r) : r
         }
         if filterName.equals("date") {
-            let dateArg = args.first
-            return try formatDate(value, format: dateArg as? String, allowNilFormat: dateArg is NSNull)
+            guard let format = args.first else { throw RenderError.undefinedFilter("date: missing required format argument") }
+            return try formatDate(value, format: stringify(format))
         }
         if filterName.equals("json") {
             return try jsonEncode(value)

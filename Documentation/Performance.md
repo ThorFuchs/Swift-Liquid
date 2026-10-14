@@ -6,7 +6,7 @@ runs in release mode.
 
 Workloads distinguish parsing plus rendering from rendering a reused parsed
 template. They cover interpolation, a filter chain, a loop with properties, and
-partial composition. Each workload performs warmups, collects repeated samples,
+partial composition, and timestamp parsing/formatting. Each workload performs warmups, collects repeated samples,
 checks expected output, and reports median, p95, minimum, maximum, and a stable
 output checksum. Receipts include the actual command, compiler, platform, and
 source hashes.

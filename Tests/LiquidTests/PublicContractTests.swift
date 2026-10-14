@@ -124,3 +124,34 @@ func malformedJSONIsRejected(source: String) {
         try await engine.render(template: "{{ value | abs }}", context: ["value": .integer(Int.min)])
     }
 }
+
+@Test func dateRangeAndFormattingRespectOperationalLimits() async throws {
+    let engine = LiquidEngine()
+    for value in [LiquidValue.integer(Int.min), .integer(Int.max), .string(String(repeating: "9", count: 100))] {
+        do {
+            _ = try await engine.render(template: "{{ value | date: '%F' }}", context: ["value": value])
+            Issue.record("Expected a date range error")
+        } catch let error as LiquidError {
+            guard case .invalidValue = error else { Issue.record("Expected invalidValue, received \(error)"); continue }
+        }
+    }
+    func expectLimit(_ expected: String, operation: () async throws -> String) async {
+        let error = await #expect(throws: LiquidError.self) { try await operation() }
+        if case .limitExceeded(let name)? = error { #expect(name == expected) }
+        else { Issue.record("Expected limitExceeded(\(expected))") }
+    }
+    for format in ["%1025Y", "%999999999999999999999N"] {
+        await expectLimit("date padding") {
+            try await engine.render(template: "{{ '2024-02-03' | date: format }}", context: ["format": .string(format)])
+        }
+    }
+    let small = LiquidEngine(limits: .init(outputBytes: 4))
+    #expect(try await small.render(template: "{{ '2024-02-03' | date: '%Y' }}") == "2024")
+    await expectLimit("outputBytes") {
+        try await small.render(template: "{{ '2024-02-03' | date: '%1000Y' }}")
+    }
+    await expectLimit("renderSteps") {
+        try await LiquidEngine(limits: .init(renderSteps: 10)).render(
+            template: "{{ '2024-02-03' | date: format }}", context: ["format": .string(String(repeating: "x", count: 100))])
+    }
+}

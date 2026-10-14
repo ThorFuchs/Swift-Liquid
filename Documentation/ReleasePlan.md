@@ -26,3 +26,6 @@ After 1.0, evaluate custom filter/tag APIs, opt-in application caches, richer
 input adapters, and additional platform qualification. Rhoe document rendering,
 services, macros, inheritance, and hosted storefront behavior need separate
 product and compatibility decisions.
+
+Current blockers are recorded in [conformance evidence](Conformance.md), including
+heuristic date parsing and the pinned corpus's recovered Ruby filter error.

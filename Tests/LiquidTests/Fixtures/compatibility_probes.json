@@ -706,6 +706,1476 @@
         "strict"
       ],
       "result": "3"
+    },
+    {
+      "name": "date: empty format",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03",
+        "format": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03"
+    },
+    {
+      "name": "date: nil format",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03",
+        "format": null
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03"
+    },
+    {
+      "name": "date: integer format",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": 0,
+        "format": 12
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "12"
+    },
+    {
+      "name": "date: bool format",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": 0,
+        "format": true
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "true"
+    },
+    {
+      "name": "date: float input",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": 1700000000.5,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1700000000.5"
+    },
+    {
+      "name": "date: negative float",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": -1.5,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "-1.5"
+    },
+    {
+      "name": "date: zero epoch",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": 0,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1970-01-01 00:00:00|0|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: negative epoch",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": -1,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1969-12-31 23:59:59|-1|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: digit epoch",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1700000000",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2023-11-14 22:13:20|1700000000|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: decimal string",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1700000000.5",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1700000000.5"
+    },
+    {
+      "name": "date: signed string",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1700000000",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "-1700000000"
+    },
+    {
+      "name": "date: plus string",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "+1700000000",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "+1700000000"
+    },
+    {
+      "name": "date: scientific string",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1e9",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1e9"
+    },
+    {
+      "name": "date: ISO fractional",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|123|123456789|123456789123"
+    },
+    {
+      "name": "date: pre epoch fraction",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1969-12-31T23:59:59.987654321987Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1969-12-31 23:59:59|-1|+0000|+00:00|+00:00:00|+00|UTC|987|987654321|987654321987"
+    },
+    {
+      "name": "date: positive offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06+05:30",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706913306|+0530|+05:30|+05:30:00|+05:30||000|000000000|000000000000"
+    },
+    {
+      "name": "date: negative offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06-03:30",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706945706|-0330|-03:30|-03:30:00|-03:30||000|000000000|000000000000"
+    },
+    {
+      "name": "date: hour offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06+05",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706915106|+0500|+05:00|+05:00:00|+05||000|000000000|000000000000"
+    },
+    {
+      "name": "date: seconds offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06+05:30:45",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706913261|+0530|+05:30|+05:30:45|+05:30:45||000|000000000|000000000000"
+    },
+    {
+      "name": "date: zero positive offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06+0000",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: zero negative offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06-0000",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: UTC",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 UTC",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: GMT",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 GMT",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: EST",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 EST",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706951106|-0500|-05:00|-05:00:00|-05||000|000000000|000000000000"
+    },
+    {
+      "name": "date: PDT",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 PDT",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706958306|-0700|-07:00|-07:00:00|-07||000|000000000|000000000000"
+    },
+    {
+      "name": "date: unknown zone",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 CET",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: RFC 2822",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat, 03 Feb 2024 04:05:06 +0530",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706913306|+0530|+05:30|+05:30:00|+05:30||000|000000000|000000000000"
+    },
+    {
+      "name": "date: RFC 850",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Saturday, 03-Feb-24 04:05:06 GMT",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: asctime",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Fri Jul 16 01:00:00 2004",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2004-07-16 01:00:00|1089939600|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: month day",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "February 3, 2024 4:05 pm",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 16:05:00|1706976300|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: day month",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "3 February 2024 4:05 am",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:00|1706933100|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: year month",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024 February 3",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: slash ambiguous",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02/03/2024",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-03-02 00:00:00|1709337600|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: slash day first",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31/01/2024",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-01-31 00:00:00|1706659200|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: slash invalid",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "01/31/2024",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "01/31/2024"
+    },
+    {
+      "name": "date: slash year first",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024/02/03",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: dotted",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "03.02.2024",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: short year 68",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "03-Feb-68",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2068-02-03 00:00:00|3095452800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: short year 69",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "03-Feb-69",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1969-02-03 00:00:00|-28684800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: short year 00",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "00-02-03",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2000-02-03 00:00:00|949536000|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: year month day",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-2-3",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: ISO basic",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "20240203T040506Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: ordinal",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-034",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: ordinal leap",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-366",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-12-31 00:00:00|1735603200|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: ISO week",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-W05-6",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-W05-6"
+    },
+    {
+      "name": "date: leap valid",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-29",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-29 00:00:00|1709164800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: leap normalize",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2023-02-29",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2023-03-01 00:00:00|1677628800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: day normalize",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-31",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-03-02 00:00:00|1709337600|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: bad day",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-32",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-32"
+    },
+    {
+      "name": "date: bad month",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-13-03",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-13-03"
+    },
+    {
+      "name": "date: zero month",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-00-03",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-00-03"
+    },
+    {
+      "name": "date: zero day",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-00",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-00"
+    },
+    {
+      "name": "date: midnight 24",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T24:00:00Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-04 00:00:00|1707004800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: midnight invalid",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T24:01:00Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03T24:01:00Z"
+    },
+    {
+      "name": "date: leap second",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:60Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:06:00|1706933160|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: bad minute",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:60:00Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03T04:60:00Z"
+    },
+    {
+      "name": "date: bad second",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:61Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03T04:05:61Z"
+    },
+    {
+      "name": "date: early Gregorian",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1500-03-01",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1500-03-01 00:00:00|-14826672000|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: Gregorian boundary",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1582-10-10",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1582-10-10 00:00:00|-12219724800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: first year",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0001-01-01",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "0001-01-01 00:00:00|-62135596800|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: last year",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9999-12-31",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "9999-12-31 00:00:00|253402214400|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: unparseable",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "not a date",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "not a date"
+    },
+    {
+      "name": "date: nil input",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": null,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": ""
+    },
+    {
+      "name": "date: bool input",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": true,
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "true"
+    },
+    {
+      "name": "date: array input",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": [
+          1,
+          2
+        ],
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "12"
+    },
+    {
+      "name": "date: with whitespace",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "  2024-02-03T04:05:06Z  ",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC|000|000000000|000000000000"
+    },
+    {
+      "name": "date: invalid offset",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06+24:00",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z|%L|%N|%12N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03T04:05:06+24:00"
+    },
+    {
+      "name": "date: directives %d|%_d|%0d|%-d|%5d|%_5d|%05d|%-5d",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%d|%_d|%0d|%-d|%5d|%_5d|%05d|%-5d"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "03| 3|03|3|00003|    3|00003|3"
+    },
+    {
+      "name": "date: directives %e|%0e|%_e|%-e|%5e|%05e",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%e|%0e|%_e|%-e|%5e|%05e"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": " 3|03| 3|3|    3|00003"
+    },
+    {
+      "name": "date: directives %B|%^B|%#B|%12B|%012B|%_12B|%-12B",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%B|%^B|%#B|%12B|%012B|%_12B|%-12B"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "February|FEBRUARY|FEBRUARY|    February|0000February|    February|February"
+    },
+    {
+      "name": "date: directives %p|%P|%^p|%^P|%#p|%#P",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%p|%P|%^p|%^P|%#p|%#P"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "AM|am|AM|AM|am|AM"
+    },
+    {
+      "name": "date: directives %F|%-F|%_F|%20F|%020F|%_20F",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%F|%-F|%_F|%20F|%020F|%_20F"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03|2024-02-03|2024-02-03|          2024-02-03|00000000002024-02-03|          2024-02-03"
+    },
+    {
+      "name": "date: directives %D|%r|%c|%v|%+",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%D|%r|%c|%v|%+"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "02/03/24|04:05:06 AM|Sat Feb  3 04:05:06 2024| 3-FEB-2024|%+"
+    },
+    {
+      "name": "date: directives %Y|%EY|%Oy|%Od|%Ec|%Ez|%OQ",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%Y|%EY|%Oy|%Od|%Ec|%Ez|%OQ"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024|2024|24|03|Sat Feb  3 04:05:06 2024|%Ez|%OQ"
+    },
+    {
+      "name": "date: directives %L|%N|%3N|%6N|%12N|%3L|%6L",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%L|%N|%3N|%6N|%12N|%3L|%6L"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "123|123456789|123|123456|123456789123|123|123456"
+    },
+    {
+      "name": "date: directives %q|%Q|%::::z|abc%|%_5q|%5%|%5n",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.123456789123+05:30",
+        "format": "%q|%Q|%::::z|abc%|%_5q|%5%|%5n"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "%q|%Q|%::::z|abc%|%_5q|    %|    \n"
+    },
+    {
+      "name": "date edge: 0001-01-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0001-01-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "0001-01-01|001|1|1|00|01|0001|01|01|Mon"
+    },
+    {
+      "name": "date edge: 1500-02-28",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1500-02-28",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1500-02-28|059|3|3|08|09|1500|00|09|Wed"
+    },
+    {
+      "name": "date edge: 1500-03-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1500-03-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1500-03-01|060|4|4|08|09|1500|00|09|Thu"
+    },
+    {
+      "name": "date edge: 1582-10-04",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1582-10-04",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1582-10-04|277|1|1|40|40|1582|82|40|Mon"
+    },
+    {
+      "name": "date edge: 1582-10-15",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1582-10-15",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1582-10-15|288|5|5|41|41|1582|82|41|Fri"
+    },
+    {
+      "name": "date edge: 1600-02-29",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1600-02-29",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1600-02-29|060|2|2|09|09|1600|00|09|Tue"
+    },
+    {
+      "name": "date edge: 1900-03-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1900-03-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "1900-03-01|060|4|4|08|09|1900|00|09|Thu"
+    },
+    {
+      "name": "date edge: 2000-02-29",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-02-29",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2000-02-29|060|2|2|09|09|2000|00|09|Tue"
+    },
+    {
+      "name": "date edge: 2015-12-31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2015-12-31",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2015-12-31|365|4|4|52|52|2015|15|53|Thu"
+    },
+    {
+      "name": "date edge: 2016-01-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2016-01-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2016-01-01|001|5|5|00|00|2015|15|53|Fri"
+    },
+    {
+      "name": "date edge: 2016-01-03",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2016-01-03",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2016-01-03|003|0|7|01|00|2015|15|53|Sun"
+    },
+    {
+      "name": "date edge: 2016-01-04",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2016-01-04",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2016-01-04|004|1|1|01|01|2016|16|01|Mon"
+    },
+    {
+      "name": "date edge: 2017-01-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2017-01-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2017-01-01|001|0|7|01|00|2016|16|52|Sun"
+    },
+    {
+      "name": "date edge: 2018-12-31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2018-12-31",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2018-12-31|365|1|1|52|53|2019|19|01|Mon"
+    },
+    {
+      "name": "date edge: 2019-12-30",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2019-12-30",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2019-12-30|364|1|1|52|52|2020|20|01|Mon"
+    },
+    {
+      "name": "date edge: 2020-12-31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2020-12-31",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2020-12-31|366|4|4|52|52|2020|20|53|Thu"
+    },
+    {
+      "name": "date edge: 2021-01-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2021-01-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2021-01-01|001|5|5|00|00|2020|20|53|Fri"
+    },
+    {
+      "name": "date edge: 2021-01-03",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2021-01-03",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2021-01-03|003|0|7|01|00|2020|20|53|Sun"
+    },
+    {
+      "name": "date edge: 2021-01-04",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2021-01-04",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2021-01-04|004|1|1|01|01|2021|21|01|Mon"
+    },
+    {
+      "name": "date edge: 2023-12-31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2023-12-31",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2023-12-31|365|0|7|53|52|2023|23|52|Sun"
+    },
+    {
+      "name": "date edge: 2024-01-01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-01-01",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-01-01|001|1|1|00|01|2024|24|01|Mon"
+    },
+    {
+      "name": "date edge: 9999-12-31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9999-12-31",
+        "format": "%F|%j|%w|%u|%U|%W|%G|%g|%V|%a"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "9999-12-31|365|5|5|52|52|9999|99|52|Fri"
+    },
+    {
+      "name": "date edge: format flags 0",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%z|%_z|%-z|%5z|%10z|%010z|%_10z|%10:z|%_10::z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "-0530| -530|-0530|-0530|-000000530|-000000530|      -530|-000005:30|  -5:30:00"
+    },
+    {
+      "name": "date edge: format flags 1",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%N|%-N|%_N|%0N|%-3N|%_3N|%03N"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "000000000|000000000|000000000|000000000|000|000|000"
+    },
+    {
+      "name": "date edge: format flags 2",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%d|%-_d|%_-d|%0-d|%-0d|%_0d|%0_d"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "03|3|3|3|3|03| 3"
+    },
+    {
+      "name": "date edge: format flags 3",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%Y|%1Y|%2Y|%3Y|%5Y|%_Y|%-Y"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024|2024|2024|2024|02024|2024|2024"
+    },
+    {
+      "name": "date edge: format flags 4",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%#c|%#r|%^c|%^r|%#Z|%^Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "Sat Feb  3 04:05:06 2024|04:05:06 AM|SAT FEB  3 04:05:06 2024|04:05:06 AM||"
+    },
+    {
+      "name": "date edge: format flags 5",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%OH|%OI|%OM|%OS|%Ou|%OV|%Ow|%OW|%OB"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "04|04|05|06|6|05|6|05|%OB"
+    },
+    {
+      "name": "date edge: format flags 6",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%Ec|%EC|%Ex|%EX|%Ey|%EY|%EF|%EN"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "Sat Feb  3 04:05:06 2024|20|02/03/24|04:05:06|24|2024|%EF|%EN"
+    },
+    {
+      "name": "date edge: format flags 7",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06.000000000123-05:30",
+        "format": "%F|%c|%v|%D|%x|%s"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03|Sat Feb  3 04:05:06 2024| 3-FEB-2024|02/03/24|02/03/24|1706952906"
+    },
+    {
+      "name": "date edge: zone A",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 A",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706929506|+0100|+01:00|+01:00:00|+01|"
+    },
+    {
+      "name": "date edge: zone I",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 I",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706900706|+0900|+09:00|+09:00:00|+09|"
+    },
+    {
+      "name": "date edge: zone J",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 J",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC"
+    },
+    {
+      "name": "date edge: zone K",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 K",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706897106|+1000|+10:00|+10:00:00|+10|"
+    },
+    {
+      "name": "date edge: zone M",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 M",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706889906|+1200|+12:00|+12:00:00|+12|"
+    },
+    {
+      "name": "date edge: zone N",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 N",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706936706|-0100|-01:00|-01:00:00|-01|"
+    },
+    {
+      "name": "date edge: zone Y",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 Y",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706976306|-1200|-12:00|-12:00:00|-12|"
+    },
+    {
+      "name": "date edge: zone Z",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 Z",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|+00:00|+00:00:00|+00|UTC"
+    },
+    {
+      "name": "date edge: zone +053045",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 +053045",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706913261|+0530|+05:30|+05:30:45|+05:30:45|"
+    },
+    {
+      "name": "date edge: zone -01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 -01",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706936706|-0100|-01:00|-01:00:00|-01|"
+    },
+    {
+      "name": "date edge: zone +00:00:01",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T04:05:06 +00:00:01",
+        "format": "%F %T|%s|%z|%:z|%::z|%:::z|%Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933105|+0000|+00:00|+00:00:01|+00:00:01|"
+    },
+    {
+      "name": "date edge: preserve array",
+      "template": "{{ value | date: format | size }}",
+      "data": {
+        "value": [
+          100,
+          200
+        ],
+        "format": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2"
+    },
+    {
+      "name": "date edge: preserve boolean",
+      "template": "{{ value | date: format | default: 'fallback' }}",
+      "data": {
+        "value": false,
+        "format": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "fallback"
+    },
+    {
+      "name": "date edge: preserve integer",
+      "template": "{{ value | date: format | size }}",
+      "data": {
+        "value": 1700000000,
+        "format": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "8"
+    },
+    {
+      "name": "date edge: preserve nil",
+      "template": "{% assign output = value | date: format %}{% if output == nil %}nil{% endif %}",
+      "data": {
+        "value": null,
+        "format": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil"
+    },
+    {
+      "name": "date edge: literal combining marks after directives",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03",
+        "format": "%Ý|%d́|é %B"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2024́|03́|é February"
     }
   ]
 }

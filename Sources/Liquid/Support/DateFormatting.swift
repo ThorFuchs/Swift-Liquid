@@ -1,106 +1,140 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 
-// Render directives separately so literal text never becomes an ICU date pattern.
-internal func renderStrftime(_ format: String, date: Date, offset: Int = 0, zoneName: String = "UTC") throws -> String {
-    var calendar = Calendar(identifier: .gregorian)
-    guard let timeZone = TimeZone(secondsFromGMT: offset) else { throw LiquidError.invalidValue("Invalid date offset") }
-    calendar.timeZone = timeZone
-    var iso = Calendar(identifier: .iso8601)
-    iso.timeZone = calendar.timeZone
-    let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second, .weekday], from: date)
-    guard let year = components.year, (1...9999).contains(year) else { throw LiquidError.invalidValue("Date year must be in 1...9999") }
-    let month = components.month ?? 1, day = components.day ?? 1
-    let hour = components.hour ?? 0, minute = components.minute ?? 0, second = components.second ?? 0
-    let weekday = (components.weekday ?? 1) - 1
-    let ordinal = calendar.ordinality(of: .day, in: .year, for: date) ?? 1
-    let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    let weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    func pad(_ value: Int, _ width: Int = 2, with character: Character = "0") -> String {
-        let text = String(value)
-        return String(repeating: String(character), count: max(0, width - text.count)) + text
+// Directives are rendered separately so literal text cannot become an ICU pattern.
+internal func renderStrftime(_ format: String, date: LiquidDate, budget: RuntimeBudget) throws -> String {
+    let parts = LiquidDateParts(date)
+    let symbols = format.unicodeScalars
+    enum Padding { case zero, space, none }
+    func padded(_ value: String, width: Int, padding: Padding) -> String {
+        guard padding != .none, value.count < width else { return value }
+        let fill = String(repeating: padding == .space ? " " : "0", count: width - value.count)
+        if padding == .zero && (value.first == "-" || value.first == "+") { return String(value.prefix(1)) + fill + value.dropFirst() }
+        return fill + value
     }
-    let datePart = "\(pad(year, 4))-\(pad(month))-\(pad(day))"
-    let timePart = "\(pad(hour)):\(pad(minute)):\(pad(second))"
-    let hour12 = hour % 12 == 0 ? 12 : hour % 12
-    var result = ""
-    var index = format.startIndex
-    while index < format.endIndex {
-        try Task.checkCancellation()
-        guard format[index] == "%" else {
-            result.append(format[index]); index = format.index(after: index); continue
+    func number(_ value: Int, _ width: Int = 2, _ padding: Padding = .zero) -> String {
+        padded(String(value), width: width, padding: padding)
+    }
+    let datePart = "\(number(parts.year, 4))-\(number(parts.month))-\(number(parts.day))"
+    let timePart = "\(number(parts.hour)):\(number(parts.minute)):\(number(parts.second))"
+    let hour12 = parts.hour % 12 == 0 ? 12 : parts.hour % 12
+    var result = "", index = symbols.startIndex
+    var remainingBytes = budget.limits.outputBytes
+    func append(_ text: String) throws {
+        guard text.utf8.count <= remainingBytes else { throw LiquidError.limitExceeded("outputBytes") }
+        remainingBytes -= text.utf8.count
+        result += text
+    }
+    while index < symbols.endIndex {
+        try budget.step()
+        guard symbols[index] == "%" else {
+            try append(String(symbols[index])); index = symbols.index(after: index); continue
         }
         let start = index
-        index = format.index(after: index)
-        guard index < format.endIndex else { result.append("%"); break }
-        var uppercase = false
-        var unpadded = false
-        var spacePadded = false
-        var width: Int?
-        while index < format.endIndex {
-            let char = format[index]
-            if char == "^" { uppercase = true }
-            else if char == "-" { unpadded = true }
-            else if char == "_" { spacePadded = true }
-            else if char == "0" && width == nil { }
-            else if let digit = char.wholeNumberValue {
-                let next = (width ?? 0) * 10 + digit
-                guard next <= 1024 else { throw LiquidError.limitExceeded("date padding") }
-                width = next
-            } else { break }
-            index = format.index(after: index)
+        index = symbols.index(after: index)
+        var uppercase = false, changeCase = false, noPadding = false
+        var padding: Padding?, width: Int?, modifier: Character?, colons = 0
+        while index < symbols.endIndex {
+            let character = Character(String(symbols[index]))
+            if character == "^" { uppercase = true }
+            else if character == "#" { changeCase = true }
+            else if character == "-" { noPadding = true }
+            else if character == "_" { padding = .space }
+            else if character == "0" { padding = .zero }
+            else { break }
+            index = symbols.index(after: index)
         }
-        guard index < format.endIndex else { result += format[start...]; break }
-        let directive = format[index]
-        index = format.index(after: index)
-        var value: String
+        while index < symbols.endIndex, (48...57).contains(symbols[index].value) {
+            let digit = symbols[index].value
+            let next = (width ?? 0) * 10 + Int(digit - 48)
+            guard next <= 1024 else { throw LiquidError.limitExceeded("date padding") }
+            width = next; index = symbols.index(after: index)
+        }
+        if noPadding { padding = Padding.none }
+        if index < symbols.endIndex, symbols[index] == "E" || symbols[index] == "O" {
+            modifier = Character(String(symbols[index])); index = symbols.index(after: index)
+        }
+        while index < symbols.endIndex && symbols[index] == ":" {
+            colons += 1; index = symbols.index(after: index)
+        }
+        guard index < symbols.endIndex else { try append(String(symbols[start...])); break }
+        let directive = Character(String(symbols[index]))
+        index = symbols.index(after: index)
+        if (modifier == "E" && !"cCxXyY".contains(directive)) ||
+            (modifier == "O" && !"deHImMSuUVwWy".contains(directive)) ||
+            (colons > 0 && (directive != "z" || colons > 3)) {
+            try append(String(symbols[start..<index])); continue
+        }
+        var value: String, defaultWidth = 0, defaultPadding = Padding.space
+        var numeric: Int?
         switch directive {
-        case "Y": value = pad(year, 4)
-        case "y": value = pad(year % 100)
-        case "C": value = pad(year / 100)
-        case "m": value = pad(month)
-        case "d": value = pad(day)
-        case "e": value = pad(day, with: " ")
-        case "H": value = pad(hour)
-        case "k": value = pad(hour, with: " ")
-        case "I": value = pad(hour12)
-        case "l": value = pad(hour12, with: " ")
-        case "M": value = pad(minute)
-        case "S": value = pad(second)
-        case "p": value = hour < 12 ? "AM" : "PM"
-        case "P": value = hour < 12 ? "am" : "pm"
-        case "B": value = monthNames[month - 1]
-        case "b", "h": value = String(monthNames[month - 1].prefix(3))
-        case "A": value = weekdayNames[weekday]
-        case "a": value = String(weekdayNames[weekday].prefix(3))
-        case "j": value = pad(ordinal, 3)
-        case "w": value = String(weekday)
-        case "u": value = String(weekday == 0 ? 7 : weekday)
-        case "V": value = pad(iso.component(.weekOfYear, from: date))
-        case "G": value = pad(iso.component(.yearForWeekOfYear, from: date), 4)
-        case "g": value = pad(iso.component(.yearForWeekOfYear, from: date) % 100)
-        case "U": value = pad((ordinal - 1 + 7 - weekday) / 7)
-        case "W": value = pad((ordinal - 1 + 7 - (weekday + 6) % 7) / 7)
-        case "z": value = "\(offset < 0 ? "-" : "+")\(pad(abs(offset) / 3600))\(pad(abs(offset) % 3600 / 60))"
-        case "Z": value = zoneName
-        case "s": value = String(try checkedInteger(date.timeIntervalSince1970))
-        case "F": value = datePart
-        case "T", "X": value = timePart
-        case "R": value = "\(pad(hour)):\(pad(minute))"
-        case "D", "x": value = "\(pad(month))/\(pad(day))/\(pad(year % 100))"
-        case "r": value = "\(pad(hour12)):\(pad(minute)):\(pad(second)) \(hour < 12 ? "AM" : "PM")"
-        case "c": value = "\(weekdayNames[weekday].prefix(3)) \(monthNames[month - 1].prefix(3)) \(pad(day, with: " ")) \(timePart) \(year)"
-        case "v": value = "\(pad(day, with: " "))-\(monthNames[month - 1].prefix(3))-\(pad(year, 4))"
-        case "n": value = "\n"
-        case "t": value = "\t"
-        case "%": value = "%"
-        default: value = String(format[start..<index])
+        case "Y": numeric = parts.year; defaultWidth = 4
+        case "y": numeric = parts.year % 100; defaultWidth = 2
+        case "C": numeric = parts.year / 100; defaultWidth = 2
+        case "m": numeric = parts.month; defaultWidth = 2
+        case "d", "e": numeric = parts.day; defaultWidth = 2
+        case "H", "k": numeric = parts.hour; defaultWidth = 2
+        case "I", "l": numeric = hour12; defaultWidth = 2
+        case "M": numeric = parts.minute; defaultWidth = 2
+        case "S": numeric = parts.second; defaultWidth = 2
+        case "j": numeric = parts.ordinal; defaultWidth = 3
+        case "w": numeric = parts.weekday
+        case "u": numeric = parts.weekday == 0 ? 7 : parts.weekday
+        case "V": numeric = parts.isoWeek; defaultWidth = 2
+        case "G": numeric = parts.isoYear; defaultWidth = 4
+        case "g": numeric = parts.isoYear % 100; defaultWidth = 2
+        case "U": numeric = (parts.ordinal - 1 + 7 - parts.weekday) / 7; defaultWidth = 2
+        case "W": numeric = (parts.ordinal - 1 + 7 - (parts.weekday + 6) % 7) / 7; defaultWidth = 2
+        case "s": numeric = date.seconds
+        default: break
         }
-        if unpadded { value = String(value.drop(while: { $0 == "0" || $0 == " " })); if value.isEmpty { value = "0" } }
+        if let numeric {
+            defaultPadding = "ekl".contains(directive) ? .space : .zero
+            value = String(numeric)
+        } else {
+            switch directive {
+            case "p": value = parts.hour < 12 ? "AM" : "PM"
+            case "P": value = parts.hour < 12 ? "am" : "pm"
+            case "B": value = liquidMonthNames[parts.month - 1]
+            case "b", "h": value = String(liquidMonthNames[parts.month - 1].prefix(3))
+            case "A": value = liquidWeekdayNames[parts.weekday]
+            case "a": value = String(liquidWeekdayNames[parts.weekday].prefix(3))
+            case "L", "N":
+                let precision = width ?? (directive == "L" ? 3 : 9)
+                value = String(date.fraction.prefix(precision))
+                value += String(repeating: "0", count: precision - value.count)
+                width = nil
+            case "z":
+                let magnitude = abs(date.offset), hours = magnitude / 3600
+                let minutes = magnitude % 3600 / 60, seconds = magnitude % 60
+                value = (date.offset < 0 ? "-" : "+") + String(hours)
+                defaultPadding = .zero
+                defaultWidth = colons == 0 ? 5 : colons == 1 ? 6 : colons == 2 ? 9 : seconds != 0 ? 9 : minutes != 0 ? 6 : 3
+                if colons == 0 { value += number(minutes) }
+                else if colons < 3 || minutes != 0 || seconds != 0 { value += ":" + number(minutes) }
+                if colons == 2 || (colons == 3 && seconds != 0) { value += ":" + number(seconds) }
+                if noPadding { padding = .zero; width = nil }
+            case "Z": value = date.zoneName
+            case "F": value = datePart
+            case "T", "X": value = timePart
+            case "R": value = "\(number(parts.hour)):\(number(parts.minute))"
+            case "D", "x": value = "\(number(parts.month))/\(number(parts.day))/\(number(parts.year % 100))"
+            case "r": value = "\(number(hour12)):\(number(parts.minute)):\(number(parts.second)) \(parts.hour < 12 ? "AM" : "PM")"
+            case "c": value = "\(liquidWeekdayNames[parts.weekday].prefix(3)) \(liquidMonthNames[parts.month - 1].prefix(3)) \(number(parts.day, 2, .space)) \(timePart) \(number(parts.year, 4))"
+            case "v": value = "\(number(parts.day, 2, .space))-\(liquidMonthNames[parts.month - 1].prefix(3).uppercased())-\(number(parts.year, 4))"
+            case "n": value = "\n"
+            case "t": value = "\t"
+            case "%": value = "%"
+            default: try append(String(symbols[start..<index])); continue
+            }
+        }
         if uppercase { value = value.uppercased() }
-        if spacePadded { value = value.replacingOccurrences(of: "^0+", with: String(repeating: " ", count: value.prefix(while: { $0 == "0" }).count), options: .regularExpression) }
-        if let width { value = String(repeating: spacePadded ? " " : "0", count: max(0, width - value.count)) + value }
-        result += value
+        if changeCase {
+            if directive == "p" || directive == "Z" { value = value.lowercased() }
+            else if "aAbBhBP".contains(directive) { value = value.uppercased() }
+        }
+        value = padded(value, width: width ?? defaultWidth, padding: padding ?? defaultPadding)
+        try append(value)
     }
     return result
 }

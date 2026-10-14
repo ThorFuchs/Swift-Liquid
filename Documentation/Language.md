@@ -34,10 +34,13 @@ Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
 Keys and equality retain Unicode scalar spelling. Case mapping uses the native
-Unicode implementation. Dates accept epoch values, ISO timestamps and common
-calendar formats; timezone-free input uses UTC, explicit offsets are preserved,
-and calendar years are bounded to 1...9999. Ruby's complete permissive Time.parse
-grammar is outside the current parser contract.
+Unicode implementation. Dates accept whole-second epochs, complete ISO and
+ordinal dates, English month names, RFC and asctime forms. Timezone-free input
+uses UTC; explicit offsets and
+parsed decimal fractions are preserved. Calendar years are bounded to 1...9999.
+See [dates](Dates.md) for coercion, directives, and the remaining heuristic
+Time.parse grammar boundary. Integer `size` follows the native integer storage
+width (8 bytes on the qualified 64-bit host).
 
 Finite limits can reject an otherwise valid template. Syntax failures, runtime
 failures, and quota exhaustion throw; cancellation remains `CancellationError`.

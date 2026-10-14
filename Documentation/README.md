@@ -7,6 +7,7 @@ guides that are compiled from the public Swift symbol graph.
 | Guide | Purpose |
 | --- | --- |
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
+| [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
 | [CLI](CLI.md) | Rendering files and JSON input, validation, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |

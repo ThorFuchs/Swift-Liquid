@@ -119,5 +119,25 @@
       "destination": "Sources/Liquid/Support/CompiledTemplate.swift",
       "upstreamSHA256": "808a3ecf01b1b76c693b129091dc1ba317048e6aaf9c48b5958e75db50831174"
     }
+  ],
+  "adaptations": [
+    {
+      "area": "Date compatibility qualification",
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Support/DateParsing.swift",
+        "Sources/Liquid/Support/DateFormatting.swift"
+      ],
+      "changes": [
+        "Replace the upstream date-format fallback with authored proleptic Gregorian parsing and formatting.",
+        "Preserve Shopify date input types and format coercion; keep parsed decimal subseconds exact.",
+        "Support complete ISO, ordinal, English-month, RFC/asctime and fixed-offset forms; retain the heuristic grammar boundary.",
+        "Charge date formatting against output and render-step budgets; bound years and widths.",
+        "Match integer size on the qualified 64-bit runtime."
+      ],
+      "qualification": "122 original date probes checked against the pinned Shopify runtime, plus typed public resource regressions."
+    }
   ]
 }

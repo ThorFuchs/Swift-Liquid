@@ -117,16 +117,19 @@ diagnostics to stderr. It exits with a nonzero status on failure. See the
 The language target is Shopify's **open-source Liquid core**, including its
 standard tags and filters. Shopify storefront objects, theme tags, Rhoe data
 loaders, template inheritance, macros, DOCX rendering, services, and WASM hosting
-are outside the 1.0 package. See the [language contract](Documentation/Language.md).
+are outside the 1.0 package. See the [language contract](Documentation/Language.md) and
+[date guide](Documentation/Dates.md).
 
 The repository vendors all **1,098 cases** from a pinned Golden Liquid corpus,
 with its original license and checksum. The test runner checks successful
 outputs and expected errors, preserves fixture object order, and passes parser
 mode metadata to the engine. The fixture integrity test prevents an absent or
 empty corpus from passing unnoticed. Fixture expectations and reference-runtime
-comparisons are distinct evidence; both are documented. An additional **63
+comparisons are distinct evidence; both are documented. An additional **185
 reference-checked probes** cover Unicode scalars and keys, structural equality,
-negative arithmetic, parser modes, loop interruption, and date formatting.
+negative arithmetic, parser modes, loop interruption, and date parsing/formatting.
+The reference receipt separates successful renders, expected errors, and reference
+failures; one recovered Ruby filter error remains an open release gate.
 
 ```sh
 python3 Scripts/ci.py --lane native
@@ -141,6 +144,7 @@ See [performance](Documentation/Performance.md).
 
 ## Documentation and contributing
 
+- [API reference and guides](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/)
 - [Documentation index](Documentation/README.md) and [DocC catalog](Sources/Liquid/Documentation.docc)
 - [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)

@@ -45,7 +45,7 @@ private enum CompatibilityProbes {
 
 @Test("Compatibility probe integrity")
 func compatibilityProbeIntegrity() throws {
-    #expect(try CompatibilityProbes.loaded.get().count == 63)
+    #expect(try CompatibilityProbes.loaded.get().count == 185)
 }
 
 @Test("Native compatibility probes", arguments: CompatibilityProbes.cases)
@@ -80,11 +80,24 @@ private func goldenLiquid(_ fixture: GoldenCase) async throws {
             Issue.record("Expected an error: \(fixture.testDescription)")
         } catch is CancellationError {
             throw CancellationError()
-        } catch { }
+        } catch let error as LiquidError {
+            switch error {
+            case .syntax, .rendering: break
+            case .limitExceeded, .invalidValue:
+                Issue.record("Operational failure cannot qualify an invalid fixture: \(error)")
+            }
+        } catch {
+            Issue.record("Expected a Liquid language error, received \(error)")
+        }
     } else {
         let actual = try await LiquidEngine().render(template: source, context: context, templates: templates, syntaxMode: syntaxMode)
-        if let expected = fixture.string("result") { #expect(actual == expected, "Actual: \(actual.debugDescription); expected: \(expected.debugDescription)") }
-        else if case .array(let results) = fixture.object["results"] { #expect(results.contains(.string(actual))) }
+        if let expected = fixture.string("result") { #expect(actual.utf8.elementsEqual(expected.utf8), "Actual: \(actual.debugDescription); expected: \(expected.debugDescription)") }
+        else if case .array(let results) = fixture.object["results"] {
+            #expect(results.contains { value in
+                if case .string(let expected) = value { return actual.utf8.elementsEqual(expected.utf8) }
+                return false
+            })
+        }
         else { Issue.record("Fixture has no expected output") }
     }
 }

@@ -466,6 +466,7 @@ extension Renderer {
     }
     
     internal func getSize(_ value: Any) -> Int {
+        if value is Int { return MemoryLayout<Int>.size }
         if let str = value as? String {
             return str.unicodeScalars.count
         }
