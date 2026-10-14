@@ -10,9 +10,9 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**1.0 is being qualified.** The API and compatibility contract may change until
-the first version tag. See the [release gates](Documentation/ReleasePlan.md) and
-[compatibility evidence](Documentation/Conformance.md). Maintained by
+**Swift-Liquid 1.0** establishes the public API and documented compatibility
+contract. See the [release notes](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0)
+and [compatibility evidence](Documentation/Conformance.md). Maintained by
 [Thorsten Fuchs](https://github.com/ThorFuchs).
 
 ## Start with a template
@@ -38,10 +38,10 @@ empty arrays, and zero are truthy.
 
 Swift tools/compiler **6.4 or later**, in Swift language mode 6.
 
-Until a version is released, use a pinned commit or the development branch:
+Add Swift-Liquid to your package dependencies:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", branch: "main")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.0.0")
 ```
 
 Add the library to your target:

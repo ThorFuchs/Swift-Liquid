@@ -9,7 +9,7 @@ import Glibc
 
 @main
 struct LiquidCommand {
-    static let version = "0.1.0-dev"
+    static let version = "1.0.0"
     static let help = """
     Swift-Liquid — Shopify Liquid templates in Swift
 

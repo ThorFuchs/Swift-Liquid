@@ -84,6 +84,7 @@ Native execution is qualified on macOS with Swift 6.4. Library compilation also
 passes against the iOS, tvOS, watchOS, and visionOS simulator SDKs at the declared
 deployment minima. Those compile checks do not certify device execution or Linux.
 
-The package remains a development candidate until all [release gates](ReleasePlan.md)
-and clean archive qualification pass. Publishing a stable version requires a
-maintainer request; test counts alone do not establish complete Shopify conformance.
+The 1.0.0 release is qualified through all [release gates](ReleasePlan.md),
+including a clean archive rebuild at the tagged commit. Qualification and
+benchmark receipts accompany the [release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0).
+Test counts alone do not establish complete Shopify conformance.

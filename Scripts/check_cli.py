@@ -51,6 +51,6 @@ with tempfile.TemporaryDirectory() as directory:
     run(['render', str(template), '--data', str(data)], succeeds=False)
     data.write_text('{"name":1,"name":2}')
     run(['render', str(template), '--data', str(data)], succeeds=False)
-    run(['--version'])
+    run(['--version'], 'Swift-Liquid 1.0.0\n')
     run(['--help'])
 print(f'{cases} CLI behavior cases passed.')
