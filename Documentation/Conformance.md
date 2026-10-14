@@ -108,3 +108,10 @@ The 1.0.0 release is qualified through all [release gates](ReleasePlan.md),
 including a clean archive rebuild at the tagged commit. Qualification and
 benchmark receipts accompany the [release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0).
 Test counts alone do not establish complete Shopify conformance.
+
+The 1.1.0 release applies the same core accounting and adds separate filter and
+inspection qualification, matched 1.0.0 benchmarks and all eight release lanes.
+Exact-commit receipts, benchmark review, source inventory and clean archive
+rebuilding evidence accompany the
+[1.1.0 release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.1.0).
+The 1.0.0 tag and assets remain unchanged.

@@ -2,7 +2,7 @@
 
 ## Adopted scope
 
-The maintainer adopted this scope on 2026-10-14. Swift-Liquid 1.1 will add two
+The maintainer adopted this scope on 2026-10-14. Swift-Liquid 1.1 adds two
 capabilities: typed custom filters scoped to an
 engine, and read-only template inspection shared by the library and CLI. This
 gives applications a small integration surface and better tooling while keeping
@@ -12,10 +12,10 @@ The [upstream feature review](Architecture/UpstreamFeatureReview.md) records the
 features retained in RhoeLiquid and the implementation boundaries behind this
 selection. Both [typed custom filters](CustomFilters.md) and the
 [AST summary and CLI JSON contract](Inspection.md) are implemented. The 1.1.0
-release candidate adds [reuse guidance](Reuse.md), matched benchmarks and final
+release includes [reuse guidance](Reuse.md), matched benchmarks and final
 qualification. Publication remains a separate step. The scope decision
 authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 version
-still requires a separate release request.
+requires an explicit maintainer request, provided for 1.1.0 on 2026-10-14.
 
 ## Package and compatibility constraints
 

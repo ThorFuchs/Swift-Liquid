@@ -35,7 +35,7 @@ and a deterministic source archive rebuilt from a clean extraction. Run every
 technical lane at the candidate commit; publication and an immutable version tag
 remain maintainer-controlled steps.
 
-## 1.1.0 release candidate
+## 1.1.0 release gates
 
 Retain every 1.0 gate and its reference accounting. Qualify typed filters and
 inspection separately, including the three public consumers, 33 CLI cases,
@@ -45,7 +45,7 @@ qualification jobs; review every threshold flag before publication. The existing
 `performance` lane additionally measures filters and source/reused inspection.
 
 The final clean archive depends on both sets of measurements. Retain all eight
-lane receipts, archives and checksums with the prepared
+lane receipts, archives and checksums with the
 [release notes](Releases/1.1.0.md). `Scripts/prepare_release.py` validates source
 inventories and assets and packages the evidence without creating a tag or release.
 Publication still requires the maintainer's explicit request, exact-commit main

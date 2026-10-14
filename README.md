@@ -10,12 +10,11 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.1.0 is being prepared for release.** It adds typed application
-filters and read-only template inspection while preserving the 1.0 API and
-dependency-free core. See the [prepared release notes](Documentation/Releases/1.1.0.md)
-and [compatibility evidence](Documentation/Conformance.md). The current published
-version remains [1.0.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0).
-Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs).
+**Swift-Liquid 1.1.0** adds typed application filters and read-only template
+inspection while preserving the 1.0 API and dependency-free core. See the
+[release notes](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.1.0)
+and [compatibility evidence](Documentation/Conformance.md). Maintained by
+[Thorsten Fuchs](https://github.com/ThorFuchs).
 
 ## Start with a template
 
@@ -43,7 +42,7 @@ Swift tools/compiler **6.4 or later**, in Swift language mode 6.
 Add Swift-Liquid to your package dependencies:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.0.0")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.1.0")
 ```
 
 Add the library to your target:
@@ -131,8 +130,8 @@ let summary = try engine.inspect(template: "{{ user[key] | escape }}{% render 'c
 `liquid analyze page.liquid --format json` exposes the same AST summary. Roots
 include local reads and conditional paths; they are not a required-input schema.
 See the [inspection contract and JSON schema](Documentation/Inspection.md).
-The filter and inspection APIs require the 1.1 source candidate; they are not
-included in the published 1.0.0 tag.
+The filter and inspection APIs are available from 1.1.0; existing 1.0 render
+call sites need no migration.
 
 ## Command-line rendering
 

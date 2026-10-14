@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.1.0 — release candidate
+## 1.1.0 — 2026-10-14
 
 - Add typed, immutable engine-scoped `LiquidFilter` callbacks with positional and
   ordered named values, protected standard names, cumulative value admission and
@@ -15,7 +15,7 @@
   and concurrency coverage, 15 separate paired host reference cases and 33 CLI checks.
 - Add filter/inspection release workloads and a pinned common-harness comparison
   against 1.0.0, with repeated ABBA runs, per-run latency summaries and review flags.
-- Prepare [release notes](Documentation/Releases/1.1.0.md), compiled documentation,
+- Include [release notes](Documentation/Releases/1.1.0.md), compiled documentation,
   reproducible source archives, qualification evidence and checksums through final gates.
 
 ## 1.0.0 — 2026-10-14
