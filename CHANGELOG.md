@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add AST-based source/reused-template inspection and `liquid analyze` with
+  deterministic text output and versioned JSON, without rendering or partial I/O.
+- Add public inspection regressions, a standalone consumer, concurrency coverage
+  and separate source/reused inspection benchmarks.
 - Adopt the focused 1.1 roadmap and begin typed, engine-scoped custom filters.
 - Add immutable Sendable callbacks with positional and ordered named values,
   protected standard names, explicit recoverable failures and cumulative admission.

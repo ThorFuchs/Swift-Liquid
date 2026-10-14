@@ -38,3 +38,11 @@ Date recognition ports the pinned Ruby Date/Time grammar into Swift. Compiled
 regular expressions are immutable and shared; parsing fragments, the base clock,
 and recovered diagnostics belong to each invocation. An explicit reference time
 makes partial-date parsing repeatable. BSD notices accompany the adaptations.
+
+The unreleased 1.1 inspection API traverses the same internal AST used for
+rendering. It retains the parsed partial reference alongside the existing render
+name, distinguishes literal/dynamic includes, and returns an immutable summary.
+Each traversal owns exact UTF-8 sets and checks source/depth limits and
+cancellation. It does not enter the evaluator or call filters/load partials. The
+CLI formats this summary without maintaining a separate source scanner. See
+[inspection](../Inspection.md) for the API and versioned JSON contract.

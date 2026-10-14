@@ -99,6 +99,21 @@ non-finite numbers. Numbers use `Int` and finite `Double`; use strings for exact
 large decimal data. This bridge is intended for template inputs. The sibling
 [Swift-JSON](https://github.com/ThorFuchs/Swift-JSON) provides an exact JSON data model.
 
+## Inspect templates (unreleased 1.1)
+
+The 1.1 development API inspects source or a parsed template without evaluating expressions,
+calling filters, or loading partials:
+
+```swift
+let summary = try engine.inspect(template: "{{ user[key] | escape }}{% render 'card' %}")
+// Roots: key, user; filters: escape; literal partials: card.
+```
+
+`liquid analyze page.liquid --format json` exposes the same AST summary. Roots
+include local reads and conditional paths; they are not a required-input schema.
+See the [inspection contract and JSON schema](Documentation/Inspection.md).
+These additions are not included in the 1.0.0 tag.
+
 ## Command-line rendering
 
 ```sh

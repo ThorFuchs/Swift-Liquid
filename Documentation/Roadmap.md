@@ -11,7 +11,9 @@ Shopify core behavior, reusable templates, and the dependency graph intact.
 The [upstream feature review](Architecture/UpstreamFeatureReview.md) records the
 features retained in RhoeLiquid and the implementation boundaries behind this
 selection. Implementation begins with [typed custom filters](CustomFilters.md).
-Read-only inspection remains the next implementation step. The scope decision
+Read-only inspection is implemented on the development branch with the
+[AST summary and CLI JSON contract](Inspection.md). Release qualification remains
+a separate step. The scope decision
 authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 version
 still requires a separate release request.
 

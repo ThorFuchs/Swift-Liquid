@@ -38,6 +38,11 @@ or `escape_once` when inserting text into HTML.
 - ``LiquidFilter``
 - ``LiquidFilterFailure``
 
+### Template inspection
+
+- <doc:TemplateInspection>
+- ``LiquidTemplateInspection``
+
 ### Input values
 
 - ``LiquidValue``

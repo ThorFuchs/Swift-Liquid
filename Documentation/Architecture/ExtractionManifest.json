@@ -211,6 +211,25 @@
         "Recover only explicit LiquidFilterFailure errors; retain operational and foreign error identity and check cancellation on both callback exits."
       ],
       "qualification": "Unchanged core fixtures and 1.0 public consumer; 15 separately pinned paired Ruby/Swift host cases; independent filter consumer and public admission, cancellation, recovery, and concurrency regressions."
+    },
+    {
+      "area": "Read-only AST inspection",
+      "scopeDecision": "Maintainer authorized AST-based template inspection and liquid analyze on 2026-10-14.",
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/LiquidCLI/LiquidCommand.swift"
+      ],
+      "changes": [
+        "Author one invocation-owned AST traversal with an immutable checked-Sendable summary and exact UTF-8 deduplication/order.",
+        "Retain the parsed include/render reference expression alongside the existing renderer name so literal and dynamic references remain distinguishable without changing render dispatch.",
+        "Apply source and syntax-depth capacities and cancellation without evaluating expressions, invoking callbacks, loading partials or spending render quotas.",
+        "Replace upstream regex-oriented CLI analysis with the public library summary; freeze CLI JSON schema 1 and retain the existing 1.0 public API and default rendering."
+      ],
+      "qualification": "Public source/reused inspection cases in all parser modes, exact Unicode, limits, cancellation and concurrent rendering; independent consumer, CLI behavior checks and measured release inspection workloads. Core fixture pins remain unchanged."
     }
   ]
 }
