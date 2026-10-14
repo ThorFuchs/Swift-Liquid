@@ -1,0 +1,711 @@
+{
+  "tests": [
+    {
+      "name": "combining text | size",
+      "template": "{{ text | size }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "2",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "combining text.first",
+      "template": "{{ text.first }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "e",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "combining text.last",
+      "template": "{{ text.last }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "́",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "combining text | slice: 1, 1",
+      "template": "{{ text | slice: 1, 1 }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "́",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "combining text | split: '' | join: '-'",
+      "template": "{{ text | split: '' | join: '-' }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "e-́",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "combining text | truncate: 2, '.'",
+      "template": "{{ text | truncate: 2, '.' }}",
+      "data": {
+        "text": "é"
+      },
+      "result": "é",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text | size",
+      "template": "{{ text | size }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "2",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text.first",
+      "template": "{{ text.first }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "🇩",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text.last",
+      "template": "{{ text.last }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "🇪",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text | slice: 1, 1",
+      "template": "{{ text | slice: 1, 1 }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "🇪",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text | split: '' | join: '-'",
+      "template": "{{ text | split: '' | join: '-' }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "🇩-🇪",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "flag text | truncate: 2, '.'",
+      "template": "{{ text | truncate: 2, '.' }}",
+      "data": {
+        "text": "🇩🇪"
+      },
+      "result": "🇩🇪",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text | size",
+      "template": "{{ text | size }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "3",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text.first",
+      "template": "{{ text.first }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "👩",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text.last",
+      "template": "{{ text.last }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "🚀",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text | slice: 1, 1",
+      "template": "{{ text | slice: 1, 1 }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "‍",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text | split: '' | join: '-'",
+      "template": "{{ text | split: '' | join: '-' }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "👩-‍-🚀",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "joined emoji text | truncate: 2, '.'",
+      "template": "{{ text | truncate: 2, '.' }}",
+      "data": {
+        "text": "👩‍🚀"
+      },
+      "result": "👩.",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "scalar equality",
+      "template": "{% if a == b %}yes{% else %}no{% endif %}",
+      "data": {
+        "a": "é",
+        "b": "é"
+      },
+      "result": "no",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "scalar contains",
+      "template": "{% if a contains b %}yes{% else %}no{% endif %}",
+      "data": {
+        "a": "é",
+        "b": "é"
+      },
+      "result": "no",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "scalar replacement",
+      "template": "{{ a | replace: b, \"x\" }}",
+      "data": {
+        "a": "é",
+        "b": "é"
+      },
+      "result": "é",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "scalar object keys",
+      "template": "{{ item[\"é\"] }}|{{ item[\"é\"] }}",
+      "data": {
+        "item": {
+          "é": "A",
+          "é": "B"
+        }
+      },
+      "result": "A|B",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "scalar root keys",
+      "template": "{{ [\"é\"] }}|{{ [\"é\"] }}",
+      "data": {
+        "é": "A",
+        "é": "B"
+      },
+      "result": "A|B",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "unicode capitalize",
+      "template": "{{ value | capitalize }}",
+      "data": {
+        "value": "ß ABC"
+      },
+      "result": "Ss abc",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "negative integer division",
+      "template": "{{ -5 | divided_by: 2 }}",
+      "data": {},
+      "result": "-3",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "negative integer modulo",
+      "template": "{{ -5 | modulo: 2 }}",
+      "data": {},
+      "result": "1",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "negative divisor modulo",
+      "template": "{{ 5 | modulo: -2 }}",
+      "data": {},
+      "result": "-1",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "float modulo",
+      "template": "{{ -5.5 | modulo: 2 }}",
+      "data": {},
+      "result": "0.5",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "floating sum",
+      "template": "{{ values | sum }}",
+      "data": {
+        "values": [
+          1.0,
+          2.0
+        ]
+      },
+      "result": "3.0",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named macro",
+      "template": "{{ macro }}",
+      "data": {
+        "macro": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named call",
+      "template": "{{ call }}",
+      "data": {
+        "call": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named input",
+      "template": "{{ input }}",
+      "data": {
+        "input": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named pipeline",
+      "template": "{{ pipeline }}",
+      "data": {
+        "pipeline": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named not",
+      "template": "{{ not }}",
+      "data": {
+        "not": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named assign",
+      "template": "{{ assign }}",
+      "data": {
+        "assign": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named contains",
+      "template": "{{ contains }}",
+      "data": {
+        "contains": "value"
+      },
+      "invalid": true,
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named and",
+      "template": "{{ and }}",
+      "data": {
+        "and": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "variable named or",
+      "template": "{{ or }}",
+      "data": {
+        "or": "value"
+      },
+      "result": "value",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date Year: %Y",
+      "template": "{{ value | date: \"Year: %Y\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "Year: 2016",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %F %T",
+      "template": "{{ value | date: \"%F %T\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "2016-03-14 15:09:26",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %u %w",
+      "template": "{{ value | date: \"%u %w\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "1 1",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %V %G",
+      "template": "{{ value | date: \"%V %G\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "11 2016",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %U %W",
+      "template": "{{ value | date: \"%U %W\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "11 11",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %e %k %l",
+      "template": "{{ value | date: \"%e %k %l\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "14 15  3",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %z %Z",
+      "template": "{{ value | date: \"%z %Z\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "+0000 UTC",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %s %Y",
+      "template": "{{ value | date: \"%s %Y\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "1457968166 2016",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %% %Y",
+      "template": "{{ value | date: \"%% %Y\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "% 2016",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "date %n%t",
+      "template": "{{ value | date: \"%n%t\" }}",
+      "data": {
+        "value": "2016-03-14 15:09:26"
+      },
+      "result": "\n\t",
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "root break",
+      "template": "A{% break %}B",
+      "data": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "A"
+    },
+    {
+      "name": "root continue",
+      "template": "A{% continue %}B",
+      "data": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "A"
+    },
+    {
+      "name": "array structural equality",
+      "template": "{% if a == b %}yes{% else %}no{% endif %}",
+      "data": {
+        "a": [
+          1,
+          2
+        ],
+        "b": [
+          12
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "no"
+    },
+    {
+      "name": "object order equality",
+      "template": "{% if a == b %}yes{% else %}no{% endif %}",
+      "data": {
+        "a": {
+          "a": 1,
+          "b": 2
+        },
+        "b": {
+          "b": 2,
+          "a": 1
+        }
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "yes"
+    },
+    {
+      "name": "structural uniq",
+      "template": "{{ items | uniq | size }}",
+      "data": {
+        "items": [
+          [
+            1,
+            2
+          ],
+          [
+            12
+          ]
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "3"
+    },
+    {
+      "name": "scalar uniq",
+      "template": "{{ items | uniq | size }}",
+      "data": {
+        "items": [
+          "é",
+          "é"
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2"
+    },
+    {
+      "name": "blank assigned becomes text",
+      "template": "{% assign value = blank %}{% if false == value %}yes{% else %}no{% endif %}",
+      "data": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "no"
+    },
+    {
+      "name": "strict filtered condition",
+      "template": "{% if nil | upcase %}yes{% else %}no{% endif %}",
+      "data": {},
+      "tags": [
+        "strict"
+      ],
+      "invalid": true
+    },
+    {
+      "name": "lax filtered condition",
+      "template": "{% if nil | upcase %}yes{% else %}no{% endif %}",
+      "data": {},
+      "tags": [],
+      "result": "no"
+    },
+    {
+      "name": "empty tag absent",
+      "template": "{% for x in items %}yes{% empty %}empty{% endfor %}",
+      "data": {
+        "items": []
+      },
+      "tags": [
+        "strict"
+      ],
+      "invalid": true
+    },
+    {
+      "name": "ISO timestamp",
+      "template": "{{ value | date: '%F %T %z %Z' }}",
+      "data": {
+        "value": "2020-05-18T12:34:56Z"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2020-05-18 12:34:56 +0000 UTC"
+    },
+    {
+      "name": "offset timestamp",
+      "template": "{{ value | date: '%F %T %z %Z' }}",
+      "data": {
+        "value": "2020-05-18T12:34:56+02:00"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "2020-05-18 12:34:56 +0200 "
+    },
+    {
+      "name": "numeric string prefix",
+      "template": "{{ value | plus: 1 }}",
+      "data": {
+        "value": "12foo"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "13"
+    },
+    {
+      "name": "numeric string decimal prefix",
+      "template": "{{ value | plus: 1 }}",
+      "data": {
+        "value": "12.5foo"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "13"
+    },
+    {
+      "name": "numeric string exponent",
+      "template": "{{ value | plus: 1 }}",
+      "data": {
+        "value": "2e3"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "3"
+    }
+  ]
+}

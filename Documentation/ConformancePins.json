@@ -1,0 +1,32 @@
+{
+  "goldenLiquid": {
+    "repository": "https://github.com/jg-rp/golden-liquid",
+    "commit": "65c2f76ea64ef20647c295b000df5fcd9fc471cd",
+    "path": "Tests/LiquidTests/Fixtures/golden_liquid.json",
+    "sha256": "1a0e763de83d8243915bfb54a40e3b24c47b50b3ff29e94f8cf1110a17a86d1e",
+    "cases": 1098,
+    "license": "MIT"
+  },
+  "shopifyLiquid": {
+    "repository": "https://github.com/Shopify/liquid",
+    "commit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+    "version": "5.14.0",
+    "settings": {
+      "timezone": "UTC",
+      "lineNumbers": true,
+      "syntaxMode": "per-fixture"
+    }
+  },
+  "authoredProbes": {
+    "path": "Tests/LiquidTests/Fixtures/compatibility_probes.json",
+    "cases": 63,
+    "sha256": "47cdf7b1be6410fe8ac9bb40bb447ed3aa4fbdfd831ad392321c784e07f6ec6e",
+    "referenceCommit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+    "license": "Apache-2.0",
+    "settings": {
+      "timezone": "UTC",
+      "lineNumbers": true,
+      "syntaxMode": "per-fixture"
+    }
+  }
+}

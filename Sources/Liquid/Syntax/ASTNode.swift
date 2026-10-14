@@ -1,0 +1,180 @@
+// SPDX-License-Identifier: Apache-2.0
+// Adapted from RhoeLiquid; Copyright 2024-2026 Thor Fuchs.
+// Modified for Swift-Liquid: standard syntax only; authoring and legacy nodes removed.
+
+internal indirect enum ASTNode: Sendable {
+    case template([ASTNode])
+    case text(InlineString)
+    case output(LiquidExpression)
+    case `if`(condition: LiquidExpression, then: [ASTNode], elsif: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
+    case unless(condition: LiquidExpression, then: [ASTNode], else: [ASTNode]?)
+    case `case`(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
+    case `for`(variable: InlineString, in: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams)
+    case tablerow(variable: InlineString, in: LiquidExpression, body: [ASTNode], params: TableRowParams)
+    case cycle(group: LiquidExpression?, items: [LiquidExpression])
+    case assign(variable: InlineString, value: LiquidExpression)
+    case capture(variable: InlineString, body: [ASTNode])
+    case increment(name: InlineString)
+    case decrement(name: InlineString)
+    case include(template: InlineString, with: [String: LiquidExpression]?, as: InlineString?)
+    case comment
+    case raw(InlineString)
+    case liquid(body: [ASTNode])
+    case echo(expression: LiquidExpression)
+    case `break`
+    case `continue`
+    case ifchanged([ASTNode])
+
+    var children: [ASTNode] {
+        switch self {
+        case .template(let nodes), .liquid(let nodes), .ifchanged(let nodes): return nodes
+        case .if(_, let body, let branches, let fallback): return body + branches.flatMap { $0.1 } + (fallback ?? [])
+        case .unless(_, let body, let fallback): return body + (fallback ?? [])
+        case .case(_, let branches, let fallback): return branches.flatMap { $0.1 } + (fallback ?? [])
+        case .for(_, _, let body, let fallback, _): return body + (fallback ?? [])
+        case .tablerow(_, _, let body, _), .capture(_, let body): return body
+        default: return []
+        }
+    }
+
+    var expressions: [LiquidExpression] {
+        switch self {
+        case .output(let value), .echo(let value), .assign(_, let value): return [value]
+        case .if(let condition, _, let branches, _): return [condition] + branches.map { $0.0 }
+        case .unless(let condition, _, _): return [condition]
+        case .case(let value, let branches, _): return [value] + branches.map { $0.0 }
+        case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
+        case .tablerow(_, let value, _, _): return [value]
+        case .cycle(let group, let values): return values + (group.map { [$0] } ?? [])
+        case .include(_, let values, _): return values.map { Array($0.values) } ?? []
+        default: return []
+        }
+    }
+}
+
+internal struct ForParams: Sendable, Equatable {
+    internal let limit: Int?
+
+    internal let offset: Int?
+
+    internal let offsetContinue: Bool
+
+    internal let reversed: Bool
+
+    internal let condition: LiquidExpression?
+
+    internal let recursive: Bool
+
+    internal let limitExpression: LiquidExpression?
+
+    internal let offsetExpression: LiquidExpression?
+
+    internal let staticBodySegment: InlineString?
+
+    internal let renderPlan: LoopBodyRenderPlan?
+
+    internal init(
+        limit: Int? = nil,
+        offset: Int? = nil,
+        offsetContinue: Bool = false,
+        reversed: Bool = false,
+        condition: LiquidExpression? = nil,
+        recursive: Bool = false,
+        limitExpression: LiquidExpression? = nil,
+        offsetExpression: LiquidExpression? = nil
+    ) {
+        self.limit = limit
+        self.offset = offset
+        self.offsetContinue = offsetContinue
+        self.reversed = reversed
+        self.condition = condition
+        self.recursive = recursive
+        self.limitExpression = limitExpression
+        self.offsetExpression = offsetExpression
+        self.staticBodySegment = nil
+        self.renderPlan = nil
+    }
+
+    internal init(
+        limit: Int? = nil,
+        offset: Int? = nil,
+        offsetContinue: Bool = false,
+        reversed: Bool = false,
+        condition: LiquidExpression? = nil,
+        recursive: Bool = false,
+        limitExpression: LiquidExpression? = nil,
+        offsetExpression: LiquidExpression? = nil,
+        staticBodySegment: InlineString? = nil,
+        renderPlan: LoopBodyRenderPlan? = nil
+    ) {
+        self.limit = limit
+        self.offset = offset
+        self.offsetContinue = offsetContinue
+        self.reversed = reversed
+        self.condition = condition
+        self.recursive = recursive
+        self.limitExpression = limitExpression
+        self.offsetExpression = offsetExpression
+        self.staticBodySegment = staticBodySegment
+        self.renderPlan = renderPlan
+    }
+}
+
+internal struct TableRowParams: Sendable, Equatable {
+    internal let cols: Int?
+    
+    internal let limit: Int?
+    
+    internal let offset: Int?
+
+    internal let staticBodySegment: InlineString?
+
+    internal let renderPlan: LoopBodyRenderPlan?
+
+    internal init(cols: Int? = nil, limit: Int? = nil, offset: Int? = nil) {
+        self.cols = cols
+        self.limit = limit
+        self.offset = offset
+        self.staticBodySegment = nil
+        self.renderPlan = nil
+    }
+
+    internal init(
+        cols: Int? = nil,
+        limit: Int? = nil,
+        offset: Int? = nil,
+        staticBodySegment: InlineString? = nil,
+        renderPlan: LoopBodyRenderPlan? = nil
+    ) {
+        self.cols = cols
+        self.limit = limit
+        self.offset = offset
+        self.staticBodySegment = staticBodySegment
+        self.renderPlan = renderPlan
+    }
+}
+
+internal enum LoopBodyRenderPlan: Sendable, Equatable {
+    case single(
+        prefix: InlineString,
+        expression: LiquidExpression,
+        suffix: InlineString
+    )
+    case double(
+        prefix: InlineString,
+        first: LiquidExpression,
+        middle: InlineString,
+        second: LiquidExpression,
+        suffix: InlineString
+    )
+
+    internal var staticUTF8Count: Int {
+        switch self {
+        case .single(let prefix, _, let suffix):
+            return prefix.utf8Count + suffix.utf8Count
+        case .double(let prefix, _, let middle, _, let suffix):
+            return prefix.utf8Count + middle.utf8Count + suffix.utf8Count
+        }
+    }
+}
+

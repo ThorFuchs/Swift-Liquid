@@ -1,0 +1,17 @@
+# Documentation
+
+Start with the [README](../README.md) and the [public consumer](../Examples/Consumer).
+The [DocC catalog](../Sources/Liquid/Documentation.docc) contains API reference and
+guides that are compiled from the public Swift symbol graph.
+
+| Guide | Purpose |
+| --- | --- |
+| [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
+| [CLI](CLI.md) | Rendering files and JSON input, validation, options, and exit behavior |
+| [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
+| [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
+| [Performance](Performance.md) | Repeatable release-mode measurements |
+| [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
+
+Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go
+under Artifacts and remain outside source control.

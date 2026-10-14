@@ -1,0 +1,11 @@
+Swift-Liquid
+Copyright 2026 Thor Fuchs
+
+This product contains source adapted from RhoeLiquid:
+Copyright 2024-2026 Thor Fuchs
+Developed for the RhoePlatform foundation line and distributed under Apache-2.0.
+The upstream LICENSE and NOTICE are retained in Licenses/RhoeLiquid.
+
+Golden Liquid test data:
+Copyright (c) 2021-2025 James Prior; MIT License.
+The complete license accompanies the data in Tests/LiquidTests/Fixtures/LICENSE.

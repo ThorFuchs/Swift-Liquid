@@ -1,0 +1,123 @@
+{
+  "repository": "https://github.com/RhoePlatform/RhoeLiquid",
+  "commit": "9e52492671bc31741932811fe689a86fed76be69",
+  "files": [
+    {
+      "source": "Sources/LiquidCore/AST/Expression.swift",
+      "destination": "Sources/Liquid/Syntax/Expression.swift",
+      "upstreamSHA256": "246f296c72911bf94266fc86405b1cec233d56ada3ad5f04deb511e0d9af70c4"
+    },
+    {
+      "source": "Sources/LiquidCore/AST/ASTNode.swift",
+      "destination": "Sources/Liquid/Syntax/ASTNode.swift",
+      "upstreamSHA256": "c79e3aa6e8b59545b6b7556abf6ae2713f70bbe0374e44dc46e075cce59888cd"
+    },
+    {
+      "source": "Sources/LiquidCore/Token/TokenType.swift",
+      "destination": "Sources/Liquid/Syntax/TokenType.swift",
+      "upstreamSHA256": "66260ea4e95e6a857706ce1a83029fd6787876806f79af98f2106b1d19dd218d"
+    },
+    {
+      "source": "Sources/LiquidCore/Token/Token.swift",
+      "destination": "Sources/Liquid/Syntax/Token.swift",
+      "upstreamSHA256": "fa6a2b3dd1b582d9c1bb1acd2737a613cc746172a432d9467036999c14da85f5"
+    },
+    {
+      "source": "Sources/LiquidLexer/Lexer.swift",
+      "destination": "Sources/Liquid/Syntax/Lexer.swift",
+      "upstreamSHA256": "7449d2a85e0726c9b034778a7a71785137220958cf2fb8629578a44fad55043c"
+    },
+    {
+      "source": "Sources/LiquidParser/Parser.swift",
+      "destination": "Sources/Liquid/Syntax/Parser.swift",
+      "upstreamSHA256": "75e7ed3b1fd1b43568d2e9bb7f4b44508f552287a4dd6dd1663a8bca7cf25a2b"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+Utilities.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+      "upstreamSHA256": "ead35e111b57f2bbb226e58bf4545de61771a83ca196c56cc49ba121fccec597"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+FilterHelpers.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+      "upstreamSHA256": "f5dc5c5f05f222732223512527cceef307de0fe238760d9c9fdee73ead68e763"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+NodeRendering.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+      "upstreamSHA256": "22d24aa4e434fb889c98a1fb577e8e6bc794961e0e67dd1bcca43eb0737c24d9"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+ControlFlow.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+      "upstreamSHA256": "0e7e4d46426da34323006062777af91ef1d9e9ff0da7eb9f45c7a8a8757c0dd7"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+Expressions.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+      "upstreamSHA256": "0aef41fdb482abd721c4b0af7495583a29ef52072831d74d7161da1b2f691fe3"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer+Filters.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer+Filters.swift",
+      "upstreamSHA256": "d9e053142512c8036409c430c1416d4670ad42693a7e39b9d6bc7b9ae48472a3"
+    },
+    {
+      "source": "Sources/LiquidRenderer/Renderer.swift",
+      "destination": "Sources/Liquid/Rendering/Renderer.swift",
+      "upstreamSHA256": "e230081be47d9fce737ef049bf9a4db6d277367c6e1c65f09b47deb0692fc85a"
+    },
+    {
+      "source": "Sources/LiquidCore/Errors/RenderError.swift",
+      "destination": "Sources/Liquid/Support/RenderError.swift",
+      "upstreamSHA256": "720138e01f0ee70473d7700c916f82dc3cfefc3c520f0d068b7fb9d3dc87adc4"
+    },
+    {
+      "source": "Sources/LiquidCore/Errors/LiquidError.swift",
+      "destination": "Sources/Liquid/Support/RuntimeError.swift",
+      "upstreamSHA256": "c2ca83841a4b9ca3c85fca18eb3c310f7284913cae2192f50296891b193a6494"
+    },
+    {
+      "source": "Sources/LiquidCore/Errors/LexerError.swift",
+      "destination": "Sources/Liquid/Support/LexerError.swift",
+      "upstreamSHA256": "53a436f9b370454b5faf5a29941493d446a926d8751d2927b3f590150804e844"
+    },
+    {
+      "source": "Sources/LiquidCore/Errors/ParserError.swift",
+      "destination": "Sources/Liquid/Support/ParserError.swift",
+      "upstreamSHA256": "efc41c08a03847bbd7e1020bd536a634480cff0153eee191aa35c0aac52a7f24"
+    },
+    {
+      "source": "Sources/LiquidCore/Errors/SourceLocation.swift",
+      "destination": "Sources/Liquid/Support/SourceLocation.swift",
+      "upstreamSHA256": "93cea823e71d24d80c27df20d3dfc8fdb0825979b692ce33c3e2e61538933858"
+    },
+    {
+      "source": "Sources/LiquidUtilities/StringUtils.swift",
+      "destination": "Sources/Liquid/Support/StringUtils.swift",
+      "upstreamSHA256": "5a7b632e95dccac6b30baf7d71549607e07fa8d718833b3a0ef4da9e868e6d07"
+    },
+    {
+      "source": "Sources/LiquidUtilities/HTMLEscape.swift",
+      "destination": "Sources/Liquid/Support/HTMLEscape.swift",
+      "upstreamSHA256": "1f33f476a0e0860934b78565871e9aaaaa36624a45bf996a92a6653363439c47"
+    }
+  ],
+  "removedAfterExtraction": [
+    {
+      "source": "Sources/LiquidParser/CustomTagDescriptor.swift",
+      "destination": "Sources/Liquid/Syntax/CustomTagDescriptor.swift",
+      "upstreamSHA256": "fe904eb99f8b404290315f7ae68a0abba183c60d706ca10adc06ab2423973c2f"
+    },
+    {
+      "source": "Sources/LiquidCore/DataSource/DataValue.swift",
+      "destination": "Sources/Liquid/Support/DataValue.swift",
+      "upstreamSHA256": "a6da027777a8bcd3b44ebfa64dffe83ac80af9e411a3fd20d000343bdc322857"
+    },
+    {
+      "source": "Sources/LiquidCore/Performance/CompiledTemplate.swift",
+      "destination": "Sources/Liquid/Support/CompiledTemplate.swift",
+      "upstreamSHA256": "808a3ecf01b1b76c693b129091dc1ba317048e6aaf9c48b5958e75db50831174"
+    }
+  ]
+}

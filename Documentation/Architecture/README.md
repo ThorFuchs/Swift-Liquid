@@ -1,0 +1,35 @@
+# Architecture
+
+The public package contains one `Liquid` library and one `liquid` executable.
+There are no third-party package dependencies. The adaptation starts from
+RhoeLiquid commit `9e52492671bc31741932811fe689a86fed76be69`; the extraction
+manifest records source paths and original file hashes.
+
+The public boundary is deliberately small: `LiquidValue`, ordered `LiquidObject`,
+`LiquidTemplate`, `LiquidEngine`, syntax modes, finite limits, and public errors.
+Values, engines, and templates use checked Sendable conformance. The adapted
+lexer, parser, AST, evaluator, and utility types are internal implementation details.
+
+Each render creates its own renderer and budget. No actor serializes unrelated
+render operations; no mutable cache or registry is shared between callers.
+The private evaluator currently bridges admitted values to `Any` within one
+invocation. This is an implementation boundary, not a public Sendable escape.
+Foundation is used for text utilities, dates, and JSON string decoding. It does
+not execute template code or provide implicit template loading.
+
+Parsed partials are immutable and supplied in a source map. The renderer resolves
+exact names and an optional `.liquid` suffix. `render` isolates local scope and
+`include` shares Liquid state. All nested operations share one rendering budget.
+
+Native String storage replaces upstream's unsafe inline byte representation.
+Global registries, memory-pressure observers, optimized shared renderer caches,
+data adapters, services, and document products are excluded from the public package.
+The standard AST excludes macro, contract, inheritance, pipeline, and custom-tag
+nodes. Variable and property keys preserve decoded Unicode scalar spelling.
+String operations use Liquid code-point semantics rather than Swift grapheme counts.
+
+Limits admit source and context before parsing/evaluation, check active nesting,
+charge evaluation and loop work, and reject oversized rendered outputs. They are
+logical operation capacities. Synchronous standard-library/Foundation helpers and
+temporary intermediate allocation are not a hard heap/RSS or instruction quota.
+Cancellation is checked at operation entry and execution boundaries.

@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: Apache-2.0
+import Foundation
+
+/// Renders standard Shopify Liquid using state owned by each invocation.
+public struct LiquidEngine: Sendable {
+    /// Finite operation capacities used by this engine.
+    public let limits: LiquidLimits
+    /// Whether unknown filters throw rather than leave the input unchanged.
+    public let strictFilters: Bool
+    /// Creates a Liquid engine.
+    public init(limits: LiquidLimits = .default, strictFilters: Bool = false) {
+        self.limits = limits; self.strictFilters = strictFilters
+    }
+
+    /// Parses and renders a template with explicit variables and partial sources.
+    /// - Parameters:
+    ///   - template: Standard Liquid source.
+    ///   - context: Values available to the template.
+    ///   - templates: Partial sources addressed by `include` and `render`.
+    ///   - syntaxMode: Shopify parsing mode applied to the root and all partials.
+    /// - Returns: The complete rendered output.
+    /// - Throws: Syntax, runtime, or cancellation errors.
+    public func render(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> String {
+        try checkSources(template, partials: Array(templates.values))
+        return try await render(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits), context: context,
+                                templates: templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) })
+    }
+
+    /// Renders a parsed template without repeating its parsing work.
+    /// - Parameters:
+    ///   - template: An immutable parsed template.
+    ///   - context: Values available to this invocation.
+    ///   - templates: Parsed partials addressed by `include` and `render`.
+    /// - Returns: The complete rendered output.
+    /// - Throws: Runtime or cancellation errors.
+    public func render(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> String {
+        try Task.checkCancellation()
+        try limits.validate()
+        try checkSources(template.source, partials: templates.values.map(\.source))
+        try admit(context)
+        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits)
+        renderer.setTemplateLoader(TemplateLoader(templates: templates.mapValues(\.ast)))
+        let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
+        do {
+            let output = try await renderer.render(template.ast, with: values)
+            try renderer.budget.output(output)
+            return output
+        } catch { throw publicError(error) }
+    }
+
+    private func checkSources(_ root: String, partials: [String]) throws {
+        try limits.validate()
+        var remaining = limits.sourceBytes
+        for source in [root] + partials {
+            let count = source.utf8.count
+            guard count <= remaining else { throw LiquidError.limitExceeded("sourceBytes") }
+            remaining -= count
+        }
+    }
+
+    private func admit(_ object: LiquidObject) throws {
+        var stack = object.entries.map { ($0.value, 1) }
+        var remaining = limits.contextValues
+        while let (value, depth) = stack.popLast() {
+            try Task.checkCancellation()
+            guard remaining > 0 else { throw LiquidError.limitExceeded("contextValues") }
+            guard depth <= limits.nestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+            remaining -= 1
+            switch value {
+            case .number(let number):
+                guard number.isFinite else { throw LiquidError.invalidValue("Numbers must be finite") }
+            case .array(let values): stack.append(contentsOf: values.map { ($0, depth + 1) })
+            case .object(let object): stack.append(contentsOf: object.entries.map { ($0.value, depth + 1) })
+            default: break
+            }
+        }
+    }
+}
