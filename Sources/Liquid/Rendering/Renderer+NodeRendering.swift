@@ -439,7 +439,7 @@ extension Renderer {
                 for argument in filter.arguments where expressionReferencesVariable(argument, named: variableName) {
                     return true
                 }
-                for argument in filter.namedArguments.values where expressionReferencesVariable(argument, named: variableName) {
+                for argument in filter.namedArguments where expressionReferencesVariable(argument.value, named: variableName) {
                     return true
                 }
             }

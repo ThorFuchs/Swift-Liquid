@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Adopt the focused 1.1 roadmap and begin typed, engine-scoped custom filters.
+- Add immutable Sendable callbacks with positional and ordered named values,
+  protected standard names, explicit recoverable failures and cumulative admission.
+- Preserve the 1.0 engine initializer, default rendering and pinned core fixtures.
+- Add separate host-extension reference cases, public consumers and cancellation,
+  admission and concurrent configuration regressions.
+
 ## 1.0.0 — 2026-10-14
 
 The first stable release of Swift-Liquid: Shopify Liquid templates in modern

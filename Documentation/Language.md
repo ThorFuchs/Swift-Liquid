@@ -28,6 +28,11 @@ Unknown filters leave their input unchanged by default, as in open-source Liquid
 treated as unknown filters. Unknown tags are syntax errors. `LiquidSyntaxMode`
 selects lax, strict, or strict2 parsing; the fixture runner preserves these modes.
 
+The unreleased 1.1 [custom-filter API](CustomFilters.md) lets a host explicitly
+provide additional names for one engine. Empty configuration preserves the 1.0
+surface. Standard names and aliases cannot be overridden, and template parsing
+does not retain host callbacks or gain a second dialect.
+
 The supported numeric domain is Swift `Int` plus finite binary `Double`, rather
 than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.

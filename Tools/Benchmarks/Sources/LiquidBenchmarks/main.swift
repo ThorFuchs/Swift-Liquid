@@ -8,6 +8,12 @@ private struct Workload {
     let context: LiquidObject
     let partials: [String: String]
     let expected: String
+    let filters: [LiquidFilter]
+    init(name: String, source: String, context: LiquidObject, partials: [String: String], expected: String,
+         filters: [LiquidFilter] = []) {
+        self.name = name; self.source = source; self.context = context
+        self.partials = partials; self.expected = expected; self.filters = filters
+    }
 }
 
 @main
@@ -21,7 +27,14 @@ struct Benchmarks {
             Workload(name: "filter-chain", source: "{{ title | strip | upcase | escape }}", context: ["title": " <Swift> "], partials: [:], expected: "&lt;SWIFT&gt;"),
             Workload(name: "loop", source: "{% for item in items %}{{ forloop.index }}:{{ item.title }};{% endfor %}", context: ["items": [["title": "A"], ["title": "B"], ["title": "C"]]], partials: [:], expected: "1:A;2:B;3:C;"),
             Workload(name: "partial", source: "{% render 'card', title: title %}", context: ["title": "Swift"], partials: ["card": "<h2>{{ title | escape }}</h2>"], expected: "<h2>Swift</h2>"),
-            Workload(name: "date", source: "{{ stamp | date: '%F %T %:z %N' }}", context: ["stamp": "2024-02-03T04:05:06.123456789+05:30"], partials: [:], expected: "2024-02-03 04:05:06 +05:30 123456789")
+            Workload(name: "date", source: "{{ stamp | date: '%F %T %:z %N' }}", context: ["stamp": "2024-02-03T04:05:06.123456789+05:30"], partials: [:], expected: "2024-02-03 04:05:06 +05:30 123456789"),
+            Workload(name: "custom-filter", source: "{{ title | strip | host_label: '<', suffix: '>' | escape }}",
+                context: ["title": " Swift "], partials: [:], expected: "&lt;Swift&gt;",
+                filters: [LiquidFilter("host_label") { value, arguments, named in
+                    guard case .string(let text) = value, case .string(let prefix) = arguments.first,
+                          case .string(let suffix) = named["suffix"] else { throw BenchmarkFailure("Invalid custom-filter arguments") }
+                    return .string(prefix + text + suffix)
+                }])
         ]
         let engine = LiquidEngine()
         let clock = ContinuousClock()
@@ -29,6 +42,9 @@ struct Benchmarks {
         let repetitions = 100
         var records: [[String: Any]] = []
         for workload in workloads {
+            let activeEngine: LiquidEngine
+            if workload.filters.isEmpty { activeEngine = engine }
+            else { activeEngine = try LiquidEngine(filters: workload.filters) }
             let parsed = try LiquidTemplate(workload.source)
             let partials = try workload.partials.mapValues { try LiquidTemplate($0) }
             for reuse in [false, true] {
@@ -38,8 +54,8 @@ struct Benchmarks {
                     let start = clock.now
                     for _ in 0..<repetitions {
                         let output: String
-                        if reuse { output = try await engine.render(parsed, context: workload.context, templates: partials) }
-                        else { output = try await engine.render(template: workload.source, context: workload.context, templates: workload.partials) }
+                        if reuse { output = try await activeEngine.render(parsed, context: workload.context, templates: partials) }
+                        else { output = try await activeEngine.render(template: workload.source, context: workload.context, templates: workload.partials) }
                         guard output == workload.expected else { throw BenchmarkFailure("Output mismatch for \(workload.name)") }
                         for byte in output.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
                     }

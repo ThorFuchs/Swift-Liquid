@@ -12,7 +12,7 @@ public struct LiquidLimits: Sendable, Equatable {
     public var nestingDepth: Int
     /// Cumulative evaluator steps, independent of wall-clock time.
     public var renderSteps: Int
-    /// Maximum number of values admitted from the context.
+    /// Cumulative values admitted from context and across custom-filter boundaries.
     public var contextValues: Int
     /// Creates a finite limit profile. Nonpositive values are rejected at operation entry.
     public init(sourceBytes: Int = 1_048_576, outputBytes: Int = 8_388_608,
@@ -36,14 +36,22 @@ internal final class RuntimeBudget {
     let limits: LiquidLimits
     var remainingSteps: Int
     var remainingIterations: Int
+    var remainingValues: Int
     var activeDepth = 0
     init(_ limits: LiquidLimits) {
         self.limits = limits; remainingSteps = limits.renderSteps; remainingIterations = limits.loopIterations
+        remainingValues = limits.contextValues
     }
     func step() throws {
         try Task.checkCancellation()
         guard remainingSteps > 0 else { throw LiquidError.limitExceeded("renderSteps") }
         remainingSteps -= 1
+    }
+    func filterValue(depth: Int) throws {
+        try step()
+        guard depth <= limits.nestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+        guard remainingValues > 0 else { throw LiquidError.limitExceeded("contextValues") }
+        remainingValues -= 1
     }
     func enter() throws {
         try step()

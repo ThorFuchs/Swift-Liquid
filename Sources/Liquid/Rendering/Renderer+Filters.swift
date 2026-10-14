@@ -27,6 +27,9 @@ extension Renderer {
     internal func applyFilterCore(_ filter: Filter, to input: Any) async throws -> Any {
         try budget.step()
         guard standardFilterNames.contains(filter.name.string) else {
+            if let custom = customFilters[ScalarKey(filter.name.string)] {
+                return try await applyCustomFilter(custom, syntax: filter, input: input)
+            }
             if configuration.strictMode { throw RenderError.undefinedFilter(filter.name.string) }
             return input
         }
@@ -40,7 +43,7 @@ extension Renderer {
         // Handle default filter with allow_false named argument
         if filter.name.equals("default"), !filter.namedArguments.isEmpty {
             let defaultValue = filter.arguments.isEmpty ? "" : try await evaluateFilterArgumentFast(filter.arguments[0])
-            if let allowFalseExpr = filter.namedArguments["allow_false"] {
+            if let allowFalseExpr = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
                 let allowFalse = try await evaluateExpression(allowFalseExpr)
                 if allowFalse as? Bool == true {
                     // With allow_false: only use default for nil/empty, NOT for false
@@ -965,14 +968,6 @@ extension Renderer {
                     return !isTruthy(val)
                 }
             }
-        }
-
-        if let customFilter = customFilters[filterName.string] {
-            return try await customFilter.apply(
-                to: value,
-                arguments: args,
-                namedArguments: [:]
-            )
         }
 
         if filterName.equals("squish") {

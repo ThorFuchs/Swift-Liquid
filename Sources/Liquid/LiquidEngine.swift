@@ -10,9 +10,24 @@ public struct LiquidEngine: Sendable {
     /// Optional base clock for `now`, `today`, and dates with missing components.
     /// A nil value captures the current time at the start of each invocation.
     public let referenceTime: Date?
+    private let filters: [ScalarKey: LiquidFilter]
     /// Creates a Liquid engine.
     public init(limits: LiquidLimits = .default, strictFilters: Bool = false, referenceTime: Date? = nil) {
         self.limits = limits; self.strictFilters = strictFilters; self.referenceTime = referenceTime
+        self.filters = [:]
+    }
+
+    /// Creates an engine with immutable, explicitly scoped application filters.
+    /// - Parameters:
+    ///   - filters: Filters available to this engine and all its supplied partials.
+    ///   - limits: Capacities shared by each invocation's evaluation and filter boundaries.
+    ///   - strictFilters: Whether unregistered filters fail during rendering.
+    ///   - referenceTime: An optional deterministic base clock.
+    /// - Throws: `LiquidError.invalidValue` for invalid, duplicate, or protected names.
+    public init(filters: [LiquidFilter], limits: LiquidLimits = .default,
+                strictFilters: Bool = false, referenceTime: Date? = nil) throws {
+        self.limits = limits; self.strictFilters = strictFilters; self.referenceTime = referenceTime
+        self.filters = try LiquidFilter.validated(filters)
     }
 
     /// Parses and renders a template with explicit variables and partial sources.
@@ -57,8 +72,9 @@ public struct LiquidEngine: Sendable {
         try Task.checkCancellation()
         try limits.validate()
         try checkSources(template.source, partials: templates.values.map(\.source))
-        try admit(context)
-        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits, recoveryEnabled: recovering, referenceTime: referenceTime ?? Date())
+        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
+            recoveryEnabled: recovering, referenceTime: referenceTime ?? Date(), filters: filters)
+        try admit(context, budget: renderer.budget)
         renderer.setTemplateLoader(TemplateLoader(templates: templates.mapValues(\.ast)))
         let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
         do {
@@ -78,14 +94,13 @@ public struct LiquidEngine: Sendable {
         }
     }
 
-    private func admit(_ object: LiquidObject) throws {
+    private func admit(_ object: LiquidObject, budget: RuntimeBudget) throws {
         var stack = object.entries.map { ($0.value, 1) }
-        var remaining = limits.contextValues
         while let (value, depth) = stack.popLast() {
             try Task.checkCancellation()
-            guard remaining > 0 else { throw LiquidError.limitExceeded("contextValues") }
+            guard budget.remainingValues > 0 else { throw LiquidError.limitExceeded("contextValues") }
             guard depth <= limits.nestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
-            remaining -= 1
+            budget.remainingValues -= 1
             switch value {
             case .number(let number):
                 guard number.isFinite else { throw LiquidError.invalidValue("Numbers must be finite") }

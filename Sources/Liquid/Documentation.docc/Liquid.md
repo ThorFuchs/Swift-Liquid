@@ -32,6 +32,12 @@ or `escape_once` when inserting text into HTML.
 - ``LiquidRenderResult``
 - ``LiquidDiagnostic``
 
+### Application filters
+
+- <doc:CustomFilters>
+- ``LiquidFilter``
+- ``LiquidFilterFailure``
+
 ### Input values
 
 - ``LiquidValue``

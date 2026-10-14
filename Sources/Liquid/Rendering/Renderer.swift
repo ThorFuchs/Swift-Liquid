@@ -75,7 +75,7 @@ internal final class Renderer {
 
     internal let autoEscapeEnabled: Bool
 
-    internal var customFilters: [String: any CustomFilter]
+    internal let customFilters: [ScalarKey: LiquidFilter]
 
 
     internal var templateLoader: TemplateLoader?
@@ -94,25 +94,20 @@ internal final class Renderer {
 
     // MARK: - Initialization
     
-    internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default, recoveryEnabled: Bool = false, referenceTime: Date = Date()) {
+    internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default,
+                  recoveryEnabled: Bool = false, referenceTime: Date = Date(), filters: [ScalarKey: LiquidFilter] = [:]) {
         self.referenceTime = referenceTime
         self.recoveryEnabled = recoveryEnabled
         self.budget = RuntimeBudget(limits)
         self.context = RenderingContext()
         self.configuration = configuration
         self.autoEscapeEnabled = configuration.autoEscape
-        self.customFilters = [:]
+        self.customFilters = filters
         self.templateLoader = nil
         self.rootTemplatePath = nil
         self.templatePathStack = []
         // Set up debug context in RenderingContext
     }
-
-    internal func setCustomFilters(_ filters: [String: any CustomFilter]) {
-        self.customFilters = filters
-    }
-
-
 
     internal func setTemplateLoader(_ loader: TemplateLoader?, rootTemplatePath: String? = nil) {
         self.templateLoader = loader

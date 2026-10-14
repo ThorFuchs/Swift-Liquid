@@ -1,0 +1,110 @@
+{
+  "scope": "Host-defined filters; not additional Shopify core conformance cases",
+  "license": "Apache-2.0",
+  "tests": [
+    {
+      "name": "identity retains large integers",
+      "template": "{{ value | host_echo }}",
+      "data": {
+        "value": 9007199254740993
+      },
+      "result": "9007199254740993"
+    },
+    {
+      "name": "floating point remains distinct",
+      "template": "{{ 1.0 | host_kind }}",
+      "result": "number"
+    },
+    {
+      "name": "false remains a boolean",
+      "template": "{{ false | host_kind }}",
+      "result": "bool"
+    },
+    {
+      "name": "nil and missing remain null",
+      "template": "{{ nil | host_kind }}|{{ missing | host_kind }}",
+      "result": "null|null"
+    },
+    {
+      "name": "arrays return to standard filters",
+      "template": "{{ items | host_echo | join: ',' }}",
+      "data": {
+        "items": [
+          1,
+          2,
+          3
+        ]
+      },
+      "result": "1,2,3"
+    },
+    {
+      "name": "objects preserve insertion order",
+      "template": "{% assign copy = item | host_echo %}{% for pair in copy %}{{ pair[0] }}={{ pair[1] }};{% endfor %}",
+      "data": {
+        "item": {
+          "b": 2,
+          "a": 1
+        }
+      },
+      "result": "b=2;a=1;"
+    },
+    {
+      "name": "positional and named arguments mix",
+      "template": "{{ 'X' | host_pack: 'p0', z: '3', 'p1', a: '2' }}",
+      "result": "X|p0|p1|z=3|a=2",
+      "syntaxMode": "strict2"
+    },
+    {
+      "name": "named arguments may appear first",
+      "template": "{{ 'X' | host_pack: z: '3', 'p0', a: '2', 'p1' }}",
+      "result": "X|p0|p1|z=3|a=2",
+      "syntaxMode": "strict"
+    },
+    {
+      "name": "duplicate named arguments replace in place",
+      "template": "{{ 'X' | host_pack: z: 'old', a: '2', z: 'new' }}",
+      "result": "X|z=new|a=2"
+    },
+    {
+      "name": "arguments evaluate lookup values",
+      "template": "{{ value | host_pack: item.title, missing, label: item.name }}",
+      "data": {
+        "value": "X",
+        "item": {
+          "title": "T",
+          "name": "N"
+        }
+      },
+      "result": "X|T||label=N"
+    },
+    {
+      "name": "custom and standard filter chains compose",
+      "template": "{{ ' <Swift> ' | strip | host_echo | escape | host_echo }}",
+      "result": "&lt;Swift&gt;"
+    },
+    {
+      "name": "filters are available in partials",
+      "template": "{% assign value = 'outer' %}{% render 'card', value: 'inner' %}|{% include 'card' %}",
+      "templates": {
+        "card": "{{ value | host_echo }}"
+      },
+      "result": "inner|outer"
+    },
+    {
+      "name": "callback objects retain order",
+      "template": "{% assign value = '' | host_object %}{% for pair in value %}{{ pair[0] }}={{ pair[1] }};{% endfor %}",
+      "result": "b=2;a=1;"
+    },
+    {
+      "name": "ranges are admitted as arrays",
+      "template": "{{ (1..3) | host_echo | join: ',' }}",
+      "result": "1,2,3"
+    },
+    {
+      "name": "multiline liquid uses the same filter scope",
+      "template": "{% liquid\n assign value = ' hi ' | host_echo | strip\n echo value | host_echo\n %}",
+      "result": "hi",
+      "syntaxMode": "strict2"
+    }
+  ]
+}

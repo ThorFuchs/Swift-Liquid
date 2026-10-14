@@ -2,7 +2,7 @@
 
 // Liquid string keys preserve scalar spelling; Swift's canonically equivalent
 // String equality must not merge distinct Liquid properties.
-internal struct ScalarKey: Hashable {
+internal struct ScalarKey: Hashable, Sendable {
     let string: String
     init(_ string: String) { self.string = string }
     static func == (lhs: Self, rhs: Self) -> Bool { lhs.string.utf8.elementsEqual(rhs.string.utf8) }

@@ -18,7 +18,8 @@ assert hashlib.sha256(probes.read_bytes()).hexdigest() == probe_pin['sha256'], '
 probe_cases = json.loads(probes.read_text())['tests']
 assert len(probe_cases) == probe_pin['cases'] == 221, 'Probe count changed'
 assert len({case['name'] for case in probe_cases}) == len(probe_cases), 'Duplicate probe names'
-for pin, count in [(pins['recoveredErrors'], 1), (pins['rubyDate']['grammarCases'], 337), (pins['dateFilters'], 376)]:
+for pin, count in [(pins['recoveredErrors'], 1), (pins['rubyDate']['grammarCases'], 337), (pins['dateFilters'], 376),
+                   (pins['customFilters'], 15)]:
     path = ROOT / pin['path']
     assert hashlib.sha256(path.read_bytes()).hexdigest() == pin['sha256'], f"Pinned data changed: {path}"
     records = json.loads(path.read_text())['tests']

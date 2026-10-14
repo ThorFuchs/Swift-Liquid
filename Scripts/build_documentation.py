@@ -46,4 +46,5 @@ run(tool + ['convert', str(ROOT / 'Sources/Liquid/Documentation.docc'),
 with tarfile.open(output / 'Liquid.doccarchive.tar.gz', 'w:gz') as package:
     package.add(archive, arcname='Liquid.doccarchive')
 run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
+run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
 print(f'DocC compiled with {len(symbols)} public symbols: {archive}')

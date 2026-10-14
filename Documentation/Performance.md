@@ -11,6 +11,12 @@ checks expected output, and reports median, p95, minimum, maximum, and a stable
 output checksum. Receipts include the actual command, compiler, platform, and
 source hashes.
 
+The 1.1 development harness adds a separate custom-filter workload with positional
+and named arguments plus standard-filter composition. The five original workloads
+continue to use an engine with no application filters, so their output checksums
+remain comparable. An empty registry is not inferred to have zero cost; matched
+measurements against 1.0.0 are required for a performance claim.
+
 Measurements describe this host and workload. They do not establish superiority
 over Ruby, Liquid-C, or another Swift implementation, and latency does not imply
 process-memory usage. A matched reference comparison needs the same fixtures,
