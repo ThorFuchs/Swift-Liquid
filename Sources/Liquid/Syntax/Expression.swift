@@ -81,6 +81,11 @@ internal enum Value: Sendable, Equatable, Hashable {
 
 // MARK: - Filter Type
 
+internal struct NamedFilterArgument: Sendable, Equatable {
+    let name: String
+    let value: LiquidExpression
+}
+
 internal struct Filter: Sendable, Equatable {
     internal enum BuiltinKind: UInt8, Sendable, Equatable {
         case upcase
@@ -137,7 +142,7 @@ internal struct Filter: Sendable, Equatable {
     
     internal let arguments: [LiquidExpression]
     
-    internal let namedArguments: [String: LiquidExpression]
+    internal let namedArguments: [NamedFilterArgument]
 
     internal let builtinKind: BuiltinKind?
     internal let singleLiteralIntegerArgument: Int?
@@ -145,7 +150,7 @@ internal struct Filter: Sendable, Equatable {
     internal init(
         name: InlineString,
         arguments: [LiquidExpression] = [],
-        namedArguments: [String: LiquidExpression] = [:]
+        namedArguments: [NamedFilterArgument] = []
     ) {
         self.name = name
         self.arguments = arguments
@@ -346,7 +351,7 @@ extension LiquidExpression {
         case .filtered(let expr, let filters):
             return expr.containsVariables || filters.contains { filter in
                 filter.arguments.contains { $0.containsVariables } ||
-                filter.namedArguments.values.contains { $0.containsVariables }
+                filter.namedArguments.contains { $0.value.containsVariables }
             }
         case .test(let expr, _):
             return expr.containsVariables
@@ -375,8 +380,8 @@ extension LiquidExpression {
                 for arg in filter.arguments {
                     variables.formUnion(arg.referencedVariables)
                 }
-                for (_, arg) in filter.namedArguments {
-                    variables.formUnion(arg.referencedVariables)
+                for arg in filter.namedArguments {
+                    variables.formUnion(arg.value.referencedVariables)
                 }
             }
             return variables
@@ -406,7 +411,7 @@ extension LiquidExpression {
         case .filtered(let expr, let filters):
             let filterComplexity = filters.reduce(0) { total, filter in
                 let argComplexity = filter.arguments.reduce(0) { $0 + $1.complexityScore }
-                let namedArgComplexity = filter.namedArguments.values.reduce(0) { $0 + $1.complexityScore }
+                let namedArgComplexity = filter.namedArguments.reduce(0) { $0 + $1.value.complexityScore }
                 return total + argComplexity + namedArgComplexity + 1
             }
             return expr.complexityScore + filterComplexity
@@ -627,7 +632,7 @@ extension Filter: CustomStringConvertible {
         
         var argStrings: [String] = []
         argStrings.append(contentsOf: arguments.map { $0.description })
-        argStrings.append(contentsOf: namedArguments.map { "\($0.key): \($0.value.description)" })
+        argStrings.append(contentsOf: namedArguments.map { "\($0.name): \($0.value.description)" })
         
         return "\(name): \(argStrings.joined(separator: ", "))"
     }

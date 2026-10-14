@@ -43,7 +43,8 @@ def source_snapshot():
 
 def require_fixtures(log):
     for label, count in [('Golden Liquid', 1098), ('Native compatibility probes', 221),
-                         ('Ruby date grammar', 337), ('Public date parsing', 376)]:
+                         ('Ruby date grammar', 337), ('Public date parsing', 376),
+                         ('Custom filter reference cases', 15)]:
         if not re.search(rf'{label}.*{count} test cases passed', log):
             raise RuntimeError(f'Missing complete {label} run ({count} cases)')
 
@@ -90,20 +91,21 @@ def main():
                 log = (output / (name + '.log')).read_text()
                 require_fixtures(log)
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 26:
+                if not summary or int(summary.group(1)) < 39:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
                 receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
                     'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
-                    'testFunctions': int(summary.group(1)), 'skipped': 0})
+                    'hostExtensionCases': 15, 'testFunctions': int(summary.group(1)), 'skipped': 0})
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
+            run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
         elif args.lane == 'safety':
             run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
             require_fixtures((output / 'address.log').read_text())
-            if not re.search(r'Test run with 1 test .* passed', (output / 'thread.log').read_text()):
-                raise RuntimeError('ThreadSanitizer did not execute the concurrency test')
+            if not re.search(r'Test run with 2 tests .* passed', (output / 'thread.log').read_text()):
+                raise RuntimeError('ThreadSanitizer did not execute both core and filter concurrency tests')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')

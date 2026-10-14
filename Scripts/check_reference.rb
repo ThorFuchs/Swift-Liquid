@@ -98,6 +98,54 @@ grammar.each do |test|
     results << { name: test['name'], status: 'reference-error', errorClass: error.class.name, message: error.message }
   end
 end
+# These are host-extension contracts, kept separate from core conformance counts.
+module HostExtensionFilters
+  def host_echo(input)
+    input.is_a?(Range) ? input.to_a : input
+  end
+  def host_kind(input)
+    case input
+    when NilClass then 'null'
+    when TrueClass, FalseClass then 'bool'
+    when Integer then 'integer'
+    when Float then 'number'
+    when String then 'string'
+    when Array then 'array'
+    when Hash then 'object'
+    else raise Liquid::ArgumentError, 'Unsupported host value'
+    end
+  end
+  def host_pack(input, *arguments)
+    named = arguments.last.is_a?(Hash) ? arguments.pop : {}
+    parts = [input, *arguments].map { |value| value.nil? ? '' : value }
+    parts.concat(named.map { |key, value| "#{key}=#{value}" })
+    parts.join('|')
+  end
+  def host_object(_input)
+    { 'b' => 2, 'a' => 1 }
+  end
+end
+extension_cases = read_pin(root, pins['customFilters'])
+abort 'Pinned host-extension case count changed' unless extension_cases.length == 15
+extension_results = extension_cases.map do |test|
+  begin
+    environment = Liquid::Environment.build do |env|
+      env.file_system = memory_files.new(test['templates'] || {})
+      env.register_filter(HostExtensionFilters)
+    end
+    template = Liquid::Template.parse(test['template'], environment: environment,
+      error_mode: (test['syntaxMode'] || 'lax').to_sym, line_numbers: true)
+    output = template.render!(test['data'] || {})
+    { name: test['name'], status: output == test['result'] && template.errors.empty? ? 'rendered' : 'failed', output: output }
+  rescue StandardError => error
+    { name: test['name'], status: 'reference-error', errorClass: error.class.name, message: error.message }
+  end
+end
+extension_successes = extension_results.count { |result| result[:status] == 'rendered' }
+host_extensions = { observed: extension_results.length, successfulRenders: extension_successes,
+  failed: extension_results.length - extension_successes, skipped: 0,
+  referenceErrors: extension_results.count { |result| result[:status] == 'reference-error' },
+  fixtureSHA256: pins['customFilters']['sha256'], cases: extension_results }
 counts = results.group_by { |result| result[:status] }.transform_values(&:length)
 qualified = %w[rendered parsed expected-error recovered-error outside-domain].sum { |kind| counts[kind] || 0 }
 receipt = {
@@ -108,8 +156,9 @@ receipt = {
   expectedErrors: counts['expected-error'] || 0, recoveredErrors: counts['recovered-error'] || 0,
   outsideSupportedDomain: counts['outside-domain'] || 0, referenceErrors: counts['reference-error'] || 0,
   observed: results.length, passed: qualified, failed: results.length - qualified, skipped: 0,
+  hostExtensions: host_extensions,
   fixtureSHA256: pins['goldenLiquid']['sha256'], probeSHA256: pins['authoredProbes']['sha256'], cases: results
 }
 File.write(ARGV[0], JSON.pretty_generate(receipt) + "\n") if ARGV[0]
-puts JSON.generate(receipt.reject { |key, _| key == :cases })
-exit(receipt[:failed].zero? ? 0 : 1)
+puts JSON.generate(receipt.reject { |key, _| [:cases, :hostExtensions].include?(key) }.merge(hostExtensions: host_extensions.reject { |key, _| key == :cases }))
+exit(receipt[:failed].zero? && host_extensions[:failed].zero? ? 0 : 1)

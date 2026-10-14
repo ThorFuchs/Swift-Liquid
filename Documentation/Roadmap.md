@@ -1,17 +1,19 @@
 # Swift-Liquid 1.1 roadmap
 
-## Proposed scope
+## Adopted scope
 
-Swift-Liquid 1.1 should add two capabilities: typed custom filters scoped to an
+The maintainer adopted this scope on 2026-10-14. Swift-Liquid 1.1 will add two
+capabilities: typed custom filters scoped to an
 engine, and read-only template inspection shared by the library and CLI. This
 gives applications a small integration surface and better tooling while keeping
 Shopify core behavior, reusable templates, and the dependency graph intact.
 
 The [upstream feature review](Architecture/UpstreamFeatureReview.md) records the
 features retained in RhoeLiquid and the implementation boundaries behind this
-selection. This is a scope proposal for implementation planning. The public
-extension contract needs an explicit maintainer scope decision before runtime
-work begins, as required by [AGENTS.md](../AGENTS.md).
+selection. Implementation begins with [typed custom filters](CustomFilters.md).
+Read-only inspection remains the next implementation step. The scope decision
+authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 version
+still requires a separate release request.
 
 ## Package and compatibility constraints
 

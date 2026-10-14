@@ -74,6 +74,17 @@ CLI checks cover output channels, stdin, partials, diagnostics, and file atomici
 
 ## Qualification limits
 
+### Host extensions
+
+The unreleased custom-filter API has 15 separately pinned cases using matching
+Ruby/Swift callbacks. Reference receipts retain these under `hostExtensions`;
+the existing 2,032 core checks and their accounting remain unchanged. Additional
+public tests qualify Swift name validation, value conversion, cumulative budgets,
+explicit failure recovery, cancellation and concurrent engine isolation. Those
+host policies do not add Shopify core conformance cases. See [custom filters](CustomFilters.md).
+
+### Core and platform boundaries
+
 The Ruby recognition pipeline and Time.parse defaults are now implemented in
 Swift, including missing date components and embedded fragments. Compatibility
 is supported by source review and evaluated cases, not a formal proof over every

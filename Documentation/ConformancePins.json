@@ -62,5 +62,13 @@
     "sha256": "cc38d0d4e959d1a7485211771ced319abc2b19b43b2dcc47137dfcb7f2d44714",
     "cases": 376,
     "outsideSupportedYears": 35
+  },
+  "customFilters": {
+    "path": "Tests/LiquidTests/Fixtures/custom_filters.json",
+    "cases": 15,
+    "sha256": "64ef00f718ad7a43dedd24ed5e5de8ac5971fe82bedebb40f90c1d188f501eff",
+    "license": "Apache-2.0",
+    "scope": "host-extension",
+    "referenceCallbacks": "Scripts/check_reference.rb"
   }
 }

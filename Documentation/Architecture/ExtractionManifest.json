@@ -185,6 +185,32 @@
         "Preserve the explicit UTC, Int, and calendar-year 1...9999 contract; unsupported years are evaluated as policy boundaries."
       ],
       "qualification": "337 source-table cases with original completion metadata and 376 public date-filter cases, including 35 explicit supported-year boundaries; no exclusions."
+    },
+    {
+      "area": "Typed engine-scoped host filters",
+      "scopeDecision": "Maintainer adopted the 1.1 roadmap and authorized typed-filter implementation on 2026-10-14.",
+      "files": [
+        "Sources/Liquid/LiquidFilter.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidLimits.swift",
+        "Sources/Liquid/Rendering/Renderer+CustomFilters.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Syntax/Expression.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ScalarKey.swift"
+      ],
+      "removed": [
+        "Sources/Liquid/Support/RuntimeProtocols.swift"
+      ],
+      "changes": [
+        "Replace the unused Any-based custom-filter seam with immutable checked-Sendable typed callbacks and exact engine-scoped name lookup.",
+        "Retain the original 1.0 initializer and protect standard names/aliases; no new products, dependencies, tag grammar, registries or implicit loading.",
+        "Preserve positional and named argument containers and source order, including mixed arguments, repeated names and exact Unicode scalar spelling.",
+        "Admit ranges as bounded arrays; reject comparison sentinels; cumulatively charge context/filter value visits and evaluator steps on the invocation budget.",
+        "Recover only explicit LiquidFilterFailure errors; retain operational and foreign error identity and check cancellation on both callback exits."
+      ],
+      "qualification": "Unchanged core fixtures and 1.0 public consumer; 15 separately pinned paired Ruby/Swift host cases; independent filter consumer and public admission, cancellation, recovery, and concurrency regressions."
     }
   ]
 }

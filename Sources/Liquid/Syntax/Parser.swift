@@ -594,7 +594,7 @@ internal final class Parser {
         }
         advance()
 
-        var firstNamedArgs: [String: LiquidExpression] = [:]
+        var firstNamedArgs: [NamedFilterArgument] = []
         let firstArguments = try parseFilterArguments(namedArguments: &firstNamedArgs)
         let firstFilter = Filter(
             name: firstFilterName,
@@ -617,7 +617,7 @@ internal final class Parser {
             }
             advance()
 
-            var namedArgs: [String: LiquidExpression] = [:]
+            var namedArgs: [NamedFilterArgument] = []
             let arguments = try parseFilterArguments(namedArguments: &namedArgs)
             allFilters.append(
                 Filter(
@@ -632,75 +632,32 @@ internal final class Parser {
     }
 
     @inline(__always)
-    private func parseFilterArguments(namedArguments: inout [String: LiquidExpression]) throws ->[LiquidExpression] {
-        guard currentToken.type == .colon else {
-            return []
-        }
-
-        advance() // consume :
-
-        // Check if this is a named argument: identifier followed by colon
-        if case .identifier(let argName) = currentToken.type,
-           nextTokenStorage.type == .colon {
-            // Named argument
-            advance() // consume identifier
-            advance() // consume :
-            namedArguments[argName.string] = try parsePrimaryExpression()
-
-            var positionalArgs: [LiquidExpression] = []
-            while currentToken.type == .comma {
-                advance() // consume ,
-                if case .identifier(let nextArgName) = currentToken.type,
-                   nextTokenStorage.type == .colon {
-                    advance() // consume identifier
-                    advance() // consume :
-                    namedArguments[nextArgName.string] = try parsePrimaryExpression()
-                } else {
-                    // Positional argument after named arguments
-                    positionalArgs.append(try parsePrimaryExpression())
-                }
-            }
-            return positionalArgs
-        }
-
-        let firstArgument = try parsePrimaryExpression()
-
-        guard currentToken.type == .comma else {
-            return [firstArgument]
-        }
-
-        var arguments = makeExpressionBuffer()
-        arguments.append(firstArgument)
-
+    private func parseFilterArguments(namedArguments: inout [NamedFilterArgument]) throws -> [LiquidExpression] {
+        guard currentToken.type == .colon else { return [] }
+        advance()
+        var arguments: [LiquidExpression] = []
+        var positions: [ScalarKey: Int] = [:]
         repeat {
-            advance() // consume ,
-            // Check for named arguments after positional ones
-            if case .identifier(let argName) = currentToken.type,
-               nextTokenStorage.type == .colon {
-                advance() // consume identifier
-                advance() // consume :
-                namedArguments[argName.string] = try parsePrimaryExpression()
-                // Continue to consume more named args
-                while currentToken.type == .comma {
-                    advance()
-                    if case .identifier(let nextArgName) = currentToken.type,
-                       nextTokenStorage.type == .colon {
-                        advance()
-                        advance()
-                        namedArguments[nextArgName.string] = try parsePrimaryExpression()
-                    } else {
-                        arguments.append(try parsePrimaryExpression())
-                        break
-                    }
+            if case .identifier(let name) = currentToken.type, nextTokenStorage.type == .colon {
+                advance()
+                advance()
+                let value = try parsePrimaryExpression()
+                let argument = NamedFilterArgument(name: name.string, value: value)
+                if let index = positions[ScalarKey(name.string)] {
+                    namedArguments[index] = argument
+                } else {
+                    positions[ScalarKey(name.string)] = namedArguments.count
+                    namedArguments.append(argument)
                 }
-                break
+            } else {
+                arguments.append(try parsePrimaryExpression())
             }
-            arguments.append(try parsePrimaryExpression())
-        } while currentToken.type == .comma
-
+            guard currentToken.type == .comma else { break }
+            advance()
+        } while true
         return arguments
     }
-    
+
     @inline(__always)
     private func parsePrimaryExpression() throws ->LiquidExpression {
         guard parseDepth < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
