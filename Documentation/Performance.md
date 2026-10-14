@@ -11,7 +11,7 @@ checks expected output, and reports median, p95, minimum, maximum, and a stable
 output checksum. Receipts include the actual command, compiler, platform, and
 source hashes.
 
-The 1.1 development harness adds a separate custom-filter workload with positional
+The 1.1 harness adds a separate custom-filter workload with positional
 and named arguments plus standard-filter composition. The five original workloads
 continue to use an engine with no application filters, so their output checksums
 remain comparable. An empty registry is not inferred to have zero cost; matched
@@ -28,5 +28,30 @@ process-memory usage. A matched reference comparison needs the same fixtures,
 outputs, warmup, sample policy, and environment. A 10% median change triggers
 review against an explicitly retained baseline; it is not automatically a release failure.
 
-No speedup claim is carried over from RhoeLiquid. Public benchmark results will
-be recorded after the current correctness and resource checks complete.
+No speedup claim is carried over from RhoeLiquid. The [1.1 benchmark review](PerformanceReview-1.1.md)
+records the initial comparison and its limits. Each release-candidate CI run retains
+its own complete comparison and review flags.
+
+## Matched 1.0.0 comparison
+
+Run `python3 -B Scripts/ci.py --lane matched-performance` from a clean candidate
+commit with the 1.0.0 commit available locally. CI fetches the exact commit
+`d36018e6b6822ae408a6c1c439c2307484525b7b`; no floating branch or tag resolution
+selects the baseline. Both libraries are built with the unchanged 1.0.0 benchmark
+source and manifest, with a pinned harness SHA-256. The root package is unchanged.
+
+Both binaries are built before timing. Three sequential ABBA blocks run baseline,
+candidate, candidate, baseline, yielding six complete runs per version. Each run
+uses the original 25 samples, 10 warmup samples and 100 repetitions per sample.
+The report compares the median of six run medians for each of ten workload/mode
+pairs and retains every run's latency summary, checksum and run order. Positive change
+means higher latency. Changes of either sign at or above 10% require review;
+mechanical measurement success does not resolve a review flag.
+
+The receipt records toolchain, OS, architecture, CPU/model, memory, source hashes,
+common harness hash and load averages. Comparisons run in one process sequence
+on one host; no builds occur during timing. The CI comparison waits for this
+repository's other qualification jobs, reducing interference from those jobs.
+It does not establish an idle machine, thermal stability or unrelated-workload
+isolation. Review outliers and repeat a comparison when they leave a material
+regression unresolved.

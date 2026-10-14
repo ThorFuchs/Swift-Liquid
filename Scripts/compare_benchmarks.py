@@ -20,16 +20,18 @@ HARNESS_SHA256 = 'd54696ca5ec336b83ad6510737c7bd29382192e81bc17b6cd61a6e22a9d130
 OUTPUT = ROOT / 'Artifacts/matched-performance'
 OUTPUT.mkdir(parents=True, exist_ok=True)
 ENV = environment()
+COMMANDS = []
 
 
 def git(*args):
     return subprocess.check_output(['git', *args], cwd=ROOT)
 
 
-def run(command, name, cwd=ROOT):
+def run(command, name, cwd=ROOT, required=True):
     result = subprocess.run(command, cwd=cwd, env=ENV, capture_output=True, text=True)
     (OUTPUT / (name + '.log')).write_text(result.stdout + result.stderr)
-    if result.returncode:
+    COMMANDS.append({'name': name, 'command': command, 'exitCode': result.returncode})
+    if result.returncode and required:
         raise RuntimeError(f'{name} failed; see {OUTPUT / (name + ".log")}')
     return result.stdout.strip()
 
@@ -82,11 +84,12 @@ def main():
     metadata = {'schemaVersion': 1, 'baselineCommit': BASELINE, 'candidateCommit': candidate,
                 'harnessSHA256': HARNESS_SHA256, 'manifestSHA256': hashlib.sha256(manifest).hexdigest(),
                 'toolchain': toolchain, 'platform': platform.platform(), 'architecture': platform.machine(),
-                'logicalCPUs': os.cpu_count(), 'order': ['baseline', 'candidate', 'candidate', 'baseline'] * 3,
+                'logicalCPUs': os.cpu_count(), 'swiftPMFlags': shlex.split(ENV.get('LIQUID_SWIFTPM_FLAGS', '')),
+                'developerDirectory': ENV.get('DEVELOPER_DIR'), 'commands': COMMANDS, 'order': ['baseline', 'candidate', 'candidate', 'baseline'] * 3,
                 'protocol': 'Build both first; three sequential ABBA blocks; six runs per version; median of run medians.',
                 'reviewThresholdPercent': 10, 'runs': []}
     if platform.system() == 'Darwin':
-        metadata['hardware'] = {key: run(['sysctl', '-n', key], 'host-' + key.replace('.', '-'))
+        metadata['hardware'] = {key: run(['sysctl', '-n', key], 'host-' + key.replace('.', '-'), required=False) or 'unavailable'
                                 for key in ['hw.model', 'hw.physicalcpu', 'hw.memsize', 'machdep.cpu.brand_string']}
     with tempfile.TemporaryDirectory(prefix='swift-liquid-matched-') as temporary:
         binaries = {}

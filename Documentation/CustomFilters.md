@@ -1,6 +1,6 @@
 # Engine-scoped custom filters
 
-Custom filters are an unreleased 1.1 development feature. The 1.0.0 tag keeps its
+Swift-Liquid 1.1 adds engine-scoped custom filters. The 1.0.0 tag keeps its
 original API. The root package still has no package dependencies and exports
 only the `Liquid` library and `liquid` executable.
 

@@ -4,7 +4,7 @@ Supply typed application filters explicitly to an engine.
 
 ## Overview
 
-Custom filters are an unreleased 1.1 development feature. Create a ``LiquidFilter``
+Swift-Liquid 1.1 adds engine-scoped custom filters. Create a ``LiquidFilter``
 with a Sendable asynchronous callback and pass it to the throwing
 ``LiquidEngine/init(filters:limits:strictFilters:referenceTime:)`` initializer.
 The original initializer installs no filters and retains the 1.0 behavior.

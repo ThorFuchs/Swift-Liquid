@@ -7,8 +7,8 @@ Use `swift run liquid --help` while developing, or the built release executable.
 | --- | --- |
 | `render TEMPLATE` | Render a UTF-8 file or `-` for stdin |
 | `validate TEMPLATE` | Parse a UTF-8 template and fail on invalid syntax |
-| `analyze TEMPLATE` | Inspect parsed references without rendering (unreleased 1.1) |
-| `--version` | Show the package version (`Swift-Liquid 1.0.0`) |
+| `analyze TEMPLATE` | Inspect parsed references without rendering (1.1) |
+| `--version` | Show the package version (`Swift-Liquid 1.1.0`) |
 | `--help` | Show commands and options |
 
 Render options:
@@ -38,7 +38,7 @@ swift run liquid render greeting.liquid --data context.json
 swift run liquid validate greeting.liquid --syntax-mode strict
 ```
 
-## Template analysis (unreleased 1.1)
+## Template analysis (1.1)
 
 `liquid analyze TEMPLATE` prints variable roots, filter names, literal partial
 names and whether dynamic include references occur. It uses the library's AST

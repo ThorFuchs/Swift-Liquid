@@ -3,10 +3,10 @@
 Version tags use semantic versions such as `1.0.0`. Never move a published tag.
 The maintainer must explicitly request publication; CI does not create releases.
 
-1. Complete the [1.0 release gates](Documentation/ReleasePlan.md) at the exact
+1. Complete the [release gates](Documentation/ReleasePlan.md) at the exact
    candidate commit. Run native, safety, reference, platforms, documentation,
-   and performance lanes. The reference lane requires the clean pinned checkout
-   and recorded Ruby/Date/Time versions.
+   performance and matched-performance lanes. Review matched comparison flags.
+   The reference lane requires the clean pinned checkout and recorded Ruby/Date/Time versions.
 2. Review fixture pins, actual evaluated counts, reference differences, source
    provenance, all public API/CLI documentation, and the public file inventory.
 3. Run `python3 Scripts/ci.py --lane archive` on the clean candidate commit. It
@@ -21,3 +21,21 @@ The maintainer must explicitly request publication; CI does not create releases.
 
 If a required gate fails, keep the repository at development status and record
 the gap. A green fixture suite alone does not qualify a stable release.
+
+For 1.1, matched measurements use the immutable 1.0.0 harness and library commit;
+see [performance](Documentation/Performance.md). Download every successful lane
+artifact and save `gh run view --json status,conclusion,headSha,url` output as
+`github-run.json` in the evidence directory. From the clean candidate checkout:
+
+```sh
+python3 -B Scripts/prepare_release.py --version 1.1.0 --evidence /path/to/evidence \
+  --run-url https://github.com/ThorFuchs/Swift-Liquid/actions/runs/RUN_ID
+```
+
+The script verifies all eight receipts against the current source inventory,
+compares every source-archive file, verifies archive checksums, and prepares
+three archives, checksums, release notes and a manifest under `Artifacts/release`.
+It performs no publication or tag mutation. A PR qualification may test a GitHub
+merge commit with the same tree; after merging, qualify the actual release commit
+again before creating the immutable version tag. Review the candidate's matched
+benchmark distributions/flags separately; packaging is not a performance verdict.

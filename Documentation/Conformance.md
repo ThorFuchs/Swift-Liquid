@@ -76,7 +76,7 @@ CLI checks cover output channels, stdin, partials, diagnostics, and file atomici
 
 ### Host extensions
 
-The unreleased custom-filter API has 15 separately pinned cases using matching
+The 1.1 custom-filter API has 15 separately pinned cases using matching
 Ruby/Swift callbacks. Reference receipts retain these under `hostExtensions`;
 the existing 2,032 core checks and their accounting remain unchanged. Additional
 public tests qualify Swift name validation, value conversion, cumulative budgets,

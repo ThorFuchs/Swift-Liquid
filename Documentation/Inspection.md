@@ -1,6 +1,6 @@
 # Template inspection
 
-Unreleased 1.1 API. Inspect one template's parsed syntax without rendering it:
+Swift-Liquid 1.1 API. Inspect one template's parsed syntax without rendering it:
 
 ```swift
 import Liquid
