@@ -31,7 +31,9 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6, sibling blueprint
         with:
           name: liquid-${{ matrix.lane }}
-          path: Artifacts/${{ matrix.lane }}/
+          path: |
+            Artifacts/${{ matrix.lane }}/
+            !Artifacts/docs/Liquid.doccarchive/**
           if-no-files-found: error
           retention-days: 30
       - name: Package documentation site

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import shutil
 import shlex
+import tarfile
 import subprocess
 import sys
 from ci import ROOT, environment, swift
@@ -42,5 +43,7 @@ run(tool + ['convert', str(ROOT / 'Sources/Liquid/Documentation.docc'),
             '--transform-for-static-hosting', '--hosting-base-path', 'Swift-Liquid',
             '--warnings-as-errors'], 'docc')
 (archive / '.nojekyll').write_text('')
+with tarfile.open(output / 'Liquid.doccarchive.tar.gz', 'w:gz') as package:
+    package.add(archive, arcname='Liquid.doccarchive')
 run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
 print(f'DocC compiled with {len(symbols)} public symbols: {archive}')
