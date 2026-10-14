@@ -14,6 +14,8 @@ guides that are compiled from the public Swift symbol graph.
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
+| [1.1 roadmap](Roadmap.md) | Proposed custom filters, template inspection, delivery sequence and release gates |
+| [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |
 
 Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go
 under Artifacts and remain outside source control.

@@ -22,10 +22,12 @@ Required gates:
 Repository publication and a stable version release are separate milestones.
 Publishing development source does not certify that the 1.0 gates passed.
 
-After 1.0, evaluate custom filter/tag APIs, opt-in application caches, richer
-input adapters, and additional platform qualification. Rhoe document rendering,
-services, macros, inheritance, and hosted storefront behavior need separate
-product and compatibility decisions.
+The [1.1 roadmap](Roadmap.md) proposes scoped typed custom filters and read-only
+template inspection. The [upstream feature review](Architecture/UpstreamFeatureReview.md)
+records the remaining RhoeLiquid capabilities and why they are deferred or belong
+in integrations. Custom tags, cache APIs, richer adapters, document rendering,
+services, macros, inheritance and additional platform qualification retain their
+separate design and scope decisions.
 
 Qualification now includes explicit recovered-error parity, the Ruby Date/Time
 grammar corpora, both public render paths, simulator-SDK library compilation,

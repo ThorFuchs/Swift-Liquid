@@ -151,6 +151,7 @@ See [performance](Documentation/Performance.md).
 - [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)
 - [Release process](RELEASING.md) and [changelog](CHANGELOG.md)
+- [Proposed 1.1 roadmap](Documentation/Roadmap.md) and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
 
 Swift-Liquid is adapted from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid),
 with a focused public API and independent qualification. Original contributions
