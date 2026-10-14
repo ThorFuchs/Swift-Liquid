@@ -6,7 +6,7 @@ RhoeLiquid commit `9e52492671bc31741932811fe689a86fed76be69`; the extraction
 manifest records source paths and original file hashes.
 
 The public boundary is deliberately small: `LiquidValue`, ordered `LiquidObject`,
-`LiquidTemplate`, `LiquidEngine`, syntax modes, finite limits, and public errors.
+`LiquidTemplate`, `LiquidEngine`, syntax modes, finite limits, public errors, and diagnostic render results.
 Values, engines, and templates use checked Sendable conformance. The adapted
 lexer, parser, AST, evaluator, and utility types are internal implementation details.
 
@@ -33,3 +33,8 @@ charge evaluation and loop work, and reject oversized rendered outputs. They are
 logical operation capacities. Synchronous standard-library/Foundation helpers and
 temporary intermediate allocation are not a hard heap/RSS or instruction quota.
 Cancellation is checked at operation entry and execution boundaries.
+
+Date recognition ports the pinned Ruby Date/Time grammar into Swift. Compiled
+regular expressions are immutable and shared; parsing fragments, the base clock,
+and recovered diagnostics belong to each invocation. An explicit reference time
+makes partial-date parsing repeatable. BSD notices accompany the adaptations.

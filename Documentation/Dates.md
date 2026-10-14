@@ -13,9 +13,10 @@ converted to Liquid strings.
 
 Produces `2024-02-03 04:05:06 +05:30 123456789`.
 
-## Complete date forms
+## Date recognition
 
-The parser accepts these complete forms, with optional times where applicable:
+The parser ports Ruby Date 3.5.1's loose recognition pipeline and Ruby Time
+0.4.2's missing-component rules. Complete forms include:
 
 | Form | Example |
 | --- | --- |
@@ -63,11 +64,44 @@ bounded to calendar years 1…9999. Formatting charges the invocation's render-s
 budget and checks UTF-8 output capacity before appending. Range and quota failures
 are operational errors, not evidence that a Liquid program is syntactically invalid.
 
-## Remaining reference differences
+## Partial dates, fragments, and the clock
 
-Ruby's full heuristic `Time.parse` grammar is not implemented. In particular,
-dates with missing components, prose with embedded date fragments, and broader
-locale-dependent spellings need further qualification. Complete compatibility
-must not be inferred from the date fixture count. See
-[compatibility evidence](Conformance.md) for the exact observed results and the
-remaining stable-release gates.
+Missing upper components come from the invocation's reference time. Missing lower
+components take their minimum values. With a base time of November 29, 2001:
+
+| Input | Calendar result |
+| --- | --- |
+| `16:30` | November 29, 2001 at 16:30 |
+| `7/23` | July 23, 2001 at midnight |
+| `Aug 31` | August 31, 2001 at midnight |
+| `Aug 2000` | August 1, 2000 at midnight |
+| `Feb` | February 1, 2001 at midnight |
+
+Two-component slash dates follow Ruby's field rotation. Three-component slash
+dates with a year last remain day-first.
+The recognizer also handles ordinal suffixes, compact decimal timestamps,
+apostrophe years, era forms, and date fragments embedded in surrounding text.
+Recognition order and field rotations follow the pinned source. A standalone
+ISO commercial-week date is preserved because Ruby Time.parse does not consume
+Date's commercial-week fields.
+
+Set a deterministic clock when reproducibility matters:
+
+```swift
+import Foundation
+import Liquid
+
+let engine = LiquidEngine(referenceTime: Date(timeIntervalSince1970: 1_007_044_400))
+let output = try await engine.render(template: "{{ 'Aug 31' | date: '%F' }}")
+// 2001-08-31
+```
+
+Without an explicit clock, each invocation captures the current time. Engines
+and parsed templates remain Sendable; the clock and mutable parsing fragments
+are owned by the invocation. The compiled grammar patterns are immutable.
+`now` and `today` use that same base time. Clock fractions have Foundation Date's
+precision; parsed decimal timestamp fractions retain their original precision.
+
+Ruby Date's default input limit is 128 bytes after Liquid lowercases the string.
+Longer date strings retain their original input. Calendar years remain bounded to 1…9999, and UTC is the hosting timezone. See [compatibility evidence](Conformance.md) for the
+source pins, evaluated cases, recovered errors, and explicit policy boundaries.

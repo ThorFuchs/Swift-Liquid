@@ -35,14 +35,21 @@ def swift():
     return ['xcrun', 'swift'] if sys.platform == 'darwin' else ['swift']
 
 def source_snapshot():
-    paths = [ROOT / 'Package.swift']
-    for folder in ['Sources', 'Tests', 'Scripts', 'Documentation', 'Examples', 'Tools']:
+    paths = [ROOT / name for name in ['Package.swift', 'README.md', 'CHANGELOG.md', 'LICENSE', 'NOTICE',
+        'THIRD_PARTY_NOTICES.md', 'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md', 'RELEASING.md', 'AGENTS.md', '.gitignore']]
+    for folder in ['Sources', 'Tests', 'Scripts', 'Documentation', 'Examples', 'Tools', 'Licenses', '.github']:
         paths += [p for p in (ROOT / folder).rglob('*') if p.is_file() and '.build' not in p.parts and '__pycache__' not in p.parts]
     return [{'path': str(p.relative_to(ROOT)), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(paths)]
 
+def require_fixtures(log):
+    for label, count in [('Golden Liquid', 1098), ('Native compatibility probes', 221),
+                         ('Ruby date grammar', 337), ('Public date parsing', 376)]:
+        if not re.search(rf'{label}.*{count} test cases passed', log):
+            raise RuntimeError(f'Missing complete {label} run ({count} cases)')
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive'], default='native')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference lane only)')
     args = parser.parse_args()
     output = ROOT / 'Artifacts' / args.lane
@@ -70,32 +77,31 @@ def main():
         if not match or tuple(map(int, match.groups())) < (6, 4):
             raise RuntimeError('Swift 6.4 or later is required')
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
-        if args.lane == 'native':
+        if args.lane in ['native', 'development']:
             run(swift() + ['build', '-Xswiftc', '-warnings-as-errors'], 'debug-build')
-            run(swift() + ['build', '-c', 'release', '-Xswiftc', '-warnings-as-errors'], 'release-build')
             run(swift() + ['test'], 'debug-tests')
-            run(swift() + ['test', '-c', 'release'], 'release-tests')
+            test_names = ['debug-tests']
+            if args.lane == 'native':
+                run(swift() + ['build', '-c', 'release', '-Xswiftc', '-warnings-as-errors'], 'release-build')
+                run(swift() + ['test', '-c', 'release'], 'release-tests')
+                test_names.append('release-tests')
             receipt['testLanes'] = []
-            for name in ['debug-tests', 'release-tests']:
+            for name in test_names:
                 log = (output / (name + '.log')).read_text()
-                if not re.search(r'Golden Liquid.*1098 test cases passed', log):
-                    raise RuntimeError(f'{name} did not report all 1098 passing golden cases')
-                if not re.search(r'Native compatibility probes.*185 test cases passed', log):
-                    raise RuntimeError(f'{name} did not report all 185 passing compatibility probes')
+                require_fixtures(log)
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 22:
+                if not summary or int(summary.group(1)) < 26:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
-                receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 185, 'testFunctions': int(summary.group(1)), 'skipped': 0})
+                receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
+                    'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
+                    'testFunctions': int(summary.group(1)), 'skipped': 0})
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
         elif args.lane == 'safety':
             run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
-            if not re.search(r'Native compatibility probes.*185 test cases passed', (output / 'address.log').read_text()):
-                raise RuntimeError('AddressSanitizer did not execute every compatibility probe')
-            if not re.search(r'Golden Liquid.*1098 test cases passed', (output / 'address.log').read_text()):
-                raise RuntimeError('AddressSanitizer did not execute the complete corpus')
+            require_fixtures((output / 'address.log').read_text())
             if not re.search(r'Test run with 1 test .* passed', (output / 'thread.log').read_text()):
                 raise RuntimeError('ThreadSanitizer did not execute the concurrency test')
         elif args.lane == 'reference':
@@ -104,6 +110,10 @@ def main():
             run(['ruby', '-I', str(args.reference_path.resolve() / 'lib'), 'Scripts/check_reference.rb', str(output / 'reference.json')], 'reference')
         elif args.lane == 'docs':
             run([sys.executable, '-B', 'Scripts/build_documentation.py'], 'documentation')
+        elif args.lane == 'platforms':
+            run([sys.executable, '-B', 'Scripts/check_platforms.py'], 'platforms')
+        elif args.lane == 'archive':
+            run([sys.executable, '-B', 'Scripts/check_archive.py'], 'archive')
         else:
             run(swift() + ['run', '-c', 'release', '--package-path', 'Tools/Benchmarks', 'LiquidBenchmarks', str(output / 'benchmarks.json')], 'benchmarks')
         receipt['status'] = 'passed'

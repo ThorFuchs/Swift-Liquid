@@ -869,6 +869,23 @@ extension Renderer {
             return false
         }
         if filterName.equals("reject") {
+            if args.first is NSNull {
+                let items: [Any]
+                if let array = value as? [Any] { items = flattenArray(array) }
+                else if value is NSNull { items = [] }
+                else { items = [value] }
+                for item in items {
+                    try budget.step()
+                    if isDictLike(item) { continue } // A missing hash key selects nil.
+                    if item is String || item is Int {
+                        throw RenderError.custom("cannot select the property ''")
+                    }
+                    // Ruby stops the entire selection on the first value without
+                    // a subscript method; later items are not inspected.
+                    return NSNull()
+                }
+                return items
+            }
             // Hash input → return array of single-entry dicts (for nested for-loop iteration)
             if let pairs = orderedDictPairs(value) {
                 let firstArg = args.first
@@ -912,10 +929,6 @@ extension Renderer {
 
             // For non-dict arrays
             if property == nil || !array.contains(where: { isDictLike($0) }) {
-                // If firstArg is NSNull, reject all truthy elements
-                if firstArg is NSNull {
-                    return array.filter { !isTruthy($0) }
-                }
                 // For string arrays, do substring matching
                 if let searchStr = property {
                     // If array has non-string items (nil, bool, int), throw or return empty

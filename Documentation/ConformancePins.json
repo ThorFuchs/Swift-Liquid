@@ -19,8 +19,8 @@
   },
   "authoredProbes": {
     "path": "Tests/LiquidTests/Fixtures/compatibility_probes.json",
-    "cases": 185,
-    "sha256": "1e5338e443c3c6aba91414d48f003e9ed216d99d6bcb19fa428ab16765b7617f",
+    "cases": 221,
+    "sha256": "da9c0a3171835c9d9144912242f491ad784eba16cdaca09b9ac6aeceabc6e59d",
     "referenceCommit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
     "license": "Apache-2.0",
     "settings": {
@@ -28,5 +28,39 @@
       "lineNumbers": true,
       "syntaxMode": "per-fixture"
     }
+  },
+  "recoveredErrors": {
+    "path": "Tests/LiquidTests/Fixtures/recovered_errors.json",
+    "sha256": "3ff4389c968f9df655eb0e848c1602877f45550109b8961c4da480f989e2d75c",
+    "cases": 1,
+    "purpose": "Explicit output-and-diagnostic qualification of the unchanged upstream recovered-error case."
+  },
+  "rubyDate": {
+    "repository": "https://github.com/ruby/date",
+    "commit": "2b5442d85a97859a680eb4be20c6e1a28f3af282",
+    "version": "3.5.1",
+    "license": "BSD-2-Clause",
+    "grammarCases": {
+      "path": "Tests/LiquidTests/Fixtures/ruby_date_cases.json",
+      "sha256": "29bcc0da8f63afc628482bac1cbee1337482b253b6fb1fec77f9324db9f5f5f3",
+      "cases": 337
+    },
+    "source": {
+      "path": "Tests/LiquidTests/Fixtures/ruby_date_parse_source.txt",
+      "sha256": "273d5873be4bacdab380fd6d2d9b11bdf437fd5eccc5b9b7c6fbf491f70c2220",
+      "cases": 337
+    },
+    "time": {
+      "repository": "https://github.com/ruby/time",
+      "commit": "387292f5d2639e7100c2118254047514068da6e4",
+      "version": "0.4.2",
+      "license": "BSD-2-Clause"
+    }
+  },
+  "dateFilters": {
+    "path": "Tests/LiquidTests/Fixtures/date_filter_cases.json",
+    "sha256": "cc38d0d4e959d1a7485211771ced319abc2b19b43b2dcc47137dfcb7f2d44714",
+    "cases": 376,
+    "outsideSupportedYears": 35
   }
 }

@@ -109,11 +109,11 @@ extension Renderer {
             date = try LiquidDate(seconds: integer)
         } else if let text = value as? String {
             if text.lowercased() == "now" || text.lowercased() == "today" {
-                date = try LiquidDate.now()
+                date = try LiquidDate.from(referenceTime)
             } else if !text.isEmpty && text.utf8.allSatisfy({ (48...57).contains($0) }) {
                 guard let seconds = Int(text) else { throw LiquidError.invalidValue("Date epoch is outside the supported range") }
                 date = try LiquidDate(seconds: seconds)
-            } else if let parsed = try parseLiquidDate(text) {
+            } else if let parsed = try parseLiquidDate(text.lowercased(), referenceTime: referenceTime) {
                 date = parsed
             } else { return value }
         } else { return value }

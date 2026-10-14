@@ -43,9 +43,18 @@ private enum CompatibilityProbes {
     static var cases: [GoldenCase] { (try? loaded.get()) ?? [] }
 }
 
+private enum RecoveredErrors {
+    static let loaded: Result<LiquidObject, Error> = Result {
+        guard let url = Bundle.module.url(forResource: "recovered_errors", withExtension: "json", subdirectory: "Fixtures"),
+              case .object(let root) = try LiquidValue(json: String(contentsOf: url, encoding: .utf8)),
+              case .object(let tests) = root["tests"] else { throw CocoaError(.fileReadCorruptFile) }
+        return tests
+    }
+}
+
 @Test("Compatibility probe integrity")
 func compatibilityProbeIntegrity() throws {
-    #expect(try CompatibilityProbes.loaded.get().count == 185)
+    #expect(try CompatibilityProbes.loaded.get().count == 221)
 }
 
 @Test("Native compatibility probes", arguments: CompatibilityProbes.cases)
@@ -56,6 +65,7 @@ private func nativeCompatibilityProbes(_ fixture: GoldenCase) async throws {
 @Test("Golden fixture integrity")
 func goldenFixtureIntegrity() throws {
     #expect(try GoldenFixtures.loaded.get().count == 1098)
+    #expect(try RecoveredErrors.loaded.get().entries.count == 1)
 }
 
 @Test("Golden Liquid", arguments: GoldenFixtures.cases)
@@ -90,7 +100,27 @@ private func goldenLiquid(_ fixture: GoldenCase) async throws {
             Issue.record("Expected a Liquid language error, received \(error)")
         }
     } else {
-        let actual = try await LiquidEngine().render(template: source, context: context, templates: templates, syntaxMode: syntaxMode)
+        let result = try await LiquidEngine().renderWithDiagnostics(template: source, context: context, templates: templates, syntaxMode: syntaxMode)
+        let actual = result.output
+        let expectedErrors = try RecoveredErrors.loaded.get()[fixture.string("name") ?? ""] ?? fixture.object["diagnostics"] ?? .array([])
+        let observedErrors = LiquidValue.array(result.diagnostics.map { diagnostic in
+            var entries: [LiquidObject.Entry] = [
+                .init("message", .string(diagnostic.message)),
+                .init("line", diagnostic.line.map(LiquidValue.integer) ?? .null)
+            ]
+            if let name = diagnostic.templateName { entries.append(.init("templateName", .string(name))) }
+            return .object(LiquidObject(entries))
+        })
+        #expect(observedErrors == expectedErrors)
+        if case .array(let errors) = expectedErrors, errors.isEmpty {
+            let direct = try await LiquidEngine().render(template: source, context: context, templates: templates, syntaxMode: syntaxMode)
+            #expect(direct.utf8.elementsEqual(actual.utf8), "Raising and diagnostic render paths disagree")
+        } else {
+            let failure = await #expect(throws: LiquidError.self) {
+                try await LiquidEngine().render(template: source, context: context, templates: templates, syntaxMode: syntaxMode)
+            }
+            guard case .rendering? = failure else { Issue.record("Expected a runtime failure from the raising API"); return }
+        }
         if let expected = fixture.string("result") { #expect(actual.utf8.elementsEqual(expected.utf8), "Actual: \(actual.debugDescription); expected: \(expected.debugDescription)") }
         else if case .array(let results) = fixture.object["results"] {
             #expect(results.contains { value in

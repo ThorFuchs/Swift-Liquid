@@ -28,6 +28,9 @@ or `escape_once` when inserting text into HTML.
 - ``LiquidTemplate``
 - <doc:RenderingAndPartials>
 - <doc:Dates>
+- <doc:ErrorRecovery>
+- ``LiquidRenderResult``
+- ``LiquidDiagnostic``
 
 ### Input values
 

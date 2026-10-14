@@ -27,5 +27,8 @@ input adapters, and additional platform qualification. Rhoe document rendering,
 services, macros, inheritance, and hosted storefront behavior need separate
 product and compatibility decisions.
 
-Current blockers are recorded in [conformance evidence](Conformance.md), including
-heuristic date parsing and the pinned corpus's recovered Ruby filter error.
+Qualification now includes explicit recovered-error parity, the Ruby Date/Time
+grammar corpora, both public render paths, simulator-SDK library compilation,
+and a deterministic source archive rebuilt from a clean extraction. Run every
+technical lane at the candidate commit; publication and an immutable version tag
+remain maintainer-controlled steps.

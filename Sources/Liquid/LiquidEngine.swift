@@ -7,9 +7,12 @@ public struct LiquidEngine: Sendable {
     public let limits: LiquidLimits
     /// Whether unknown filters throw rather than leave the input unchanged.
     public let strictFilters: Bool
+    /// Optional base clock for `now`, `today`, and dates with missing components.
+    /// A nil value captures the current time at the start of each invocation.
+    public let referenceTime: Date?
     /// Creates a Liquid engine.
-    public init(limits: LiquidLimits = .default, strictFilters: Bool = false) {
-        self.limits = limits; self.strictFilters = strictFilters
+    public init(limits: LiquidLimits = .default, strictFilters: Bool = false, referenceTime: Date? = nil) {
+        self.limits = limits; self.strictFilters = strictFilters; self.referenceTime = referenceTime
     }
 
     /// Parses and renders a template with explicit variables and partial sources.
@@ -34,17 +37,34 @@ public struct LiquidEngine: Sendable {
     /// - Returns: The complete rendered output.
     /// - Throws: Runtime or cancellation errors.
     public func render(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> String {
+        try await perform(template, context: context, templates: templates, recovering: false).output
+    }
+
+    /// Renders source while retaining recovered Liquid runtime diagnostics.
+    /// Syntax errors, cancellation, unsupported values and quota failures still throw.
+    public func renderWithDiagnostics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
+        try checkSources(template, partials: Array(templates.values))
+        return try await renderWithDiagnostics(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits), context: context,
+            templates: templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) })
+    }
+
+    /// Renders a reusable template and returns output together with recovered errors.
+    public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidRenderResult {
+        try await perform(template, context: context, templates: templates, recovering: true)
+    }
+
+    private func perform(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate], recovering: Bool) async throws -> LiquidRenderResult {
         try Task.checkCancellation()
         try limits.validate()
         try checkSources(template.source, partials: templates.values.map(\.source))
         try admit(context)
-        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits)
+        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits, recoveryEnabled: recovering, referenceTime: referenceTime ?? Date())
         renderer.setTemplateLoader(TemplateLoader(templates: templates.mapValues(\.ast)))
         let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
         do {
             let output = try await renderer.render(template.ast, with: values)
             try renderer.budget.output(output)
-            return output
+            return LiquidRenderResult(output: output, diagnostics: renderer.diagnostics)
         } catch { throw publicError(error) }
     }
 

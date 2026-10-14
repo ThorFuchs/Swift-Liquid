@@ -2176,6 +2176,674 @@
         "strict"
       ],
       "result": "2024́|03́|é February"
+    },
+    {
+      "name": "recovery lax 0",
+      "template": "A{% assign b = items | reject: missing %}B{{ b }}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "AB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "lax"
+      ]
+    },
+    {
+      "name": "recovery lax 1",
+      "template": "A{{ items | reject: missing }}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "lax"
+      ]
+    },
+    {
+      "name": "recovery lax 2",
+      "template": "A{% echo items | reject: missing %}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "lax"
+      ]
+    },
+    {
+      "name": "recovery lax 3",
+      "template": "{% for item in (1..2) %}A{% assign b = items | reject: missing %}B{% endfor %}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ABAB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        },
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "lax"
+      ]
+    },
+    {
+      "name": "recovery strict 0",
+      "template": "A{% assign b = items | reject: missing %}B{{ b }}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "AB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "recovery strict 1",
+      "template": "A{{ items | reject: missing }}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "recovery strict 2",
+      "template": "A{% echo items | reject: missing %}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "recovery strict 3",
+      "template": "{% for item in (1..2) %}A{% assign b = items | reject: missing %}B{% endfor %}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ABAB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        },
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict"
+      ]
+    },
+    {
+      "name": "recovery strict2 0",
+      "template": "A{% assign b = items | reject: missing %}B{{ b }}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict2"
+      ]
+    },
+    {
+      "name": "recovery strict2 1",
+      "template": "A{{ items | reject: missing }}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict2"
+      ]
+    },
+    {
+      "name": "recovery strict2 2",
+      "template": "A{% echo items | reject: missing %}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict2"
+      ]
+    },
+    {
+      "name": "recovery strict2 3",
+      "template": "{% for item in (1..2) %}A{% assign b = items | reject: missing %}B{% endfor %}",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "result": "ALiquid error (line 1): cannot select the property ''BALiquid error (line 1): cannot select the property ''B",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        },
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ],
+      "tags": [
+        "strict2"
+      ]
+    },
+    {
+      "name": "recovery multiline retained assignment",
+      "template": "A\n{% assign b = 'old' %}\n{% assign b = items | reject: missing %}{{ b }}\nB",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "A\n\nold\nB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "name": "recovery capture",
+      "template": "{% capture x %}P{{ items | reject: missing }}Q{% endcapture %}[{{ x }}]",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "[PLiquid error (line 1): cannot select the property ''Q]",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery partial render",
+      "template": "A{% render 'part', items: items %}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {
+        "part": "P{{ items | reject: missing }}Q"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "APLiquid error (part line 1): cannot select the property ''QB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1,
+          "templateName": "part"
+        }
+      ]
+    },
+    {
+      "name": "recovery partial include",
+      "template": "A{% include 'part' %}B",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {
+        "part": "P{{ items | reject: missing }}Q"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "APLiquid error (part line 1): cannot select the property ''QB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1,
+          "templateName": "part"
+        }
+      ]
+    },
+    {
+      "name": "recovery liquid strict2",
+      "template": "A\n{% liquid\nassign b = items | reject: missing\necho 'after'\n%}\nB",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {},
+      "tags": [
+        "strict2"
+      ],
+      "result": "A\nLiquid error (line 3): cannot select the property ''after\nB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 3
+        }
+      ]
+    },
+    {
+      "name": "recovery liquid strict",
+      "template": "A\n{% liquid\n# retained line position\nassign b = items | reject: missing\necho 'after'\n%}\nB",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {},
+      "tags": [
+        "strict"
+      ],
+      "result": "A\nafter\nB",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 4
+        }
+      ]
+    },
+    {
+      "name": "recovery nested continue prefix",
+      "template": "{% for x in (1..3) %}X{{ x }}{% include 'part' %}Z{% endfor %}Q",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {
+        "part": "P{{ x }}{% continue %}BAD"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "X1P1X2P2X3P3Q",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery nested break prefix",
+      "template": "{% for x in (1..3) %}X{{ x }}{% include 'part' %}Z{% endfor %}Q",
+      "data": {
+        "items": [
+          "x",
+          "y"
+        ]
+      },
+      "templates": {
+        "part": "P{{ x }}{% if x == 2 %}{% break %}{% endif %}K"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "X1P1KZX2P2Q",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 0",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": null
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:0",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 1",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": []
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:0",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 2",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": {}
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:1",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 3",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": {
+          "a": 1,
+          "b": 2
+        }
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:1",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 4",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          null
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 5",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          false
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 6",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          true,
+          "x"
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 7",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          "x",
+          true
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 8",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          0
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 9",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": 1
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 10",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": 1.5
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 11",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": false
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "nil",
+      "diagnostics": []
+    },
+    {
+      "name": "recovery undefined property type 12",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": ""
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 13",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": "x"
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 14",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          {},
+          "x"
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "name": "recovery undefined property type 15",
+      "template": "{% assign result = 'old' %}{% assign result = input | reject: missing %}{% if result == nil %}nil{% else %}value:{{ result | size }}{% endif %}",
+      "data": {
+        "input": [
+          "x",
+          {}
+        ]
+      },
+      "tags": [
+        "strict"
+      ],
+      "result": "value:3",
+      "diagnostics": [
+        {
+          "message": "cannot select the property ''",
+          "line": 1
+        }
+      ]
     }
   ]
 }

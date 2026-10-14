@@ -19,8 +19,10 @@ type. Floats and unparseable strings also retain their values.
 Complete ISO, ordinal, English-month, RFC, and asctime dates are accepted.
 Timezone-free dates use UTC; fixed offsets are preserved for formatting. Slash
 dates with the year last use day/month/year. The calendar is proleptic Gregorian.
-Ruby Time's complete heuristic grammar, including missing date components, still
-requires further qualification.
+The pinned Ruby Date recognition pipeline and Time.parse defaults also handle
+partial dates and embedded fragments. Set ``LiquidEngine/referenceTime`` to make
+their clock-dependent components repeatable. A nil clock captures the current
+time once per invocation. The parser retains Ruby Date's 128-byte string limit.
 
 `%N` retains nine parsed fractional digits, `%L` retains three, and a width selects
 another precision. `%:z` prints an offset with a colon. Unknown directives remain

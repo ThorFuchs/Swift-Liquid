@@ -12,3 +12,19 @@ not replace applicable licenses on qualification inputs.
 The root package has no third-party dependencies. Reference clones and build
 outputs are not distributed. File-level source adaptations and hashes are
 recorded in Documentation/Architecture/ExtractionManifest.json.
+
+The date grammar and missing-component defaults include Swift adaptations of
+Ruby Date 3.5.1 (`2b5442d85a97859a680eb4be20c6e1a28f3af282`,
+`ext/date/date_parse.c`, coded by Tadayoshi Funaba) and Ruby Time 0.4.2
+(`387292f5d2639e7100c2118254047514068da6e4`, `lib/time.rb`). Applicable source
+files carry `Apache-2.0 AND BSD-2-Clause` identifiers. The original BSD copyright,
+conditions and disclaimer, plus alternative Ruby terms, are retained in
+[Licenses/RubyDate](Licenses/RubyDate). No Ruby interpreter is linked or invoked
+by the distributed library or CLI.
+
+The complete upstream date test source is preserved as inert fixture text, with
+its SHA-256 in the conformance pins. The 337 source-table inputs retain their
+line, original expectation, and year-completion metadata. The grammar tests
+check the fields consumed by Time.parse; the public date-filter corpus checks
+rendering and supported-year failures separately. These inputs carry the
+upstream BSD-2-Clause terms. They are never evaluated as Ruby test code.

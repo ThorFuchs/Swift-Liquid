@@ -1,0 +1,7 @@
+{
+  "tests": {
+    "filters, reject, first argument is undefined": [
+      { "message": "cannot select the property ''", "line": 1 }
+    ]
+  }
+}

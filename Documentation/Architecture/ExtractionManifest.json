@@ -138,6 +138,53 @@
         "Match integer size on the qualified 64-bit runtime."
       ],
       "qualification": "122 original date probes checked against the pinned Shopify runtime, plus typed public resource regressions."
+    },
+    {
+      "area": "Explicit Ruby runtime recovery",
+      "files": [
+        "Sources/Liquid/LiquidRenderResult.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift"
+      ],
+      "changes": [
+        "Fail-fast rendering remains the default; explicit diagnostic rendering preserves recovered errors and partial locations.",
+        "Reject with an undefined property now raises the reference error instead of silently selecting an empty array.",
+        "Preserve output carried through nested break/continue and maintain parser modes and line positions in liquid tags.",
+        "Preserve input order and Ruby subscript failure/early-return behavior for undefined reject properties across admitted value types."
+      ],
+      "qualification": "Original golden case and 36 authored recovery/control-flow/type probes; recovered errors remain separate from successful renders."
+    },
+    {
+      "area": "Ruby Time.parse grammar",
+      "source": {
+        "repository": "https://github.com/ruby/date",
+        "commit": "2b5442d85a97859a680eb4be20c6e1a28f3af282",
+        "path": "ext/date/date_parse.c",
+        "sha256": "c95ed43dd24d92c70a4a51ed5fed445a1362a9cf5b31efa8e7368ef7867377fb"
+      },
+      "timeSource": {
+        "repository": "https://github.com/ruby/time",
+        "commit": "387292f5d2639e7100c2118254047514068da6e4",
+        "path": "lib/time.rb",
+        "sha256": "524e910df9d670cc0e60a4122b00a4c70dd27b6dd07bee406806d172a667570c"
+      },
+      "files": [
+        "Sources/Liquid/Support/RubyDateParser.swift",
+        "Sources/Liquid/Support/DateParsing.swift"
+      ],
+      "license": "Apache-2.0 AND BSD-2-Clause",
+      "changes": [
+        "Port the complete loose-parser production sequence, numeric-field rotations, fragments, and Time.parse defaults into Swift.",
+        "Retain only Date._parse fields consumed by Time.parse; commercial-week/weekday fields do not supply calendar dates to Ruby Time.",
+        "Use immutable compiled grammar patterns with invocation-owned fragment state and an optional Sendable reference clock.",
+        "Preserve the explicit UTC, Int, and calendar-year 1...9999 contract; unsupported years are evaluated as policy boundaries."
+      ],
+      "qualification": "337 source-table cases with original completion metadata and 376 public date-filter cases, including 35 explicit supported-year boundaries; no exclusions."
     }
   ]
 }

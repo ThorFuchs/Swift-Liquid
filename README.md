@@ -5,7 +5,7 @@
 Render HTML, Markdown, configuration files, and plain text with a focused Liquid
 engine and a command-line tool. Swift-Liquid provides typed Sendable input values,
 immutable reusable templates, explicit partials, and Swift 6 concurrency. The
-package has no third-party runtime dependencies.
+SwiftPM dependency graph is empty; platform support comes from Foundation.
 
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -52,7 +52,8 @@ Add the library to your target:
 
 The package declares macOS 14, iOS 17, tvOS 17, watchOS 10, and visionOS 1 as its
 Apple deployment minimums. Qualification currently runs on macOS 27 with Swift 6.4.
-Platform declarations alone are not evidence of device qualification. The
+The library also compiles against all four declared simulator SDKs. These checks
+are separate from device execution qualification. The
 [consumer example](Examples/Consumer) is a separate package using only public APIs.
 
 ## Parse once, render many times
@@ -125,11 +126,12 @@ with its original license and checksum. The test runner checks successful
 outputs and expected errors, preserves fixture object order, and passes parser
 mode metadata to the engine. The fixture integrity test prevents an absent or
 empty corpus from passing unnoticed. Fixture expectations and reference-runtime
-comparisons are distinct evidence; both are documented. An additional **185
+comparisons are distinct evidence; both are documented. An additional **221
 reference-checked probes** cover Unicode scalars and keys, structural equality,
 negative arithmetic, parser modes, loop interruption, and date parsing/formatting.
-The reference receipt separates successful renders, expected errors, and reference
-failures; one recovered Ruby filter error remains an open release gate.
+The Ruby Date/Time grammar is additionally checked with 337 source-table cases
+and 376 public date-filter cases. Reference receipts separate successful renders,
+expected errors, recovered errors, supported-year boundaries, and reference failures.
 
 ```sh
 python3 Scripts/ci.py --lane native

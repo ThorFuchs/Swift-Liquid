@@ -15,9 +15,23 @@ extension Renderer {
     internal func renderNode(_ node: ASTNode) async throws -> String {
         try budget.enter()
         defer { budget.activeDepth -= 1 }
-        let output = try await executeNode(node)
-        try budget.output(output)
-        return output
+        do {
+            let output = try await executeNode(node)
+            try budget.output(output)
+            return output
+        } catch let error as RenderError {
+            guard recoveryEnabled, error.renderErrorCategory != .resource,
+                  error.renderErrorCategory != .security else { throw error }
+            let location = node.renderLocation
+            let message = error.message
+            diagnostics.append(.init(message: message, line: location?.line, templateName: currentTemplatePath))
+            if location?.suppressErrorText == true { return "" }
+            if case .undefinedFilter = error { return "" }
+            let prefix = location.map { "Liquid error (\(currentTemplatePath.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
+            let output = prefix + message
+            try budget.output(output)
+            return output
+        }
     }
 
     internal func executeNode(_ node: ASTNode) async throws -> String {
@@ -28,13 +42,13 @@ extension Renderer {
         case .text(let content):
             return content.string
 
-        case .output(let expression):
+        case .output(let expression, _):
             return try await renderExpression(expression)
 
-        case .assign(let variable, let value):
+        case .assign(let variable, let value, _):
             return try await renderAssign(variable: variable, value: value)
 
-        case .echo(let expression):
+        case .echo(let expression, _):
             return try await renderExpression(expression)
 
 
@@ -111,8 +125,8 @@ extension Renderer {
             try Task.checkCancellation()
             do { output.append(try await renderNode(node)) }
             catch let signal as LoopControlSignal {
-                if context.isInsideLoop { throw signal }
-                if case .breakLoopWithOutput(let partial) = signal { output.append(partial) }
+                output.append(signal.partialOutput)
+                if context.isInsideLoop { throw signal.carrying(output) }
                 return output
             }
         }
@@ -121,6 +135,7 @@ extension Renderer {
     }
 
     internal func renderSimpleNodeListFast(_ nodes: [ASTNode], staticCapacityHint: Int) async throws -> String {
+        if recoveryEnabled { return try await renderTemplate(nodes, staticCapacityHint: staticCapacityHint) }
 
 
         switch nodes.count {
@@ -130,7 +145,7 @@ extension Renderer {
             switch nodes[0] {
             case .text(let content), .raw(let content):
                 return content.string
-            case .output(let expression), .echo(let expression):
+            case .output(let expression, _), .echo(let expression, _):
                 return try await renderExpressionFast(expression)
             default:
                 return try await renderNode(nodes[0])
@@ -163,6 +178,7 @@ extension Renderer {
     }
 
     internal func appendRenderedSimpleNodeListFast(_ nodes: [ASTNode], to output: inout String) async throws {
+        if recoveryEnabled { output.append(try await renderTemplate(nodes)); return }
 
 
         switch nodes.count {
@@ -189,10 +205,11 @@ extension Renderer {
 
     @inline(__always)
     internal func appendRenderedSimpleNodeFast(_ node: ASTNode, to output: inout String) async throws {
+        if recoveryEnabled { output.append(try await renderNode(node)); return }
         switch node {
         case .text(let content), .raw(let content):
             output.append(content.string)
-        case .output(let expression), .echo(let expression):
+        case .output(let expression, _), .echo(let expression, _):
             try await appendRenderedExpressionFast(expression, to: &output)
         default:
             output.append(try await renderNode(node))
@@ -214,18 +231,18 @@ extension Renderer {
             output.append(trailing.string)
             return
 
-        case (.text(let leading), .output(let expression)),
-             (.text(let leading), .echo(let expression)),
-             (.raw(let leading), .output(let expression)),
-             (.raw(let leading), .echo(let expression)):
+        case (.text(let leading), .output(let expression, _)),
+             (.text(let leading), .echo(let expression, _)),
+             (.raw(let leading), .output(let expression, _)),
+             (.raw(let leading), .echo(let expression, _)):
             output.append(leading.string)
             try await appendRenderedExpressionFast(expression, to: &output)
             return
 
-        case (.output(let expression), .text(let trailing)),
-             (.output(let expression), .raw(let trailing)),
-             (.echo(let expression), .text(let trailing)),
-             (.echo(let expression), .raw(let trailing)):
+        case (.output(let expression, _), .text(let trailing)),
+             (.output(let expression, _), .raw(let trailing)),
+             (.echo(let expression, _), .text(let trailing)),
+             (.echo(let expression, _), .raw(let trailing)):
             try await appendRenderedExpressionFast(expression, to: &output)
             output.append(trailing.string)
             return
@@ -246,14 +263,14 @@ extension Renderer {
         to output: inout String
     ) async throws {
         switch (first, second, third) {
-        case (.text(let leading), .output(let expression), .text(let trailing)),
-             (.text(let leading), .output(let expression), .raw(let trailing)),
-             (.text(let leading), .echo(let expression), .text(let trailing)),
-             (.text(let leading), .echo(let expression), .raw(let trailing)),
-             (.raw(let leading), .output(let expression), .text(let trailing)),
-             (.raw(let leading), .output(let expression), .raw(let trailing)),
-             (.raw(let leading), .echo(let expression), .text(let trailing)),
-             (.raw(let leading), .echo(let expression), .raw(let trailing)):
+        case (.text(let leading), .output(let expression, _), .text(let trailing)),
+             (.text(let leading), .output(let expression, _), .raw(let trailing)),
+             (.text(let leading), .echo(let expression, _), .text(let trailing)),
+             (.text(let leading), .echo(let expression, _), .raw(let trailing)),
+             (.raw(let leading), .output(let expression, _), .text(let trailing)),
+             (.raw(let leading), .output(let expression, _), .raw(let trailing)),
+             (.raw(let leading), .echo(let expression, _), .text(let trailing)),
+             (.raw(let leading), .echo(let expression, _), .raw(let trailing)):
             output.append(leading.string)
             try await appendRenderedExpressionFast(expression, to: &output)
             output.append(trailing.string)

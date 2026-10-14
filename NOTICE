@@ -9,3 +9,10 @@ The upstream LICENSE and NOTICE are retained in Licenses/RhoeLiquid.
 Golden Liquid test data:
 Copyright (c) 2021-2025 James Prior; MIT License.
 The complete license accompanies the data in Tests/LiquidTests/Fixtures/LICENSE.
+
+Ruby Date and Time grammar adaptations:
+Ruby copyright (C) 1993-2013 Yukihiro Matsumoto. All rights reserved.
+date_parse.c was coded by Tadayoshi Funaba (2011, 2012).
+Original BSD-2-Clause terms and alternative Ruby terms are in Licenses/RubyDate.
+Swift adaptations and original contributions remain available under Apache-2.0;
+the applicable original notices and BSD conditions are also retained.

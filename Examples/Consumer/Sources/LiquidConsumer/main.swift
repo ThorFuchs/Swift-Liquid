@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
+import Foundation
 import Liquid
 
 @main
@@ -17,6 +18,13 @@ struct Consumer {
         guard case .object(let context) = value else { preconditionFailure("Expected context object") }
         let author = try await engine.render(template: "{{ name }}", context: context)
         precondition(author == "Ada")
+        let deterministic = LiquidEngine(referenceTime: Date(timeIntervalSince1970: 1_007_044_400))
+        let partialDate = try await deterministic.render(template: "{{ 'Aug 31' | date: '%F' }}")
+        precondition(partialDate == "2001-08-31")
+        let recovered = try await deterministic.renderWithDiagnostics(
+            template: "A{% assign b = items | reject: missing %}B", context: ["items": ["x"]])
+        precondition(recovered.output == "AB" && recovered.diagnostics.count == 1)
+        precondition(recovered.diagnostics.first?.line == 1)
         print("Public consumer examples passed.")
     }
 }

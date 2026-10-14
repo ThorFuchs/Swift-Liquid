@@ -1,0 +1,4419 @@
+{
+  "tests": [
+    {
+      "name": "Ruby Date 3.5.1 line 11",
+      "sourceLine": 11,
+      "input": "Sat Aug 28 02:55:50 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,28,2,55,50,nil,nil,6]",
+      "fields": {
+        "hour": 2,
+        "min": 55,
+        "sec": 50,
+        "year": 1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 12",
+      "sourceLine": 12,
+      "input": "Sat Aug 28 02:55:50 02",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,55,50,nil,nil,6]",
+      "fields": {
+        "hour": 2,
+        "min": 55,
+        "sec": 50,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 13",
+      "sourceLine": 13,
+      "input": "Sat Aug 28 02:55:50 02",
+      "completeYear": true,
+      "originalExpectation": "[2002,8,28,2,55,50,nil,nil,6]",
+      "fields": {
+        "hour": 2,
+        "min": 55,
+        "sec": 50,
+        "year": 2002,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 14",
+      "sourceLine": 14,
+      "input": "Sat Aug 28 02:55:50 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,55,50,nil,nil,6]",
+      "fields": {
+        "hour": 2,
+        "min": 55,
+        "sec": 50,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 15",
+      "sourceLine": 15,
+      "input": "Sat Aug 28 02:55:50 0002",
+      "completeYear": true,
+      "originalExpectation": "[2,8,28,2,55,50,nil,nil,6]",
+      "fields": {
+        "hour": 2,
+        "min": 55,
+        "sec": 50,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 18",
+      "sourceLine": 18,
+      "input": "Sat Aug 28 02:29:34 JST 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,28,2,29,34,'JST',9*3600,6]",
+      "fields": {
+        "zone": "JST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 19",
+      "sourceLine": 19,
+      "input": "Sat Aug 28 02:29:34 MET DST 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,28,2,29,34,'MET DST',2*3600,6]",
+      "fields": {
+        "zone": "MET DST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 20",
+      "sourceLine": 20,
+      "input": "Sat Aug 28 02:29:34 AMT 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,28,2,29,34,'AMT',nil,6]",
+      "fields": {
+        "zone": "AMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 21",
+      "sourceLine": 21,
+      "input": "Sat Aug 28 02:29:34 PMT 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,28,2,29,34,'PMT',nil,6]",
+      "fields": {
+        "zone": "PMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 22",
+      "sourceLine": 22,
+      "input": "Sat Aug 28 02:29:34 PMT -1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'PMT',nil,6]",
+      "fields": {
+        "zone": "PMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 24",
+      "sourceLine": 24,
+      "input": "Sat Aug 28 02:29:34 JST 02",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'JST',9*3600,6]",
+      "fields": {
+        "zone": "JST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 25",
+      "sourceLine": 25,
+      "input": "Sat Aug 28 02:29:34 JST 02",
+      "completeYear": true,
+      "originalExpectation": "[2002,8,28,2,29,34,'JST',9*3600,6]",
+      "fields": {
+        "zone": "JST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2002,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 26",
+      "sourceLine": 26,
+      "input": "Sat Aug 28 02:29:34 JST 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'JST',9*3600,6]",
+      "fields": {
+        "zone": "JST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 27",
+      "sourceLine": 27,
+      "input": "Sat Aug 28 02:29:34 JST 0002",
+      "completeYear": true,
+      "originalExpectation": "[2,8,28,2,29,34,'JST',9*3600,6]",
+      "fields": {
+        "zone": "JST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 28",
+      "sourceLine": 28,
+      "input": "Sat Aug 28 02:29:34 AEST 0002",
+      "completeYear": true,
+      "originalExpectation": "[2,8,28,2,29,34,'AEST',10*3600,6]",
+      "fields": {
+        "zone": "AEST",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 30",
+      "sourceLine": 30,
+      "input": "Sat Aug 28 02:29:34 GMT+09 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT+09',9*3600,6]",
+      "fields": {
+        "zone": "GMT+09",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 31",
+      "sourceLine": 31,
+      "input": "Sat Aug 28 02:29:34 GMT+0900 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT+0900',9*3600,6]",
+      "fields": {
+        "zone": "GMT+0900",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 32",
+      "sourceLine": 32,
+      "input": "Sat Aug 28 02:29:34 GMT+09:00 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT+09:00',9*3600,6]",
+      "fields": {
+        "zone": "GMT+09:00",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 33",
+      "sourceLine": 33,
+      "input": "Sat Aug 28 02:29:34 GMT-09 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT-09',-9*3600,6]",
+      "fields": {
+        "zone": "GMT-09",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 34",
+      "sourceLine": 34,
+      "input": "Sat Aug 28 02:29:34 GMT-0900 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT-0900',-9*3600,6]",
+      "fields": {
+        "zone": "GMT-0900",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 35",
+      "sourceLine": 35,
+      "input": "Sat Aug 28 02:29:34 GMT-09:00 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT-09:00',-9*3600,6]",
+      "fields": {
+        "zone": "GMT-09:00",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 36",
+      "sourceLine": 36,
+      "input": "Sat Aug 28 02:29:34 GMT-090102 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT-090102',-9*3600-60-2,6]",
+      "fields": {
+        "zone": "GMT-090102",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 37",
+      "sourceLine": 37,
+      "input": "Sat Aug 28 02:29:34 GMT-09:01:02 0002",
+      "completeYear": false,
+      "originalExpectation": "[2,8,28,2,29,34,'GMT-09:01:02',-9*3600-60-2,6]",
+      "fields": {
+        "zone": "GMT-09:01:02",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 39",
+      "sourceLine": 39,
+      "input": "Sat Aug 28 02:29:34 GMT Standard Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'GMT Standard Time',0*3600,6]",
+      "fields": {
+        "zone": "GMT Standard Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 40",
+      "sourceLine": 40,
+      "input": "Sat Aug 28 02:29:34 Mountain Standard Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'Mountain Standard Time',-7*3600,6]",
+      "fields": {
+        "zone": "Mountain Standard Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 41",
+      "sourceLine": 41,
+      "input": "Sat Aug 28 02:29:34 Mountain Daylight Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'Mountain Daylight Time',-6*3600,6]",
+      "fields": {
+        "zone": "Mountain Daylight Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 42",
+      "sourceLine": 42,
+      "input": "Sat Aug 28 02:29:34 Mexico Standard Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'Mexico Standard Time',-6*3600,6]",
+      "fields": {
+        "zone": "Mexico Standard Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 43",
+      "sourceLine": 43,
+      "input": "Sat Aug 28 02:29:34 E. Australia Standard Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'E. Australia Standard Time',10*3600,6]",
+      "fields": {
+        "zone": "E. Australia Standard Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 44",
+      "sourceLine": 44,
+      "input": "Sat Aug 28 02:29:34 W.  Central  Africa  Standard  Time 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'W. Central Africa Standard Time',1*3600,6]",
+      "fields": {
+        "zone": "W. Central Africa Standard Time",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 47",
+      "sourceLine": 47,
+      "input": "1999-05-23 23:55:21",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 48",
+      "sourceLine": 48,
+      "input": "1999-05-23 23:55:21+0900",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "zone": "+0900",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 49",
+      "sourceLine": 49,
+      "input": "1999-05-23 23:55:21-0900",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "zone": "-0900",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 50",
+      "sourceLine": 50,
+      "input": "1999-05-23 23:55:21+09:00",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'+09:00',9*3600,nil]",
+      "fields": {
+        "zone": "+09:00",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 51",
+      "sourceLine": 51,
+      "input": "1999-05-23T23:55:21-09:00",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'-09:00',-9*3600,nil]",
+      "fields": {
+        "zone": "-09:00",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 52",
+      "sourceLine": 52,
+      "input": "1999-05-23 23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 53",
+      "sourceLine": 53,
+      "input": "1999-05-23T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 54",
+      "sourceLine": 54,
+      "input": "-1999-05-23T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": -1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 55",
+      "sourceLine": 55,
+      "input": "-1999-05-23T23:55:21Z",
+      "completeYear": true,
+      "originalExpectation": "[-1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": -1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 56",
+      "sourceLine": 56,
+      "input": "19990523T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 58",
+      "sourceLine": 58,
+      "input": "+011985-04-12",
+      "completeYear": false,
+      "originalExpectation": "[11985,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 11985,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 59",
+      "sourceLine": 59,
+      "input": "+011985-04-12T10:15:30",
+      "completeYear": false,
+      "originalExpectation": "[11985,4,12,10,15,30,nil,nil,nil]",
+      "fields": {
+        "hour": 10,
+        "min": 15,
+        "sec": 30,
+        "year": 11985,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 60",
+      "sourceLine": 60,
+      "input": "-011985-04-12",
+      "completeYear": false,
+      "originalExpectation": "[-11985,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -11985,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 61",
+      "sourceLine": 61,
+      "input": "-011985-04-12T10:15:30",
+      "completeYear": false,
+      "originalExpectation": "[-11985,4,12,10,15,30,nil,nil,nil]",
+      "fields": {
+        "hour": 10,
+        "min": 15,
+        "sec": 30,
+        "year": -11985,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 63",
+      "sourceLine": 63,
+      "input": "02-04-12",
+      "completeYear": false,
+      "originalExpectation": "[2,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 64",
+      "sourceLine": 64,
+      "input": "02-04-12",
+      "completeYear": true,
+      "originalExpectation": "[2002,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2002,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 65",
+      "sourceLine": 65,
+      "input": "0002-04-12",
+      "completeYear": false,
+      "originalExpectation": "[2,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 66",
+      "sourceLine": 66,
+      "input": "0002-04-12",
+      "completeYear": true,
+      "originalExpectation": "[2,4,12,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2,
+        "mon": 4,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 68",
+      "sourceLine": 68,
+      "input": "19990523",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 69",
+      "sourceLine": 69,
+      "input": "-19990523",
+      "completeYear": true,
+      "originalExpectation": "[-1999,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 70",
+      "sourceLine": 70,
+      "input": "990523",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 71",
+      "sourceLine": 71,
+      "input": "0523",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 72",
+      "sourceLine": 72,
+      "input": "23",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 74",
+      "sourceLine": 74,
+      "input": "19990523 235521",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 75",
+      "sourceLine": 75,
+      "input": "990523 235521",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 76",
+      "sourceLine": 76,
+      "input": "0523 2355",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,23,23,55,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 77",
+      "sourceLine": 77,
+      "input": "23 2355",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,23,23,55,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 23,
+        "hour": 23,
+        "min": 55
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 79",
+      "sourceLine": 79,
+      "input": "19990523T235521",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 80",
+      "sourceLine": 80,
+      "input": "990523T235521",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 81",
+      "sourceLine": 81,
+      "input": "19990523T235521.99",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "fraction": "99"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 82",
+      "sourceLine": 82,
+      "input": "990523T235521.99",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "fraction": "99"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 83",
+      "sourceLine": 83,
+      "input": "0523T2355",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,23,23,55,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 85",
+      "sourceLine": 85,
+      "input": "19990523T235521+0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "zone": "+0900"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 86",
+      "sourceLine": 86,
+      "input": "990523T235521-0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "zone": "-0900"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 87",
+      "sourceLine": 87,
+      "input": "19990523T235521.99+0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "+0900",
+        "fraction": "99"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 88",
+      "sourceLine": 88,
+      "input": "990523T235521.99-0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "-0900",
+        "fraction": "99"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 89",
+      "sourceLine": 89,
+      "input": "0523T2355Z",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,23,23,55,nil,'Z',0,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "zone": "Z"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 91",
+      "sourceLine": 91,
+      "input": "19990523235521.123456+0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "+0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 92",
+      "sourceLine": 92,
+      "input": "19990523235521.123456-0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 93",
+      "sourceLine": 93,
+      "input": "19990523235521,123456+0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "+0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 94",
+      "sourceLine": 94,
+      "input": "19990523235521,123456-0900",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 96",
+      "sourceLine": 96,
+      "input": "990523235521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[99,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 99,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 97",
+      "sourceLine": 97,
+      "input": "0523235521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 98",
+      "sourceLine": 98,
+      "input": "23235521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 99",
+      "sourceLine": 99,
+      "input": "235521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 100",
+      "sourceLine": 100,
+      "input": "5521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 101",
+      "sourceLine": 101,
+      "input": "21,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 103",
+      "sourceLine": 103,
+      "input": "3235521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,3,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 3,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 104",
+      "sourceLine": 104,
+      "input": "35521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,3,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 3,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 105",
+      "sourceLine": 105,
+      "input": "521,123456-0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,5,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 5,
+        "zone": "-0900",
+        "fraction": "123456"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 108",
+      "sourceLine": 108,
+      "input": "23-05-1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 109",
+      "sourceLine": 109,
+      "input": "23-05-1999 23:55:21",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 110",
+      "sourceLine": 110,
+      "input": "23-05--1999 23:55:21",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": -1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 111",
+      "sourceLine": 111,
+      "input": "23-05-'99",
+      "completeYear": false,
+      "originalExpectation": "[99,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 112",
+      "sourceLine": 112,
+      "input": "23-05-'99",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 115",
+      "sourceLine": 115,
+      "input": "19990523T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 116",
+      "sourceLine": 116,
+      "input": "19990523235521.1234-100",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-100',-1*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-100",
+        "fraction": "1234"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 117",
+      "sourceLine": 117,
+      "input": "19990523235521.1234-10",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,23,23,55,21,'-10',-10*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-10",
+        "fraction": "1234"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 120",
+      "sourceLine": 120,
+      "input": "M11.05.23",
+      "completeYear": false,
+      "originalExpectation": "[1878,5,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1878,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 121",
+      "sourceLine": 121,
+      "input": "T11.05.23 23:55:21+0900",
+      "completeYear": false,
+      "originalExpectation": "[1922,5,23,23,55,21,'+0900',9*3600,nil]",
+      "fields": {
+        "zone": "+0900",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1922,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 122",
+      "sourceLine": 122,
+      "input": "S11.05.23 23:55:21-0900",
+      "completeYear": false,
+      "originalExpectation": "[1936,5,23,23,55,21,'-0900',-9*3600,nil]",
+      "fields": {
+        "zone": "-0900",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1936,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 123",
+      "sourceLine": 123,
+      "input": "S40.05.23 23:55:21+09:00",
+      "completeYear": false,
+      "originalExpectation": "[1965,5,23,23,55,21,'+09:00',9*3600,nil]",
+      "fields": {
+        "zone": "+09:00",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1965,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 124",
+      "sourceLine": 124,
+      "input": "S40.05.23T23:55:21-09:00",
+      "completeYear": false,
+      "originalExpectation": "[1965,5,23,23,55,21,'-09:00',-9*3600,nil]",
+      "fields": {
+        "zone": "-09:00",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1965,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 125",
+      "sourceLine": 125,
+      "input": "H11.05.23 23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 126",
+      "sourceLine": 126,
+      "input": "H11.05.23T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 127",
+      "sourceLine": 127,
+      "input": "H31.04.30 23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[2019,4,30,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 2019,
+        "mon": 4,
+        "mday": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 128",
+      "sourceLine": 128,
+      "input": "H31.04.30T23:55:21Z",
+      "completeYear": false,
+      "originalExpectation": "[2019,4,30,23,55,21,'Z',0,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 23,
+        "min": 55,
+        "sec": 21,
+        "year": 2019,
+        "mon": 4,
+        "mday": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 131",
+      "sourceLine": 131,
+      "input": "19990523235521",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 23,
+        "hour": 23,
+        "min": 55,
+        "sec": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 132",
+      "sourceLine": 132,
+      "input": "19990523235521.123",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,nil,nil,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 133",
+      "sourceLine": 133,
+      "input": "19990523235521.123[-9]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'-9',-(9*3600),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-9",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 134",
+      "sourceLine": 134,
+      "input": "19990523235521.123[+9]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'+9',+(9*3600),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "+9",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 135",
+      "sourceLine": 135,
+      "input": "19990523235521.123[9]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'9',+(9*3600),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "9",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 136",
+      "sourceLine": 136,
+      "input": "19990523235521.123[9 ]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'9 ',+(9*3600),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "9 ",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 137",
+      "sourceLine": 137,
+      "input": "19990523235521.123[-9.50]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'-9.50',-(9*3600+30*60),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "-9.50",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 138",
+      "sourceLine": 138,
+      "input": "19990523235521.123[+9.50]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'+9.50',+(9*3600+30*60),nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "+9.50",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 139",
+      "sourceLine": 139,
+      "input": "19990523235521.123[-5:EST]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'EST',-5*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "EST",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 140",
+      "sourceLine": 140,
+      "input": "19990523235521.123[+9:JST]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'JST',9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "JST",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 141",
+      "sourceLine": 141,
+      "input": "19990523235521.123[+12:XXX YYY ZZZ]",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,23,55,21,'XXX YYY ZZZ',12*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "mday": 23,
+        "mon": 5,
+        "year": 1999,
+        "zone": "XXX YYY ZZZ",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 142",
+      "sourceLine": 142,
+      "input": "235521.123",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,nil,nil,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 143",
+      "sourceLine": 143,
+      "input": "235521.123[-9]",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'-9',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "-9",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 144",
+      "sourceLine": 144,
+      "input": "235521.123[+9]",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'+9',+9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "+9",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 145",
+      "sourceLine": 145,
+      "input": "235521.123[-9 ]",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'-9 ',-9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "-9 ",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 146",
+      "sourceLine": 146,
+      "input": "235521.123[-5:EST]",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'EST',-5*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "EST",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 147",
+      "sourceLine": 147,
+      "input": "235521.123[+9:JST]",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,55,21,'JST',+9*3600,nil]",
+      "fields": {
+        "sec": 21,
+        "min": 55,
+        "hour": 23,
+        "zone": "JST",
+        "fraction": "123"
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 150",
+      "sourceLine": 150,
+      "input": "Sun, 22 Aug 1999 00:45:29 -0400",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,29,'-0400',-4*3600,0]",
+      "fields": {
+        "zone": "-0400",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 151",
+      "sourceLine": 151,
+      "input": "Sun, 22 Aug 1999 00:45:29 -9959",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,29,'-9959',-(99*3600+59*60),0]",
+      "fields": {
+        "zone": "-9959",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 152",
+      "sourceLine": 152,
+      "input": "Sun, 22 Aug 1999 00:45:29 +9959",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,29,'+9959',+(99*3600+59*60),0]",
+      "fields": {
+        "zone": "+9959",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 153",
+      "sourceLine": 153,
+      "input": "Sun, 22 Aug 05 00:45:29 -0400",
+      "completeYear": true,
+      "originalExpectation": "[2005,8,22,0,45,29,'-0400',-4*3600,0]",
+      "fields": {
+        "zone": "-0400",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 2005,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 154",
+      "sourceLine": 154,
+      "input": "Sun, 22 Aug 49 00:45:29 -0400",
+      "completeYear": true,
+      "originalExpectation": "[2049,8,22,0,45,29,'-0400',-4*3600,0]",
+      "fields": {
+        "zone": "-0400",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 2049,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 155",
+      "sourceLine": 155,
+      "input": "Sun, 22 Aug 1999 00:45:29 GMT",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,29,'GMT',0,0]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 156",
+      "sourceLine": 156,
+      "input": "Sun,\\00022\r\nAug\r\n1999\r\n00:45:29\r\nGMT",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,29,'GMT',0,0]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 22,
+        "mon": 8,
+        "mday": 1999
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 157",
+      "sourceLine": 157,
+      "input": "Sun, 22 Aug 1999 00:45 GMT",
+      "completeYear": false,
+      "originalExpectation": "[1999,8,22,0,45,nil,'GMT',0,0]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 0,
+        "min": 45,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 158",
+      "sourceLine": 158,
+      "input": "Sun, 22 Aug -1999 00:45 GMT",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,22,0,45,nil,'GMT',0,0]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 0,
+        "min": 45,
+        "year": -1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 159",
+      "sourceLine": 159,
+      "input": "Sun, 22 Aug 99 00:45:29 UT",
+      "completeYear": true,
+      "originalExpectation": "[1999,8,22,0,45,29,'UT',0,0]",
+      "fields": {
+        "zone": "UT",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 1999,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 160",
+      "sourceLine": 160,
+      "input": "Sun, 22 Aug 0099 00:45:29 UT",
+      "completeYear": true,
+      "originalExpectation": "[99,8,22,0,45,29,'UT',0,0]",
+      "fields": {
+        "zone": "UT",
+        "hour": 0,
+        "min": 45,
+        "sec": 29,
+        "year": 99,
+        "mon": 8,
+        "mday": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 163",
+      "sourceLine": 163,
+      "input": "Tuesday, 02-Mar-99 11:20:32 GMT",
+      "completeYear": true,
+      "originalExpectation": "[1999,3,2,11,20,32,'GMT',0,2]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 11,
+        "min": 20,
+        "sec": 32,
+        "year": 1999,
+        "mon": 3,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 166",
+      "sourceLine": 166,
+      "input": "2000-01-31 13:20:00-5",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'-5',-5*3600,nil]",
+      "fields": {
+        "zone": "-5",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 169",
+      "sourceLine": 169,
+      "input": "2000-01-31 13:20:00-5.5",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'-5.5',-5*3600-30*60,nil]",
+      "fields": {
+        "zone": "-5.5",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 170",
+      "sourceLine": 170,
+      "input": "2000-01-31 13:20:00-5,5",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'-5,5',-5*3600-30*60,nil]",
+      "fields": {
+        "zone": "-5,5",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 171",
+      "sourceLine": 171,
+      "input": "2000-01-31 13:20:00+3.5",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'+3.5',3*3600+30*60,nil]",
+      "fields": {
+        "zone": "+3.5",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 172",
+      "sourceLine": 172,
+      "input": "2000-01-31 13:20:00+3,5",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'+3,5',3*3600+30*60,nil]",
+      "fields": {
+        "zone": "+3,5",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 175",
+      "sourceLine": 175,
+      "input": "2000-01-31 13:20:00 Z",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'Z',0*3600,nil]",
+      "fields": {
+        "zone": "Z",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 176",
+      "sourceLine": 176,
+      "input": "2000-01-31 13:20:00 H",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'H',8*3600,nil]",
+      "fields": {
+        "zone": "H",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 177",
+      "sourceLine": 177,
+      "input": "2000-01-31 13:20:00 M",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'M',12*3600,nil]",
+      "fields": {
+        "zone": "M",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 178",
+      "sourceLine": 178,
+      "input": "2000-01-31 13:20 M",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,nil,'M',12*3600,nil]",
+      "fields": {
+        "zone": "M",
+        "hour": 13,
+        "min": 20,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 179",
+      "sourceLine": 179,
+      "input": "2000-01-31 13:20:00 S",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'S',-6*3600,nil]",
+      "fields": {
+        "zone": "S",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 180",
+      "sourceLine": 180,
+      "input": "2000-01-31 13:20:00 A",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'A',1*3600,nil]",
+      "fields": {
+        "zone": "A",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 181",
+      "sourceLine": 181,
+      "input": "2000-01-31 13:20:00 P",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,31,13,20,0,'P',-3*3600,nil]",
+      "fields": {
+        "zone": "P",
+        "hour": 13,
+        "min": 20,
+        "sec": 0,
+        "year": 2000,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 184",
+      "sourceLine": 184,
+      "input": "1999.5.2",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 185",
+      "sourceLine": 185,
+      "input": "1999.05.02",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 186",
+      "sourceLine": 186,
+      "input": "-1999.05.02",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 188",
+      "sourceLine": 188,
+      "input": "0099.5.2",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 189",
+      "sourceLine": 189,
+      "input": "0099.5.2",
+      "completeYear": true,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 191",
+      "sourceLine": 191,
+      "input": "'99.5.2",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 192",
+      "sourceLine": 192,
+      "input": "'99.5.2",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 195",
+      "sourceLine": 195,
+      "input": "2.5.1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 196",
+      "sourceLine": 196,
+      "input": "02.05.1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 197",
+      "sourceLine": 197,
+      "input": "02.05.-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 199",
+      "sourceLine": 199,
+      "input": "2.5.0099",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 200",
+      "sourceLine": 200,
+      "input": "2.5.0099",
+      "completeYear": true,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 202",
+      "sourceLine": 202,
+      "input": "2.5.'99",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 203",
+      "sourceLine": 203,
+      "input": "2.5.'99",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 206",
+      "sourceLine": 206,
+      "input": "08-DEC-1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 207",
+      "sourceLine": 207,
+      "input": "31-JAN-1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 208",
+      "sourceLine": 208,
+      "input": "31-JAN--1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 210",
+      "sourceLine": 210,
+      "input": "08-DEC-88",
+      "completeYear": false,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 211",
+      "sourceLine": 211,
+      "input": "08-DEC-88",
+      "completeYear": true,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 212",
+      "sourceLine": 212,
+      "input": "08-DEC-0088",
+      "completeYear": false,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 213",
+      "sourceLine": 213,
+      "input": "08-DEC-0088",
+      "completeYear": true,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 216",
+      "sourceLine": 216,
+      "input": "DEC-08-1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 217",
+      "sourceLine": 217,
+      "input": "JAN-31-1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 218",
+      "sourceLine": 218,
+      "input": "JAN-31--1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 219",
+      "sourceLine": 219,
+      "input": "JAN-1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 220",
+      "sourceLine": 220,
+      "input": "JAN--1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 223",
+      "sourceLine": 223,
+      "input": "1988-DEC-08",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 224",
+      "sourceLine": 224,
+      "input": "1999-JAN-31",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 225",
+      "sourceLine": 225,
+      "input": "-1999-JAN-31",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 227",
+      "sourceLine": 227,
+      "input": "0088-DEC-08",
+      "completeYear": false,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 228",
+      "sourceLine": 228,
+      "input": "0088-DEC-08",
+      "completeYear": true,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 230",
+      "sourceLine": 230,
+      "input": "'88/12/8",
+      "completeYear": false,
+      "originalExpectation": "[88,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 88,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 231",
+      "sourceLine": 231,
+      "input": "'88/12/8",
+      "completeYear": true,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 234",
+      "sourceLine": 234,
+      "input": "08/dec/1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 235",
+      "sourceLine": 235,
+      "input": "31/jan/1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 236",
+      "sourceLine": 236,
+      "input": "31/jan/-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 237",
+      "sourceLine": 237,
+      "input": "08.dec.1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 238",
+      "sourceLine": 238,
+      "input": "31.jan.1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 239",
+      "sourceLine": 239,
+      "input": "31.jan.-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 242",
+      "sourceLine": 242,
+      "input": "dec/08/1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 243",
+      "sourceLine": 243,
+      "input": "jan/31/1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 244",
+      "sourceLine": 244,
+      "input": "jan/31/-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 245",
+      "sourceLine": 245,
+      "input": "jan/31",
+      "completeYear": false,
+      "originalExpectation": "[nil,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 246",
+      "sourceLine": 246,
+      "input": "jan/1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,1,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 247",
+      "sourceLine": 247,
+      "input": "dec.08.1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,12,8,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 12,
+        "mday": 8
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 248",
+      "sourceLine": 248,
+      "input": "jan.31.1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 249",
+      "sourceLine": 249,
+      "input": "jan.31.-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 250",
+      "sourceLine": 250,
+      "input": "jan.31",
+      "completeYear": false,
+      "originalExpectation": "[nil,1,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 1,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 251",
+      "sourceLine": 251,
+      "input": "jan.1988",
+      "completeYear": false,
+      "originalExpectation": "[1988,1,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1988,
+        "mon": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 254",
+      "sourceLine": 254,
+      "input": "Jan 1",
+      "completeYear": false,
+      "originalExpectation": "[nil,1,1,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 1,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 255",
+      "sourceLine": 255,
+      "input": "Jul 11",
+      "completeYear": false,
+      "originalExpectation": "[nil,7,11,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 7,
+        "mday": 11
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 256",
+      "sourceLine": 256,
+      "input": "July 11",
+      "completeYear": false,
+      "originalExpectation": "[nil,7,11,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 7,
+        "mday": 11
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 257",
+      "sourceLine": 257,
+      "input": "Sept 23",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 258",
+      "sourceLine": 258,
+      "input": "Sep. 23",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 259",
+      "sourceLine": 259,
+      "input": "Sept. 23",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 260",
+      "sourceLine": 260,
+      "input": "September 23",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 261",
+      "sourceLine": 261,
+      "input": "October 1st",
+      "completeYear": false,
+      "originalExpectation": "[nil,10,1,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 10,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 262",
+      "sourceLine": 262,
+      "input": "October 23rd",
+      "completeYear": false,
+      "originalExpectation": "[nil,10,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 10,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 263",
+      "sourceLine": 263,
+      "input": "October 25th 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,10,25,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 10,
+        "mday": 25
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 264",
+      "sourceLine": 264,
+      "input": "October 25th -1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,10,25,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 10,
+        "mday": 25
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 265",
+      "sourceLine": 265,
+      "input": "october 25th 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,10,25,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 10,
+        "mday": 25
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 266",
+      "sourceLine": 266,
+      "input": "OCTOBER 25th 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,10,25,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 10,
+        "mday": 25
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 267",
+      "sourceLine": 267,
+      "input": "oCtoBer 25th 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,10,25,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 10,
+        "mday": 25
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 268",
+      "sourceLine": 268,
+      "input": "aSep 23",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,23,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 271",
+      "sourceLine": 271,
+      "input": "Sept 1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1990,
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 272",
+      "sourceLine": 272,
+      "input": "Sept '90",
+      "completeYear": false,
+      "originalExpectation": "[90,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 90,
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 273",
+      "sourceLine": 273,
+      "input": "Sept '90",
+      "completeYear": true,
+      "originalExpectation": "[1990,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1990,
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 274",
+      "sourceLine": 274,
+      "input": "1990/09",
+      "completeYear": false,
+      "originalExpectation": "[1990,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1990,
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 275",
+      "sourceLine": 275,
+      "input": "09/1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1990,
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 276",
+      "sourceLine": 276,
+      "input": "aSep '90",
+      "completeYear": false,
+      "originalExpectation": "[90,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 90
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 279",
+      "sourceLine": 279,
+      "input": "'90",
+      "completeYear": false,
+      "originalExpectation": "[90,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 90
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 280",
+      "sourceLine": 280,
+      "input": "'90",
+      "completeYear": true,
+      "originalExpectation": "[1990,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1990
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 283",
+      "sourceLine": 283,
+      "input": "Jun",
+      "completeYear": false,
+      "originalExpectation": "[nil,6,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 6
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 284",
+      "sourceLine": 284,
+      "input": "June",
+      "completeYear": false,
+      "originalExpectation": "[nil,6,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 6
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 285",
+      "sourceLine": 285,
+      "input": "Sep",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 286",
+      "sourceLine": 286,
+      "input": "Sept",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 287",
+      "sourceLine": 287,
+      "input": "September",
+      "completeYear": false,
+      "originalExpectation": "[nil,9,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 288",
+      "sourceLine": 288,
+      "input": "aSep",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 291",
+      "sourceLine": 291,
+      "input": "1st",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,1,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 292",
+      "sourceLine": 292,
+      "input": "2nd",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 293",
+      "sourceLine": 293,
+      "input": "3rd",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,3,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 3
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 294",
+      "sourceLine": 294,
+      "input": "4th",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,4,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 4
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 295",
+      "sourceLine": 295,
+      "input": "29th",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,29,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 29
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 296",
+      "sourceLine": 296,
+      "input": "31st",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,31,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 297",
+      "sourceLine": 297,
+      "input": "1sta",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 300",
+      "sourceLine": 300,
+      "input": "Sat Aug 28 02:29:34 GMT CE 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 301",
+      "sourceLine": 301,
+      "input": "Sat Aug 28 02:29:34 GMT C.E. 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 302",
+      "sourceLine": 302,
+      "input": "Sat Aug 28 02:29:34 GMT BCE 2000",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 303",
+      "sourceLine": 303,
+      "input": "Sat Aug 28 02:29:34 GMT B.C.E. 2000",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 304",
+      "sourceLine": 304,
+      "input": "Sat Aug 28 02:29:34 GMT AD 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 305",
+      "sourceLine": 305,
+      "input": "Sat Aug 28 02:29:34 GMT A.D. 2000",
+      "completeYear": false,
+      "originalExpectation": "[2000,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": 2000,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 306",
+      "sourceLine": 306,
+      "input": "Sat Aug 28 02:29:34 GMT BC 2000",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 307",
+      "sourceLine": 307,
+      "input": "Sat Aug 28 02:29:34 GMT B.C. 2000",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 308",
+      "sourceLine": 308,
+      "input": "Sat Aug 28 02:29:34 GMT 2000 BC",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 309",
+      "sourceLine": 309,
+      "input": "Sat Aug 28 02:29:34 GMT 2000 BCE",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 310",
+      "sourceLine": 310,
+      "input": "Sat Aug 28 02:29:34 GMT 2000 B.C.",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 311",
+      "sourceLine": 311,
+      "input": "Sat Aug 28 02:29:34 GMT 2000 B.C.E.",
+      "completeYear": false,
+      "originalExpectation": "[-1999,8,28,2,29,34,'GMT',0,6]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 2,
+        "min": 29,
+        "sec": 34,
+        "year": -1999,
+        "mon": 8,
+        "mday": 28
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 322",
+      "sourceLine": 322,
+      "input": "8:00 pm lt",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,20,0,nil,'lt',nil,nil]",
+      "fields": {
+        "zone": "lt",
+        "hour": 20,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 323",
+      "sourceLine": 323,
+      "input": "4:00 AM, Jan. 12, 1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 4,
+        "min": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 324",
+      "sourceLine": 324,
+      "input": "Jan. 12 4:00 AM 1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 4,
+        "min": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 325",
+      "sourceLine": 325,
+      "input": "1990-01-12 04:00:00+00",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,0,'+00',0,nil]",
+      "fields": {
+        "zone": "+00",
+        "hour": 4,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 326",
+      "sourceLine": 326,
+      "input": "1990-01-11 20:00:00-08",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,11,20,0,0,'-08',-8*3600,nil]",
+      "fields": {
+        "zone": "-08",
+        "hour": 20,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 11
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 327",
+      "sourceLine": 327,
+      "input": "1990/01/12 04:00:00",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,0,nil,nil,nil]",
+      "fields": {
+        "hour": 4,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 328",
+      "sourceLine": 328,
+      "input": "Thu Jan 11 20:00:00 PST 1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,11,20,0,0,'PST',-8*3600,4]",
+      "fields": {
+        "zone": "PST",
+        "hour": 20,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 11
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 329",
+      "sourceLine": 329,
+      "input": "Fri Jan 12 04:00:00 GMT 1990",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,0,'GMT',0,5]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 4,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 330",
+      "sourceLine": 330,
+      "input": "Thu, 11 Jan 1990 20:00:00 -0800",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,11,20,0,0,'-0800',-8*3600,4]",
+      "fields": {
+        "zone": "-0800",
+        "hour": 20,
+        "min": 0,
+        "sec": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 11
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 331",
+      "sourceLine": 331,
+      "input": "12-January-1990, 04:00 WET",
+      "completeYear": false,
+      "originalExpectation": "[1990,1,12,4,0,nil,'WET',0*3600,nil]",
+      "fields": {
+        "zone": "WET",
+        "hour": 4,
+        "min": 0,
+        "year": 1990,
+        "mon": 1,
+        "mday": 12
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 332",
+      "sourceLine": 332,
+      "input": "jan 2 3 am +4 5",
+      "completeYear": false,
+      "originalExpectation": "[5,1,2,3,nil,nil,'+4',4*3600,nil]",
+      "fields": {
+        "zone": "+4",
+        "hour": 3,
+        "year": 5,
+        "mon": 1,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 333",
+      "sourceLine": 333,
+      "input": "jan 2 3 am +4 5",
+      "completeYear": true,
+      "originalExpectation": "[2005,1,2,3,nil,nil,'+4',4*3600,nil]",
+      "fields": {
+        "zone": "+4",
+        "hour": 3,
+        "year": 2005,
+        "mon": 1,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 334",
+      "sourceLine": 334,
+      "input": "fri1feb3bc4pm+5",
+      "completeYear": false,
+      "originalExpectation": "[-2,2,1,16,nil,nil,'+5',5*3600,5]",
+      "fields": {
+        "zone": "+5",
+        "hour": 16,
+        "year": -2,
+        "mon": 2,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 335",
+      "sourceLine": 335,
+      "input": "fri1feb3bc4pm+5",
+      "completeYear": true,
+      "originalExpectation": "[-2,2,1,16,nil,nil,'+5',5*3600,5]",
+      "fields": {
+        "zone": "+5",
+        "hour": 16,
+        "year": -2,
+        "mon": 2,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 336",
+      "sourceLine": 336,
+      "input": "03 feb 1st",
+      "completeYear": false,
+      "originalExpectation": "[03,2,1,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 3,
+        "mon": 2,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 339",
+      "sourceLine": 339,
+      "input": "July 4, '79",
+      "completeYear": true,
+      "originalExpectation": "[1979,7,4,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1979,
+        "mon": 7,
+        "mday": 4
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 340",
+      "sourceLine": 340,
+      "input": "4th July '79",
+      "completeYear": true,
+      "originalExpectation": "[1979,7,4,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1979,
+        "mon": 7,
+        "mday": 4
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 343",
+      "sourceLine": 343,
+      "input": "Sunday",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,0]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 344",
+      "sourceLine": 344,
+      "input": "Mon",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,1]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 345",
+      "sourceLine": 345,
+      "input": "Tue",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,2]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 346",
+      "sourceLine": 346,
+      "input": "Wed",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,3]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 347",
+      "sourceLine": 347,
+      "input": "Thurs",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,4]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 348",
+      "sourceLine": 348,
+      "input": "Friday",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,5]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 349",
+      "sourceLine": 349,
+      "input": "Sat.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,6]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 350",
+      "sourceLine": 350,
+      "input": "sat.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,6]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 351",
+      "sourceLine": 351,
+      "input": "SAT.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,6]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 352",
+      "sourceLine": 352,
+      "input": "sAt.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,6]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 355",
+      "sourceLine": 355,
+      "input": "09:55",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,55,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 55
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 356",
+      "sourceLine": 356,
+      "input": "09:55:30",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,55,30,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 357",
+      "sourceLine": 357,
+      "input": "09:55:30am",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,55,30,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 358",
+      "sourceLine": 358,
+      "input": "09:55:30pm",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,55,30,nil,nil,nil]",
+      "fields": {
+        "hour": 21,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 359",
+      "sourceLine": 359,
+      "input": "09:55:30a.m.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,55,30,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 360",
+      "sourceLine": 360,
+      "input": "09:55:30p.m.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,55,30,nil,nil,nil]",
+      "fields": {
+        "hour": 21,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 361",
+      "sourceLine": 361,
+      "input": "09:55:30pm GMT",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,55,30,'GMT',0,nil]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 21,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 362",
+      "sourceLine": 362,
+      "input": "09:55:30p.m. GMT",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,55,30,'GMT',0,nil]",
+      "fields": {
+        "zone": "GMT",
+        "hour": 21,
+        "min": 55,
+        "sec": 30
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 363",
+      "sourceLine": 363,
+      "input": "09:55+0900",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,55,nil,'+0900',9*3600,nil]",
+      "fields": {
+        "zone": "+0900",
+        "hour": 9,
+        "min": 55
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 364",
+      "sourceLine": 364,
+      "input": "09 AM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 365",
+      "sourceLine": 365,
+      "input": "09am",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 366",
+      "sourceLine": 366,
+      "input": "09 A.M.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 367",
+      "sourceLine": 367,
+      "input": "09 PM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 368",
+      "sourceLine": 368,
+      "input": "09pm",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 369",
+      "sourceLine": 369,
+      "input": "09 P.M.",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 371",
+      "sourceLine": 371,
+      "input": "9h22m23s",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,23,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22,
+        "sec": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 372",
+      "sourceLine": 372,
+      "input": "9h 22m 23s",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,23,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22,
+        "sec": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 373",
+      "sourceLine": 373,
+      "input": "9h22m",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 374",
+      "sourceLine": 374,
+      "input": "9h 22m",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 375",
+      "sourceLine": 375,
+      "input": "9h",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 376",
+      "sourceLine": 376,
+      "input": "9h 22m 23s am",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,23,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22,
+        "sec": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 377",
+      "sourceLine": 377,
+      "input": "9h 22m 23s pm",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,22,23,nil,nil,nil]",
+      "fields": {
+        "hour": 21,
+        "min": 22,
+        "sec": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 378",
+      "sourceLine": 378,
+      "input": "9h 22m am",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,22,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9,
+        "min": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 379",
+      "sourceLine": 379,
+      "input": "9h 22m pm",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,22,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 21,
+        "min": 22
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 380",
+      "sourceLine": 380,
+      "input": "9h am",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,9,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 9
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 381",
+      "sourceLine": 381,
+      "input": "9h pm",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,21,nil,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 21
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 383",
+      "sourceLine": 383,
+      "input": "00:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,0,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 0,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 384",
+      "sourceLine": 384,
+      "input": "01:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,1,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 1,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 385",
+      "sourceLine": 385,
+      "input": "11:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,11,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 11,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 386",
+      "sourceLine": 386,
+      "input": "12:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,12,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 12,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 387",
+      "sourceLine": 387,
+      "input": "13:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,13,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 13,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 388",
+      "sourceLine": 388,
+      "input": "23:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 23,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 389",
+      "sourceLine": 389,
+      "input": "24:00",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,24,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 24,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 391",
+      "sourceLine": 391,
+      "input": "00:00 AM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,0,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 0,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 392",
+      "sourceLine": 392,
+      "input": "12:00 AM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,0,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 0,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 393",
+      "sourceLine": 393,
+      "input": "01:00 AM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,1,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 1,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 394",
+      "sourceLine": 394,
+      "input": "11:00 AM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,11,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 11,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 395",
+      "sourceLine": 395,
+      "input": "00:00 PM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,12,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 12,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 396",
+      "sourceLine": 396,
+      "input": "12:00 PM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,12,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 12,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 397",
+      "sourceLine": 397,
+      "input": "01:00 PM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,13,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 13,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 398",
+      "sourceLine": 398,
+      "input": "11:00 PM",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,23,0,nil,nil,nil,nil]",
+      "fields": {
+        "hour": 23,
+        "min": 0
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 401",
+      "sourceLine": 401,
+      "input": "2000-01-02 1",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,2,1,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2000,
+        "mon": 1,
+        "mday": 2,
+        "hour": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 402",
+      "sourceLine": 402,
+      "input": "2000-01-02 23",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,2,23,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2000,
+        "mon": 1,
+        "mday": 2,
+        "hour": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 403",
+      "sourceLine": 403,
+      "input": "2000-01-02 24",
+      "completeYear": false,
+      "originalExpectation": "[2000,1,2,24,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 2000,
+        "mon": 1,
+        "mday": 2,
+        "hour": 24
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 404",
+      "sourceLine": 404,
+      "input": "1 03:04:05",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,1,3,4,5,nil,nil,nil]",
+      "fields": {
+        "hour": 3,
+        "min": 4,
+        "sec": 5,
+        "mday": 1
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 405",
+      "sourceLine": 405,
+      "input": "02 03:04:05",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,2,3,4,5,nil,nil,nil]",
+      "fields": {
+        "hour": 3,
+        "min": 4,
+        "sec": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 406",
+      "sourceLine": 406,
+      "input": "31 03:04:05",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,31,3,4,5,nil,nil,nil]",
+      "fields": {
+        "hour": 3,
+        "min": 4,
+        "sec": 5,
+        "mday": 31
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 409",
+      "sourceLine": 409,
+      "input": "",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 410",
+      "sourceLine": 410,
+      "input": "\\s",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 412",
+      "sourceLine": 412,
+      "input": "\t",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 413",
+      "sourceLine": 413,
+      "input": "\n",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 414",
+      "sourceLine": 414,
+      "input": "\u000b",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 415",
+      "sourceLine": 415,
+      "input": "\f",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 416",
+      "sourceLine": 416,
+      "input": "\r",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 417",
+      "sourceLine": 417,
+      "input": "\t\n\u000b\f\r\\s",
+      "completeYear": false,
+      "originalExpectation": "[nil,nil,nil,nil,nil,nil,nil,nil,nil]",
+      "fields": {}
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 418",
+      "sourceLine": 418,
+      "input": "1999-05-23\t\n\u000b\f\r\\s21:34:56",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,23,21,34,56,nil,nil,nil]",
+      "fields": {
+        "hour": 21,
+        "min": 34,
+        "sec": 56,
+        "year": 1999,
+        "mon": 5,
+        "mday": 23
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 439",
+      "sourceLine": 439,
+      "input": "2/5/1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 440",
+      "sourceLine": 440,
+      "input": "02/05/1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 441",
+      "sourceLine": 441,
+      "input": "02/05/-1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 442",
+      "sourceLine": 442,
+      "input": "05/02",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 443",
+      "sourceLine": 443,
+      "input": " 5/ 2",
+      "completeYear": false,
+      "originalExpectation": "[nil,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 445",
+      "sourceLine": 445,
+      "input": "2/5/'99",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 446",
+      "sourceLine": 446,
+      "input": "2/5/0099",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 447",
+      "sourceLine": 447,
+      "input": "2/5/0099",
+      "completeYear": true,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 449",
+      "sourceLine": 449,
+      "input": "2/5 1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 450",
+      "sourceLine": 450,
+      "input": "2/5-1999",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 451",
+      "sourceLine": 451,
+      "input": "2/5--1999",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 454",
+      "sourceLine": 454,
+      "input": "99/5/2",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 455",
+      "sourceLine": 455,
+      "input": "99/5/2",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 457",
+      "sourceLine": 457,
+      "input": "1999/5/2",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 458",
+      "sourceLine": 458,
+      "input": "1999/05/02",
+      "completeYear": false,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 459",
+      "sourceLine": 459,
+      "input": "-1999/05/02",
+      "completeYear": false,
+      "originalExpectation": "[-1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": -1999,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 461",
+      "sourceLine": 461,
+      "input": "0099/5/2",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 462",
+      "sourceLine": 462,
+      "input": "0099/5/2",
+      "completeYear": true,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 464",
+      "sourceLine": 464,
+      "input": "'99/5/2",
+      "completeYear": false,
+      "originalExpectation": "[99,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 99,
+        "mon": 5,
+        "mday": 2
+      }
+    },
+    {
+      "name": "Ruby Date 3.5.1 line 465",
+      "sourceLine": 465,
+      "input": "'99/5/2",
+      "completeYear": true,
+      "originalExpectation": "[1999,5,2,nil,nil,nil,nil,nil,nil]",
+      "fields": {
+        "year": 1999,
+        "mon": 5,
+        "mday": 2
+      }
+    }
+  ]
+}

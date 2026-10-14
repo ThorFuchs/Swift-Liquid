@@ -23,6 +23,7 @@ internal final class Parser {
 
     private let source: String?
     private let syntaxMode: LiquidSyntaxMode
+    private let lineOffset: Int
     private let maxNestingDepth: Int
     private var parseDepth = 0
 
@@ -43,11 +44,13 @@ internal final class Parser {
         consuming tokens: [Token],
         source: String? = nil,
         syntaxMode: LiquidSyntaxMode = .lax,
-        maxNestingDepth: Int = 64
+        maxNestingDepth: Int = 64,
+        lineOffset: Int = 0
     ) {
         self.tokens = tokens
         self.source = source
         self.syntaxMode = syntaxMode
+        self.lineOffset = lineOffset
         self.maxNestingDepth = maxNestingDepth
         self.currentTokenStorage = tokens.first ?? Self.eofToken
         self.nextTokenStorage = tokens.count > 1 ? tokens[1] : Self.eofToken
@@ -95,6 +98,7 @@ internal final class Parser {
     
     @inline(__always)
     private func parseVariable() throws ->ASTNode {
+        let line = currentToken.line + lineOffset
         advance() // consume {{
         
         let expression = try parseExpression()
@@ -104,7 +108,7 @@ internal final class Parser {
         }
         advance() // consume }}
         
-        return .output(expression)
+        return .output(expression, location: .init(line: line, suppressErrorText: false))
     }
     
     @inline(__always)
@@ -259,6 +263,7 @@ internal final class Parser {
     // MARK: - Simple Tag Parsing
     
     private func parseAssignTag() throws ->ASTNode {
+        let line = currentToken.line + lineOffset
         if syntaxMode == .strict2 {
             if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true { throw ParserError.expectedIdentifier }
             if case .number = currentToken.type { throw ParserError.expectedIdentifier }
@@ -286,10 +291,11 @@ internal final class Parser {
         let value = try parseExpression()
         try consumeTagEnd()
         
-        return .assign(variable: variableName, value: value)
+        return .assign(variable: variableName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
     }
     
     private func parseEchoTag() throws ->ASTNode {
+        let line = currentToken.line + lineOffset
         // Empty echo: {% echo %} outputs nothing
         if currentToken.type == .tagEnd {
             try consumeTagEnd()
@@ -298,7 +304,7 @@ internal final class Parser {
         let expression = try parseExpression()
         try consumeTagEnd()
 
-        return .echo(expression: expression)
+        return .echo(expression: expression, location: .init(line: line, suppressErrorText: false))
     }
     
     private func parseCommentTag() throws ->ASTNode {
@@ -1773,6 +1779,7 @@ internal final class Parser {
     
     private func parseLiquidTag() throws ->ASTNode {
         let markupStart = current
+        let markupLine = currentToken.line
         while currentToken.type != .tagEnd && !isAtEnd {
             advance()
         }
@@ -1797,7 +1804,10 @@ internal final class Parser {
         }
         let nestedParser = Parser(
             consuming: nestedTokens,
-            source: rewrittenTemplate
+            source: rewrittenTemplate,
+            syntaxMode: syntaxMode,
+            maxNestingDepth: maxNestingDepth,
+            lineOffset: lineOffset + markupLine - 1
         )
         let nestedAST = try nestedParser.parse()
 
@@ -1825,7 +1835,7 @@ internal final class Parser {
         var result: [String] = []
         var inComment = false
         for line in lines {
-            if line.isEmpty { continue }
+            if line.isEmpty { result.append(""); continue }
 
             if inComment {
                 // Inside comment block, check for endcomment
@@ -1833,7 +1843,8 @@ internal final class Parser {
                     result.append("{% endcomment %}")
                     inComment = false
                 }
-                // Skip comment content lines
+                else { result.append("") }
+                // Keep line positions while the comment lexer discards content.
                 continue
             }
 
@@ -1845,6 +1856,7 @@ internal final class Parser {
 
             // Handle # inline comments — skip them
             if line.hasPrefix("#") {
+                result.append("")
                 continue
             }
 

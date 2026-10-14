@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 AND BSD-2-Clause
+// Time.parse defaults adapted from Ruby Time 0.4.2; terms in Licenses/RubyDate.
 import Foundation
 
 /// Integral epoch seconds and decimal subseconds are kept separately. Foundation
@@ -21,8 +22,8 @@ internal struct LiquidDate {
         self.seconds = seconds; self.fraction = fraction; self.offset = offset
     }
 
-    static func now() throws -> Self {
-        let epoch = Date().timeIntervalSince1970
+    static func from(_ date: Date) throws -> Self {
+        let epoch = date.timeIntervalSince1970
         let seconds = try checkedInteger(epoch.rounded(.down))
         let nanos = Int((epoch - Double(seconds)) * 1_000_000_000)
         let digits = String(nanos)
@@ -83,99 +84,80 @@ internal struct LiquidDateParts {
 internal let liquidMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 internal let liquidWeekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-/// Recognizes complete calendar/ordinal dates and English RFC/asctime forms.
-/// It deliberately does not guess missing date components from the system clock.
-internal func parseLiquidDate(_ source: String) throws -> LiquidDate? {
+/// Apply Time.make_time's defaults after Date._parse's heuristic recognition.
+/// The reference's timezone is UTC; unrecognized abbreviations use that zone.
+internal func parseLiquidDate(_ source: String, referenceTime: Date) throws -> LiquidDate? {
     try Task.checkCancellation()
-    var text = source.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-    func match(_ pattern: String, _ input: String) -> [String]? {
-        guard let regex = try? NSRegularExpression(pattern: pattern),
-              let result = regex.firstMatch(in: input, range: NSRange(input.startIndex..., in: input)) else { return nil }
-        return (0..<result.numberOfRanges).map { index in
-            Range(result.range(at: index), in: input).map { String(input[$0]) } ?? ""
-        }
-    }
-    func completeYear(_ spelling: String) -> Int? {
-        guard let value = Int(spelling) else { return nil }
-        return spelling.count <= 2 ? value + (value >= 69 ? 1900 : 2000) : value
-    }
-    // Expand the basic timestamp spelling before the common parser below.
-    if let basic = match(#"^(\d{4})(\d{2})(\d{2})t(\d{2})(\d{2})(\d{2})(\.\d+)?(.*)$"#, text) {
-        text = "\(basic[1])-\(basic[2])-\(basic[3])t\(basic[4]):\(basic[5]):\(basic[6])\(basic[7])\(basic[8])"
-    }
-    if let weekday = match(#"^(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)\s*,?\s*"#, text) {
-        text.removeFirst(weekday[0].count)
-    }
-    var hour = 0, minute = 0, second = 0, offset = 0, fraction = ""
-    if let time = match(#"(?:[t\s])?(\d{1,2}):(\d{2})(?::(\d{2})(?:[.,](\d+))?)?"#, text),
-       let range = text.range(of: time[0]) {
-        hour = Int(time[1]) ?? 0; minute = Int(time[2]) ?? 0; second = Int(time[3]) ?? 0; fraction = time[4]
-        var tail = String(text[range.upperBound...]).trimmingCharacters(in: .whitespacesAndNewlines)
-        if let meridian = match(#"^(am|pm)\b\s*"#, tail) {
-            guard (1...12).contains(hour) else { return nil }
-            hour = hour % 12 + (meridian[1] == "pm" ? 12 : 0)
-            tail.removeFirst(meridian[0].count)
-        }
-        if let zone = match(#"^([+-]\d{2}(?::?\d{2})?(?::?\d{2})?|[a-z]+)\s*$"#, tail) {
-            let spelling = zone[1]
-            if spelling.first == "+" || spelling.first == "-" {
-                let digits = spelling.dropFirst().replacingOccurrences(of: ":", with: "")
-                guard [2, 4, 6].contains(digits.count), let hours = Int(digits.prefix(2)) else { return nil }
-                let minutes = digits.count >= 4 ? Int(digits.dropFirst(2).prefix(2)) ?? 0 : 0
-                let seconds = digits.count == 6 ? Int(digits.suffix(2)) ?? 0 : 0
-                guard hours < 24, minutes < 60, seconds < 60 else { return nil }
-                offset = (hours * 3600 + minutes * 60 + seconds) * (spelling.first == "-" ? -1 : 1)
-            } else {
-                // RFC 822 abbreviations; unrecognized zones are ignored in UTC,
-                // as Time.parse does when they do not name the reference's zone.
-                let hours = ["ut": 0, "utc": 0, "gmt": 0, "z": 0, "est": -5, "edt": -4, "cst": -6, "cdt": -5, "mst": -7, "mdt": -6, "pst": -8, "pdt": -7]
-                if let known = hours[spelling] { offset = known * 3600 }
-                else if spelling.utf8.count == 1, let code = spelling.utf8.first {
-                    if (97...105).contains(code) { offset = Int(code - 96) * 3600 }
-                    else if (107...109).contains(code) { offset = Int(code - 97) * 3600 }
-                    else if (110...121).contains(code) { offset = -Int(code - 109) * 3600 }
+    // Date._parse's default length limit is bytes, after Liquid lowercases input.
+    guard source.utf8.count <= 128 else { return nil }
+    var parser = try RubyDateParser(source)
+    let fields = try parser.parse()
+    guard fields.year != nil || fields.month != nil || fields.day != nil || fields.ordinal != nil || fields.hour != nil || fields.minute != nil || fields.second != nil || fields.fraction != nil else { return nil }
+    let offset = timeZoneOffset(fields.zone ?? "")
+    guard (-86_399...86_399).contains(offset) else { return nil }
+    let clock = try LiquidDate.from(referenceTime)
+    let now = LiquidDateParts(try LiquidDate(seconds: clock.seconds, fraction: clock.fraction, offset: offset))
+    var year = fields.year, month = fields.month, day = fields.day
+    var hour = fields.hour, minute = fields.minute, second = fields.second
+    var fraction = fields.fraction
+    // Fill missing upper fields from the base clock until the first supplied
+    // field. Unspecified lower fields then take their minimum values.
+    if year == nil {
+        year = now.year
+        if month == nil && fields.ordinal == nil {
+            month = now.month
+            if day == nil {
+                day = now.day
+                if hour == nil {
+                    hour = now.hour
+                    if minute == nil {
+                        minute = now.minute
+                        if second == nil {
+                            second = now.second
+                            if fraction == nil { fraction = clock.fraction }
+                        }
+                    }
                 }
             }
-            tail = ""
-        }
-        text = String(text[..<range.lowerBound]) + " " + tail
-    }
-    guard hour <= 24, minute < 60, second <= 60,
-          hour != 24 || (minute == 0 && second == 0 && !fraction.contains(where: { $0 != "0" })) else { return nil }
-    text = text.trimmingCharacters(in: .whitespacesAndNewlines)
-    var year: Int?, month: Int?, day: Int?, ordinal: Int?
-    if let numeric = match(#"^(\d{1,4})([-/.])(\d{1,2})\2(\d{1,4})$"#, text) {
-        if numeric[1].count >= 3 || (numeric[2] == "-" && numeric[4].count <= 2) {
-            year = completeYear(numeric[1]); month = Int(numeric[3]); day = Int(numeric[4])
-        } else {
-            day = Int(numeric[1]); month = Int(numeric[3]); year = completeYear(numeric[4])
-        }
-    } else if let date = match(#"^(\d{4})-(\d{3})$"#, text) {
-        year = Int(date[1]); ordinal = Int(date[2])
-    } else {
-        let words = text.replacingOccurrences(of: ",", with: " ").replacingOccurrences(of: "-", with: " ").split(whereSeparator: { $0.isWhitespace }).map(String.init)
-        if words.count == 3, let position = words.firstIndex(where: { word in
-            liquidMonthNames.contains { name in name.lowercased() == word || name.lowercased().prefix(3) == word }
-        }) {
-            month = liquidMonthNames.firstIndex { $0.lowercased() == words[position] || $0.lowercased().prefix(3) == words[position] }.map { $0 + 1 }
-            if position == 0 { day = Int(words[1]); year = completeYear(words[2]) }
-            else if position == 1 {
-                if words[0].count >= 3 { year = completeYear(words[0]); day = Int(words[2]) }
-                else { day = Int(words[0]); year = completeYear(words[2]) }
-            }
         }
     }
-    guard let year else { return nil }
-    guard (1...9999).contains(year) else { throw LiquidError.invalidValue("Date year must be in 1...9999") }
+    let y = year ?? 1970, mon = month ?? 1, d = day ?? 1
+    let h = hour ?? 0, m = minute ?? 0, s = second ?? 0
+    guard (1...12).contains(mon), (1...31).contains(d), (0...24).contains(h), (0...59).contains(m), (0...60).contains(s),
+          h != 24 || (m == 0 && s == 0) else { return nil }
+    guard (1...9999).contains(y) else { throw LiquidError.invalidValue("Date year must be in 1...9999") }
     let epochDay: Int
-    if let ordinal {
-        guard (1...(LiquidDateParts.isLeap(year) ? 366 : 365)).contains(ordinal) else { return nil }
-        epochDay = LiquidDateParts.epochDay(year: year, month: 1, day: 1) + ordinal - 1
+    if let ordinal = fields.ordinal {
+        guard (1...(LiquidDateParts.isLeap(y) ? 366 : 365)).contains(ordinal) else { return nil }
+        epochDay = LiquidDateParts.epochDay(year: y, month: 1, day: 1) + ordinal - 1
     } else {
-        guard let month, let day, (1...12).contains(month), (1...31).contains(day) else { return nil }
-        // Ruby Time normalizes days 29...31 that overflow a shorter month.
-        epochDay = LiquidDateParts.epochDay(year: year, month: month, day: day)
+        epochDay = LiquidDateParts.epochDay(year: y, month: mon, day: d)
     }
     try Task.checkCancellation()
-    return try LiquidDate(seconds: epochDay * 86_400 + hour * 3600 + minute * 60 + second - offset, fraction: fraction, offset: offset)
+    return try LiquidDate(seconds: epochDay * 86_400 + h * 3600 + m * 60 + s - offset, fraction: fraction ?? "", offset: offset)
+}
+
+private func timeZoneOffset(_ original: String) -> Int {
+    let zone = original.lowercased()
+    let named = ["ut": 0, "utc": 0, "gmt": 0, "z": 0, "est": -5, "edt": -4, "cst": -6, "cdt": -5, "mst": -7, "mdt": -6, "pst": -8, "pdt": -7]
+    if let hours = named[zone] { return hours * 3600 }
+    if zone.utf8.count == 1, let code = zone.utf8.first {
+        if (97...105).contains(code) { return Int(code - 96) * 3600 }
+        if (107...109).contains(code) { return Int(code - 97) * 3600 }
+        if (110...121).contains(code) { return -Int(code - 109) * 3600 }
+    }
+    guard zone.first == "+" || zone.first == "-" else { return 0 }
+    let sign = zone.first == "-" ? -1 : 1
+    let digits = zone.dropFirst()
+    let pieces: [String]
+    if digits.contains(":") {
+        pieces = digits.split(separator: ":", omittingEmptySubsequences: false).map(String.init)
+        guard [2, 3].contains(pieces.count), pieces.allSatisfy({ $0.utf8.count == 2 }) else { return 0 }
+    } else {
+        let bytes = Array(digits.utf8)
+        guard [2, 4, 6].contains(bytes.count) else { return 0 }
+        pieces = stride(from: 0, to: bytes.count, by: 2).map { String(decoding: bytes[$0..<($0 + 2)], as: UTF8.self) }
+    }
+    guard pieces.allSatisfy({ $0.utf8.allSatisfy { (48...57).contains($0) } }) else { return 0 }
+    return sign * ((Int(pieces[0]) ?? 0) * 3600 + (pieces.count > 1 ? (Int(pieces[1]) ?? 0) * 60 : 0) + (pieces.count > 2 ? Int(pieces[2]) ?? 0 : 0))
 }

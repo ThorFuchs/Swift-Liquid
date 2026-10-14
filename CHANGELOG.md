@@ -13,3 +13,10 @@
 - Report recovered reference errors separately instead of counting them as renders.
 - Compare fixture outputs as UTF-8 and keep operational failures distinct from language errors.
 - Add a date workload to the release benchmark package.
+- Implement Ruby Date/Time's complete recognition pipeline and missing-component
+  defaults with a deterministic reference clock and retained BSD attribution.
+- Qualify 337 upstream source-table cases and 376 public date-filter cases.
+- Add explicit diagnostic rendering with line/partial metadata while retaining
+  fail-fast rendering and CLI failure atomicity.
+- Preserve output through nested break/continue and parser modes in liquid tags.
+- Add simulator-SDK compilation and deterministic clean-source archive gates.

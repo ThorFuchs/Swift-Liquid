@@ -5,14 +5,14 @@
 internal indirect enum ASTNode: Sendable {
     case template([ASTNode])
     case text(InlineString)
-    case output(LiquidExpression)
+    case output(LiquidExpression, location: RenderLocation? = nil)
     case `if`(condition: LiquidExpression, then: [ASTNode], elsif: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
     case unless(condition: LiquidExpression, then: [ASTNode], else: [ASTNode]?)
     case `case`(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
     case `for`(variable: InlineString, in: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams)
     case tablerow(variable: InlineString, in: LiquidExpression, body: [ASTNode], params: TableRowParams)
     case cycle(group: LiquidExpression?, items: [LiquidExpression])
-    case assign(variable: InlineString, value: LiquidExpression)
+    case assign(variable: InlineString, value: LiquidExpression, location: RenderLocation? = nil)
     case capture(variable: InlineString, body: [ASTNode])
     case increment(name: InlineString)
     case decrement(name: InlineString)
@@ -20,7 +20,7 @@ internal indirect enum ASTNode: Sendable {
     case comment
     case raw(InlineString)
     case liquid(body: [ASTNode])
-    case echo(expression: LiquidExpression)
+    case echo(expression: LiquidExpression, location: RenderLocation? = nil)
     case `break`
     case `continue`
     case ifchanged([ASTNode])
@@ -39,7 +39,7 @@ internal indirect enum ASTNode: Sendable {
 
     var expressions: [LiquidExpression] {
         switch self {
-        case .output(let value), .echo(let value), .assign(_, let value): return [value]
+        case .output(let value, _), .echo(let value, _), .assign(_, let value, _): return [value]
         case .if(let condition, _, let branches, _): return [condition] + branches.map { $0.0 }
         case .unless(let condition, _, _): return [condition]
         case .case(let value, let branches, _): return [value] + branches.map { $0.0 }
@@ -178,3 +178,17 @@ internal enum LoopBodyRenderPlan: Sendable, Equatable {
     }
 }
 
+
+internal struct RenderLocation: Sendable {
+    let line: Int
+    let suppressErrorText: Bool
+}
+
+extension ASTNode {
+    var renderLocation: RenderLocation? {
+        switch self {
+        case .output(_, let location), .echo(_, let location), .assign(_, _, let location): return location
+        default: return nil
+        }
+    }
+}

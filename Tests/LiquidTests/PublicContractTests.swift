@@ -4,13 +4,14 @@ import Testing
 import Liquid
 
 @Test func concurrentRendersOwnTheirScopesAndCounters() async throws {
-    let engine = LiquidEngine()
+    let engine = LiquidEngine(referenceTime: Date(timeIntervalSince1970: 0))
     let template = try LiquidTemplate("{% increment n %}:{{ name }}:{% assign name = 'local' %}{{ name }}")
     try await withThrowingTaskGroup(of: Void.self) { group in
         for index in 0..<64 {
             group.addTask {
                 let output = try await engine.render(template, context: ["name": .string(String(index))])
                 #expect(output == "0:\(index):local")
+                #expect(try await engine.render(template: "{{ 'Jan 1' | date: '%F' }}") == "1970-01-01")
             }
         }
         try await group.waitForAll()
@@ -153,5 +154,22 @@ func malformedJSONIsRejected(source: String) {
     await expectLimit("renderSteps") {
         try await LiquidEngine(limits: .init(renderSteps: 10)).render(
             template: "{{ '2024-02-03' | date: format }}", context: ["format": .string(String(repeating: "x", count: 100))])
+    }
+}
+
+@Test func recoveredErrorsAreExplicitAndInvocationOwned() async throws {
+    let engine = LiquidEngine()
+    let template = try LiquidTemplate("A{% assign b = items | reject: missing %}B")
+    await #expect(throws: LiquidError.self) { try await engine.render(template, context: ["items": ["x"]]) }
+    let result = try await engine.renderWithDiagnostics(template, context: ["items": ["x"]])
+    #expect(result.output == "AB")
+    #expect(result.diagnostics.count == 1)
+    #expect(result.diagnostics.first?.message == "cannot select the property ''")
+    #expect(result.diagnostics.first?.line == 1)
+    let clean = try await engine.renderWithDiagnostics(template, context: ["items": []])
+    #expect(clean.output == "AB")
+    #expect(clean.diagnostics.isEmpty)
+    await #expect(throws: LiquidError.self) {
+        try await LiquidEngine(limits: .init(outputBytes: 1)).renderWithDiagnostics(template, context: ["items": ["x"]])
     }
 }

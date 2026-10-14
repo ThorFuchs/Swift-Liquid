@@ -260,7 +260,7 @@ extension Renderer {
             return output
         }
 
-        if let renderPlan = params.renderPlan {
+        if !recoveryEnabled, let renderPlan = params.renderPlan {
             var output = String()
             let staticPlanCapacity = renderPlan.staticUTF8Count
             if staticPlanCapacity > 0 {
@@ -298,13 +298,11 @@ extension Renderer {
                 do {
                     try await appendLoopBodyRenderPlanFast(renderPlan, to: &output)
                 } catch let signal as LoopControlSignal {
+                    output += signal.partialOutput
                     switch signal {
-                    case .continueLoop:
+                    case .continueLoop, .continueLoopWithOutput:
                         continue forLoop
-                    case .breakLoop:
-                        break forLoop
-                    case .breakLoopWithOutput(let partialOutput):
-                        output += partialOutput
+                    case .breakLoop, .breakLoopWithOutput:
                         break forLoop
                     }
                 }
@@ -351,13 +349,11 @@ extension Renderer {
             do {
                 try await appendRenderedSimpleNodeListFast(body, to: &output)
             } catch let signal as LoopControlSignal {
+                output += signal.partialOutput
                 switch signal {
-                case .continueLoop:
+                case .continueLoop, .continueLoopWithOutput:
                     continue forLoop
-                case .breakLoop:
-                    break forLoop
-                case .breakLoopWithOutput(let partialOutput):
-                    output += partialOutput
+                case .breakLoop, .breakLoopWithOutput:
                     break forLoop
                 }
             }
@@ -430,7 +426,7 @@ extension Renderer {
             return output
         }
 
-        if let renderPlan = params.renderPlan {
+        if !recoveryEnabled, let renderPlan = params.renderPlan {
             var output = String()
             output.reserveCapacity(try budget.capacity((renderPlan.staticUTF8Count + 32), count: itemCount))
 
@@ -469,19 +465,16 @@ extension Renderer {
                 do {
                     try await appendLoopBodyRenderPlanFast(renderPlan, to: &output)
                 } catch let signal as LoopControlSignal {
+                    output += signal.partialOutput
                     output.append("</td>")
 
                     switch signal {
-                    case .continueLoop:
+                    case .continueLoop, .continueLoopWithOutput:
                         if colIndex == columnCount - 1 || index == lastIndex {
                             output.append("</tr>\n")
                         }
                         continue
-                    case .breakLoop:
-                        output.append("</tr>\n")
-                        return output
-                    case .breakLoopWithOutput(let partialOutput):
-                        output.append(partialOutput)
+                    case .breakLoop, .breakLoopWithOutput:
                         output.append("</tr>\n")
                         return output
                     }
@@ -542,19 +535,16 @@ extension Renderer {
             do {
                 try await appendRenderedSimpleNodeListFast(body, to: &output)
             } catch let signal as LoopControlSignal {
+                output += signal.partialOutput
                 output.append("</td>")
 
                 switch signal {
-                case .continueLoop:
+                case .continueLoop, .continueLoopWithOutput:
                     if colIndex == columnCount - 1 || index == lastIndex {
                         output.append("</tr>\n")
                     }
                     continue
-                case .breakLoop:
-                    output.append("</tr>\n")
-                    return output
-                case .breakLoopWithOutput(let partialOutput):
-                    output.append(partialOutput)
+                case .breakLoop, .breakLoopWithOutput:
                     output.append("</tr>\n")
                     return output
                 }
@@ -793,10 +783,7 @@ extension Renderer {
                 }
             } catch let signal as LoopControlSignal {
                 // Re-throw with COMBINED partial output (our output + nested include's output)
-                if case .breakLoopWithOutput(let nestedOutput) = signal {
-                    throw LoopControlSignal.breakLoopWithOutput(includeOutput + nestedOutput)
-                }
-                throw LoopControlSignal.breakLoopWithOutput(includeOutput)
+                throw signal.carrying(includeOutput + signal.partialOutput)
             }
 
             return includeOutput

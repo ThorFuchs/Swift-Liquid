@@ -13,6 +13,20 @@ internal enum LoopControlSignal: Error {
     case breakLoop
     case continueLoop
     case breakLoopWithOutput(String)
+    case continueLoopWithOutput(String)
+
+    var partialOutput: String {
+        switch self {
+        case .breakLoopWithOutput(let output), .continueLoopWithOutput(let output): return output
+        default: return ""
+        }
+    }
+    func carrying(_ output: String) -> Self {
+        switch self {
+        case .continueLoop, .continueLoopWithOutput: return .continueLoopWithOutput(output)
+        case .breakLoop, .breakLoopWithOutput: return .breakLoopWithOutput(output)
+        }
+    }
 }
 
 internal struct RendererConfiguration: Sendable {
@@ -51,6 +65,9 @@ internal final class Renderer {
     // MARK: - Properties
     
     internal let budget: RuntimeBudget
+    internal let recoveryEnabled: Bool
+    internal let referenceTime: Date
+    internal var diagnostics: [LiquidDiagnostic] = []
     internal var lastIfChanged: String?
     internal var context: RenderingContext
 
@@ -77,7 +94,9 @@ internal final class Renderer {
 
     // MARK: - Initialization
     
-    internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default) {
+    internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default, recoveryEnabled: Bool = false, referenceTime: Date = Date()) {
+        self.referenceTime = referenceTime
+        self.recoveryEnabled = recoveryEnabled
         self.budget = RuntimeBudget(limits)
         self.context = RenderingContext()
         self.configuration = configuration
@@ -112,8 +131,7 @@ internal final class Renderer {
         resetTemplatePathStack()
         do { return try await renderNode(node) }
         catch let signal as LoopControlSignal {
-            if case .breakLoopWithOutput(let output) = signal { return output }
-            return ""
+            return signal.partialOutput
         }
     }
 

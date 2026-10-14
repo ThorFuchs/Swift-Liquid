@@ -1,0 +1,6275 @@
+{
+  "tests": [
+    {
+      "name": "date grammar public: source line 11",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:55:50 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 11,
+        "completeYear": false
+      },
+      "result": "1999-08-28 02:55:50|935808950|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 12",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:55:50 02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 12,
+        "completeYear": false
+      },
+      "result": "2002-08-28 02:55:50|1030503350|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 13",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:55:50 02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 13,
+        "completeYear": true
+      },
+      "result": "2002-08-28 02:55:50|1030503350|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 14",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:55:50 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 14,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:55:50|-62083400650|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 15",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:55:50 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 15,
+        "completeYear": true
+      },
+      "result": "0002-08-28 02:55:50|-62083400650|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 18",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 JST 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 18,
+        "completeYear": false
+      },
+      "result": "1999-08-28 02:29:34|935807374|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 19",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 MET DST 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 19,
+        "completeYear": false
+      },
+      "result": "1999-08-28 02:29:34|935807374|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 20",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 AMT 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 20,
+        "completeYear": false
+      },
+      "result": "1999-08-28 02:29:34|935807374|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 21",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 PMT 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 21,
+        "completeYear": false
+      },
+      "result": "1999-08-28 02:29:34|935807374|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 22",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 PMT -1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 22,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 24",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 JST 02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 24,
+        "completeYear": false
+      },
+      "result": "2002-08-28 02:29:34|1030501774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 25",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 JST 02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 25,
+        "completeYear": true
+      },
+      "result": "2002-08-28 02:29:34|1030501774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 26",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 JST 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 26,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 27",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 JST 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 27,
+        "completeYear": true
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 28",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 AEST 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 28,
+        "completeYear": true
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 30",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT+09 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 30,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT+0900 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 31,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 32",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT+09:00 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 32,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 33",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT-09 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 33,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 34",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT-0900 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 34,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 35",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT-09:00 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 35,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 36",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT-090102 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 36,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 37",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT-09:01:02 0002",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 37,
+        "completeYear": false
+      },
+      "result": "0002-08-28 02:29:34|-62083402226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 39",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT Standard Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 39,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 40",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 Mountain Standard Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 40,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 41",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 Mountain Daylight Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 41,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 42",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 Mexico Standard Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 42,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 43",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 E. Australia Standard Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 43,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 44",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 W.  Central  Africa  Standard  Time 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 44,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 47",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23 23:55:21",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 47,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 48",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23 23:55:21+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 48,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 49",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23 23:55:21-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 49,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 50",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23 23:55:21+09:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 50,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 51",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23T23:55:21-09:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 51,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 52",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23 23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 52,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 53",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 53,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 54",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1999-05-23T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 54,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-23 23:55:21|-125237145879|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 55",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1999-05-23T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 55,
+        "completeYear": true
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-23 23:55:21|-125237145879|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 56",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 56,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 58",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "+011985-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 58,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "11985-04-12 00:00:00|316051632000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 59",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "+011985-04-12T10:15:30",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 59,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "11985-04-12 10:15:30|316051668930|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 60",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-011985-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 60,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-11985-04-12 00:00:00|-440368531200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 61",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-011985-04-12T10:15:30",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 61,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-11985-04-12 10:15:30|-440368494270|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 63",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 63,
+        "completeYear": false
+      },
+      "result": "2002-04-12 00:00:00|1018569600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 64",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 64,
+        "completeYear": true
+      },
+      "result": "2002-04-12 00:00:00|1018569600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 65",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0002-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 65,
+        "completeYear": false
+      },
+      "result": "0002-04-12 00:00:00|-62095334400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 66",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0002-04-12",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 66,
+        "completeYear": true
+      },
+      "result": "0002-04-12 00:00:00|-62095334400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 68",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 68,
+        "completeYear": true
+      },
+      "result": "1970-08-20 08:55:23|19990523|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 69",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-19990523",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 69,
+        "completeYear": true
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-23 00:00:00|-125237232000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 70",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 70,
+        "completeYear": true
+      },
+      "result": "1970-01-12 11:08:43|990523|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 71",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0523",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 71,
+        "completeYear": false
+      },
+      "result": "1970-01-01 00:08:43|523|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 72",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 72,
+        "completeYear": false
+      },
+      "result": "1970-01-01 00:00:23|23|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 74",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523 235521",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 74,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 75",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523 235521",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 75,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 76",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0523 2355",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 76,
+        "completeYear": false
+      },
+      "result": "2001-05-23 23:55:00|990662100|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 77",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23 2355",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 77,
+        "completeYear": false
+      },
+      "result": "2001-11-23 23:55:00|1006559700|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 79",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T235521",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 79,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 80",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523T235521",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 80,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 81",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T235521.99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 81,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|990000000"
+    },
+    {
+      "name": "date grammar public: source line 82",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523T235521.99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 82,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|990000000"
+    },
+    {
+      "name": "date grammar public: source line 83",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0523T2355",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 83,
+        "completeYear": false
+      },
+      "result": "2001-05-23 23:55:00|990662100|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 85",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T235521+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 85,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 86",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523T235521-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 86,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 87",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T235521.99+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 87,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|990000000"
+    },
+    {
+      "name": "date grammar public: source line 88",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523T235521.99-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 88,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|990000000"
+    },
+    {
+      "name": "date grammar public: source line 89",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0523T2355Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 89,
+        "completeYear": false
+      },
+      "result": "2001-05-23 23:55:00|990662100|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 91",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123456+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 91,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 92",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 92,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 93",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521,123456+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 93,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927471321|+0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 94",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 94,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 96",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "990523235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 96,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927536121|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 97",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0523235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 97,
+        "completeYear": false
+      },
+      "result": "2001-05-23 23:55:21|990694521|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 98",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 98,
+        "completeYear": false
+      },
+      "result": "2001-11-23 23:55:21|1006592121|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 99",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 99,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007110521|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 100",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "5521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 100,
+        "completeYear": false
+      },
+      "result": "2001-11-29 05:55:21|1007045721|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 101",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "21,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 101,
+        "completeYear": false
+      },
+      "result": "2001-11-29 05:33:21|1007044401|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 103",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "3235521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 103,
+        "completeYear": false
+      },
+      "result": "2001-11-03 23:55:21|1004864121|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 104",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "35521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 104,
+        "completeYear": false
+      },
+      "result": "2001-11-29 03:55:21|1007038521|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 105",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "521,123456-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 105,
+        "completeYear": false
+      },
+      "result": "2001-11-29 05:05:21|1007042721|-0900|123456000"
+    },
+    {
+      "name": "date grammar public: source line 108",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23-05-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 108,
+        "completeYear": false
+      },
+      "result": "1999-05-23 00:00:00|927417600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 109",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23-05-1999 23:55:21",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 109,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 110",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23-05--1999 23:55:21",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 110,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-23 23:55:21|-125237145879|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 111",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23-05-'99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 111,
+        "completeYear": false
+      },
+      "result": "1999-05-23 00:00:00|927417600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 112",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23-05-'99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 112,
+        "completeYear": true
+      },
+      "result": "1999-05-23 00:00:00|927417600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 115",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 115,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 116",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.1234-100",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 116,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123400000"
+    },
+    {
+      "name": "date grammar public: source line 117",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.1234-10",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 117,
+        "completeYear": true
+      },
+      "result": "1999-05-23 23:55:21|927539721|-1000|123400000"
+    },
+    {
+      "name": "date grammar public: source line 120",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "M11.05.23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 120,
+        "completeYear": false
+      },
+      "result": "1878-05-23 00:00:00|-2890944000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 121",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "T11.05.23 23:55:21+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 121,
+        "completeYear": false
+      },
+      "result": "1922-05-23 23:55:21|-1502442279|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 122",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "S11.05.23 23:55:21-0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 122,
+        "completeYear": false
+      },
+      "result": "1936-05-23 23:55:21|-1060527879|-0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 123",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "S40.05.23 23:55:21+09:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 123,
+        "completeYear": false
+      },
+      "result": "1965-05-23 23:55:21|-145443879|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 124",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "S40.05.23T23:55:21-09:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 124,
+        "completeYear": false
+      },
+      "result": "1965-05-23 23:55:21|-145379079|-0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 125",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "H11.05.23 23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 125,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 126",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "H11.05.23T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 126,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 127",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "H31.04.30 23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 127,
+        "completeYear": false
+      },
+      "result": "2019-04-30 23:55:21|1556668521|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 128",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "H31.04.30T23:55:21Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 128,
+        "completeYear": false
+      },
+      "result": "2019-04-30 23:55:21|1556668521|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 131",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 131,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "635444-06-18 16:58:41|19990523235521|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 132",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 132,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 133",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[-9]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 133,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 134",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[+9]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 134,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 135",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[9]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 135,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 136",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[9 ]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 136,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 137",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[-9.50]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 137,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 138",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[+9.50]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 138,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 139",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[-5:EST]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 139,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927521721|-0500|123000000"
+    },
+    {
+      "name": "date grammar public: source line 140",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[+9:JST]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 140,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 141",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "19990523235521.123[+12:XXX YYY ZZZ]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 141,
+        "completeYear": false
+      },
+      "result": "1999-05-23 23:55:21|927503721|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 142",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 142,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007078121|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 143",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123[-9]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 143,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007078121|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 144",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123[+9]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 144,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007078121|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 145",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123[-9 ]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 145,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007078121|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 146",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123[-5:EST]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 146,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007096121|-0500|123000000"
+    },
+    {
+      "name": "date grammar public: source line 147",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235521.123[+9:JST]",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 147,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:55:21|1007078121|+0000|123000000"
+    },
+    {
+      "name": "date grammar public: source line 150",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 1999 00:45:29 -0400",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 150,
+        "completeYear": false
+      },
+      "result": "1999-08-22 00:45:29|935297129|-0400|000000000"
+    },
+    {
+      "name": "date grammar public: source line 151",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 1999 00:45:29 -9959",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 151,
+        "completeYear": false
+      },
+      "result": "Sun, 22 Aug 1999 00:45:29 -9959"
+    },
+    {
+      "name": "date grammar public: source line 152",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 1999 00:45:29 +9959",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 152,
+        "completeYear": false
+      },
+      "result": "Sun, 22 Aug 1999 00:45:29 +9959"
+    },
+    {
+      "name": "date grammar public: source line 153",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 05 00:45:29 -0400",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 153,
+        "completeYear": true
+      },
+      "result": "2005-08-22 00:45:29|1124685929|-0400|000000000"
+    },
+    {
+      "name": "date grammar public: source line 154",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 49 00:45:29 -0400",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 154,
+        "completeYear": true
+      },
+      "result": "2049-08-22 00:45:29|2513220329|-0400|000000000"
+    },
+    {
+      "name": "date grammar public: source line 155",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 1999 00:45:29 GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 155,
+        "completeYear": false
+      },
+      "result": "1999-08-22 00:45:29|935282729|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 156",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun,\\00022\r\nAug\r\n1999\r\n00:45:29\r\nGMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 156,
+        "completeYear": false
+      },
+      "result": "Sun,\\00022\r\nAug\r\n1999\r\n00:45:29\r\nGMT"
+    },
+    {
+      "name": "date grammar public: source line 157",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 1999 00:45 GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 157,
+        "completeYear": false
+      },
+      "result": "1999-08-22 00:45:00|935282700|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 158",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug -1999 00:45 GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 158,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-22 00:45:00|-125229366900|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 159",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 99 00:45:29 UT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 159,
+        "completeYear": true
+      },
+      "result": "1999-08-22 00:45:29|935282729|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 160",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sun, 22 Aug 0099 00:45:29 UT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 160,
+        "completeYear": true
+      },
+      "result": "0099-08-22 00:45:29|-59022861271|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 163",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Tuesday, 02-Mar-99 11:20:32 GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 163,
+        "completeYear": true
+      },
+      "result": "1999-03-02 11:20:32|920373632|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 166",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00-5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 166,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 169",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00-5.5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 169,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 170",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00-5,5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 170,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 171",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00+3.5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 171,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 172",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00+3,5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 172,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 175",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 175,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949324800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 176",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 H",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 176,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949296000|+0800|000000000"
+    },
+    {
+      "name": "date grammar public: source line 177",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 M",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 177,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949281600|+1200|000000000"
+    },
+    {
+      "name": "date grammar public: source line 178",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20 M",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 178,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949281600|+1200|000000000"
+    },
+    {
+      "name": "date grammar public: source line 179",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 S",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 179,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949346400|-0600|000000000"
+    },
+    {
+      "name": "date grammar public: source line 180",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 A",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 180,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949321200|+0100|000000000"
+    },
+    {
+      "name": "date grammar public: source line 181",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-31 13:20:00 P",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 181,
+        "completeYear": false
+      },
+      "result": "2000-01-31 13:20:00|949335600|-0300|000000000"
+    },
+    {
+      "name": "date grammar public: source line 184",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999.5.2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 184,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 185",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999.05.02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 185,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 186",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1999.05.02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 186,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-02 00:00:00|-125239046400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 188",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0099.5.2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 188,
+        "completeYear": false
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 189",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0099.5.2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 189,
+        "completeYear": true
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 191",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'99.5.2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 191,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 192",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'99.5.2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 192,
+        "completeYear": true
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 195",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2.5.1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 195,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 196",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02.05.1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 196,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 197",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02.05.-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 197,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-02 00:00:00|-125239046400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 199",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2.5.0099",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 199,
+        "completeYear": false
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 200",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2.5.0099",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 200,
+        "completeYear": true
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 202",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2.5.'99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 202,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 203",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2.5.'99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 203,
+        "completeYear": true
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 206",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08-DEC-1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 206,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 207",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31-JAN-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 207,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 208",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31-JAN--1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 208,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 210",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08-DEC-88",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 210,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 211",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08-DEC-88",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 211,
+        "completeYear": true
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 212",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08-DEC-0088",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 212,
+        "completeYear": false
+      },
+      "result": "0088-12-08 00:00:00|-59360601600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 213",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08-DEC-0088",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 213,
+        "completeYear": true
+      },
+      "result": "0088-12-08 00:00:00|-59360601600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 216",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "DEC-08-1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 216,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 217",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "JAN-31-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 217,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 218",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "JAN-31--1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 218,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 219",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "JAN-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 219,
+        "completeYear": false
+      },
+      "result": "1999-01-01 00:00:00|915148800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 220",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "JAN--1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 220,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-01 00:00:00|-125249500800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 223",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1988-DEC-08",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 223,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 224",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-JAN-31",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 224,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 225",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1999-JAN-31",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 225,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 227",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0088-DEC-08",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 227,
+        "completeYear": false
+      },
+      "result": "0088-12-08 00:00:00|-59360601600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 228",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0088-DEC-08",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 228,
+        "completeYear": true
+      },
+      "result": "0088-12-08 00:00:00|-59360601600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 230",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'88/12/8",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 230,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 231",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'88/12/8",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 231,
+        "completeYear": true
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 234",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08/dec/1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 234,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 235",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31/jan/1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 235,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 236",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31/jan/-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 236,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 237",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "08.dec.1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 237,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 238",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31.jan.1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 238,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 239",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31.jan.-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 239,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 242",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "dec/08/1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 242,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 243",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan/31/1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 243,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 244",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan/31/-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 244,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 245",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan/31",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 245,
+        "completeYear": false
+      },
+      "result": "2001-01-31 00:00:00|980899200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 246",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan/1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 246,
+        "completeYear": false
+      },
+      "result": "1988-01-01 00:00:00|567993600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 247",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "dec.08.1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 247,
+        "completeYear": false
+      },
+      "result": "1988-12-08 00:00:00|597542400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 248",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan.31.1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 248,
+        "completeYear": false
+      },
+      "result": "1999-01-31 00:00:00|917740800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 249",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan.31.-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 249,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-01-31 00:00:00|-125246908800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 250",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan.31",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 250,
+        "completeYear": false
+      },
+      "result": "2001-01-31 00:00:00|980899200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 251",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan.1988",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 251,
+        "completeYear": false
+      },
+      "result": "1988-01-01 00:00:00|567993600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 254",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Jan 1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 254,
+        "completeYear": false
+      },
+      "result": "2001-01-01 00:00:00|978307200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 255",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Jul 11",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 255,
+        "completeYear": false
+      },
+      "result": "2001-07-11 00:00:00|994809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 256",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "July 11",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 256,
+        "completeYear": false
+      },
+      "result": "2001-07-11 00:00:00|994809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 257",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 257,
+        "completeYear": false
+      },
+      "result": "2001-09-23 00:00:00|1001203200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 258",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sep. 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 258,
+        "completeYear": false
+      },
+      "result": "2001-09-23 00:00:00|1001203200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 259",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept. 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 259,
+        "completeYear": false
+      },
+      "result": "2001-09-23 00:00:00|1001203200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 260",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "September 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 260,
+        "completeYear": false
+      },
+      "result": "2001-09-23 00:00:00|1001203200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 261",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "October 1st",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 261,
+        "completeYear": false
+      },
+      "result": "2001-10-01 00:00:00|1001894400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 262",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "October 23rd",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 262,
+        "completeYear": false
+      },
+      "result": "2001-10-23 00:00:00|1003795200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 263",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "October 25th 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 263,
+        "completeYear": false
+      },
+      "result": "1999-10-25 00:00:00|940809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 264",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "October 25th -1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 264,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-10-25 00:00:00|-125223840000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 265",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "october 25th 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 265,
+        "completeYear": false
+      },
+      "result": "1999-10-25 00:00:00|940809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 266",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "OCTOBER 25th 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 266,
+        "completeYear": false
+      },
+      "result": "1999-10-25 00:00:00|940809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 267",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "oCtoBer 25th 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 267,
+        "completeYear": false
+      },
+      "result": "1999-10-25 00:00:00|940809600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 268",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "aSep 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 268,
+        "completeYear": false
+      },
+      "result": "2001-11-23 00:00:00|1006473600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 271",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept 1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 271,
+        "completeYear": false
+      },
+      "result": "1990-09-01 00:00:00|652147200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 272",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept '90",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 272,
+        "completeYear": false
+      },
+      "result": "1990-09-01 00:00:00|652147200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 273",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept '90",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 273,
+        "completeYear": true
+      },
+      "result": "1990-09-01 00:00:00|652147200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 274",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1990/09",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 274,
+        "completeYear": false
+      },
+      "result": "1990-09-01 00:00:00|652147200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 275",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09/1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 275,
+        "completeYear": false
+      },
+      "result": "1990-09-01 00:00:00|652147200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 276",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "aSep '90",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 276,
+        "completeYear": false
+      },
+      "result": "1990-01-01 00:00:00|631152000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 279",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'90",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 279,
+        "completeYear": false
+      },
+      "result": "1990-01-01 00:00:00|631152000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 280",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'90",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 280,
+        "completeYear": true
+      },
+      "result": "1990-01-01 00:00:00|631152000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 283",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Jun",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 283,
+        "completeYear": false
+      },
+      "result": "2001-06-01 00:00:00|991353600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 284",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "June",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 284,
+        "completeYear": false
+      },
+      "result": "2001-06-01 00:00:00|991353600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 285",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sep",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 285,
+        "completeYear": false
+      },
+      "result": "2001-09-01 00:00:00|999302400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 286",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sept",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 286,
+        "completeYear": false
+      },
+      "result": "2001-09-01 00:00:00|999302400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 287",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "September",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 287,
+        "completeYear": false
+      },
+      "result": "2001-09-01 00:00:00|999302400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 288",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "aSep",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 288,
+        "completeYear": false
+      },
+      "result": "aSep"
+    },
+    {
+      "name": "date grammar public: source line 291",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1st",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 291,
+        "completeYear": false
+      },
+      "result": "2001-11-01 00:00:00|1004572800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 292",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2nd",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 292,
+        "completeYear": false
+      },
+      "result": "2001-11-02 00:00:00|1004659200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 293",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "3rd",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 293,
+        "completeYear": false
+      },
+      "result": "2001-11-03 00:00:00|1004745600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 294",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "4th",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 294,
+        "completeYear": false
+      },
+      "result": "2001-11-04 00:00:00|1004832000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 295",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "29th",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 295,
+        "completeYear": false
+      },
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 296",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31st",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 296,
+        "completeYear": false
+      },
+      "result": "2001-12-01 00:00:00|1007164800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 297",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1sta",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 297,
+        "completeYear": false
+      },
+      "result": "1sta"
+    },
+    {
+      "name": "date grammar public: source line 300",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT CE 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 300,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 301",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT C.E. 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 301,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 302",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT BCE 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 302,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 303",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT B.C.E. 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 303,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 304",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT AD 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 304,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 305",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT A.D. 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 305,
+        "completeYear": false
+      },
+      "result": "2000-08-28 02:29:34|967429774|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 306",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT BC 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 306,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 307",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT B.C. 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 307,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 308",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT 2000 BC",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 308,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 309",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT 2000 BCE",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 309,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 310",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT 2000 B.C.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 310,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 311",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat Aug 28 02:29:34 GMT 2000 B.C.E.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 311,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-08-28 02:29:34|-125228842226|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 322",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "8:00 pm lt",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 322,
+        "completeYear": false
+      },
+      "result": "2001-11-29 20:00:00|1007064000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 323",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "4:00 AM, Jan. 12, 1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 323,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 324",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Jan. 12 4:00 AM 1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 324,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 325",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1990-01-12 04:00:00+00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 325,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 326",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1990-01-11 20:00:00-08",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 326,
+        "completeYear": false
+      },
+      "result": "1990-01-11 20:00:00|632116800|-0800|000000000"
+    },
+    {
+      "name": "date grammar public: source line 327",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1990/01/12 04:00:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 327,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 328",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Thu Jan 11 20:00:00 PST 1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 328,
+        "completeYear": false
+      },
+      "result": "1990-01-11 20:00:00|632116800|-0800|000000000"
+    },
+    {
+      "name": "date grammar public: source line 329",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Fri Jan 12 04:00:00 GMT 1990",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 329,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 330",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Thu, 11 Jan 1990 20:00:00 -0800",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 330,
+        "completeYear": false
+      },
+      "result": "1990-01-11 20:00:00|632116800|-0800|000000000"
+    },
+    {
+      "name": "date grammar public: source line 331",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12-January-1990, 04:00 WET",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 331,
+        "completeYear": false
+      },
+      "result": "1990-01-12 04:00:00|632116800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 332",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan 2 3 am +4 5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 332,
+        "completeYear": false
+      },
+      "result": "2005-01-02 03:00:00|1104634800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 333",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "jan 2 3 am +4 5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 333,
+        "completeYear": true
+      },
+      "result": "2005-01-02 03:00:00|1104634800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 334",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "fri1feb3bc4pm+5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 334,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-0002-02-01 16:00:00|-62227555200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 335",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "fri1feb3bc4pm+5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 335,
+        "completeYear": true
+      },
+      "outsideYearDomain": true,
+      "result": "-0002-02-01 16:00:00|-62227555200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 336",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "03 feb 1st",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 336,
+        "completeYear": false
+      },
+      "result": "2003-02-01 00:00:00|1044057600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 339",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "July 4, '79",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 339,
+        "completeYear": true
+      },
+      "result": "1979-07-04 00:00:00|299894400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 340",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "4th July '79",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 340,
+        "completeYear": true
+      },
+      "result": "1979-07-04 00:00:00|299894400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 343",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sunday",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 343,
+        "completeYear": false
+      },
+      "result": "Sunday"
+    },
+    {
+      "name": "date grammar public: source line 344",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Mon",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 344,
+        "completeYear": false
+      },
+      "result": "Mon"
+    },
+    {
+      "name": "date grammar public: source line 345",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Tue",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 345,
+        "completeYear": false
+      },
+      "result": "Tue"
+    },
+    {
+      "name": "date grammar public: source line 346",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Wed",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 346,
+        "completeYear": false
+      },
+      "result": "Wed"
+    },
+    {
+      "name": "date grammar public: source line 347",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Thurs",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 347,
+        "completeYear": false
+      },
+      "result": "Thurs"
+    },
+    {
+      "name": "date grammar public: source line 348",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Friday",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 348,
+        "completeYear": false
+      },
+      "result": "Friday"
+    },
+    {
+      "name": "date grammar public: source line 349",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Sat.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 349,
+        "completeYear": false
+      },
+      "result": "Sat."
+    },
+    {
+      "name": "date grammar public: source line 350",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "sat.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 350,
+        "completeYear": false
+      },
+      "result": "sat."
+    },
+    {
+      "name": "date grammar public: source line 351",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "SAT.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 351,
+        "completeYear": false
+      },
+      "result": "SAT."
+    },
+    {
+      "name": "date grammar public: source line 352",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "sAt.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 352,
+        "completeYear": false
+      },
+      "result": "sAt."
+    },
+    {
+      "name": "date grammar public: source line 355",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 355,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:55:00|1007027700|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 356",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 356,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:55:30|1007027730|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 357",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 357,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:55:30|1007027730|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 358",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30pm",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 358,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:55:30|1007070930|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 359",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30a.m.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 359,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:55:30|1007027730|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 360",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30p.m.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 360,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:55:30|1007070930|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 361",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30pm GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 361,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:55:30|1007070930|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 362",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55:30p.m. GMT",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 362,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:55:30|1007070930|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 363",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09:55+0900",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 363,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:55:00|1006995300|+0900|000000000"
+    },
+    {
+      "name": "date grammar public: source line 364",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09 AM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 364,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 365",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 365,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 366",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09 A.M.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 366,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 367",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09 PM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 367,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:00:00|1007067600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 368",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09pm",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 368,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:00:00|1007067600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 369",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "09 P.M.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 369,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:00:00|1007067600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 371",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h22m23s",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 371,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:23|1007025743|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 372",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m 23s",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 372,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:23|1007025743|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 373",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h22m",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 373,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:00|1007025720|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 374",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 374,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:00|1007025720|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 375",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 375,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 376",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m 23s am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 376,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:23|1007025743|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 377",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m 23s pm",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 377,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:22:23|1007068943|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 378",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 378,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:22:00|1007025720|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 379",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h 22m pm",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 379,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:22:00|1007068920|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 380",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 380,
+        "completeYear": false
+      },
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 381",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9h pm",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 381,
+        "completeYear": false
+      },
+      "result": "2001-11-29 21:00:00|1007067600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 383",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "00:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 383,
+        "completeYear": false
+      },
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 384",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "01:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 384,
+        "completeYear": false
+      },
+      "result": "2001-11-29 01:00:00|1006995600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 385",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "11:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 385,
+        "completeYear": false
+      },
+      "result": "2001-11-29 11:00:00|1007031600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 386",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 386,
+        "completeYear": false
+      },
+      "result": "2001-11-29 12:00:00|1007035200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 387",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "13:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 387,
+        "completeYear": false
+      },
+      "result": "2001-11-29 13:00:00|1007038800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 388",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "23:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 388,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:00:00|1007074800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 389",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "24:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 389,
+        "completeYear": false
+      },
+      "result": "2001-11-30 00:00:00|1007078400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 391",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "00:00 AM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 391,
+        "completeYear": false
+      },
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 392",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12:00 AM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 392,
+        "completeYear": false
+      },
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 393",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "01:00 AM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 393,
+        "completeYear": false
+      },
+      "result": "2001-11-29 01:00:00|1006995600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 394",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "11:00 AM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 394,
+        "completeYear": false
+      },
+      "result": "2001-11-29 11:00:00|1007031600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 395",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "00:00 PM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 395,
+        "completeYear": false
+      },
+      "result": "2001-11-29 12:00:00|1007035200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 396",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12:00 PM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 396,
+        "completeYear": false
+      },
+      "result": "2001-11-29 12:00:00|1007035200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 397",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "01:00 PM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 397,
+        "completeYear": false
+      },
+      "result": "2001-11-29 13:00:00|1007038800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 398",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "11:00 PM",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 398,
+        "completeYear": false
+      },
+      "result": "2001-11-29 23:00:00|1007074800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 401",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-02 1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 401,
+        "completeYear": false
+      },
+      "result": "2000-01-02 01:00:00|946774800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 402",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-02 23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 402,
+        "completeYear": false
+      },
+      "result": "2000-01-02 23:00:00|946854000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 403",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2000-01-02 24",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 403,
+        "completeYear": false
+      },
+      "result": "2000-01-03 00:00:00|946857600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 404",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1 03:04:05",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 404,
+        "completeYear": false
+      },
+      "result": "2001-11-01 03:04:05|1004583845|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 405",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02 03:04:05",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 405,
+        "completeYear": false
+      },
+      "result": "2001-11-02 03:04:05|1004670245|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 406",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "31 03:04:05",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 406,
+        "completeYear": false
+      },
+      "result": "2001-12-01 03:04:05|1007175845|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 409",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 409,
+        "completeYear": false
+      },
+      "result": ""
+    },
+    {
+      "name": "date grammar public: source line 410",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\\s",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 410,
+        "completeYear": false
+      },
+      "result": "\\s"
+    },
+    {
+      "name": "date grammar public: source line 412",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\t",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 412,
+        "completeYear": false
+      },
+      "result": "\t"
+    },
+    {
+      "name": "date grammar public: source line 413",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\n",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 413,
+        "completeYear": false
+      },
+      "result": "\n"
+    },
+    {
+      "name": "date grammar public: source line 414",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\u000b",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 414,
+        "completeYear": false
+      },
+      "result": "\u000b"
+    },
+    {
+      "name": "date grammar public: source line 415",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\f",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 415,
+        "completeYear": false
+      },
+      "result": "\f"
+    },
+    {
+      "name": "date grammar public: source line 416",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\r",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 416,
+        "completeYear": false
+      },
+      "result": "\r"
+    },
+    {
+      "name": "date grammar public: source line 417",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "\t\n\u000b\f\r\\s",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 417,
+        "completeYear": false
+      },
+      "result": "\t\n\u000b\f\r\\s"
+    },
+    {
+      "name": "date grammar public: source line 418",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999-05-23\t\n\u000b\f\r\\s21:34:56",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 418,
+        "completeYear": false
+      },
+      "result": "1999-05-23 21:34:56|927495296|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 439",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5/1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 439,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 440",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02/05/1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 440,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 441",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "02/05/-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 441,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-02 00:00:00|-125239046400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 442",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "05/02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 442,
+        "completeYear": false
+      },
+      "result": "2001-05-02 00:00:00|988761600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 443",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": " 5/ 2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 443,
+        "completeYear": false
+      },
+      "result": "2001-05-02 00:00:00|988761600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 445",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5/'99",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 445,
+        "completeYear": true
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 446",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5/0099",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 446,
+        "completeYear": false
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 447",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5/0099",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 447,
+        "completeYear": true
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 449",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5 1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 449,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 450",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5-1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 450,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 451",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2/5--1999",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 451,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-02 00:00:00|-125239046400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 454",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "99/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 454,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 455",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "99/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 455,
+        "completeYear": true
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 457",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 457,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 458",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1999/05/02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 458,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 459",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-1999/05/02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 459,
+        "completeYear": false
+      },
+      "outsideYearDomain": true,
+      "result": "-1999-05-02 00:00:00|-125239046400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 461",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0099/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 461,
+        "completeYear": false
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 462",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "0099/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 462,
+        "completeYear": true
+      },
+      "result": "0099-05-02 00:00:00|-59032540800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 464",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'99/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 464,
+        "completeYear": false
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: source line 465",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "'99/5/2",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "origin": {
+        "sourceLine": 465,
+        "completeYear": true
+      },
+      "result": "1999-05-02 00:00:00|925603200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 0",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 12:00:00|1007035200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 1",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "16:30",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 16:30:00|1007051400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 2",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "7/23",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-07-23 00:00:00|995846400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 3",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Aug 31",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-08-31 00:00:00|999216000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 4",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Aug 2000",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2000-08-01 00:00:00|965088000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 5",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Feb",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-02-01 00:00:00|980985600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 6",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "29th",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 7",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "November 2024",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-11-01 00:00:00|1730419200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 8",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024 November",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-11-01 00:00:00|1730419200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 9",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02"
+    },
+    {
+      "name": "date grammar public: authored 10",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "--11-29",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 11",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "--1129",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 12",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "--11",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-01 00:00:00|1004572800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 13",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "---29",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 14",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "-333",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 00:00:00|1006992000|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 15",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "w15",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "w15"
+    },
+    {
+      "name": "date grammar public: authored 16",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2006-w15-5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2006-w15-5"
+    },
+    {
+      "name": "date grammar public: authored 17",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2006-w15-5 12:00",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 12:00:00|1007035200|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 18",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 09:00:00|1007024400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 19",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "99am",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 03:00:00|1007002800|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 20",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "9 p.m.",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 21:00:00|1007067600|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 21",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "10h 20m 30s",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 10:20:30|1007029230|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 22",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "05.5",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:05|1007044385|+0000|500000000"
+    },
+    {
+      "name": "date grammar public: authored 23",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "235959.123456789123",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 23:59:59|1007078399|+0000|123456789"
+    },
+    {
+      "name": "date grammar public: authored 24",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "prefix February 3 2024 suffix",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 25",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "prefix 03 Feb 2024 at 04:05 UTC suffix",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:00|1706933100|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 26",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03T24:00:00.1Z",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-04 00:00:00|1707004800|+0000|100000000"
+    },
+    {
+      "name": "date grammar public: authored 27",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 +0199",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706923566|+0239|000000000"
+    },
+    {
+      "name": "date grammar public: authored 28",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 GMT+09",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 29",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06 +1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706933106|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 30",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "2024-02-03 04:05:06+05:30:45",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 04:05:06|1706913261|+0530|000000000"
+    },
+    {
+      "name": "date grammar public: authored 31",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "now",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:20|1007044400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 32",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "Today",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:20|1007044400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 33",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2024-02-03",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: authored 34",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2024-02-03",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2024-02-03"
+    },
+    {
+      "name": "date grammar public: authored 35",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé2024-02-03",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2024-02-03 00:00:00|1706918400|+0000|000000000"
+    },
+    {
+      "name": "date grammar public: odd compact fraction 0",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "123456789.1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:20|1007044400|+0000|100000000"
+    },
+    {
+      "name": "date grammar public: odd compact fraction 1",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "12345678901.1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:20|1007044400|+0000|100000000"
+    },
+    {
+      "name": "date grammar public: odd compact fraction 2",
+      "template": "{{ value | date: format }}",
+      "data": {
+        "value": "1234567890123.1",
+        "format": "%F %T|%s|%z|%N"
+      },
+      "referenceTime": 1007044400,
+      "tags": [
+        "strict"
+      ],
+      "result": "2001-11-29 14:33:20|1007044400|+0000|100000000"
+    }
+  ]
+}

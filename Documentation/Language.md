@@ -38,12 +38,15 @@ Unicode implementation. Dates accept whole-second epochs, complete ISO and
 ordinal dates, English month names, RFC and asctime forms. Timezone-free input
 uses UTC; explicit offsets and
 parsed decimal fractions are preserved. Calendar years are bounded to 1...9999.
-See [dates](Dates.md) for coercion, directives, and the remaining heuristic
-Time.parse grammar boundary. Integer `size` follows the native integer storage
+Ruby Date's loose grammar and Time.parse's defaults are implemented, including
+partial dates and embedded fragments. See [dates](Dates.md) for the UTC hosting
+policy, reference clock, coercion, and supported range. Integer `size` follows the native integer storage
 width (8 bytes on the qualified 64-bit host).
 
-Finite limits can reject an otherwise valid template. Syntax failures, runtime
-failures, and quota exhaustion throw; cancellation remains `CancellationError`.
+Finite limits can reject an otherwise valid template. The raising render API throws on syntax/runtime failures and quota exhaustion;
+cancellation remains `CancellationError`. Explicit diagnostic rendering can
+recover Liquid runtime errors while retaining every diagnostic; see
+[errors and recovery](Errors.md).
 These limits are policy, not language invalidity. They do not certify a process
 sandbox, wall-clock deadline, or memory ceiling.
 
