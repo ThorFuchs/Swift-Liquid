@@ -21,7 +21,6 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
-      LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -33,6 +32,8 @@ jobs:
           ruby-version: '4.0.1'
       - name: Prepare pinned reference
         if: matrix.lane == 'reference'
+        env:
+          LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
         run: |
           gem install date --version 3.5.1 --no-document
           gem install time --version 0.4.2 --no-document
@@ -45,6 +46,8 @@ jobs:
         run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
       - name: Qualify reference behavior
         if: matrix.lane == 'reference'
+        env:
+          LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
         run: python3 -B Scripts/ci.py --lane reference --reference-path "$LIQUID_REFERENCE_PATH"
       - name: Retain qualification evidence
         if: always()
