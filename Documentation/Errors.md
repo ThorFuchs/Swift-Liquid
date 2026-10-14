@@ -37,7 +37,7 @@ before treating a recovered result as error-free.
 Application filters opt into this recovery only by throwing `LiquidFilterFailure`.
 Unexpected host errors propagate unchanged, and cancellation is checked again
 after awaiting a callback. See [custom filters](CustomFilters.md) for value
-admission, shared budgets and the unreleased 1.1 extension contract.
+admission, shared budgets and the 1.1 extension contract.
 
 The independent corpus's unchanged `reject: missing` case is qualified against
 both its empty output and its recorded error. Its sidecar annotation is pinned

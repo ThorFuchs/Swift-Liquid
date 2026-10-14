@@ -10,10 +10,12 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.0** establishes the public API and documented compatibility
-contract. See the [release notes](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0)
-and [compatibility evidence](Documentation/Conformance.md). Maintained by
-[Thorsten Fuchs](https://github.com/ThorFuchs).
+**Swift-Liquid 1.1.0 is being prepared for release.** It adds typed application
+filters and read-only template inspection while preserving the 1.0 API and
+dependency-free core. See the [prepared release notes](Documentation/Releases/1.1.0.md)
+and [compatibility evidence](Documentation/Conformance.md). The current published
+version remains [1.0.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.0.0).
+Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs).
 
 ## Start with a template
 
@@ -99,9 +101,26 @@ non-finite numbers. Numbers use `Int` and finite `Double`; use strings for exact
 large decimal data. This bridge is intended for template inputs. The sibling
 [Swift-JSON](https://github.com/ThorFuchs/Swift-JSON) provides an exact JSON data model.
 
-## Inspect templates (unreleased 1.1)
+## Add application filters (1.1)
 
-The 1.1 development API inspects source or a parsed template without evaluating expressions,
+```swift
+let engine = try LiquidEngine(filters: [
+    LiquidFilter("greet") { value, _, _ in
+        guard case .string(let name) = value else { throw LiquidFilterFailure("Expected a name") }
+        return .string("Hello, " + name)
+    }
+])
+let greeting = try await engine.render(template: "{{ name | greet | escape }}", context: ["name": "Ada"])
+// Hello, Ada
+```
+
+Callbacks receive typed values and belong to one immutable engine configuration.
+Standard filters are protected; defaults retain Shopify core behavior. See
+[custom filters](Documentation/CustomFilters.md) and [application reuse](Documentation/Reuse.md).
+
+## Inspect templates (1.1)
+
+The 1.1 API inspects source or a parsed template without evaluating expressions,
 calling filters, or loading partials:
 
 ```swift
@@ -112,7 +131,8 @@ let summary = try engine.inspect(template: "{{ user[key] | escape }}{% render 'c
 `liquid analyze page.liquid --format json` exposes the same AST summary. Roots
 include local reads and conditional paths; they are not a required-input schema.
 See the [inspection contract and JSON schema](Documentation/Inspection.md).
-These additions are not included in the 1.0.0 tag.
+The filter and inspection APIs require the 1.1 source candidate; they are not
+included in the published 1.0.0 tag.
 
 ## Command-line rendering
 
@@ -133,7 +153,7 @@ diagnostics to stderr. It exits with a nonzero status on failure. See the
 The language target is Shopify's **open-source Liquid core**, including its
 standard tags and filters. Shopify storefront objects, theme tags, Rhoe data
 loaders, template inheritance, macros, DOCX rendering, services, and WASM hosting
-are outside the 1.0 package. See the [language contract](Documentation/Language.md) and
+remain outside the package. See the [language contract](Documentation/Language.md) and
 [date guide](Documentation/Dates.md).
 
 The repository vendors all **1,098 cases** from a pinned Golden Liquid corpus,
@@ -166,7 +186,7 @@ See [performance](Documentation/Performance.md).
 - [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)
 - [Release process](RELEASING.md) and [changelog](CHANGELOG.md)
-- [Adopted 1.1 roadmap](Documentation/Roadmap.md), [custom filters in development](Documentation/CustomFilters.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
+- [Adopted 1.1 roadmap](Documentation/Roadmap.md), [custom filters](Documentation/CustomFilters.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
 
 Swift-Liquid is adapted from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid),
 with a focused public API and independent qualification. Original contributions

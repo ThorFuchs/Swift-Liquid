@@ -52,7 +52,7 @@ with tempfile.TemporaryDirectory() as directory:
     run(['render', str(template), '--data', str(data)], succeeds=False)
     data.write_text('{"name":1,"name":2}')
     run(['render', str(template), '--data', str(data)], succeeds=False)
-    run(['--version'], 'Swift-Liquid 1.0.0\n')
+    run(['--version'], 'Swift-Liquid 1.1.0\n')
     run(['--help'])
     source = "{% raw %}{{ hidden | ignored }}{% endraw %}{{ user[key] | host | escape }}{% render 'folder/card' %}{% include selected %}"
     template.write_text(source)

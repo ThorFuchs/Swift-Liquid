@@ -65,9 +65,32 @@ jobs:
         with:
           path: Artifacts/docs/Liquid.doccarchive/
           include-hidden-files: true
+  matched-performance:
+    name: Matched benchmarks against 1.0.0
+    needs: qualify
+    runs-on: xcode-27
+    timeout-minutes: 45
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Fetch immutable 1.0.0 baseline
+        run: git fetch --no-tags --depth 1 origin d36018e6b6822ae408a6c1c439c2307484525b7b
+      - run: python3 -B Scripts/ci.py --lane matched-performance
+      - name: Retain matched measurements
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: liquid-matched-performance
+          path: Artifacts/matched-performance/
+          if-no-files-found: error
+          retention-days: 30
   archive:
     name: Qualify clean source archive
-    needs: qualify
+    needs: [qualify, matched-performance]
     runs-on: xcode-27
     timeout-minutes: 45
     env:

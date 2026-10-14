@@ -2,16 +2,21 @@
 
 ## Unreleased
 
-- Add AST-based source/reused-template inspection and `liquid analyze` with
-  deterministic text output and versioned JSON, without rendering or partial I/O.
-- Add public inspection regressions, a standalone consumer, concurrency coverage
-  and separate source/reused inspection benchmarks.
-- Adopt the focused 1.1 roadmap and begin typed, engine-scoped custom filters.
-- Add immutable Sendable callbacks with positional and ordered named values,
-  protected standard names, explicit recoverable failures and cumulative admission.
-- Preserve the 1.0 engine initializer, default rendering and pinned core fixtures.
-- Add separate host-extension reference cases, public consumers and cancellation,
-  admission and concurrent configuration regressions.
+## 1.1.0 — release candidate
+
+- Add typed, immutable engine-scoped `LiquidFilter` callbacks with positional and
+  ordered named values, protected standard names, cumulative value admission and
+  explicit recoverable `LiquidFilterFailure` errors.
+- Add source/reused-template AST inspection and `liquid analyze` with deterministic
+  text and schema-versioned JSON, without evaluation, callbacks or partial loading.
+- Preserve the 1.0 public initializer/render APIs, default Shopify core behavior,
+  fixture bytes, parser modes, licenses and checksums; keep the core dependency-free.
+- Add public filter/inspection consumers, application reuse guidance, regression
+  and concurrency coverage, 15 separate paired host reference cases and 33 CLI checks.
+- Add filter/inspection release workloads and a pinned common-harness comparison
+  against 1.0.0, with repeated ABBA runs, per-run latency summaries and review flags.
+- Prepare [release notes](Documentation/Releases/1.1.0.md), compiled documentation,
+  reproducible source archives, qualification evidence and checksums through final gates.
 
 ## 1.0.0 — 2026-10-14
 

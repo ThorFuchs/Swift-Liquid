@@ -4,7 +4,7 @@ Read variable roots, filters and partial references from a template's parsed AST
 
 ## Overview
 
-The unreleased 1.1 inspection API returns an immutable
+The 1.1 inspection API returns an immutable
 ``LiquidTemplateInspection``. Inspect source or reuse a ``LiquidTemplate``:
 
 ```swift

@@ -50,7 +50,7 @@ def require_fixtures(log):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance'], default='native')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference lane only)')
     args = parser.parse_args()
     output = ROOT / 'Artifacts' / args.lane
@@ -115,6 +115,8 @@ def main():
             run([sys.executable, '-B', 'Scripts/build_documentation.py'], 'documentation')
         elif args.lane == 'platforms':
             run([sys.executable, '-B', 'Scripts/check_platforms.py'], 'platforms')
+        elif args.lane == 'matched-performance':
+            run([sys.executable, '-B', 'Scripts/compare_benchmarks.py'], 'matched-benchmarks')
         elif args.lane == 'archive':
             run([sys.executable, '-B', 'Scripts/check_archive.py'], 'archive')
         else:

@@ -8,8 +8,9 @@ guides that are compiled from the public Swift symbol graph.
 | --- | --- |
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
-| [Custom filters](CustomFilters.md) | Unreleased typed engine-scoped callbacks, arguments, admission and failures |
-| [Inspection](Inspection.md) | Unreleased AST summary, syntactic references, limits and CLI JSON schema |
+| [Custom filters](CustomFilters.md) | Typed engine-scoped callbacks, arguments, admission and failures |
+| [Inspection](Inspection.md) | AST summary, syntactic references, limits and CLI JSON schema |
+| [Application reuse](Reuse.md) | Retained root/partial bundles, explicit domain mapping and bounded application caches |
 | [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |

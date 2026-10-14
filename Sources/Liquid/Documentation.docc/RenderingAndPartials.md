@@ -31,3 +31,15 @@ let output = try await LiquidEngine().render(
 behavior. Both operate under the invoking render's cumulative budget. Syntax
 errors, missing partials, invalid operations, and exhausted budgets throw.
 An operation returns one complete String after successful rendering.
+
+## Retain an application bundle
+
+Keep parsed roots and partial maps as immutable application values. Convert your
+own domain types explicitly to ``LiquidValue`` and ordered ``LiquidObject`` values.
+The filter consumer demonstrates this pattern with repeated renders of one bundle.
+
+If the application uses a parse cache, bound entries and retained source bytes.
+Key by exact source, parser mode, parse limits and library/parser version; replace
+a bundle when any root or partial source/configuration changes. Parsed templates
+retain no filters. Engine configuration, clock and context still affect output
+and belong in any separate output-cache policy. Budgets remain per invocation.
