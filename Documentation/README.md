@@ -8,6 +8,8 @@ guides that are compiled from the public Swift symbol graph.
 | Guide | Purpose |
 | --- | --- |
 | [Documentation tooling](DocumentationTooling.md) | Public comment coverage, compiled examples, site routes and local previews |
+| [Contribution isolation](ContributionIsolation.md) | Hosted runner provenance, fork approval and publishing boundaries |
+| [Package discovery](PackageDiscovery.md) | Published-URL installation and index status |
 | [Quality sprints](QualityRoadmap.md) | Public quality work, acceptance gates and subsequent audits |
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |

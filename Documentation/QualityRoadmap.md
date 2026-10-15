@@ -30,7 +30,7 @@ Shopify render-conformance count.
 
 ## Sprint 2 — adversarial behavior and test evidence
 
-Sprint 2 implements the adopted testing scope:
+Sprint 2 was merged in PR #12:
 
 - Add fixed-seed Unicode scalar, JSON truncation/escape, parser boundary and exact
   UTF-8 capacity cases, with independent expected results and small reproductions.
@@ -55,17 +55,26 @@ qualification and retained source-bound CI evidence.
 
 ## Sprint 3 — contribution isolation and package discovery
 
-Review self-hosted runner isolation and an ephemeral Swift 6.4 path for external
-contributions. Requiring approval for all external fork workflows is an admission
-control; it does not sandbox approved code. Maintainers must inspect workflow and
-code changes before granting execution. Preserve least-privilege tokens and the
-separate Pages deployment boundary. See
-[GitHub's runner security guidance](https://docs.github.com/en/actions/concepts/security/compromised-runners).
+The audit verified that `xcode-27` is already GitHub's hosted macOS preview image;
+it is not self-hosted. No self-hosted runners were registered in the repository at
+the audit date. Sprint 3 makes this hosted path explicit and enforceable:
 
-Verify package-index listing and release discoverability, clean-checkout install
-instructions and platform claims. A Swift Package Index submission contacts an
-external project and should use a separately reviewed registration change. Do not
-add a listing or build-status badge until its destination is live.
+- Require provider-hosted admission before checkout and retain runner/image provenance.
+- Audit workflow triggers, token permissions, action pins, cache and checkout policy,
+  complete gates and the separate main-only Pages boundary; test meaningful failures.
+- Preserve all-external-contributor approval, read-only token defaults and the live
+  Pages environment's main-only deployment policy. Document what approval does.
+- Qualify a clean public-URL library/CLI installation of the immutable 1.3.0 anchor
+  in an additional CI/release lane, preserving candidate/archive qualification.
+- Verify canonical release/docs links and package-index status. Submit the one-URL
+  registration as a separately reviewed external change after explicit maintainer
+  authorization; add no premature badge.
+
+See [contribution isolation](ContributionIsolation.md) and
+[package discovery](PackageDiscovery.md) for the audit, maintained checks and limits.
+Acceptance includes workflow-policy regressions, actual hosted runner receipts,
+clean published installation, all affected native/docs gates and the clean archive.
+No core runtime, public API, fixture pin or root dependency changes are required.
 
 ## Sprint 4 — measured maintenance
 

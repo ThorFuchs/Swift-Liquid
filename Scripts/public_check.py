@@ -3,6 +3,7 @@
 """Check fixture integrity, attribution and package boundaries without building."""
 import hashlib
 import json
+from workflow_policy import audit, load_yaml
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,3 +39,8 @@ for path in (ROOT / 'Sources').rglob('*.swift'):
     assert '@unchecked' not in source, f'Unchecked concurrency: {path}'
     assert 'SPDX-License-Identifier: Apache-2.0' in source, f'Missing license: {path}'
 print(f'Public checks passed; {len(cases)} intact independent fixtures and {len(probe_cases)} authored probes.')
+
+audit(ROOT / '.github/workflows/ci.yml')
+spi = load_yaml((ROOT / '.spi.yml').read_text())
+assert spi == {'version': 1, 'external_links': {'documentation': 'https://thorfuchs.github.io/Swift-Liquid/'}}, 'Review package-index documentation metadata'
+print('Hosted contribution/publishing policy and package discovery metadata passed.')

@@ -17,11 +17,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lane: [native, safety, docs, performance, reference, platforms]
+        lane: [native, safety, docs, performance, reference, platforms, installation]
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
@@ -75,6 +81,12 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
@@ -98,10 +110,16 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7 (Node 24)
         with:
           name: liquid-docs
           path: Artifacts/docs
@@ -131,6 +149,12 @@ jobs:
       group: github-pages
       cancel-in-progress: false
     steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

@@ -66,6 +66,9 @@ Then add the library product to your target:
 .product(name: "Liquid", package: "swift-liquid")
 ```
 
+For clean CLI checkout instructions, published-URL qualification and index status,
+see [package discovery](Documentation/PackageDiscovery.md).
+
 See the complete [public consumer package](Examples/Consumer). The executable
 examples below are also [compiled and run in CI](Examples/READMEConsumer).
 
@@ -241,6 +244,7 @@ No inherited speedup, zero-overhead or process-memory claim is made.
 
 - [Documentation site](https://thorfuchs.github.io/Swift-Liquid/), [API reference](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/) and [guide index](Documentation/README.md)
 - [Contributing](CONTRIBUTING.md), [community standards](CODE_OF_CONDUCT.md), [support](SUPPORT.md) and [private security reporting](SECURITY.md)
+- [Contribution isolation](Documentation/ContributionIsolation.md) and [package discovery](Documentation/PackageDiscovery.md)
 - [Adversarial testing and structured evidence](Documentation/Testing.md)
 - [Architecture and provenance](Documentation/Architecture/README.md), [documentation tooling](Documentation/DocumentationTooling.md) and [quality sprints](Documentation/QualityRoadmap.md)
 - [Changelog](CHANGELOG.md), [release process](RELEASING.md) and [adopted feature roadmaps](Documentation/README.md)

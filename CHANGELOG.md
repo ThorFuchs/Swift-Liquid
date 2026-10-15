@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Verify GitHub-hosted contribution isolation and enforce runner provenance,
+  read-only qualification, pinned actions and main-only Pages publishing with
+  semantic policy regressions. Retain external-contributor approval controls.
+- Add a clean public-URL installation gate for the immutable 1.3.0 library/CLI,
+  package discovery guidance and explicit index-registration status. Preserve
+  the core dependency graph, runtime, public APIs and fixture pins.
+
 - Add fixed-seed adversarial Unicode, JSON, parser and byte-capacity boundaries;
   replace scheduling-dependent cancellation tests with coordinated entry/callback
   tests and independent reuse checks.

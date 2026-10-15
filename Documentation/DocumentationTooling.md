@@ -77,7 +77,7 @@ path and checks byte equality, preserving article URLs and generated JavaScript.
 
 GitHub Pages receives only `Artifacts/docs/site`. Compiler graphs, command logs
 and maintainer records are not website content. The deployment job runs on `main`
-after all eight qualification lanes pass, with Pages/OIDC permissions confined
+after all nine qualification lanes pass, with Pages/OIDC permissions confined
 to that job. PRs compile and verify the site without deploying it. Actions are
 pinned by commit.
 

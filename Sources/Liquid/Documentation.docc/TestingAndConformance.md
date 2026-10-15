@@ -63,3 +63,17 @@ not add conformance renders or change published release receipts.
 See the repository's
 [testing and evidence contract](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Testing.md)
 for fixed seeds, repeat runs, adapter limitations and retained artifact paths.
+
+## Contribution and installation boundaries
+
+Qualification uses GitHub-hosted machines with recorded provider/image provenance,
+read-only tokens and no shared build-cache restore. Approved fork contributions
+use that same path; approval remains admission control. The separate Pages job
+only deploys qualified main-branch artifacts. See
+[contribution isolation](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/ContributionIsolation.md)
+for the verified image and maintained workflow policy.
+
+An additional installation gate clones the immutable published 1.3.0 anchor,
+builds its CLI and resolves an independent public-URL library consumer using fresh
+storage. It complements the current candidate's consumers and clean source archive.
+Package-index acceptance and unqualified platform execution are separate observations.
