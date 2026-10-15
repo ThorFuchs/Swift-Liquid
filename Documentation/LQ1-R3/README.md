@@ -20,6 +20,14 @@ matches, 2,361 mismatches and ten operational errors. Integration earns no repai
 credit. PR #15 and its separate release-candidate worktree remain untouched;
 main/release state is timestamped in the return packet, rather than inferred.
 
+During qualification, PR #15 merged and main advanced to `fb81cf4`. Its delta
+changes release documentation and the CLI version/checker, with no engine runtime
+change. The R3 history was rebased onto that main, preserving the published 1.3.1
+changelog section exactly and retaining independent work under Unreleased. A
+separate latest-main/R2 baseline and complete final qualification bind the updated
+integration; earlier receipts remain historical. Release/tag status is recorded
+from the APIs without treating preparation or README text as publication proof.
+
 ## Two qualified rules
 
 | Rule | General correction | Independent evidence |

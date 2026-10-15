@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1 — 2026-10-15
+## Unreleased
 
 - Integrate the independent conformance work with quality sprint 4; preserve its
   cancellation, maintenance/release and hosted-workflow protections.
@@ -8,14 +8,6 @@
   property lookup with exact-key precedence, bracket semantics and scalar counts.
 - Defer render-global visibility after a historical assertion conflict; retain
   the failed experiment and decision record without changing its expected bytes.
-
-- Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and
-  variance review flags, larger workload observations and coordinated cancellation
-  response evidence. Require complete measurements and bound review during packaging.
-- Cover explicitly released host callbacks across every rendering policy without
-  timing-sensitive correctness assertions.
-- Observe cancellation at output admission after synchronous filter work, preserving
-  successful output, public APIs, byte quotas and logical counters.
 
 - Reconcile LQ1 with quality sprint 3, preserve raw upstream comparison verdicts,
   add a supplemental diagnostic ledger and bind gates to their exact source revision.
@@ -33,6 +25,15 @@
 - Add a source-backed peer API crosswalk and five deferred design studies; keep
   the root dependency graph, default policies and released public API unchanged.
 
+## 1.3.1 — 2026-10-15
+
+- Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and
+  variance review flags, larger workload observations and coordinated cancellation
+  response evidence. Require complete measurements and bound review during packaging.
+- Cover explicitly released host callbacks across every rendering policy without
+  timing-sensitive correctness assertions.
+- Observe cancellation at output admission after synchronous filter work, preserving
+  successful output, public APIs, byte quotas and logical counters.
 
 - Verify GitHub-hosted contribution isolation and enforce runner provenance,
   read-only qualification, pinned actions and main-only Pages publishing with
