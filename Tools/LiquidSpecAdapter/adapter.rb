@@ -10,7 +10,6 @@ module LQ1
     drops: 'transport-inapplicable: no typed host-object/callback API',
     ruby_drops: 'transport-inapplicable: Ruby-native runtime objects',
     drop_class_output: 'transport-inapplicable: Ruby class identity',
-    ruby_types: 'transport-inapplicable: Ruby-only value/output semantics',
     binary_data: 'transport-inapplicable: non-UTF8 strings',
     template_factory: 'transport-inapplicable: host template factory callback',
     shopify_tags: 'unsupported: hosted Shopify tags are outside open-source core',
@@ -23,6 +22,9 @@ module LQ1
     shopify_includes: 'unsupported: hosted include policy',
     shopify_resource_limits: 'unsupported: Ruby score units are not Swift logical quotas',
     range_resource_limits: 'unsupported: no verified range-score mapping'
+  }.freeze
+  FEATURE_POLICIES = {
+    ruby_types: 'per-case primitive JSON admission; Ruby classes, symbol keys, cycles and out-of-domain numbers are explicitly rejected'
   }.freeze
   PARSER_MODES = %i[strict2 strict lax].freeze
   RENDER_MODES = %i[raise inline].freeze

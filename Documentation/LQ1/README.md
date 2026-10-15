@@ -15,8 +15,8 @@ and errors, with separate parser and raising/recovery modes. The source manifest
 variants. Advertised counts come from the pinned upstream README; observed counts
 come from the matrix. They are different measurements.
 
-The first full repaired run selected 4,536 variants: 2,205 comparator matches, 2,321
-mismatches and 10 operational quota failures. Another 576 variants were not
+The final per-case eligibility run selected 4,624 variants: 2,222 comparator matches,
+2,392 mismatches and 10 operational quota failures. Another 488 variants were not
 executed with visible reasons. This is a failed independent conformance gate,
 not full language compliance. `parser_errors` alone has 1,902 mismatches under the pinned comparator:
 1,857 reject during parsing but differ in diagnostics, 43 render successfully,
@@ -43,5 +43,7 @@ remain open until minimal reproduction, pinned Ruby verification and domain revi
 
 Raw matrices, run receipts, protocol traces, gate logs, source diff/archive and
 checksums are delivered as a local return packet. Large generated results stay
-outside Git. A failing independent lane must remain failing until its selected
+outside Git. Earlier runs with a broader ruby_types exclusion remain in history;
+88 primitive-JSON cases were subsequently admitted individually, adding 17 matches
+and 71 failures. These admissions are not counted as repaired engine defects. A failing independent lane must remain failing until its selected
 mismatches and operational errors are resolved or individually reviewed in scope.

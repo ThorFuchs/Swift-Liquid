@@ -205,7 +205,8 @@ ensure
 end
 File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n")
 report = { schemaVersion: 1, suiteVersion: Liquid::Spec::VERSION, rubyVersion: RUBY_DESCRIPTION, liquidVersion: Liquid::VERSION,
-  missingFeatures: LQ1::MISSING_FEATURES, parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / CLI::Runner.expand_error_mode_variants',
+  missingFeatures: LQ1::MISSING_FEATURES, featurePolicies: LQ1::FEATURE_POLICIES,
+  numericDomainPolicy: 'Int64 plus finite binary Double; context is preflighted; source-literal/arithmetic mismatches require individual domain review', parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / CLI::Runner.expand_error_mode_variants',
   shutdownError: shutdown_error, suites: runs, gems: Gem.loaded_specs.transform_values { |s| s.version.to_s }, observedRows: rows.size }
 File.write(File.join(output, 'SPEC_RUNS.json'), JSON.pretty_generate(report) + "\n")
 puts JSON.generate(report.reject { |k, _| k == :missingFeatures })
