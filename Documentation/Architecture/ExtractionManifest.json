@@ -360,15 +360,17 @@
         "Scripts/ci.py",
         "Tests/LiquidTests/CancellationMaintenanceTests.swift",
         "Tests/TestInventory.json",
-        "Documentation/MeasuredMaintenance.md"
+        "Documentation/MeasuredMaintenance.md",
+        "Sources/Liquid/LiquidLimits.swift"
       ],
       "changes": [
         "Advance only future comparison selection to immutable 1.3.0 while preserving the identical pinned common harness and historical releases.",
         "Describe observed run-median MAD/range and admit separate variance flags without statistical independence or speedup claims.",
         "Author larger-input, runnable escaping and cooperative/explicit-release callback measurements using public checked-Sendable APIs, independent output evidence and externally timed boundaries.",
-        "Require complete retained samples, cancellation identity/continuation/reuse accounting and checksum-bound reviews; add noncooperative return/error correctness cases without sleeps or deadlines."
+        "Require complete retained samples, cancellation identity/continuation/reuse accounting and checksum-bound reviews; add noncooperative return/error correctness cases without sleeps or deadlines.",
+        "The runnable escaping evidence exposed normal delivery after an active cancellation request. Add a step-free cancellation check at output admission, with deterministic boundary/error-precedence/counter regressions; preserve successful output and public contracts."
       ],
-      "qualification": "Affected Scripts/ci.py native, safety, performance, matched-performance, documentation and archive gates. Production Swift, root products/dependencies, public declaration baseline, fixture metadata/licenses/checksums and CLI schemas remain unchanged."
+      "qualification": "Affected Scripts/ci.py native, safety, performance, matched-performance, documentation and archive gates. Only output-admission cancellation changes at runtime. Root products/dependencies, public declaration baseline, fixture metadata/licenses/checksums and CLI schemas remain unchanged."
     }
   ]
 }

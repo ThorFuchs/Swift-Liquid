@@ -72,6 +72,8 @@ internal final class RuntimeBudget {
         remainingIterations -= 1
     }
     func output(_ text: String) throws {
+        // Final synchronous work can finish after the last evaluator checkpoint.
+        try Task.checkCancellation()
         guard text.utf8.count <= limits.outputBytes else { throw LiquidError.limitExceeded("outputBytes") }
     }
     func capacity(_ bytes: Int, count: Int) throws -> Int {

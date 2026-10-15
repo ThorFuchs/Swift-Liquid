@@ -96,8 +96,9 @@ Sprint 4 implements [measured maintenance](MeasuredMaintenance.md):
 Acceptance includes native/sanitizer correctness, negative evidence regressions,
 release-mode larger/cancellation observations, matched measurements, documentation
 and a clean source archive. Logical quota, elapsed latency and process-memory
-claims remain separate. The production engine, public API, CLI schemas, root graph
-and fixture pins remain unchanged.
+claims remain separate. The measured escaping case also exposed a missing cancellation check at output
+admission; add that checkpoint without changing quotas or logical counts. Public
+APIs, CLI schemas, the root graph and fixture pins remain unchanged.
 
 New platform support or language extensions remain explicit scope decisions.
 A release requires all gates and a separate publication request; these sprints

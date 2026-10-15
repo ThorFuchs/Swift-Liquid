@@ -115,7 +115,7 @@ def maintenance_result():
                          releaseToCompletionNanoseconds=[i - 0.5 for i in range(1, 26)] if host == 'explicit-release' else [])
                     for policy in POLICIES for mode in ['source', 'parsed'] for host in ['cooperative', 'explicit-release']]
     return {'schemaVersion': 1, 'configuration': 'release', 'operation': 'measured-maintenance',
-            'schedulerConfiguration': 'generic-executor controller and detached workers',
+            'schedulerConfiguration': 'concurrent driver, detached workers, Dispatch cancellation controller',
             'largeWorkloads': large, 'cancellation': cancellation,
             'runnableCancellation': [dict(workload='runnable-escape', policy=policy, mode=mode, samples=25,
                 warmupSamples=5, inputBytes=UNITS['large-escape'], expectedOutputBytes=len(OUTPUTS['large-escape'].encode()),

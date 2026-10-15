@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
+import Dispatch
 import Liquid
 
 private struct MaintenanceFailure: Error { let message: String }
@@ -76,7 +77,6 @@ private actor HostGate {
         var iterator = arrival.stream.makeAsyncIterator()
         return await iterator.next() != nil
     }
-    func announce() { arrival.continuation.yield(()); arrival.continuation.finish() }
     func finished() { arrival.continuation.finish() }
     func release() {
         resume.continuation.finish()
@@ -212,11 +212,23 @@ struct MaintenanceBenchmarks {
                 var observations: [[String: Any]] = []
                 var cancelled: [Double] = []
                 for index in -5..<25 {
-                    let gate = HostGate()
+                    let entry = DispatchSemaphore(value: 0)
+                    let start = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
+                    let requests = AsyncStream<ContinuousClock.Instant>.makeStream(bufferingPolicy: .bufferingNewest(1))
+                    let announcements = AsyncStream<Void>.makeStream(bufferingPolicy: .bufferingNewest(1))
                     let active = try LiquidEngine(filters: [
-                        LiquidFilter("announce_work") { value, _, _ in await gate.announce(); return value }
+                        LiquidFilter("announce_work") { value, _, _ in
+                            announcements.continuation.yield(()); announcements.continuation.finish()
+                            entry.signal(); return value
+                        }
                     ])
                     let worker = Task.detached {
+                        // Also unblock the controller if rendering fails before the marker.
+                        defer { announcements.continuation.finish(); entry.signal() }
+                        var iterator = start.stream.makeAsyncIterator()
+                        guard await iterator.next() != nil else {
+                            return Completion(outcome: .failed("Missing controller start"), instant: clock.now)
+                        }
                         let completion: Completion
                         do {
                             let output = try await policy.render(active, source: runnableSource,
@@ -225,15 +237,27 @@ struct MaintenanceBenchmarks {
                             completion = Completion(outcome: output == escaped ? .completed : .failed("Output differs"), instant: end)
                         } catch is CancellationError { completion = Completion(outcome: .cancelled, instant: clock.now) }
                         catch { completion = Completion(outcome: .failed(String(describing: error)), instant: clock.now) }
-                        await gate.finished(); return completion
+                        return completion
                     }
-                    guard await gate.waitForEntry() else {
+                    // Only a Dispatch thread blocks. A Swift-task controller could be
+                    // scheduled after all runnable work on a busy cooperative executor.
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        start.continuation.yield(()); start.continuation.finish()
+                        entry.wait()
+                        let requested = clock.now
+                        worker.cancel()
+                        requests.continuation.yield(requested); requests.continuation.finish()
+                    }
+                    var iterator = requests.stream.makeAsyncIterator()
+                    guard let requested = await iterator.next() else {
                         worker.cancel(); _ = await worker.value
-                        throw MaintenanceFailure(message: "Runnable worker failed before entry signal")
+                        throw MaintenanceFailure(message: "Missing runnable cancellation request")
                     }
-                    let requested = clock.now
-                    worker.cancel()
                     let completion = await worker.value
+                    var announcement = announcements.stream.makeAsyncIterator()
+                    guard await announcement.next() != nil else {
+                        throw MaintenanceFailure(message: "Runnable render did not enter its marker callback")
+                    }
                     let interval = nanoseconds(requested.duration(to: completion.instant))
                     let outcome: String
                     switch completion.outcome {
@@ -271,7 +295,7 @@ struct MaintenanceBenchmarks {
         }
         let result: [String: Any] = ["schemaVersion": 1, "configuration": "release",
             "operation": "measured-maintenance",
-            "schedulerConfiguration": "generic-executor controller and detached workers", "largeWorkloads": large, "cancellation": cancellation, "runnableCancellation": runnable]
+            "schedulerConfiguration": "concurrent driver, detached workers, Dispatch cancellation controller", "largeWorkloads": large, "cancellation": cancellation, "runnableCancellation": runnable]
         let data = try JSONSerialization.data(withJSONObject: result, options: [.sortedKeys, .prettyPrinted])
         try data.write(to: URL(fileURLWithPath: CommandLine.arguments[1]), options: .atomic)
         print(String(decoding: data, as: UTF8.self))

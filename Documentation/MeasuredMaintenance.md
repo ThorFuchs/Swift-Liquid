@@ -90,10 +90,19 @@ never a microsecond deadline.
 
 Eight additional `runnable-escape` records cover all four policies and both source
 forms. Their callback signals entry and returns immediately before a 128 KiB
-HTML-escaping input. The controller requests cancellation after that signal;
-there is no suspension barrier holding the callback. Retain all 25 outcomes:
+HTML-escaping input. An independent Dispatch controller waits for that signal,
+stamps the request and
+cancels the worker. Only the Dispatch thread blocks on a semaphore; the Swift
+cooperative executor never performs a blocking wait. A start stream admits the
+worker only after the controller is installed. Worker completion also signals the
+controller so an entry failure cannot strand its wait. There is no suspension
+barrier holding the callback. This placement prevents a busy Swift executor from
+deferring the controller task until after rendering completes; Dispatch scheduling
+and the request/check race still affect the observations. Retain all 25 outcomes:
 `cancelled`, `completed-before-request` or `completed-racing-request`, with a signed
-completion-time offset from the request. Normal completions must match the exact
+completion-time offset from the request. The worker stamps completion immediately
+after the public return or error, before result delivery to the driver. Normal
+completions must match the exact
 escaped output. Completed observations are not cancellation successes.
 
 Cancellation-only median/p95 summaries are conditional on the cancelled subset;
@@ -112,7 +121,8 @@ Host callbacks remain responsible for their I/O, allocations and cooperation.
 ## Admit and retain evidence
 
 `Scripts/maintenance_evidence.py` requires all shapes and scenarios exactly once,
-finite positive raw observations, recomputed summaries, expected output shapes
+finite positive operation/coordinated samples, finite signed runnable offsets,
+recomputed summaries, expected output shapes
 and checksums, successful coordinated cancellation accounting, interval consistency, exact
 runnable outcome accounting and engine reuse. Negative regressions reject missing/duplicated scenarios, changed outputs,
 invalid samples, misleading summaries and inconsistent cancellation intervals.
@@ -122,6 +132,11 @@ Release preparation requires this evidence alongside the existing graph records.
 
 Keep logical source/output/value/step quotas, elapsed latency and process memory
 separate. No RSS, peak allocation, hard deadline, universal response time or
-cross-engine superiority is inferred. A runtime optimization needs an independent
-behavioral regression and a measured reason; this sprint changes qualification
-and tests while preserving the production engine.
+cross-engine superiority is inferred. The runnable observations exposed normal completion after cancellation during
+last-filter work. Output admission now checks cancellation before its byte quota,
+including final delivery, without consuming evaluator steps or changing quotas.
+A deterministic internal budget-boundary regression covers empty, fitting and
+oversized output, cancellation precedence and unchanged logical counters. Public
+rendering tests and measurements cover integration. This adds a checkpoint; it
+does not preempt the synchronous helper or eliminate the final request/return race.
+Public APIs, successful output, fixture pins and the dependency graph are preserved.

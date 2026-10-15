@@ -43,7 +43,7 @@ def summary(record, field):
 def validate(result):
     if result.get('schemaVersion') != 1 or result.get('configuration') != 'release' or result.get('operation') != 'measured-maintenance':
         raise RuntimeError('Missing maintenance measurement identity')
-    if result.get('schedulerConfiguration') != 'generic-executor controller and detached workers':
+    if result.get('schedulerConfiguration') != 'concurrent driver, detached workers, Dispatch cancellation controller':
         raise RuntimeError('Unreviewed cancellation executor placement')
     large = result.get('largeWorkloads', [])
     expected = {(name, mode) for name in OUTPUTS for mode in ['source', 'parsed']}

@@ -38,3 +38,7 @@ or throws. Logical capacities do not preempt host code. Deterministic tests cove
 both callback exits and healthy engine reuse. Separate
 [maintenance measurements](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/MeasuredMaintenance.md)
 retain observed response intervals, including scheduling, without a latency guarantee.
+
+Output admission checks cancellation before its byte capacity, including final
+delivery. This adds no evaluator-step charge and does not interrupt a synchronous
+helper before it returns. A request can still race the last check and return.

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-import Liquid
+@testable import Liquid
 import Testing
 
 private actor ExplicitReleaseGate {
@@ -26,6 +26,30 @@ private actor ExplicitReleaseGate {
 
 @Suite(.timeLimit(.minutes(1)))
 struct CancellationMaintenanceTests {
+    @Test(arguments: ["", "x", "xx"])
+    func cancellationAtOutputAdmissionPrecedesQuota(output: String) async throws {
+        let worker = Task {
+            let budget = RuntimeBudget(.init(outputBytes: 1))
+            withUnsafeCurrentTask { $0?.cancel() }
+            try budget.output(output)
+        }
+        defer { worker.cancel() }
+        await #expect(throws: CancellationError.self) { try await worker.value }
+        let healthy = RuntimeBudget(.init(outputBytes: 1))
+        let steps = healthy.remainingSteps
+        let values = healthy.remainingValues
+        let iterations = healthy.remainingIterations
+        try healthy.output(""); try healthy.output("x")
+        do { try healthy.output("xx"); Issue.record("Oversized output was admitted") }
+        catch {
+            guard case LiquidError.limitExceeded(let name) = error else { throw error }
+            #expect(name == "outputBytes")
+        }
+        #expect(healthy.remainingSteps == steps)
+        #expect(healthy.remainingValues == values)
+        #expect(healthy.remainingIterations == iterations)
+    }
+
     @Test(arguments: [false, true], 0..<8)
     func cancellationWaitsForUncooperativeHostAndPreservesReuse(parsedInput: Bool, scenario: Int) async throws {
         let policy = scenario % 4
