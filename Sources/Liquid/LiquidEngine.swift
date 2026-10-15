@@ -71,7 +71,7 @@ public struct LiquidEngine: Sendable {
     /// - Returns: The complete rendered output.
     /// - Throws: Runtime or cancellation errors.
     public func render(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> String {
-        try await perform(template, context: context, templates: templates, recovering: false).output
+        try await perform(template, context: context, templates: templates, recovering: false).result.output
     }
 
     /// Renders source while retaining recovered Liquid runtime diagnostics.
@@ -84,13 +84,64 @@ public struct LiquidEngine: Sendable {
 
     /// Renders a reusable template and returns output together with recovered errors.
     public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidRenderResult {
-        try await perform(template, context: context, templates: templates, recovering: true)
+        try await perform(template, context: context, templates: templates, recovering: true).result
     }
 
-    private func perform(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate], recovering: Bool) async throws -> LiquidRenderResult {
+    /// Parses and renders source with opt-in timing and cumulative budget observations.
+    /// Uses the same throwing behavior as `render`; failures return no metrics.
+    public func renderWithMetrics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        try await measureSource(template, context: context, templates: templates, syntaxMode: syntaxMode, recovering: false)
+    }
+
+    /// Measures a reusable template without parsing; `parseDuration` is nil.
+    public func renderWithMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult {
+        try await measure(template, context: context, templates: templates, recovering: false,
+                          measurement: .init(start: ContinuousClock().now, parseDuration: nil))
+    }
+
+    /// Parses and measures source with the explicit recovery behavior of `renderWithDiagnostics`.
+    /// Recovered output retains diagnostics; operational and unexpected host failures still throw.
+    public func renderWithDiagnosticsAndMetrics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        try await measureSource(template, context: context, templates: templates, syntaxMode: syntaxMode, recovering: true)
+    }
+
+    /// Measures a reusable template while retaining explicitly recovered diagnostics.
+    public func renderWithDiagnosticsAndMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult {
+        try await measure(template, context: context, templates: templates, recovering: true,
+                          measurement: .init(start: ContinuousClock().now, parseDuration: nil))
+    }
+
+    private struct Measurement {
+        let start: ContinuousClock.Instant
+        let parseDuration: Duration?
+    }
+
+    private func measureSource(_ source: String, context: LiquidObject, templates: [String: String],
+                               syntaxMode: LiquidSyntaxMode, recovering: Bool) async throws -> LiquidMeasuredRenderResult {
+        let clock = ContinuousClock()
+        let start = clock.now
+        try checkSources(source, partials: Array(templates.values))
+        let parseStart = clock.now
+        let root = try LiquidTemplate(source, syntaxMode: syntaxMode, limits: limits)
+        let partials = try templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) }
+        let parseDuration = parseStart.duration(to: clock.now)
+        return try await measure(root, context: context, templates: partials, recovering: recovering,
+                                 measurement: .init(start: start, parseDuration: parseDuration))
+    }
+
+    private func measure(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate],
+                         recovering: Bool, measurement: Measurement) async throws -> LiquidMeasuredRenderResult {
+        let execution = try await perform(template, context: context, templates: templates,
+                                          recovering: recovering, measurement: measurement)
+        // A supplied measurement always snapshots metrics after successful output admission.
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
+    }
+
+    private func perform(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate],
+                         recovering: Bool, measurement: Measurement? = nil) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         try Task.checkCancellation()
         try limits.validate()
-        try checkSources(template.source, partials: templates.values.map(\.source))
+        let sourceBytes = try checkSources(template.source, partials: templates.values.map(\.source))
         let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
             recoveryEnabled: recovering, referenceTime: referenceTime ?? Date(), filters: filters)
         try admit(context, budget: renderer.budget)
@@ -99,11 +150,19 @@ public struct LiquidEngine: Sendable {
         do {
             let output = try await renderer.render(template.ast, with: values)
             try renderer.budget.output(output)
-            return LiquidRenderResult(output: output, diagnostics: renderer.diagnostics)
+            let metrics = measurement.map {
+                LiquidRenderMetrics(totalDuration: $0.start.duration(to: ContinuousClock().now),
+                    parseDuration: $0.parseDuration, sourceBytes: sourceBytes, outputBytes: output.utf8.count,
+                    renderSteps: limits.renderSteps - renderer.budget.remainingSteps,
+                    loopIterations: limits.loopIterations - renderer.budget.remainingIterations,
+                    admittedValues: limits.contextValues - renderer.budget.remainingValues)
+            }
+            return (LiquidRenderResult(output: output, diagnostics: renderer.diagnostics), metrics)
         } catch { throw publicError(error) }
     }
 
-    private func checkSources(_ root: String, partials: [String]) throws {
+    @discardableResult
+    private func checkSources(_ root: String, partials: [String]) throws -> Int {
         try limits.validate()
         var remaining = limits.sourceBytes
         for source in [root] + partials {
@@ -111,6 +170,7 @@ public struct LiquidEngine: Sendable {
             guard count <= remaining else { throw LiquidError.limitExceeded("sourceBytes") }
             remaining -= count
         }
+        return limits.sourceBytes - remaining
     }
 
     private func admit(_ object: LiquidObject, budget: RuntimeBudget) throws {

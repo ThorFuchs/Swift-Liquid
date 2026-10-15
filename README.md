@@ -133,6 +133,23 @@ See the [inspection contract and JSON schema](Documentation/Inspection.md).
 The filter and inspection APIs are available from 1.1.0; existing 1.0 render
 call sites need no migration.
 
+## Measure a render (1.2 development)
+
+```swift
+let measured = try await engine.renderWithMetrics(
+    template: "Hello, {{ name }}!", context: ["name": "Swift"]
+)
+print(measured.output)
+print(measured.metrics.totalDuration)
+```
+
+Source and parsed-template entry points return immutable timing and budget
+observations. Use `renderWithDiagnosticsAndMetrics` for explicit recovered errors.
+Ordinary render APIs collect no timing. The CLI's `--metrics PATH` writes separate
+JSON while keeping rendered stdout intact. See the [metrics contract](Documentation/Metrics.md)
+for timing boundaries, counter meanings and failure behavior. These additions are
+in development for 1.2; the published release remains 1.1.0.
+
 ## Command-line rendering
 
 ```sh
@@ -185,7 +202,7 @@ See [performance](Documentation/Performance.md).
 - [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)
 - [Release process](RELEASING.md) and [changelog](CHANGELOG.md)
-- [Proposed 1.2 roadmap](Documentation/Roadmap-1.2.md), [adopted 1.1 roadmap](Documentation/Roadmap.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
+- [Adopted 1.2 roadmap](Documentation/Roadmap-1.2.md), [adopted 1.1 roadmap](Documentation/Roadmap.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
 
 Swift-Liquid is adapted from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid),
 with a focused public API and independent qualification. Original contributions

@@ -13,7 +13,8 @@ The source repository's remote HEAD still matched that commit on 2026-10-15. Fea
 names below describe the reviewed implementation; they do not transfer its
 qualification or performance claims to Swift-Liquid.
 
-The [1.2 roadmap](../Roadmap-1.2.md) is a proposal. The
+The maintainer adopted the [1.2 roadmap](../Roadmap-1.2.md) on 2026-10-15; its
+[metrics contract](../Metrics.md) defines the development API. The
 [adopted 1.1 roadmap](../Roadmap.md) records the previous scope decision.
 
 ## Feature disposition after 1.1
@@ -26,7 +27,7 @@ The [1.2 roadmap](../Roadmap-1.2.md) is a proposal. The
 | CLI `analyze` | Shipped in 1.1 using the library inspection | One parser authority replaces regex counts and heuristic complexity labels. |
 | Runtime custom tags and parser adapters | Defer to a separate API design | Parsing, nested content, scope mutation, lifecycle hooks, and budgets substantially widen the extension boundary. |
 | AST cache, compiled templates, optimizer, renderer pooling | Reuse guide shipped in 1.1; defer runtime machinery | Public Sendable `LiquidTemplate` supports parse-once reuse. Eviction, identity, promotion and shared state need separate correctness and measurement work. Some optimizer/cache settings are archived compatibility shims. |
-| Render metrics | Propose a narrow library API and CLI JSON file for 1.2 | Reuse invocation counters and a monotonic clock; exclude cache statistics, storage estimates and a parallel measured renderer. |
+| Render metrics | Adopted for 1.2 development as a narrow library API and CLI JSON file | Reuse invocation counters and a monotonic clock; exclude cache statistics, storage estimates and a parallel measured renderer. |
 | Provenance and interactive debugging | Defer to separate execution contracts | Exact source/output attribution, suspension, captured values and bounded session state go beyond aggregate metrics. |
 | File-backed template loader | Keep file access in the CLI or host application | The library's explicit partial maps already support composition without ambient filesystem access. |
 | JSON, CSV/TSV, Markdown, YAML, TOML, XML, SQLite, GraphQL loaders and data filters | Keep outside the core; consider future integration packages | Format dependencies, URL access, query execution, caches, and format-specific values require independent policies and qualification. Ordered JSON input is already available. |
@@ -92,10 +93,10 @@ Swift-Liquid's native strings.
 Swift-Liquid's [engine](../../Sources/Liquid/LiquidEngine.swift) creates a renderer
 per invocation, admits typed values and checks final output. Its
 [RuntimeBudget](../../Sources/Liquid/LiquidLimits.swift) already tracks steps,
-iterations and admitted values across nested work. The proposed 1.2 design
+iterations and admitted values across nested work. The adopted 1.2 design
 snapshots those counters and measures elapsed time through the same render path,
-without importing upstream metrics code. Clock choice, source/reused timing,
-recovery and failure semantics need explicit contracts before implementation.
+without importing upstream metrics code. The [metrics contract](../Metrics.md)
+defines clocks, source/reused timing, recovery and failure semantics.
 
 ### Custom tags widen the host boundary
 
@@ -160,5 +161,5 @@ code can still introduce ambient I/O or application policy.
 
 Future integration packages should depend on Swift-Liquid. Swift-Liquid should
 retain an empty package dependency list, one public library, one executable,
-and host-owned I/O. The [1.2 roadmap](../Roadmap-1.2.md) defines the proposed work
+and host-owned I/O. The [1.2 roadmap](../Roadmap-1.2.md) defines the adopted work
 and its acceptance gates.

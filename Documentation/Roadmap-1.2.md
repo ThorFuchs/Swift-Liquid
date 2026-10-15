@@ -1,18 +1,20 @@
 # Swift-Liquid 1.2 roadmap
 
-## Proposed scope
+## Adopted scope
 
-Swift-Liquid 1.2 should add opt-in render metrics and a CLI JSON metrics file.
+The maintainer adopted this scope and authorized implementation on 2026-10-15.
+Swift-Liquid 1.2 adds opt-in render metrics and a CLI JSON metrics file.
 Applications could observe elapsed time and logical budget consumption while
 retaining the same rendering behavior, explicit partial maps and immutable
 engines. These are two parts of one observability feature, with no language
 extensions or package dependencies.
 
-This proposal follows [1.1.0](Releases/1.1.0.md), which shipped typed custom
+This scope follows [1.1.0](Releases/1.1.0.md), which shipped typed custom
 filters and AST inspection. The updated [RhoeLiquid review](Architecture/UpstreamFeatureReview.md)
-compares the remaining features against that release. Implementation follows
-maintainer adoption of this scope; publication requires a later explicit request
-and completed release gates. The [adopted 1.1 roadmap](Roadmap.md) remains the
+compares the remaining features against that release. The
+[metrics contract](Metrics.md) specifies the public API and CLI schema.
+Publication requires a later explicit request and completed release gates.
+The [adopted 1.1 roadmap](Roadmap.md) remains the
 record of the previous scope decision.
 
 ## Why metrics next
@@ -52,13 +54,13 @@ Add measured entry points for source and parsed templates, with the same context
 partial and syntax-mode inputs as their existing counterparts. Return an
 immutable, checked Sendable result containing output and metrics. Provide an
 explicit counterpart for diagnostic rendering so callers can retain recovered
-diagnostics without switching error policy. Settle names and signatures in the
-contract review before implementation; `renderWithMetrics` and
-`LiquidRenderMetrics` are working names.
+diagnostics without switching error policy. The [contract](Metrics.md) selects
+`renderWithMetrics`, `renderWithDiagnosticsAndMetrics`, `LiquidRenderMetrics`
+and `LiquidMeasuredRenderResult` for these boundaries.
 
 Keep the initial payload small:
 
-| Observation | Proposed meaning |
+| Observation | Meaning |
 | --- | --- |
 | Total elapsed duration | Monotonic elapsed time from measured library entry through final output admission, including parsing when requested, value admission and suspended host callbacks; excludes caller and CLI I/O |
 | Parse elapsed duration | Parsing work for the root and all supplied partial sources; present for source entry points, absent for already parsed templates |

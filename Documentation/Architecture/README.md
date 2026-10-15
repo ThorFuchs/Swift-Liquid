@@ -46,3 +46,8 @@ Each traversal owns exact UTF-8 sets and checks source/depth limits and
 cancellation. It does not enter the evaluator or call filters/load partials. The
 CLI formats this summary without maintaining a separate source scanner. See
 [inspection](../Inspection.md) for the API and versioned JSON contract.
+
+Opt-in metrics share the normal execution path and snapshot its invocation budget
+after final output admission. Immutable results include monotonic durations and
+counts; measurement creates no shared mutable state, evaluator work or library
+I/O. Ordinary APIs do not read a measurement clock. See [metrics](../Metrics.md).
