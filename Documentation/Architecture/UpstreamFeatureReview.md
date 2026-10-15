@@ -1,33 +1,34 @@
 # RhoeLiquid feature review
 
-Swift-Liquid 1.1.0 ships scoped typed custom filters and AST inspection shared by
-the library and CLI. The strongest remaining candidate for 1.2 is opt-in render
-metrics, reduced to elapsed durations and existing invocation budget consumption.
-Most other upstream features add language, storage, I/O or hosting policies that
-need independent scope decisions.
+Swift-Liquid 1.2.0 ships scoped typed custom filters, AST inspection and opt-in
+render metrics, including separate CLI JSON metrics. The recommended 1.3 scope
+is bounded partial-dependency inspection over explicitly supplied templates,
+with an opt-in CLI mode. Other remaining capabilities add language, shared state,
+I/O or hosting policies that need independent scope decisions.
 
-This review compares [Swift-Liquid 1.1.0](https://github.com/ThorFuchs/Swift-Liquid/tree/1.1.0)
-at `1107ec865b9ae7ed35e1245386ba882db3abd93d`
+This review compares [Swift-Liquid 1.2.0](https://github.com/ThorFuchs/Swift-Liquid/tree/1.2.0)
+at `8676da8059e71905632c233cffb438f8edbf51d2`
 with the extraction source, [RhoeLiquid at `9e524926`](https://github.com/RhoePlatform/RhoeLiquid/tree/9e52492671bc31741932811fe689a86fed76be69).
 The source repository's remote HEAD still matched that commit on 2026-10-15. Feature
 names below describe the reviewed implementation; they do not transfer its
 qualification or performance claims to Swift-Liquid.
 
-The maintainer adopted the [1.2 roadmap](../Roadmap-1.2.md) on 2026-10-15; its
-[metrics contract](../Metrics.md) defines the development API. The
-[adopted 1.1 roadmap](../Roadmap.md) records the previous scope decision.
+The [proposed 1.3 roadmap](../Roadmap-1.3.md) defines the next scope decision.
+The adopted [1.2](../Roadmap-1.2.md) and [1.1](../Roadmap.md) roadmaps retain their
+shipped scope and acceptance criteria. This review proposes work; it does not
+authorize implementation of the remaining extensions.
 
-## Feature disposition after 1.1
+## Feature disposition after 1.2
 
 | RhoeLiquid capability | Swift-Liquid disposition | Reason |
 | --- | --- | --- |
 | Registry-backed custom filters | Shipped in 1.1 with a typed, immutable configuration | `LiquidValue` callbacks, ordered arguments and explicit admission/failure semantics replace the `Any` boundary and mutable registration API. |
 | Supplemental collection filters such as `group_by`, `sort_by`, `pluck`, `limit` and `offset` | Leave as application filters or later opt-in examples | A custom-filter API can support these without adding Rhoe filter names to the default Shopify surface. |
-| Template analysis and manifests | Shipped a small AST-derived summary in 1.1; defer recursive graphs | Syntactic references support tooling without data loading or exposing the AST. Dynamic partials and local reads do not certify dependencies or required inputs. |
-| CLI `analyze` | Shipped in 1.1 using the library inspection | One parser authority replaces regex counts and heuristic complexity labels. |
+| Template analysis and manifests | Shipped a small AST summary in 1.1; propose bounded dependency inspection for 1.3 | Follow literal references through caller-supplied partials; report missing/dynamic references and cycle groups without evaluating templates. |
+| CLI `analyze` | Shipped in 1.1; propose explicit dependency mode for 1.3 | Preserve ordinary analysis and its schema while presenting the new library result with explicit CLI file inputs. |
 | Runtime custom tags and parser adapters | Defer to a separate API design | Parsing, nested content, scope mutation, lifecycle hooks, and budgets substantially widen the extension boundary. |
 | AST cache, compiled templates, optimizer, renderer pooling | Reuse guide shipped in 1.1; defer runtime machinery | Public Sendable `LiquidTemplate` supports parse-once reuse. Eviction, identity, promotion and shared state need separate correctness and measurement work. Some optimizer/cache settings are archived compatibility shims. |
-| Render metrics | Adopted for 1.2 development as a narrow library API and CLI JSON file | Reuse invocation counters and a monotonic clock; exclude cache statistics, storage estimates and a parallel measured renderer. |
+| Render metrics | Shipped in 1.2 as opt-in source/parsed APIs and a CLI JSON file | Snapshot invocation counters with a monotonic clock; ordinary calls collect no timing. Cache statistics, storage estimates and a parallel measured renderer remain excluded. |
 | Provenance and interactive debugging | Defer to separate execution contracts | Exact source/output attribution, suspension, captured values and bounded session state go beyond aggregate metrics. |
 | File-backed template loader | Keep file access in the CLI or host application | The library's explicit partial maps already support composition without ambient filesystem access. |
 | JSON, CSV/TSV, Markdown, YAML, TOML, XML, SQLite, GraphQL loaders and data filters | Keep outside the core; consider future integration packages | Format dependencies, URL access, query execution, caches, and format-specific values require independent policies and qualification. Ordered JSON input is already available. |
@@ -74,10 +75,32 @@ counts.
 Swift-Liquid 1.1 [inspection](../Inspection.md) traverses the standard parser's
 internal AST and returns immutable summaries. Raw text and comments do not
 introduce false dependencies. Variable references cannot certify required inputs
-or the templates that a dynamic name might select. Recursive partial graphs need
-explicit input maps, dynamic-reference semantics, cycles and graph limits.
+or the templates that a dynamic name might select.
 
-### Metrics can reuse invocation state
+### Bounded dependency inspection is the focused 1.3 candidate
+
+Rhoe's `buildManifest` and AST walker collect a direct `referencedTemplates` set.
+Its broader analysis also resolves files and validates macro/input contracts.
+Those paths are not a bounded Shopify-core graph over host-supplied partials.
+The 1.3 proposal extends Swift-Liquid's own inspection with that smaller model;
+it does not import the upstream analysis subsystem or its heuristic scores.
+
+The existing [partial resolver](../../Sources/Liquid/Support/TemplateLoader.swift)
+looks for a supplied name, then that name plus `.liquid`. A graph must retain that
+lookup behavior, distinguish requested spelling from the actual map key, and
+keep the root identity separate from every partial name. Existing String-keyed
+maps cannot hold canonically equivalent keys as separate entries; exact-spelling
+inspection lists do not create a different rendering name-resolution contract.
+
+Follow reachable literal references after admitting and inspecting the supplied
+bundle. Report missing names and dynamic includes as observations, and report
+cycles as finite strongly connected groups. Conditional branches and unresolved
+dynamic names prevent a static report from certifying execution or renderability.
+Count supplied entries, name bytes and edges, check cancellation and avoid
+enumerating every path or simple cycle. The [roadmap](../Roadmap-1.3.md) makes
+those contracts, the separate CLI schema and acceptance cases explicit.
+
+### The 1.2 metrics reuse invocation state
 
 Rhoe's [renderWithMetrics](https://github.com/RhoePlatform/RhoeLiquid/blob/9e52492671bc31741932811fe689a86fed76be69/Sources/RhoeLiquid/RhoeLiquid.swift)
 has its own cache/parse/render orchestration. It times phases with
@@ -93,10 +116,14 @@ Swift-Liquid's native strings.
 Swift-Liquid's [engine](../../Sources/Liquid/LiquidEngine.swift) creates a renderer
 per invocation, admits typed values and checks final output. Its
 [RuntimeBudget](../../Sources/Liquid/LiquidLimits.swift) already tracks steps,
-iterations and admitted values across nested work. The adopted 1.2 design
-snapshots those counters and measures elapsed time through the same render path,
-without importing upstream metrics code. The [metrics contract](../Metrics.md)
-defines clocks, source/reused timing, recovery and failure semantics.
+iterations and admitted values across nested work. The shipped 1.2 implementation
+snapshots those counters after final output admission and measures monotonic
+elapsed time through the same render path, without importing upstream metrics
+code. Source and parsed throwing/diagnostic entry points retain error identity
+and invocation ownership. The [metrics contract](../Metrics.md) and
+[1.2.0 release notes](../Releases/1.2.0.md) define clocks, timing boundaries,
+logical counts, recovery and CLI schema 1. The remaining upstream cache/storage
+observations do not become additional metrics commitments for 1.3.
 
 ### Custom tags widen the host boundary
 
@@ -161,5 +188,5 @@ code can still introduce ambient I/O or application policy.
 
 Future integration packages should depend on Swift-Liquid. Swift-Liquid should
 retain an empty package dependency list, one public library, one executable,
-and host-owned I/O. The [1.2 roadmap](../Roadmap-1.2.md) defines the adopted work
-and its acceptance gates.
+and host-owned I/O. The [1.3 roadmap](../Roadmap-1.3.md) proposes one tooling feature
+and its acceptance gates; no other upstream subsystem is a stretch goal.
