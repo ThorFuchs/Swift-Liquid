@@ -23,6 +23,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
 | [1.3.1 benchmark review](PerformanceReview-1.3.1.md) | Prior flags, independent study and release review policy |
+| [Interpolation investigation](PerformanceReview-Interpolation.md) | Controls, rejected hypotheses and bounded synchronous execution |
 | [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |

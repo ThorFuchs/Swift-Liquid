@@ -135,3 +135,7 @@ The [1.3.1 maintenance review](PerformanceReview-1.3.1.md) records the PR #14
 flags and the independent-host investigation of possible output-checkpoint cost.
 The final qualification archive retains every observation and the bound release
 decision; earlier measurements are not substituted for the final candidate.
+
+The [interpolation investigation](PerformanceReview-Interpolation.md) retains
+controlled 1.3.1 comparisons and rejected hypotheses separately from the pinned
+release comparison. Caller context and identical-source controls are explicit.
