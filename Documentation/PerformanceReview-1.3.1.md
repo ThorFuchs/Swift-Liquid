@@ -44,21 +44,70 @@ cause is inferred from spread alone.
 
 ## One independent-host study
 
-Before observing its results, specify one complete local
-`Scripts/ci.py --lane matched-performance` run at merged PR #14 commit
-`2a9e787e9f073b444e69d258f53ecaabbdd74bcb`. Use the same immutable baseline,
-unchanged harness, compiler requirements, three ABBA blocks, six runs per side,
-sampling and 10% review thresholds. Build every binary before timing, run no
-additional qualification build during measurement, and retain every observation.
-The release candidate must have the identical Liquid Swift-source fingerprint
-for this study to inform its review. CLI versions and Markdown do not affect that
-fingerprint. No repeats are selected to obtain an unflagged result.
+One complete local `Scripts/ci.py --lane matched-performance` run used merged
+PR #14 commit `2a9e787e9f073b444e69d258f53ecaabbdd74bcb`. Its question and
+sampling policy were recorded before observing results. It kept the immutable
+baseline, unchanged harness, three ABBA blocks, six runs per side and 10% review
+thresholds. All binaries built before timing; no other local qualification build
+ran during timing. The Liquid Swift-source fingerprint is
+`50b372f97e4f3429647723b7c9ec8c4b8cca13759774fa069b369109b48fafa4`.
+CLI versions and Markdown do not change this fingerprint.
 
-This study supplements the final candidate's nine CI gates. It does not replace
-exact-source candidate qualification, establish physical-host isolation or create
-independent statistical samples. Its full receipt, environment, raw samples,
-flags and interpretation accompany the final release evidence, including any
-unfavorable or inconclusive observations.
+The host was severely contended: one-minute load was 247.69–277.31 on ten physical
+cores. Every common and metrics comparison had a spread flag. Common median
+changes ranged from −33.11% to +94.13%; metrics changes from −44.35% to +44.48%.
+This study is inconclusive for intrinsic cost and does not clear the earlier
+flags. All unfavorable observations remain retained; no local repeat was selected.
+
+## Isolate the checkpoint
+
+The required merged-main
+[run 38800631012](https://github.com/ThorFuchs/Swift-Liquid/actions/runs/38800631012)
+again observed ordinary reused custom filters at +11.40% and measured reused
+interpolation at +19.05%, with spread flags in all 26 common comparisons. These
+recurring effects justified a different experiment, specified before timing.
+
+A private release executable linked two modules copied from the same Liquid
+Swift sources. The control omitted only the new output-admission cancellation
+check; this intentionally incorrect cancellation control is not a package product
+or supported engine. Source manifests and the exact diff are retained. Four
+prepared public-API fixtures ran five warmup and forty measured ABBA blocks,
+500 calls per batch, with output equality and FNV-1a checks inside timing.
+Identical checked-code A/A comparisons used the same boundaries for each fixture.
+No qualification build overlapped timing.
+
+| Fixture | Median paired checkpoint change | Identical-code A/A median |
+| --- | ---: | ---: |
+| Ordinary reused custom filter | +5.57% | +0.99% |
+| Measured reused interpolation | +9.34% | +0.052% |
+| Ordinary reused loop | −0.50% | −1.00% |
+| Reused inspection | +1.54% | +0.92% |
+
+Measured interpolation was positive in 37/40 blocks; median batch values were
+about 2.47 µs for the control and 2.68 µs with the checkpoint. This supports a
+possible positive cost on a small workload. The custom-filter blocks had extreme
+signed spread, and the loop and inspection results do not establish a speedup or
+absence of overhead. Local load remained about 203. A/A controls, interleaving and
+output checks improve the diagnosis but do not establish isolation. Separate
+module names/code layout can influence the result. This authored harness differs
+from the pinned common harness; no cross-harness latency comparison or universal
+overhead bound is justified.
+
+## First candidate observations
+
+[Run 38801432017](https://github.com/ThorFuchs/Swift-Liquid/actions/runs/38801432017)
+measured the same Liquid fingerprint with the unchanged common protocol. Its
+source-interpolation flag was +15.17% (20.589 to 23.712 µs), with block effects
+`[3.66, 12.72, 19.01]%`. Measured reused interpolation changed sign relative to
+the earlier runs: −10.43%, with blocks `[-12.24, -26.25, 23.06]%`. That result is
+not evidence of a speedup. Spread flags affected 25/26 common and all 24 metrics
+comparisons; five opt-in metrics flags ranged from +11.01% to +23.20%.
+
+These are retained observations for the earlier candidate source inventory,
+not a substitute for qualification after this review documentation was added.
+The final candidate's archive contains its own raw measurements, all four exact
+flag lists and checksum-bound decision. No repeated measurement was selected to
+obtain an unflagged result.
 
 ## Release decision
 
@@ -69,10 +118,13 @@ prior runs and independent study beside the final evidence. A mechanically valid
 comparison is insufficient to approve performance, and an unresolved material
 regression must not be hidden by changing thresholds or accepting a status field.
 
-The bound review must explain whether a repeatable cost remains, whether it is
-acceptable for this correctness fix and what the observations cannot establish.
-A possible cost may be disclosed and accepted explicitly; it must not be described
-as no regression or zero overhead. Fresh exact-main qualification and review are
+The recurring flags and controlled interpolation observation support treating a
+positive checkpoint cost as a correctness tradeoff. Retain the checkpoint: the
+old engine could deliver normal output after cancellation during its last filter.
+A possible latency increase on these small calls is acceptable for fixing that
+reproduced defect; this is not a no-regression or zero-overhead verdict. The bound
+review must assess every final flag and any additional material regression rather
+than inheriting this decision mechanically. Fresh exact-main qualification and review are
 required after the release preparation merges and before separately authorized
 publication.
 
