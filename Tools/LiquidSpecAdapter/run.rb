@@ -39,12 +39,17 @@ def transport_reason(value, ancestors = Set.new, depth = 0)
   when NilClass, TrueClass, FalseClass then nil
   when Integer then 'unsupported-by-domain: integer outside signed 64-bit Int' unless (-(2**63)...2**63).cover?(value)
   when Float then 'unsupported-by-domain: nonfinite float' unless value.finite?
-  when String then 'transport-inapplicable: non-UTF8/binary string' unless value.valid_encoding? && (value.encoding == Encoding::UTF_8 || value.ascii_only?)
+  when String
+    return "transport-inapplicable: Ruby #{value.class} is not a plain JSON string" unless value.instance_of?(String)
+    'transport-inapplicable: non-UTF8/binary string' unless value.valid_encoding? && (value.encoding == Encoding::UTF_8 || value.ascii_only?)
   when Array, Hash
+    unless value.instance_of?(Array) || value.instance_of?(Hash)
+      return "transport-inapplicable: Ruby #{value.class} is not a plain JSON container"
+    end
     return 'transport-inapplicable: cyclic JSON value' if ancestors.include?(value.object_id)
     path = ancestors.dup.add(value.object_id)
     items = value.is_a?(Hash) ? value.to_a.flatten(1) : value
-    return 'transport-inapplicable: non-string object key' if value.is_a?(Hash) && value.keys.any? { |key| !key.is_a?(String) }
+    return 'transport-inapplicable: non-string object key' if value.is_a?(Hash) && value.keys.any? { |key| !key.instance_of?(String) }
     items.each do |child|
       reason = transport_reason(child, path, depth + 1)
       return reason if reason
