@@ -13,6 +13,11 @@ The root package has no third-party dependencies. Reference clones and build
 outputs are not distributed. File-level source adaptations and hashes are
 recorded in Documentation/Architecture/ExtractionManifest.json.
 
+Documentation qualification and landing-page tooling adapt Apache-2.0 code from
+[ThorFuchs/Swift-JSON](https://github.com/ThorFuchs/Swift-JSON), copyright 2026 Thor
+Fuchs. File headers retain that attribution and identify Liquid-specific changes;
+the extraction manifest records the adapted source files and their hashes.
+
 The date grammar and missing-component defaults include Swift adaptations of
 Ruby Date 3.5.1 (`2b5442d85a97859a680eb4be20c6e1a28f3af282`,
 `ext/date/date_parse.c`, coded by Tadayoshi Funaba) and Ruby Time 0.4.2

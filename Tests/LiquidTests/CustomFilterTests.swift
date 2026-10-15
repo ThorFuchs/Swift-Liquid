@@ -55,7 +55,7 @@ private func hostFilters() -> [LiquidFilter] {
     ]
 }
 
-@Suite("Custom filter host extensions")
+@Suite("Custom filter host extensions", .timeLimit(.minutes(1)))
 struct CustomFilterTests {
     @Test func fixtureIntegrity() throws { #expect(try FilterFixtures.loaded.get().count == 15) }
 
@@ -231,16 +231,17 @@ struct CustomFilterTests {
 
     @Test(arguments: [false, true])
     func cancellationAfterSuspendingCallbackTakesPrecedenceOverRecovery(throwsFailure: Bool) async throws {
-        let gate = FilterGate()
+        let gate = TestSuspensionGate()
         let engine = try LiquidEngine(filters: [LiquidFilter("wait") { _, _, _ in
             await gate.enter()
             if throwsFailure { throw LiquidFilterFailure("Must not recover cancellation") }
             return "Must not return output after cancellation"
         }])
         let task = Task { try await engine.renderWithDiagnostics(template: "{{ '' | wait }}") }
-        await gate.waitForEntry()
+        defer { task.cancel() }
+        try await gate.waitForEntry()
         task.cancel()
-        await gate.release()
+        _ = try await gate.release()
         await #expect(throws: CancellationError.self) { try await task.value }
     }
 
@@ -276,20 +277,4 @@ struct CustomFilterTests {
             try await group.waitForAll()
         }
     }
-}
-
-private actor FilterGate {
-    private var entered = false
-    private var entryWaiters: [CheckedContinuation<Void, Never>] = []
-    private var releaseContinuation: CheckedContinuation<Void, Never>?
-    func enter() async {
-        entered = true
-        for waiter in entryWaiters { waiter.resume() }
-        entryWaiters = []
-        await withCheckedContinuation { releaseContinuation = $0 }
-    }
-    func waitForEntry() async {
-        if !entered { await withCheckedContinuation { entryWaiters.append($0) } }
-    }
-    func release() { releaseContinuation?.resume(); releaseContinuation = nil }
 }

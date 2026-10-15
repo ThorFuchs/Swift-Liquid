@@ -57,13 +57,14 @@ jobs:
           path: |
             Artifacts/${{ matrix.lane }}/
             !Artifacts/docs/Liquid.doccarchive/**
+            !Artifacts/docs/site/**
           if-no-files-found: error
           retention-days: 30
       - name: Package documentation site
         if: matrix.lane == 'docs'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
-          path: Artifacts/docs/Liquid.doccarchive/
+          path: Artifacts/docs/site/
           include-hidden-files: true
   matched-performance:
     name: Matched benchmarks against 1.2.0

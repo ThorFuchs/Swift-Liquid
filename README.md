@@ -1,23 +1,75 @@
 # Swift-Liquid
 
-**Shopify Liquid templates, written in modern Swift.**
+**Shopify Liquid templates for modern Swift. One library, one CLI, no package dependencies.**
 
-Render HTML, Markdown, configuration files, and plain text with a focused Liquid
-engine and a command-line tool. Swift-Liquid provides typed Sendable input values,
-immutable reusable templates, explicit partials, and Swift 6 concurrency. The
-SwiftPM dependency graph is empty; platform support comes from Foundation.
+Render HTML, email, Markdown and configuration files with typed values, reusable
+parsed templates and Swift 6 concurrency. Supply partials and application filters
+explicitly, inspect templates before rendering, and opt into timing and budget
+metrics when you need them. Each operation owns its mutable state.
 
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
-[![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/ThorFuchs/Swift-Liquid)](https://github.com/ThorFuchs/Swift-Liquid/releases/latest)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.3.0** adds bounded partial-dependency inspection
-and an explicit CLI dependency report, preserving the 1.0–1.2 APIs and dependency-free core.
-See the
-[1.3.0 release notes](Documentation/Releases/1.3.0.md)
-and [compatibility evidence](Documentation/Conformance.md). Maintained by
-[Thorsten Fuchs](https://github.com/ThorFuchs).
+[Read the documentation →](https://thorfuchs.github.io/Swift-Liquid/)
 
-## Start with a template
+Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The latest stable
+release is [1.3.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0).
+Use a released version for applications; `main` and the documentation site track
+ongoing development. Release assets include the source, compiled DocC reference,
+qualification evidence and SHA-256 checksums for that exact version.
+
+## Why Swift-Liquid?
+
+- **A focused language target.** Shopify's open-source Liquid core, with standard
+  tags, filters, parser modes and explicit error recovery.
+- **Parse once, share safely.** Engines, templates, inputs and results have checked
+  `Sendable` conformance. Variables, counters, diagnostics and budgets belong to
+  one invocation.
+- **Explicit composition.** Pass partials by name and configure typed custom
+  filters on an immutable engine. The library performs no implicit file or network I/O.
+- **Useful inspection.** Analyze the actual AST, then inspect an explicit partial
+  bundle for literal dependencies, missing references, dynamic includes and cycles.
+- **Finite, observable work.** Cumulative quotas and cooperative cancellation are
+  part of the operation contract. Metrics are opt-in.
+- **Evidence you can inspect.** Pinned independent fixtures, comparisons with Ruby
+  Liquid, public consumers, Swift Testing, sanitizers and retained release measurements.
+
+## Requirements and products
+
+| Requirement | Baseline |
+| --- | --- |
+| Swift tools and compiler | 6.4 or later |
+| Swift language mode | 6 |
+| Declared Apple minimums | macOS 14, iOS 17, tvOS 17, watchOS 10, visionOS 1 |
+| Runtime qualification | macOS 27 with Swift 6.4; four simulator SDK compilation gates |
+| Package products | `Liquid` library and `liquid` executable |
+| Root package dependencies | None; Foundation comes from the platform SDK |
+| License | Apache-2.0 original code, with retained upstream notices |
+
+Simulator compilation is separate from device execution. Linux, WASI and browser
+hosting have no runtime qualification claim. The standalone schema qualification
+tool uses [Swift-JSON](https://github.com/ThorFuchs/Swift-JSON); applications linking
+`Liquid` acquire no package dependencies.
+
+## Installation
+
+Add the package to `Package.swift`:
+
+```swift
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.0")
+```
+
+Then add the library product to your target:
+
+```swift
+.product(name: "Liquid", package: "swift-liquid")
+```
+
+See the complete [public consumer package](Examples/Consumer). The executable
+examples below are also [compiled and run in CI](Examples/READMEConsumer).
+
+## Render a template
 
 ```swift
 import Liquid
@@ -30,195 +82,173 @@ let output = try await engine.render(
 print(output) // Hello, SWIFT!
 ```
 
-Context values use Swift literals: strings, integers, floating-point numbers,
-booleans, arrays, objects, and `nil`. Object literals retain member order; keys
-retain their Unicode scalar spelling, including canonically equivalent forms.
-Liquid truthiness is preserved: only `nil` and `false` are falsy; empty strings,
-empty arrays, and zero are truthy.
-
-## Installation
-
-Swift tools/compiler **6.4 or later**, in Swift language mode 6.
-
-Add the stable package dependency:
-
-```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.0")
-```
-
-Add the library to your target:
-
-```swift
-.product(name: "Liquid", package: "swift-liquid")
-```
-
-The package declares macOS 14, iOS 17, tvOS 17, watchOS 10, and visionOS 1 as its
-Apple deployment minimums. Qualification currently runs on macOS 27 with Swift 6.4.
-The library also compiles against all four declared simulator SDKs. These checks
-are separate from device execution qualification. The
-[consumer example](Examples/Consumer) is a separate package using only public APIs.
+Context values use Swift literals: strings, integers, finite floating-point
+numbers, booleans, arrays, objects and `nil`. Only `nil` and `false` are falsy;
+zero, empty strings and empty arrays are truthy. Object literals retain insertion
+order and the exact Unicode scalar spelling of keys.
 
 ## Parse once, render many times
 
 ```swift
+import Foundation
+import Liquid
+
+let engine = LiquidEngine()
 let template = try LiquidTemplate("{% for item in items %}{{ item }} {% endfor %}")
-let result = try await engine.render(template, context: ["items": ["one", "two"]])
-print(result) // one two
+let output = try await engine.render(template, context: ["items": ["one", "two"]])
+print(output.trimmingCharacters(in: .whitespaces)) // one two
 ```
 
-Templates and engines are Sendable. Each render owns its variables, scopes,
-iteration counters, and temporary output. Share a parsed template across tasks
-without sharing mutable rendering state. Caching is explicit: keep the template
-value in your application rather than relying on a global cache.
+Keep parsed templates in your application and share them across tasks. Each render
+gets independent state. There is no implicit global cache or mutable registry.
+See [limits and concurrency](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/limitsandconcurrency/).
 
 ## Compose templates explicitly
 
 ```swift
-let page = try await engine.render(
+import Liquid
+
+let output = try await LiquidEngine().render(
     template: "{% render 'card', title: title %}",
-    context: ["title": "Liquid in Swift"],
+    context: ["title": "Swift & Liquid"],
     templates: ["card": "<h2>{{ title | escape }}</h2>"]
 )
-print(page) // <h2>Liquid in Swift</h2>
+print(output) // <h2>Swift &amp; Liquid</h2>
 ```
 
-`render` isolates local variables; `include` follows Liquid's shared-scope
-behavior. Partial sources are supplied by name. The library performs no implicit
-filesystem or network access. Use `escape` or `escape_once` for HTML content:
-Liquid does not automatically escape output.
+`render` isolates local variables; `include` follows Liquid's shared-scope behavior.
+Supply partials as sources or parsed templates. HTML escaping is explicit: use
+`escape` or `escape_once` when inserting text into HTML. Read the
+[rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).
 
-## Read JSON without losing object order
+## Supply JSON and custom filters
 
 ```swift
-let value = try LiquidValue(json: #"{"name":"Ada","roles":["author","editor"]}"#)
+import Liquid
+
+let value = try LiquidValue(json: #"{"name":"Ada"}"#)
 if case .object(let context) = value {
-    print(try await engine.render(template: "{{ name }}", context: context))
+    let engine = try LiquidEngine(filters: [
+        LiquidFilter("greet") { value, _, _ in
+            guard case .string(let name) = value else {
+                throw LiquidFilterFailure("Expected a name")
+            }
+            return .string("Hello, " + name)
+        }
+    ])
+    print(try await engine.render(template: "{{ name | greet | escape }}", context: context)) // Hello, Ada
 }
 ```
 
-The JSON bridge rejects malformed input, duplicate keys, trailing data, and
-non-finite numbers. Numbers use `Int` and finite `Double`; use strings for exact
-large decimal data. This bridge is intended for template inputs. The sibling
-[Swift-JSON](https://github.com/ThorFuchs/Swift-JSON) provides an exact JSON data model.
+The input JSON bridge rejects malformed input, duplicate keys, trailing data and
+non-finite numbers. It uses `Int` and finite `Double`; supply strings for decimal
+data that must remain exact. Custom filters receive typed values and belong to
+one engine. Standard filters are protected. See [values and JSON](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/valuesandjson/)
+and the [custom-filter contract](Documentation/CustomFilters.md).
 
-## Add application filters (1.1)
-
-```swift
-let engine = try LiquidEngine(filters: [
-    LiquidFilter("greet") { value, _, _ in
-        guard case .string(let name) = value else { throw LiquidFilterFailure("Expected a name") }
-        return .string("Hello, " + name)
-    }
-])
-let greeting = try await engine.render(template: "{{ name | greet | escape }}", context: ["name": "Ada"])
-// Hello, Ada
-```
-
-Callbacks receive typed values and belong to one immutable engine configuration.
-Standard filters are protected; defaults retain Shopify core behavior. See
-[custom filters](Documentation/CustomFilters.md) and [application reuse](Documentation/Reuse.md).
-
-## Inspect templates (1.1)
-
-The 1.1 API inspects source or a parsed template without evaluating expressions,
-calling filters, or loading partials:
+## Inspect source and partial dependencies
 
 ```swift
+import Liquid
+
+let engine = LiquidEngine()
 let summary = try engine.inspect(template: "{{ user[key] | escape }}{% render 'card' %}")
-// Roots: key, user; filters: escape; literal partials: card.
-```
+print(summary.variableRoots.joined(separator: ",")) // key,user
 
-`liquid analyze page.liquid --format json` exposes the same AST summary. Roots
-include local reads and conditional paths; they are not a required-input schema.
-See the [inspection contract and JSON schema](Documentation/Inspection.md).
-The filter and inspection APIs are available from 1.1.0; existing 1.0 render
-call sites need no migration.
-
-## Inspect partial dependencies (1.3)
-
-```swift
 let graph = try engine.inspectDependencies(
-    template: "{% include 'card' %}", templates: ["card": "{{ title | escape }}"]
+    template: "{% include 'card' %}",
+    templates: ["card": "{% include 'badge' %}"]
 )
+print(graph.nodes.count) // 2
+print(graph.missingReferences.map(\.requestedName).joined(separator: ",")) // badge
 ```
 
-Inspect literal dependencies, missing references, dynamic includes and cycle groups
-without rendering. Use `liquid analyze --dependencies` with an explicit partial
-directory for the same report. See the [dependency contract](Documentation/Dependencies.md).
-The standalone schema qualification tool uses Swift-JSON; the root graph stays empty.
+Inspection traverses the AST without evaluating expressions, calling filters or
+loading files. Reads include local variables and retained branches; they do not
+constitute a required-input schema. Dependency inspection admits the whole supplied
+bundle under explicit bounds and follows the renderer's name lookup rules. Missing
+references and cycles are findings; they do not prove render failure or success.
+Read the [inspection](Documentation/Inspection.md) and [dependency](Documentation/Dependencies.md) contracts.
 
-## Measure a render (1.2)
+## Measure a render
 
 ```swift
-let measured = try await engine.renderWithMetrics(
+import Liquid
+
+let measured = try await LiquidEngine().renderWithMetrics(
     template: "Hello, {{ name }}!", context: ["name": "Swift"]
 )
-print(measured.output)
-print(measured.metrics.totalDuration)
+print(measured.output) // Hello, Swift!
+print(measured.metrics.outputBytes) // 13
 ```
 
-Source and parsed-template entry points return immutable timing and budget
-observations. Use `renderWithDiagnosticsAndMetrics` for explicit recovered errors.
-Ordinary render APIs collect no timing. The CLI's `--metrics PATH` writes separate
-JSON while keeping rendered stdout intact. See the [metrics contract](Documentation/Metrics.md)
-for timing boundaries, counter meanings and failure behavior.
+Metrics report monotonic elapsed durations and charged operation counts. Parsed
+calls omit parse duration. Ordinary rendering collects no timing; the measured
+APIs share its execution and error behavior. Logical quotas are not process-memory
+or wall-clock guarantees. See [metrics](Documentation/Metrics.md) and
+[errors and recovery](Documentation/Errors.md).
 
-## Command-line rendering
+## Use the CLI
 
 ```sh
-swift build -c release
-.build/release/liquid render greeting.liquid --data context.json
-.build/release/liquid render page.liquid --data context.json --partials ./partials --output page.html
-printf 'Hello, {{ name }}!' | .build/release/liquid render - --data context.json
-.build/release/liquid validate page.liquid
+swift run -c release liquid render greeting.liquid --data context.json
+swift run -c release liquid render page.liquid --data context.json --partials ./partials --output page.html
+swift run -c release liquid validate page.liquid
+swift run -c release liquid analyze page.liquid --format json
+swift run -c release liquid analyze page.liquid --dependencies --partials ./partials --format json
 ```
 
-The CLI writes rendered bytes to stdout or the requested output file and sends
-diagnostics to stderr. It exits with a nonzero status on failure. See the
-[CLI reference](Documentation/CLI.md) for options and examples.
+The CLI writes rendered bytes to stdout or the requested file, diagnostics to
+stderr, and a nonzero exit status on operational failure. `--metrics PATH` writes
+an independent JSON metrics file. See [CLI usage and schemas](Documentation/CLI.md).
 
-## Compatibility, tests, and performance
+## Compatibility and independent evidence
 
-The language target is Shopify's **open-source Liquid core**, including its
-standard tags and filters. Shopify storefront objects, theme tags, Rhoe data
-loaders, template inheritance, macros, DOCX rendering, services, and WASM hosting
-remain outside the package. See the [language contract](Documentation/Language.md) and
-[date guide](Documentation/Dates.md).
+The language authority is [Shopify's Liquid reference implementation](https://github.com/Shopify/liquid)
+and its [core language documentation](https://shopify.github.io/liquid/).
+Swift-Liquid targets that open-source core. Storefront objects, theme-only tags,
+inheritance, macros, platform data loaders, document rendering and hosting services
+remain outside this package's [language contract](Documentation/Language.md).
 
-The repository vendors all **1,098 cases** from a pinned Golden Liquid corpus,
-with its original license and checksum. The test runner checks successful
-outputs and expected errors, preserves fixture object order, and passes parser
-mode metadata to the engine. The fixture integrity test prevents an absent or
-empty corpus from passing unnoticed. Fixture expectations and reference-runtime
-comparisons are distinct evidence; both are documented. An additional **221
-reference-checked probes** cover Unicode scalars and keys, structural equality,
-negative arithmetic, parser modes, loop interruption, and date parsing/formatting.
-The Ruby Date/Time grammar is additionally checked with 337 source-table cases
-and 376 public date-filter cases. Reference receipts separate successful renders,
-expected errors, recovered errors, supported-year boundaries, and reference failures.
+The independent [Golden Liquid test suite](https://github.com/jg-rp/golden-liquid),
+maintained by James Prior, contributes all **1,098 cases** from a
+[pinned revision](https://github.com/jg-rp/golden-liquid/tree/65c2f76ea64ef20647c295b000df5fcd9fc471cd).
+The complete fixture bytes, original license, checksum and parser-mode metadata
+are retained. This corpus is separate from
+[Shopify's own upstream tests](https://github.com/Shopify/liquid/tree/4e39ae4cc3da73921923c0669e0fc84a66b2f696/test).
+
+Release qualification also compares authored probes and date grammar behavior
+with pinned Ruby Liquid. Receipts distinguish successful renders, parsed cases,
+expected and recovered errors, supported-year boundaries and reference failures.
+Swift Testing exercises public contracts, quotas, cancellation, concurrent reuse
+and graph relationships; independent consumers and CLI/schema checks cover package
+integration. AddressSanitizer and ThreadSanitizer qualify separate safety concerns.
+Test counts alone do not establish complete conformance. See the
+[conformance record and pins](Documentation/Conformance.md).
 
 ```sh
-python3 Scripts/ci.py --lane native
-python3 Scripts/ci.py --lane docs
-python3 Scripts/ci.py --lane performance
+python3 -B Scripts/ci.py --lane native
+python3 -B Scripts/ci.py --lane safety
+python3 -B Scripts/ci.py --lane docs
 ```
 
-Performance uses a separate release-mode benchmark package. Measurements report
-workloads, sample counts, latency distributions, output checksums, toolchain, and
-source identity. Swift-Liquid makes no inherited speedup or process-memory claim.
-See [performance](Documentation/Performance.md).
+Performance evidence retains workloads, sample distributions, checksums, compiler
+and source identity. Review [methodology](Documentation/Performance.md) and the
+[released qualification archives](https://github.com/ThorFuchs/Swift-Liquid/releases).
+No inherited speedup, zero-overhead or process-memory claim is made.
 
-## Documentation and contributing
+## Documentation and community
 
-- [API reference and guides](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/)
-- [Documentation index](Documentation/README.md) and [DocC catalog](Sources/Liquid/Documentation.docc)
-- [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
-- [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)
-- [Release process](RELEASING.md) and [changelog](CHANGELOG.md)
-- [Adopted 1.3 roadmap](Documentation/Roadmap-1.3.md), [adopted 1.2 roadmap](Documentation/Roadmap-1.2.md), [adopted 1.1 roadmap](Documentation/Roadmap.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
+- [Documentation site](https://thorfuchs.github.io/Swift-Liquid/), [API reference](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/) and [guide index](Documentation/README.md)
+- [Contributing](CONTRIBUTING.md), [community standards](CODE_OF_CONDUCT.md), [support](SUPPORT.md) and [private security reporting](SECURITY.md)
+- [Architecture and provenance](Documentation/Architecture/README.md), [documentation tooling](Documentation/DocumentationTooling.md) and [quality sprints](Documentation/QualityRoadmap.md)
+- [Changelog](CHANGELOG.md), [release process](RELEASING.md) and [adopted feature roadmaps](Documentation/README.md)
 
-Swift-Liquid is adapted from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid),
-with a focused public API and independent qualification. Original contributions
-are licensed under [Apache-2.0](LICENSE). Upstream source attribution and fixture
-licenses are retained in [NOTICE](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md),
-and the [extraction manifest](Documentation/Architecture/ExtractionManifest.json).
+## License and credits
+
+Original Swift-Liquid contributions are [Apache-2.0](LICENSE). The engine is adapted
+from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid); upstream Apache notices
+are preserved. Golden Liquid fixtures retain their MIT license, and Ruby Date/Time
+adaptations retain the applicable BSD terms. See [NOTICE](NOTICE),
+[third-party notices](THIRD_PARTY_NOTICES.md) and the
+[extraction manifest](Documentation/Architecture/ExtractionManifest.json).

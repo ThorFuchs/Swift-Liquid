@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Private vulnerability reporting
+    url: https://github.com/ThorFuchs/Swift-Liquid/security/advisories/new
+    about: Keep security-sensitive details out of public issues.
+  - name: Documentation and API reference
+    url: https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/
+    about: Rendering, values, custom filters, inspection, metrics and operation limits.

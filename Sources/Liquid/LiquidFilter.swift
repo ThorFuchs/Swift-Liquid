@@ -53,6 +53,7 @@ public struct LiquidFilterFailure: Error, Sendable, Equatable, CustomStringConve
     /// The explanation included in the rendering error or recovered diagnostic.
     public let message: String
     /// Creates an explicitly recoverable filter failure.
+    /// - Parameter message: Explanation retained in the rendering error and recovered diagnostic.
     public init(_ message: String) { self.message = message }
     /// The filter's explanation.
     public var description: String { message }

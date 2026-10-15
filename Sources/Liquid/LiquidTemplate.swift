@@ -7,7 +7,11 @@ public struct LiquidTemplate: Sendable {
     /// The original Liquid source.
     public let source: String
     /// Parses standard Liquid source.
-    /// - Throws: A syntax error if the source cannot be parsed.
+    /// - Parameters:
+    ///   - source: Liquid source retained exactly as supplied.
+    ///   - syntaxMode: Parser policy retained by the parsed AST.
+    ///   - limits: Source and syntax-depth capacities; rendering applies its own current profile.
+    /// - Throws: Syntax, invalid-limit, source/depth capacity or cancellation errors.
     public init(_ source: String, syntaxMode: LiquidSyntaxMode = .lax, limits: LiquidLimits = .default) throws {
         try limits.validate()
         try Task.checkCancellation()

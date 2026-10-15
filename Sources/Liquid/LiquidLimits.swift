@@ -14,7 +14,15 @@ public struct LiquidLimits: Sendable, Equatable {
     public var renderSteps: Int
     /// Cumulative values admitted from context and across custom-filter boundaries.
     public var contextValues: Int
-    /// Creates a finite limit profile. Nonpositive values are rejected at operation entry.
+    /// Creates a finite limit profile, validated when an operation begins.
+    /// Every capacity must be positive; nesting depth must not exceed 128.
+    /// - Parameters:
+    ///   - sourceBytes: Cumulative UTF-8 capacity of the root and all supplied partials.
+    ///   - outputBytes: UTF-8 capacity of a completed intermediate or final output.
+    ///   - loopIterations: Cumulative iterations across the root and its partial calls.
+    ///   - nestingDepth: Maximum syntax and active rendering depth.
+    ///   - renderSteps: Cumulative evaluator-work allowance for one invocation.
+    ///   - contextValues: Cumulative admitted context and custom-filter value visits.
     public init(sourceBytes: Int = 1_048_576, outputBytes: Int = 8_388_608,
                 loopIterations: Int = 100_000, nestingDepth: Int = 64,
                 renderSteps: Int = 1_000_000, contextValues: Int = 100_000) {

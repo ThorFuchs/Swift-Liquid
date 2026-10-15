@@ -36,7 +36,7 @@ def swift():
 
 def source_snapshot():
     paths = [ROOT / name for name in ['Package.swift', 'README.md', 'CHANGELOG.md', 'LICENSE', 'NOTICE',
-        'THIRD_PARTY_NOTICES.md', 'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md', 'RELEASING.md', 'AGENTS.md', '.gitignore']]
+        'THIRD_PARTY_NOTICES.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'SECURITY.md', 'SUPPORT.md', 'RELEASING.md', 'AGENTS.md', '.gitignore']]
     for folder in ['Sources', 'Tests', 'Scripts', 'Documentation', 'Examples', 'Tools', 'Licenses', '.github']:
         paths += [p for p in (ROOT / folder).rglob('*') if p.is_file() and '.build' not in p.parts and '__pycache__' not in p.parts]
     return [{'path': str(p.relative_to(ROOT)), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(paths)]
@@ -92,7 +92,7 @@ def main():
                 log = (output / (name + '.log')).read_text()
                 require_fixtures(log)
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 65:
+                if not summary or int(summary.group(1)) < 68:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
                 receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
                     'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
@@ -102,6 +102,7 @@ def main():
             run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
             run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
             run(swift() + ['run', '--package-path', 'Examples/DependencyConsumer', 'LiquidDependencyConsumer'], 'dependency-consumer')
+            run([sys.executable, '-B', 'Scripts/check_readme_examples.py'], 'readme-consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
             run([sys.executable, '-B', 'Scripts/check_dependencies.py', str(Path(binary_path) / 'liquid')], 'dependency-cli-schema')

@@ -1,11 +1,14 @@
 # Documentation
 
-Start with the [README](../README.md) and the [public consumer](../Examples/Consumer).
+Start with the [documentation site](https://thorfuchs.github.io/Swift-Liquid/),
+the [README](../README.md) and the [public consumer](../Examples/Consumer).
 The [DocC catalog](../Sources/Liquid/Documentation.docc) contains API reference and
 guides that are compiled from the public Swift symbol graph.
 
 | Guide | Purpose |
 | --- | --- |
+| [Documentation tooling](DocumentationTooling.md) | Public comment coverage, compiled examples, site routes and local previews |
+| [Quality sprints](QualityRoadmap.md) | Public quality work, acceptance gates and subsequent audits |
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
 | [Custom filters](CustomFilters.md) | Typed engine-scoped callbacks, arguments, admission and failures |

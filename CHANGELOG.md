@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Refresh the README, contributor guidance and hosted documentation entry point,
+  linking directly to Shopify Liquid and the independent Golden Liquid corpus.
+- Qualify every authored public API comment and preserve the 1.3.0 declaration
+  baseline; compile and check the README's six runnable Swift examples.
+- Add deterministic public rendering properties, an independent dependency-cycle
+  oracle and cancellable callback-test barriers. Retain runtime behavior, fixture
+  pins, one library/CLI and the empty root dependency graph.
+
 ## 1.3.0 — 2026-10-15
 
 - Avoid repeated failed bridge casts for native strings at custom-filter boundaries,

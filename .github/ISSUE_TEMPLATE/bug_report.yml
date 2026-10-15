@@ -1,0 +1,28 @@
+name: Reproducible defect
+description: Report incorrect rendering, analysis, CLI behavior or documentation.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Use the private route in SECURITY.md for vulnerabilities. Remove credentials and private template/context data."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and environment
+      description: Swift-Liquid tag/resolved commit, Swift compiler, OS/SDK, API or CLI command, syntax mode and custom limits.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the smallest template, context, explicit partials and Swift code or command that reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+      description: Include exact output or error. For a compatibility issue, link the Shopify reference behavior or pinned fixture.
+    validations:
+      required: true

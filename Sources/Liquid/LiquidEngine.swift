@@ -11,7 +11,11 @@ public struct LiquidEngine: Sendable {
     /// A nil value captures the current time at the start of each invocation.
     public let referenceTime: Date?
     private let filters: [ScalarKey: LiquidFilter]
-    /// Creates a Liquid engine.
+    /// Creates an immutable engine with the standard filters.
+    /// - Parameters:
+    ///   - limits: Finite capacities charged independently by each invocation.
+    ///   - strictFilters: Whether unknown filters fail instead of leaving their input unchanged.
+    ///   - referenceTime: Base time for partial dates, `now` and `today`; nil captures the invocation clock.
     public init(limits: LiquidLimits = .default, strictFilters: Bool = false, referenceTime: Date? = nil) {
         self.limits = limits; self.strictFilters = strictFilters; self.referenceTime = referenceTime
         self.filters = [:]
@@ -43,6 +47,9 @@ public struct LiquidEngine: Sendable {
     /// Inspects a reusable template under this engine's source and syntax-depth limits.
     /// Variable roots include local reads and unreachable branches, not just required inputs.
     /// Filters are reported regardless of registration; callbacks are never invoked.
+    /// - Parameter template: A reusable template whose original parser mode is retained.
+    /// - Returns: Unique syntactic references in exact UTF-8 order.
+    /// - Throws: Invalid-limit, source/depth capacity or cancellation errors.
     public func inspect(_ template: LiquidTemplate) throws -> LiquidTemplateInspection {
         try Task.checkCancellation()
         try checkSources(template.source, partials: [])
@@ -76,6 +83,14 @@ public struct LiquidEngine: Sendable {
 
     /// Renders source while retaining recovered Liquid runtime diagnostics.
     /// Syntax errors, cancellation, unsupported values and quota failures still throw.
+    /// - Parameters:
+    ///   - template: Liquid source parsed for this invocation.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit partial sources, including unused sources in admission.
+    ///   - syntaxMode: Parser mode applied to the root and every supplied partial.
+    /// - Returns: Complete output, recovered diagnostics.
+    /// - Throws: Syntax, runtime, invalid-value, quota or cancellation errors.
+    ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnostics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
         try checkSources(template, partials: Array(templates.values))
         return try await renderWithDiagnostics(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits), context: context,
@@ -83,17 +98,37 @@ public struct LiquidEngine: Sendable {
     }
 
     /// Renders a reusable template and returns output together with recovered errors.
+    /// - Parameters:
+    ///   - template: An immutable parsed template, reused without parsing.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit parsed partials; each retains its original parser mode.
+    /// - Returns: Complete output, recovered diagnostics.
+    /// - Throws: runtime, invalid-value, quota or cancellation errors.
+    ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidRenderResult {
         try await perform(template, context: context, templates: templates, recovering: true).result
     }
 
     /// Parses and renders source with opt-in timing and cumulative budget observations.
     /// Uses the same throwing behavior as `render`; failures return no metrics.
+    /// - Parameters:
+    ///   - template: Liquid source parsed for this invocation.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit partial sources, including unused sources in admission.
+    ///   - syntaxMode: Parser mode applied to the root and every supplied partial.
+    /// - Returns: Complete output and timing/budget observations.
+    /// - Throws: Syntax, runtime, invalid-value, quota or cancellation errors.
     public func renderWithMetrics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
         try await measureSource(template, context: context, templates: templates, syntaxMode: syntaxMode, recovering: false)
     }
 
     /// Measures a reusable template without parsing; `parseDuration` is nil.
+    /// - Parameters:
+    ///   - template: An immutable parsed template, reused without parsing.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit parsed partials; each retains its original parser mode.
+    /// - Returns: Complete output and timing/budget observations.
+    /// - Throws: runtime, invalid-value, quota or cancellation errors.
     public func renderWithMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult {
         try await measure(template, context: context, templates: templates, recovering: false,
                           measurement: .init(start: ContinuousClock().now, parseDuration: nil))
@@ -101,11 +136,26 @@ public struct LiquidEngine: Sendable {
 
     /// Parses and measures source with the explicit recovery behavior of `renderWithDiagnostics`.
     /// Recovered output retains diagnostics; operational and unexpected host failures still throw.
+    /// - Parameters:
+    ///   - template: Liquid source parsed for this invocation.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit partial sources, including unused sources in admission.
+    ///   - syntaxMode: Parser mode applied to the root and every supplied partial.
+    /// - Returns: Complete output, recovered diagnostics and timing/budget observations.
+    /// - Throws: Syntax, runtime, invalid-value, quota or cancellation errors.
+    ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnosticsAndMetrics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
         try await measureSource(template, context: context, templates: templates, syntaxMode: syntaxMode, recovering: true)
     }
 
     /// Measures a reusable template while retaining explicitly recovered diagnostics.
+    /// - Parameters:
+    ///   - template: An immutable parsed template, reused without parsing.
+    ///   - context: Typed values admitted under the invocation's cumulative quotas.
+    ///   - templates: Explicit parsed partials; each retains its original parser mode.
+    /// - Returns: Complete output, recovered diagnostics and timing/budget observations.
+    /// - Throws: runtime, invalid-value, quota or cancellation errors.
+    ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnosticsAndMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult {
         try await measure(template, context: context, templates: templates, recovering: true,
                           measurement: .init(start: ContinuousClock().now, parseDuration: nil))
