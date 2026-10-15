@@ -854,43 +854,29 @@ extension Renderer {
 
 
     
-    internal func renderCase(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else elseBranch: [ASTNode]?) async throws -> String {
+    internal func renderCase(value: LiquidExpression, branches: [CaseBranch]) async throws -> String {
         let caseValue = try await evaluateExpression(value)
-
-        // Process sequentially. Else branches (sentinel .literal(.null)) render when
-        // no PRECEDING when matched. Regular when branches match against case value.
         var output = ""
         var anyPrecedingWhenMatched = false
 
-        for (whenExpr, whenNodes) in whens {
-            // Sentinel .literal(.null) means else branch
-            if case .literal(.null) = whenExpr {
-                // Else renders when no preceding when matched
-                if !anyPrecedingWhenMatched {
-                    output += try await renderNodeListFast(whenNodes)
+        // Ruby evaluates every when, including duplicate matches. An else tests
+        // only preceding matches; it does not prevent a later when from rendering.
+        for branch in branches {
+            switch branch {
+            case .otherwise(let nodes):
+                if !anyPrecedingWhenMatched { output += try await renderNodeListFast(nodes) }
+            case .when(let expression, let nodes):
+                let whenValue = try await evaluateExpression(expression)
+                if isEqual(caseValue, whenValue) {
+                    anyPrecedingWhenMatched = true
+                    output += try await renderNodeListFast(nodes)
                 }
-                continue
-            }
-
-            let whenValue = try await evaluateExpression(whenExpr)
-            if isEqual(caseValue, whenValue) {
-                anyPrecedingWhenMatched = true
-                output += try await renderNodeListFast(whenNodes)
             }
         }
-
-        // If no when matched at all, render the legacy else branch
-        if !anyPrecedingWhenMatched, let elseBranch = elseBranch {
-            output += try await renderNodeListFast(elseBranch)
-        }
-
-        // Blank suppression: if output is whitespace-only and all branches are statically blank, suppress
         if output.allSatisfy(\.isWhitespace),
-           whens.allSatisfy({ RenderingContext.isStaticallyBlankBlock($0.1) }),
-           (elseBranch == nil || RenderingContext.isStaticallyBlankBlock(elseBranch!)) {
+           branches.allSatisfy({ RenderingContext.isStaticallyBlankBlock($0.body) }) {
             return ""
         }
-
         return output
     }
 

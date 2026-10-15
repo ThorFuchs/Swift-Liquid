@@ -11,7 +11,7 @@ internal indirect enum ASTNode: Sendable {
     case output(LiquidExpression, location: RenderLocation? = nil)
     case `if`(condition: LiquidExpression, then: [ASTNode], elsif: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
     case unless(condition: LiquidExpression, then: [ASTNode], else: [ASTNode]?)
-    case `case`(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
+    case `case`(value: LiquidExpression, branches: [CaseBranch])
     case `for`(variable: InlineString, in: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams)
     case tablerow(variable: InlineString, in: LiquidExpression, body: [ASTNode], params: TableRowParams)
     case cycle(group: LiquidExpression?, items: [LiquidExpression], site: CycleSiteIdentity)
@@ -33,7 +33,7 @@ internal indirect enum ASTNode: Sendable {
         case .template(let nodes), .liquid(let nodes), .ifchanged(let nodes): return nodes
         case .if(_, let body, let branches, let fallback): return body + branches.flatMap { $0.1 } + (fallback ?? [])
         case .unless(_, let body, let fallback): return body + (fallback ?? [])
-        case .case(_, let branches, let fallback): return branches.flatMap { $0.1 } + (fallback ?? [])
+        case .case(_, let branches): return branches.flatMap(\.body)
         case .for(_, _, let body, let fallback, _): return body + (fallback ?? [])
         case .tablerow(_, _, let body, _), .capture(_, let body): return body
         default: return []
@@ -45,13 +45,30 @@ internal indirect enum ASTNode: Sendable {
         case .output(let value, _), .echo(let value, _), .assign(_, let value, _): return [value]
         case .if(let condition, _, let branches, _): return [condition] + branches.map { $0.0 }
         case .unless(let condition, _, _): return [condition]
-        case .case(let value, let branches, _): return [value] + branches.map { $0.0 }
+        case .case(let value, let branches): return [value] + branches.compactMap(\.expression)
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
         case .tablerow(_, let value, _, _): return [value]
         case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
         case .include(_, let reference, let values, _): return [reference] + (values.map { Array($0.values) } ?? [])
         default: return []
         }
+    }
+}
+
+// Control-flow identity cannot collide with any legal when expression value.
+internal enum CaseBranch: Sendable {
+    case when(LiquidExpression, [ASTNode])
+    case otherwise([ASTNode])
+
+    var body: [ASTNode] {
+        switch self {
+        case .when(_, let nodes), .otherwise(let nodes): return nodes
+        }
+    }
+
+    var expression: LiquidExpression? {
+        if case .when(let expression, _) = self { return expression }
+        return nil
     }
 }
 

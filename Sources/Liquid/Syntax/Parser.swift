@@ -1306,9 +1306,8 @@ internal final class Parser {
         let expression = try parseExpression()
         try consumeTagEnd()
         
-        var branches: [(LiquidExpression?, [ASTNode])] = []
+        var branches: [CaseBranch] = []
         branches.reserveCapacity(4)
-        var defaultBranch: [ASTNode]? = nil
         
         // Parse all branches: when, else, and mixed when/else blocks
         // Skip whitespace before first branch
@@ -1328,11 +1327,7 @@ internal final class Parser {
                 while !isAtEnd && !isWhenOrElseOrEndcase() {
                     elseNodes.append(try parseNode())
                 }
-                // Store else as nil-expression branch
-                branches.append((nil, elseNodes))
-                if defaultBranch == nil {
-                    defaultBranch = elseNodes
-                }
+                branches.append(.otherwise(elseNodes))
             } else {
                 // Skip whitespace/text between branches
                 advance()
@@ -1346,20 +1341,10 @@ internal final class Parser {
         try consumeTagKeyword(.endcase, identifier: "endcase")
         try consumeTagEnd()
 
-        // Convert branches to AST format
-        // Else branches use .literal(.null) as sentinel expression
-        let allBranches: [(LiquidExpression, [ASTNode])] = branches.map { (value, nodes) in
-            if let value { return (value, nodes) }
-            return (.literal(.null), nodes) // sentinel for else
-        }
-
-        // If we have sentinel else branches in allBranches, don't also pass defaultBranch
-        // to avoid double-rendering
-        let hasSentinelElse = branches.contains { $0.0 == nil }
-        return .case(value: expression, whens: allBranches, else: hasSentinelElse ? nil : defaultBranch)
+        return .case(value: expression, branches: branches)
     }
     
-    private func parseCaseWhenBranch(into branches: inout [(LiquidExpression?, [ASTNode])]) throws {
+    private func parseCaseWhenBranch(into branches: inout [CaseBranch]) throws {
         advance() // consume {%
         try consumeTagKeyword(.when, identifier: "when")
 
@@ -1386,7 +1371,7 @@ internal final class Parser {
             whenNodes.append(try parseNode())
         }
         for value in whenValues {
-            branches.append((value, whenNodes))
+            branches.append(.when(value, whenNodes))
         }
     }
 
@@ -1887,14 +1872,15 @@ internal final class Parser {
                 then: normalizeLiquidBodyNodes(thenNodes),
                 else: elseNodes.map(normalizeLiquidBodyNodes)
             )
-        case .case(let value, let whens, let elseBranch):
-            return .case(
-                value: value,
-                whens: whens.map { value, branch in
-                    (value, normalizeLiquidBodyNodes(branch))
-                },
-                else: elseBranch.map(normalizeLiquidBodyNodes)
-            )
+        case .case(let value, let branches):
+            return .case(value: value, branches: branches.map { branch in
+                switch branch {
+                case .when(let expression, let body):
+                    return .when(expression, normalizeLiquidBodyNodes(body))
+                case .otherwise(let body):
+                    return .otherwise(normalizeLiquidBodyNodes(body))
+                }
+            })
         case .for(let variable, let collection, let body, let empty, let params):
             return .for(
                 variable: variable,

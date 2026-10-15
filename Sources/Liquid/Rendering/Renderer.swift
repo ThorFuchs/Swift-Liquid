@@ -400,9 +400,8 @@ internal final class RenderingContext {
             case .unless(_, let thenNodes, let elseNodes):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
-            case .case(_, let whens, let elseBranch):
-                for (_, whenNodes) in whens { if !isStaticallyBlankBlock(whenNodes) { return false } }
-                if let elseBranch, !isStaticallyBlankBlock(elseBranch) { return false }
+            case .case(_, let branches):
+                for branch in branches { if !isStaticallyBlankBlock(branch.body) { return false } }
             case .for(_, _, let body, let empty, _):
                 if !isStaticallyBlankBlock(body) { return false }
                 if let empty, !isStaticallyBlankBlock(empty) { return false }

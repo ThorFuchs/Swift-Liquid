@@ -66,8 +66,8 @@ extension Renderer {
         case .unless(let condition, let thenNodes, let elseNodes):
             return try await renderUnless(condition: condition, then: thenNodes, else: elseNodes)
 
-        case .case(let value, let whens, let elseBranch):
-            return try await renderCase(value: value, whens: whens, else: elseBranch)
+        case .case(let value, let branches):
+            return try await renderCase(value: value, branches: branches)
 
         case .for(let variable, let collection, let body, let empty, let params):
             return try await renderFor(variable: variable, collection: collection, body: body, empty: empty, params: params)
