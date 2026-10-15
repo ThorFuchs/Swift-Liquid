@@ -37,14 +37,14 @@ def swift():
 
 def source_snapshot():
     paths = [ROOT / name for name in ['Package.swift', 'README.md', 'CHANGELOG.md', 'LICENSE', 'NOTICE',
-        'THIRD_PARTY_NOTICES.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'SECURITY.md', 'SUPPORT.md', 'RELEASING.md', 'AGENTS.md', '.gitignore']]
+        'THIRD_PARTY_NOTICES.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'SECURITY.md', 'SUPPORT.md', 'RELEASING.md', 'AGENTS.md', '.gitignore', '.spi.yml']]
     for folder in ['Sources', 'Tests', 'Scripts', 'Documentation', 'Examples', 'Tools', 'Licenses', '.github']:
         paths += [p for p in (ROOT / folder).rglob('*') if p.is_file() and '.build' not in p.parts and '__pycache__' not in p.parts]
     return [{'path': str(p.relative_to(ROOT)), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(paths)]
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation'], default='native')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference lane only)')
     args = parser.parse_args()
     output = ROOT / 'Artifacts' / args.lane
@@ -81,6 +81,10 @@ def main():
             raise RuntimeError(f'{name} failed structured admission; see {summary}')
 
     try:
+        if env.get('GITHUB_ACTIONS') == 'true':
+            receipt['runner'] = {key: env.get(key) for key in ['LIQUID_RUNNER_ENVIRONMENT', 'RUNNER_OS', 'RUNNER_ARCH', 'ImageOS', 'ImageVersion', 'GITHUB_SHA']}
+            if env.get('LIQUID_RUNNER_ENVIRONMENT') != 'github-hosted':
+                raise RuntimeError('CI qualification requires a GitHub-hosted runner')
         version = run(swift() + ['--version'], 'toolchain')
         receipt['toolchain'] = version.strip()
         match = re.search(r'Swift version (\d+)\.(\d+)', version)
@@ -88,6 +92,7 @@ def main():
             raise RuntimeError('Swift 6.4 or later is required')
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
         if args.lane in ['native', 'development']:
+            run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
             run([sys.executable, '-B', 'Scripts/check_release_evidence.py'], 'release-evidence-contract')
             run([sys.executable, '-B', 'Scripts/check_test_evidence.py'], 'test-evidence-contract')
             run(swift() + ['build', '-Xswiftc', '-warnings-as-errors'], 'debug-build')
@@ -107,6 +112,8 @@ def main():
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
             run([sys.executable, '-B', 'Scripts/check_dependencies.py', str(Path(binary_path) / 'liquid')], 'dependency-cli-schema')
+        elif args.lane == 'installation':
+            run([sys.executable, '-B', 'Scripts/check_installation.py'], 'published-installation')
         elif args.lane == 'safety':
             run_tests(['--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run_tests(['--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread', profile='thread')

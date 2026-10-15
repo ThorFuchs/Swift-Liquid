@@ -45,7 +45,7 @@ python3 -B Scripts/ci.py --lane docs
 | Parser, standard filters or recovery | `reference` against the clean pinned Shopify checkout |
 | Runtime or performance | `performance`, then matched comparisons on an idle host when evaluating a regression |
 | Apple platform surface | `platforms` simulator compilation |
-| Release preparation | All eight lanes, reviewed measurements and a clean `archive` rebuild |
+| Release preparation | All nine lanes, reviewed measurements and a clean `archive` rebuild |
 
 The [conformance guide](Documentation/Conformance.md) explains the Ruby reference
 setup. [Performance methodology](Documentation/Performance.md) defines comparable
@@ -59,6 +59,15 @@ parameter counts with intentional test changes; qualification never regenerates 
 Disabled tests, known issues, empty collections and filtered omissions fail the gate.
 See [adversarial testing and evidence](Documentation/Testing.md) for seeds, cancellation
 barriers, raw receipts and the Swift 6.4 case-metadata adapter.
+
+## Review contribution execution
+
+CI uses GitHub-hosted `xcode-27` machines, including approved fork contributions.
+Approval is admission control; inspect workflow, scripts, manifests and code before
+approving. See [contribution isolation](Documentation/ContributionIsolation.md) for
+provider checks, read-only tokens, publishing separation and live-setting audits.
+The [installation lane](Documentation/PackageDiscovery.md) qualifies the published
+repository URL independently of the candidate's path-based consumers.
 
 ## Keep documentation executable
 

@@ -324,6 +324,29 @@
         "Replace recursive JSON container descent with a bounded explicit stack after the 128-level regression exposes sanitizer stack exhaustion; preserve the public depth, scalar-key, ordering, numeric and error contracts."
       ],
       "qualification": "Affected Scripts/ci.py native, sanitizer and documentation lanes; selected adversarial/cancellation repetitions under parallel execution. Synchronous traversal coverage claims entry cancellation, not selected-phase latency. Root dependencies and released 1.0\u20131.3 contracts remain unchanged."
+    },
+    {
+      "area": "Hosted contribution isolation and public package discovery",
+      "scopeDecision": "Maintainer authorized quality sprint 3 and merging PR #12 on 2026-10-15.",
+      "files": [
+        ".github/workflows/ci.yml",
+        "Scripts/workflow_policy.py",
+        "Scripts/check_workflow_policy.py",
+        "Scripts/check_installation.py",
+        "Scripts/ci.py",
+        "Scripts/public_check.py",
+        "Scripts/prepare_release.py",
+        "Documentation/ContributionIsolation.md",
+        "Documentation/PackageDiscovery.md"
+      ],
+      "changes": [
+        "Verify xcode-27 as the official GitHub-hosted preview image, retaining the Swift 6.4 platform scope.",
+        "Audit hosted runner admission, least-privilege contribution execution, pinned actions and separate main-only Pages publishing with Ruby standard-library YAML parsing and negative semantic regressions.",
+        "Retain provider/image provenance and bind existing .spi.yml metadata into source receipts; upgrade the pinned artifact downloader to audited Node 24 v7.",
+        "Add real public-URL installation of the immutable 1.3.0 library/CLI with fresh source, dependency stores, configuration, module caches and scratch paths, and require its release receipt.",
+        "Verify index absence and prepare separate one-URL registration without claiming a live index page or unqualified platform support."
+      ],
+      "qualification": "Affected Scripts/ci.py workflow, native, documentation, installation and clean-archive gates plus actual provider-hosted CI evidence. No runtime, API, fixture, license or root dependency changes."
     }
   ]
 }

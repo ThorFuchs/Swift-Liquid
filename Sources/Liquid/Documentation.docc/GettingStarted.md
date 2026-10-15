@@ -9,7 +9,10 @@ Add `https://github.com/ThorFuchs/Swift-Liquid.git` to your SwiftPM dependencies
 select a released version and add the `Liquid` product to your target. The root
 package has no third-party dependencies. See the
 [installation examples](https://github.com/ThorFuchs/Swift-Liquid#installation)
-for complete manifest fragments.
+for complete manifest fragments. The
+[package discovery guide](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/PackageDiscovery.md)
+provides clean CLI checkout commands, the published-URL installation gate and
+package-index status.
 
 The package declares macOS 14, iOS 17, tvOS 17, watchOS 10 and visionOS 1 minimums.
 Runtime qualification covers macOS 27; four simulator SDKs have compilation gates.

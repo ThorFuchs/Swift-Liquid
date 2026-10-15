@@ -39,7 +39,7 @@ Before packaging, add `benchmark-review.json` to the evidence directory. Record
 explaining the distributions, flags and material limitations. Unresolved material
 regressions cannot be accepted by setting a status field.
 
-The script verifies all eight receipts against the current source inventory,
+The script verifies all nine receipts against the current source inventory,
 compares every source-archive file, recomputes all 26 common and 24 metrics
 comparisons, validates retained samples and the four graph benchmark records,
 checks the bound review and archive checksums, and prepares

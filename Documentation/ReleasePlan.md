@@ -71,7 +71,7 @@ Retain common per-run summaries, individual metrics samples, output checksums,
 environment receipts and both flag lists. Review every flagged result before
 preparing assets; passing measurements alone are not a regression verdict.
 
-`Scripts/prepare_release.py` requires matching source inventories from all eight
+`Scripts/prepare_release.py` requires matching source inventories from all nine
 lanes, reproducible archives and an explicit benchmark review bound to the exact
 comparison checksum. It prepares the three archives, notes and checksums under
 `Artifacts/release/1.2.0` without creating a tag or release. Qualify the merged
@@ -106,3 +106,6 @@ missing measured-render records, missing samples, inconsistent summaries and
 changed graph shapes/checksums. Review both threshold lists before preparing the
 three archives, checksums and [1.3.0 notes](Releases/1.3.0.md). Publication requires
 separate authorization and exact-main qualification after merging preparation.
+
+Sprint 3 adds the published-URL `installation` lane to the eight original lanes.
+Its immutable 1.3.0 anchor remains independent of an unpublished candidate version.

@@ -58,7 +58,7 @@ def main():
     if run['status'] != 'completed' or run['conclusion'] != 'success' or run['headSha'] != commit or run['url'] != args.run_url:
         raise RuntimeError('GitHub run does not qualify this candidate commit')
     expected_sources = source_snapshot()
-    lanes = ['native', 'safety', 'reference', 'platforms', 'docs', 'performance', 'matched-performance', 'archive']
+    lanes = ['native', 'safety', 'reference', 'platforms', 'docs', 'performance', 'matched-performance', 'archive', 'installation']
     for lane in lanes:
         receipt = json.loads((evidence / ('liquid-' + lane) / 'receipt.json').read_text())
         if receipt['status'] != 'passed' or receipt['sources'] != expected_sources:
