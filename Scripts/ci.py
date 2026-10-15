@@ -12,6 +12,7 @@ import re
 import shlex
 import subprocess
 import sys
+from test_evidence import qualify
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,13 +42,6 @@ def source_snapshot():
         paths += [p for p in (ROOT / folder).rglob('*') if p.is_file() and '.build' not in p.parts and '__pycache__' not in p.parts]
     return [{'path': str(p.relative_to(ROOT)), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(paths)]
 
-def require_fixtures(log):
-    for label, count in [('Golden Liquid', 1098), ('Native compatibility probes', 221),
-                         ('Ruby date grammar', 337), ('Public date parsing', 376),
-                         ('Custom filter reference cases', 15), ('AST inspection cases', 8)]:
-        if not re.search(rf'{label}.*{count} test cases passed', log):
-            raise RuntimeError(f'Missing complete {label} run ({count} cases)')
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance'], default='native')
@@ -56,10 +50,11 @@ def main():
     output = ROOT / 'Artifacts' / args.lane
     output.mkdir(parents=True, exist_ok=True)
     env = environment()
+    env['LIQUID_TEST_EVIDENCE_PROBE_OUTPUT'] = str(output / 'runner-probe')
     receipt = {'lane': args.lane, 'startedUTC': datetime.datetime.now(datetime.timezone.utc).isoformat(),
                'platform': platform.platform(), 'sources': source_snapshot(), 'commands': [], 'status': 'failed'}
 
-    def run(command, name):
+    def run(command, name, check=True):
         if command[:len(swift())] == swift() and "--version" not in command:
             flags = shlex.split(env.get("LIQUID_SWIFTPM_FLAGS", ""))
             position = len(swift()) + 1 if command[len(swift())] == "package" else len(command)
@@ -67,9 +62,23 @@ def main():
         result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True)
         (output / (name + '.log')).write_text(result.stdout + result.stderr)
         receipt['commands'].append({'command': command, 'exitCode': result.returncode, 'log': name + '.log'})
-        if result.returncode:
+        if check and result.returncode:
             raise RuntimeError(f'{name} failed; see {output / (name + ".log")}')
-        return result.stdout
+        return result.stdout if check else result
+
+    def run_tests(options, name, profile='full'):
+        events = output / (name + '.events.jsonl')
+        summary = output / (name + '.tests.json')
+        events.unlink(missing_ok=True)
+        summary.unlink(missing_ok=True)
+        result = run(swift() + ['test', *options, '--event-stream-version', '0',
+                              '--event-stream-output-path', str(events)], name, check=False)
+        evidence = qualify(events, ROOT / 'Tests/TestInventory.json', profile, result.returncode)
+        evidence.update(name=name, events=events.name, summary=summary.name)
+        summary.write_text(json.dumps(evidence, indent=2) + '\n')
+        receipt.setdefault('testLanes', []).append(evidence)
+        if evidence['status'] != 'passed':
+            raise RuntimeError(f'{name} failed structured admission; see {summary}')
 
     try:
         version = run(swift() + ['--version'], 'toolchain')
@@ -80,23 +89,15 @@ def main():
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
         if args.lane in ['native', 'development']:
             run([sys.executable, '-B', 'Scripts/check_release_evidence.py'], 'release-evidence-contract')
+            run([sys.executable, '-B', 'Scripts/check_test_evidence.py'], 'test-evidence-contract')
             run(swift() + ['build', '-Xswiftc', '-warnings-as-errors'], 'debug-build')
-            run(swift() + ['test'], 'debug-tests')
-            test_names = ['debug-tests']
+            run_tests([], 'debug-tests')
             if args.lane == 'native':
                 run(swift() + ['build', '-c', 'release', '-Xswiftc', '-warnings-as-errors'], 'release-build')
-                run(swift() + ['test', '-c', 'release'], 'release-tests')
-                test_names.append('release-tests')
-            receipt['testLanes'] = []
-            for name in test_names:
-                log = (output / (name + '.log')).read_text()
-                require_fixtures(log)
-                summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 68:
-                    raise RuntimeError(f'{name} has an absent or reduced test run')
-                receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
-                    'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
-                    'hostExtensionCases': 15, 'inspectionCases': 8, 'dependencyTestFunctions': 11, 'testFunctions': int(summary.group(1)), 'skipped': 0})
+                run_tests(['-c', 'release'], 'release-tests')
+                for repeat in [1, 2]:
+                    run_tests(['--filter', 'AdversarialTests|cancellation|suspension'],
+                              f'adversarial-repeat-{repeat}', profile='adversarial')
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
             run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
             run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
@@ -107,11 +108,8 @@ def main():
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
             run([sys.executable, '-B', 'Scripts/check_dependencies.py', str(Path(binary_path) / 'liquid')], 'dependency-cli-schema')
         elif args.lane == 'safety':
-            run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
-            run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
-            require_fixtures((output / 'address.log').read_text())
-            if not re.search(r'Test run with 5 tests .* passed', (output / 'thread.log').read_text()):
-                raise RuntimeError('ThreadSanitizer did not execute core, filter, inspection, metrics and dependency concurrency tests')
+            run_tests(['--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
+            run_tests(['--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread', profile='thread')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')
@@ -131,7 +129,10 @@ def main():
     except (RuntimeError, OSError) as error:
         receipt['error'] = str(error)
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
-    print(json.dumps({k: v for k, v in receipt.items() if k not in ['sources', 'commands']}, indent=2))
+    display = {k: v for k, v in receipt.items() if k not in ['sources', 'commands']}
+    if 'testLanes' in display:
+        display['testLanes'] = [{k: v for k, v in lane.items() if k != 'functions'} for lane in display['testLanes']]
+    print(json.dumps(display, indent=2))
     return 0 if receipt['status'] == 'passed' else 1
 
 if __name__ == '__main__':

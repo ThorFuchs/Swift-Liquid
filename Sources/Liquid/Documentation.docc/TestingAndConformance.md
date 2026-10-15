@@ -45,3 +45,21 @@ from the [release page](https://github.com/ThorFuchs/Swift-Liquid/releases).
 See [contributing](https://github.com/ThorFuchs/Swift-Liquid/blob/main/CONTRIBUTING.md)
 for local commands and [performance methodology](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Performance.md)
 for the measurement protocol.
+
+## Adversarial boundaries and test receipts
+
+Fixed-seed Unicode, JSON and parser cases use explicit expected results, with exact
+byte-capacity boundaries. Cancellation tests coordinate callback entry and protect
+independent invocation reuse. Synchronous inspection cancellation is checked at
+entry; no mid-traversal timing or responsiveness guarantee is inferred.
+
+Native and sanitizer qualification retain Swift Testing v0 JSON event streams and
+summaries, checked against a reviewed function/case inventory. Skips, known issues,
+missing cases and incomplete runs fail admission. The Swift 6.4 adapter requires
+case metadata beyond the stable envelope and fails closed if it changes. Separate
+runner probes verify actual failure and skip rejection. These execution counts do
+not add conformance renders or change published release receipts.
+
+See the repository's
+[testing and evidence contract](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Testing.md)
+for fixed seeds, repeat runs, adapter limitations and retained artifact paths.

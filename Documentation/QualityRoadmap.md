@@ -7,7 +7,7 @@ qualification while preserving the dependency-free Liquid core and released
 
 ## Sprint 1 — public surface and enforceable documentation
 
-This change prepares the first sprint for review:
+Sprint 1 was merged in PR #11 and qualified on main:
 
 - Rewrite the README around installation, runnable examples, requirements and
   direct links to Shopify's reference, its pinned tests and independent Golden Liquid.
@@ -30,17 +30,28 @@ Shopify render-conformance count.
 
 ## Sprint 2 — adversarial behavior and test evidence
 
-Expand deterministic parser/value/Unicode boundary exploration with minimized
-reproductions and fixed seeds. Review timeout and cancellation cases, especially
-in-flight synchronous traversals whose current tests use a scheduling delay.
-Prefer controlled public behavior over production-only test hooks. Investigate
-structured Swift Testing evidence so disabled, skipped and failed cases have
-explicit accounting beyond human log summaries. Keep missing fixture and
-reference failures terminal.
+Sprint 2 implements the adopted testing scope:
 
-Acceptance requires a concrete regression or invariant for every addition,
-repeatability under parallel execution and sanitizer coverage. Avoid tests that
-merely repeat implementation details or inflate counts.
+- Add fixed-seed Unicode scalar, JSON truncation/escape, parser boundary and exact
+  UTF-8 capacity cases, with independent expected results and small reproductions.
+- Fix the sanitizer stack exhaustion exposed at the public 128-level JSON
+  boundary with an iterative reader, retaining value order and error policies.
+- Replace sleep-driven inspection cancellation and the immediate loop-cancel race
+  with explicit barriers, cancellation precedence and healthy invocation reuse.
+- Admit versioned Swift Testing streams against a reviewed exact inventory, retaining
+  raw events, per-function/case completion and actual skip/issue/cancellation counts.
+- Exercise failed, disabled, known-issue, empty and filtered runs with an isolated
+  dependency-free runner probe; reject damaged evidence without reading success text.
+- Repeat the selected adversarial/cancellation cases twice under parallel execution;
+  retain full AddressSanitizer and the five ThreadSanitizer concurrency checks.
+
+See [testing and evidence](Testing.md) for reproduction, adapter details and limits.
+Synchronous inspection tests establish entry cancellation and reuse, without claiming
+cancellation at a selected in-flight instruction or a latency guarantee. The JSON
+reader uses an explicit stack; public APIs, admitted nesting, fixture bytes and root
+dependencies remain unchanged. The reviewed baseline is 73 functions and 2,104 parameterized cases; counts alone establish neither complete
+conformance nor performance. Acceptance requires affected native, safety and docs
+qualification and retained source-bound CI evidence.
 
 ## Sprint 3 — contribution isolation and package discovery
 

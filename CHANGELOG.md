@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Add fixed-seed adversarial Unicode, JSON, parser and byte-capacity boundaries;
+  replace scheduling-dependent cancellation tests with coordinated entry/callback
+  tests and independent reuse checks.
+- Fix recursive JSON-reader stack exhaustion exposed by the 128-level nesting
+  regression under AddressSanitizer; retain the public nesting boundary and ordered
+  scalar-exact values with iterative container parsing.
+- Require structured Swift Testing evidence with exact reviewed function/case
+  inventories, explicit skip/issue/cancellation accounting and real runner rejection
+  probes. Repeat the selected boundary tests under parallel execution.
+
 - Refresh the README, contributor guidance and hosted documentation entry point,
   linking directly to Shopify Liquid and the independent Golden Liquid corpus.
 - Qualify every authored public API comment and preserve the 1.3.0 declaration

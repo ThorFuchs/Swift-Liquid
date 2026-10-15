@@ -53,6 +53,13 @@ measurements. Receipts and logs go under ignored `Artifacts/`; report actual
 commands, results and limitations, including any unavailable checks. A missing
 fixture, skipped check or reference-runtime error is never a successful render.
 
+Structured Swift Testing admission uses the reviewed
+[`Tests/TestInventory.json`](Tests/TestInventory.json). Update its function and
+parameter counts with intentional test changes; qualification never regenerates it.
+Disabled tests, known issues, empty collections and filtered omissions fail the gate.
+See [adversarial testing and evidence](Documentation/Testing.md) for seeds, cancellation
+barriers, raw receipts and the Swift 6.4 case-metadata adapter.
+
 ## Keep documentation executable
 
 Document public declarations with a useful summary and named parameters. Explain
