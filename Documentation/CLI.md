@@ -59,6 +59,20 @@ liquid analyze page.liquid --syntax-mode strict2 --format json
 printf '{{ name | upcase }}' | liquid analyze -
 ```
 
+## Partial dependencies (1.3 development)
+
+```sh
+liquid analyze page.liquid --dependencies --partials ./partials --format json
+```
+
+`--dependencies` selects the bounded library graph and accepts an optional explicit
+partial directory. It shares cumulative source, template-count and name-byte
+capacities across the bundle, rejects ambiguous keys, and preserves ordinary
+analysis when the flag is absent. Successful missing/dynamic/cycle findings exit 0;
+failures emit no graph. The report has its own `kind: liquid.dependencies` and
+schema version 1. See [dependencies](Dependencies.md) for identity, limits, JSON
+schema and Swift-JSON qualification. `render` and `validate` reject this flag.
+
 ## Render metrics (1.2)
 
 ```sh

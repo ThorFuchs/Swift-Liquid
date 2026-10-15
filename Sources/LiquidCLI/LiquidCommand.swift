@@ -16,7 +16,7 @@ struct LiquidCommand {
     Usage:
       liquid render TEMPLATE [--data JSON] [--partials DIRECTORY] [--output FILE]
       liquid validate TEMPLATE
-      liquid analyze TEMPLATE [--format text|json]
+      liquid analyze TEMPLATE [--format text|json] [--dependencies [--partials DIRECTORY]]
       liquid --help
       liquid --version
 
@@ -29,6 +29,7 @@ struct LiquidCommand {
       --output FILE                     Atomically write complete rendered output
       --metrics FILE                    Write opt-in render metrics as separate JSON
       --format text|json                Inspection output format (default: text)
+      --dependencies                    Inspect the explicit partial-dependency bundle
     """
 
     static func main() async {
@@ -49,11 +50,15 @@ struct LiquidCommand {
         var path: String?
         var options: [String: String] = [:]
         var strictFilters = false
+        var dependencies = false
         var index = 1
         let valueOptions: Set<String> = ["--data", "--partials", "--output", "--syntax-mode", "--format", "--metrics"]
         while index < arguments.count {
             let argument = arguments[index]
-            if argument == "--strict-filters" {
+            if argument == "--dependencies" {
+                guard !dependencies else { throw CLIError("Duplicate --dependencies") }
+                dependencies = true
+            } else if argument == "--strict-filters" {
                 guard !strictFilters else { throw CLIError("Duplicate --strict-filters") }
                 strictFilters = true
             } else if valueOptions.contains(argument) {
@@ -73,19 +78,27 @@ struct LiquidCommand {
         guard let mode = LiquidSyntaxMode(rawValue: options["--syntax-mode"] ?? "lax") else {
             throw CLIError("Syntax mode must be lax, strict, or strict2")
         }
+        if dependencies && command != "analyze" { throw CLIError("--dependencies requires analyze") }
         if command == "validate", options.keys.contains(where: { $0 != "--syntax-mode" }) || strictFilters {
             throw CLIError("validate accepts only --syntax-mode")
         }
         if command == "render", options["--format"] != nil { throw CLIError("render does not accept --format") }
         if command == "analyze" {
-            guard !strictFilters, options.keys.allSatisfy({ ["--syntax-mode", "--format"].contains($0) }) else {
-                throw CLIError("analyze accepts only --syntax-mode and --format")
+            let allowed = dependencies ? ["--syntax-mode", "--format", "--partials"] : ["--syntax-mode", "--format"]
+            guard !strictFilters, options.keys.allSatisfy({ allowed.contains($0) }) else {
+                throw CLIError("analyze accepts --syntax-mode, --format, and --partials only with --dependencies")
             }
             guard ["text", "json"].contains(options["--format"] ?? "text") else {
                 throw CLIError("Format must be text or json")
             }
         }
         let source = try readText(path, maximumBytes: LiquidLimits.default.sourceBytes)
+        if command == "analyze", dependencies {
+            let partials = try readDependencyPartials(options["--partials"], rootSourceBytes: source.utf8.count)
+            let result = try LiquidEngine().inspectDependencies(template: source, templates: partials, syntaxMode: mode)
+            try writeDependencies(result, format: options["--format"] ?? "text")
+            return
+        }
         let template = try LiquidTemplate(source, syntaxMode: mode)
         if command == "validate" { print("Valid Liquid template."); return }
         if command == "analyze" {
@@ -144,7 +157,7 @@ struct LiquidCommand {
         try FileHandle.standardOutput.write(contentsOf: Data((output + "\n").utf8))
     }
 
-    private static func readText(_ path: String, maximumBytes: Int) throws -> String {
+    static func readText(_ path: String, maximumBytes: Int) throws -> String {
         let handle = path == "-" ? FileHandle.standardInput : try FileHandle(forReadingFrom: URL(fileURLWithPath: path))
         defer { if path != "-" { try? handle.close() } }
         var bytes = Data()
@@ -185,7 +198,7 @@ struct LiquidCommand {
     }
 }
 
-private struct CLIError: Error, CustomStringConvertible {
+struct CLIError: Error, CustomStringConvertible {
     let description: String
     init(_ description: String) { self.description = description }
 }

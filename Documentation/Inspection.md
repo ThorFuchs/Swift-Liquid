@@ -56,8 +56,8 @@ under the existing language contract.
 
 Inspection never evaluates an expression, invokes a callback, loads a partial,
 accesses a context, or renders output. Missing partials and unknown filters do not
-fail inspection. There is no recursive partial graph traversal; inspect supplied
-partial templates separately. The AST remains private.
+fail inspection. This one-template operation does not follow partials. The separate
+[dependency inspection API](Dependencies.md) accepts an explicit bounded bundle. The AST remains private.
 
 The engine validates its limit profile and applies `sourceBytes` to this one
 source and `nestingDepth` to syntax nodes and expressions. These capacities also
@@ -105,7 +105,7 @@ ignore unknown fields and reject unsupported schema versions. Removing/renaming
 fields, changing types, or changing the meaning of these fields requires a new
 schema version. No environment-dependent timestamps or counts are included.
 
-Only `--syntax-mode` and `--format text|json` are accepted by `analyze`. It reads
+Without `--dependencies`, only `--syntax-mode` and `--format text|json` are accepted by `analyze`. It reads
 one file or stdin with the default 1 MiB UTF-8 source capacity, following existing
 CLI input rules. It writes the summary to stdout, errors to stderr prefixed with
 `liquid:`, and exits 0 on success or 1 on syntax, input or usage failure. Analysis

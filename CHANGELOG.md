@@ -2,9 +2,13 @@
 
 ## Unreleased
 
-- Propose a focused [1.3 roadmap](Documentation/Roadmap-1.3.md) for bounded partial
-  dependency inspection and an explicit CLI mode; update the RhoeLiquid feature
-  review against published 1.2.0. This is documentation, with no runtime changes.
+- Adopt the [1.3 roadmap](Documentation/Roadmap-1.3.md) and add bounded source/parsed
+  partial-dependency inspection, retaining exact names, missing/dynamic references
+  and deterministic strongly connected cycle groups without evaluation or I/O.
+- Add explicit `liquid analyze --dependencies` with a separate versioned report,
+  bounded directory admission and public consumer. Preserve 1.0–1.2 behavior.
+- Qualify the dependency-report JSON Schema with published Swift-JSON 1.3.0 in a
+  standalone tool; retain the empty root dependency graph.
 
 ## 1.2.0 — 2026-10-15
 

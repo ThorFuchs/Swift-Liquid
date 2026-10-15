@@ -1,0 +1,15 @@
+{
+  "originHash" : "fe15fac2249e4423ee8967279a6594702fbe95c6316edbebe70de85b234f80e1",
+  "pins" : [
+    {
+      "identity" : "swift-json",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ThorFuchs/Swift-JSON.git",
+      "state" : {
+        "revision" : "9517233ef0a3c1b961b738df58fe3ee4081d780c",
+        "version" : "1.3.0"
+      }
+    }
+  ],
+  "version" : 3
+}

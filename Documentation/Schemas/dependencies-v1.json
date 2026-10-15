@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thorfuchs.github.io/Swift-Liquid/schemas/dependencies-v1.json",
+  "title": "Swift-Liquid partial dependency report, version 1",
+  "type": "object",
+  "required": [
+    "kind",
+    "schemaVersion",
+    "nodes",
+    "edges",
+    "missingReferences",
+    "dynamicReferences",
+    "cycles"
+  ],
+  "properties": {
+    "kind": {
+      "const": "liquid.dependencies"
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    },
+    "missingReferences": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/edge"
+          },
+          {
+            "properties": {
+              "resolvedName": {
+                "type": "null"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "dynamicReferences": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "cycles": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "root"
+            }
+          },
+          "not": {
+            "required": [
+              "name"
+            ]
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "const": "partial"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "required": [
+        "variableRoots",
+        "filterNames",
+        "literalPartialNames",
+        "hasDynamicPartials"
+      ],
+      "properties": {
+        "variableRoots": {
+          "$ref": "#/$defs/names"
+        },
+        "filterNames": {
+          "$ref": "#/$defs/names"
+        },
+        "literalPartialNames": {
+          "$ref": "#/$defs/names"
+        },
+        "hasDynamicPartials": {
+          "type": "boolean"
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "inspection"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "inspection": {
+          "$ref": "#/$defs/inspection"
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "origin",
+        "requestedName",
+        "resolvedName"
+      ],
+      "properties": {
+        "origin": {
+          "$ref": "#/$defs/id"
+        },
+        "requestedName": {
+          "type": "string"
+        },
+        "resolvedName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

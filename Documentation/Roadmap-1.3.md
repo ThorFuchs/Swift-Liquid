@@ -1,9 +1,9 @@
 # Swift-Liquid 1.3 roadmap
 
-## Proposed scope
+## Adopted scope
 
-Swift-Liquid 1.3 should add bounded partial-dependency inspection to the library
-and an explicit dependency mode to `liquid analyze`. Applications would inspect
+Swift-Liquid 1.3 adds bounded partial-dependency inspection to the library
+and an explicit dependency mode to `liquid analyze`. Applications inspect
 a root and their supplied partial map to find literal dependencies, missing
 references, dynamic includes and cycles without rendering the bundle.
 
@@ -11,8 +11,10 @@ This is one tooling feature with two entry points. It builds on the AST
 inspection shipped in 1.1 and preserves the opt-in metrics shipped in
 [1.2.0](Releases/1.2.0.md). The [RhoeLiquid feature review](Architecture/UpstreamFeatureReview.md)
 records the source findings and the other capabilities that remain deferred.
-The maintainer requested this proposal on 2026-10-15; implementation follows a
-separate scope adoption and API/JSON contract review.
+The maintainer adopted this scope on 2026-10-15. The [dependency contract](Dependencies.md)
+freezes the public API, capacities and separate CLI report schema. JSON Schema
+qualification uses the published Swift-JSON package in isolated tooling, keeping
+the root dependency graph empty.
 
 ## Why dependency inspection next
 
@@ -24,13 +26,13 @@ inspect those bundles before choosing what to render or invalidate.
 
 RhoeLiquid's analysis exposes template references alongside authoring contracts,
 file resolution, macros and heuristic scores. Its standard-reference manifest is
-a direct AST summary. The proposed bounded graph is a new Swift-Liquid design
+a direct AST summary. The adopted bounded graph is a new Swift-Liquid design
 using that analysis idea and the existing parser; it is not an upstream graph
 implementation ready for extraction.
 
 | Candidate | Disposition for 1.3 | Reason |
 | --- | --- | --- |
-| Partial-dependency inspection | Proposed scope | Extends existing AST tooling over explicit inputs without adding language or hosting policy. |
+| Partial-dependency inspection | Adopted scope | Extends existing AST tooling over explicit inputs without adding language or hosting policy. |
 | Runtime custom tags | Separate design | Grammar, nested content, scope mutation and host failures need a larger execution contract. |
 | Cache, optimizer and renderer pooling | Continue application-owned parsed reuse | Metrics and small release workloads do not establish demand for a new shared-state subsystem. |
 | Exact provenance and debugging | Separate observability work | Source/output ranges, suspension and captured values need their own bounded contracts. |
@@ -56,8 +58,7 @@ implementation ready for extraction.
 Provide source and reusable parsed-template entry points accepting a root and an
 explicit named partial map, matching the existing composition model. Source
 inputs use the selected parser mode. Parsed inputs keep each template's original
-parser mode and do not reparse it. Exact public names and signatures are settled
-in the contract review before implementation.
+parser mode and do not reparse it. The [dependency contract](Dependencies.md) specifies the public names and signatures.
 
 Admit and inspect the whole supplied bundle before constructing the graph,
 including unused partials. Apply cumulative source admission and syntax-depth
@@ -67,9 +68,9 @@ the current inspection limits. Return the graph reachable from the root through
 literal references. Unused supplied templates do not become reachable simply
 because they are present in the map.
 
-The immutable result should describe:
+The immutable result describes:
 
-| Observation | Contract to freeze |
+| Observation | Contract |
 | --- | --- |
 | Root and reachable partial nodes | Distinguish the root identity from every possible partial name; retain each node's existing inspection summary. |
 | Literal edges | Retain the originating node, requested literal spelling and resolved supplied key when present. Repeated identical references can share one edge; this is not an occurrence or execution count. |
@@ -85,8 +86,8 @@ keys cannot represent separate entries. The contract must preserve that lookup
 behavior while retaining exact UTF-8 spellings in reported names; adding a new
 name-resolution model is outside this scope.
 
-Define deterministic UTF-8 ordering, exact-spelling equality, edge deduplication
-and cycle-group ordering before freezing result types. Traversal must visit each
+The [dependency contract](Dependencies.md) defines deterministic UTF-8 ordering,
+exact-spelling equality, edge deduplication and cycle-group ordering. Traversal must visit each
 resolved template once and use bounded worklists. Shared dependencies in a
 diamond graph must not cause repeated expansion or an exponential path list.
 
@@ -102,8 +103,8 @@ Retain the current `sourceBytes` and `nestingDepth` meanings. Add an explicit,
 finite analysis capacity profile for supplied template count, cumulative supplied
 name bytes and retained edges. Count the root and all supplied entries before
 allocating graph storage; empty sources must not bypass the count bound. Count
-admitted names and literal references with overflow-safe arithmetic. Set and
-document finite defaults and exact charging rules during contract review.
+admitted names and literal references with overflow-safe arithmetic. The
+[dependency contract](Dependencies.md) records finite defaults and exact charging rules.
 
 Keep syntax depth distinct from graph cycles and graph size. Implement cycle
 detection without unbounded call-stack recursion. Do not spend or reset rendering
@@ -119,7 +120,7 @@ observations even when they describe missing references or cycles.
 
 ## Explicit CLI dependency mode
 
-Propose this opt-in form; the spelling is finalized with the CLI contract:
+The adopted opt-in form is:
 
 ```sh
 liquid analyze page.liquid --dependencies --partials ./partials --format json

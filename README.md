@@ -134,6 +134,19 @@ See the [inspection contract and JSON schema](Documentation/Inspection.md).
 The filter and inspection APIs are available from 1.1.0; existing 1.0 render
 call sites need no migration.
 
+## Inspect partial dependencies (1.3 development)
+
+```swift
+let graph = try engine.inspectDependencies(
+    template: "{% include 'card' %}", templates: ["card": "{{ title | escape }}"]
+)
+```
+
+Inspect literal dependencies, missing references, dynamic includes and cycle groups
+without rendering. Use `liquid analyze --dependencies` with an explicit partial
+directory for the same report. See the [dependency contract](Documentation/Dependencies.md).
+The standalone schema qualification tool uses Swift-JSON; the root graph stays empty.
+
 ## Measure a render (1.2)
 
 ```swift
@@ -202,7 +215,7 @@ See [performance](Documentation/Performance.md).
 - [Language and behavior](Documentation/Language.md), [CLI](Documentation/CLI.md), and [architecture](Documentation/Architecture/README.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and [security reporting](SECURITY.md)
 - [Release process](RELEASING.md) and [changelog](CHANGELOG.md)
-- [Proposed 1.3 roadmap](Documentation/Roadmap-1.3.md), [adopted 1.2 roadmap](Documentation/Roadmap-1.2.md), [adopted 1.1 roadmap](Documentation/Roadmap.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
+- [Adopted 1.3 roadmap](Documentation/Roadmap-1.3.md), [adopted 1.2 roadmap](Documentation/Roadmap-1.2.md), [adopted 1.1 roadmap](Documentation/Roadmap.md), and [RhoeLiquid feature review](Documentation/Architecture/UpstreamFeatureReview.md)
 
 Swift-Liquid is adapted from [RhoeLiquid](https://github.com/RhoePlatform/RhoeLiquid),
 with a focused public API and independent qualification. Original contributions

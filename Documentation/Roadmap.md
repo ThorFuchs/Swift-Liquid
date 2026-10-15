@@ -18,7 +18,7 @@ authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 ver
 requires an explicit maintainer request, provided for 1.1.0 on 2026-10-14.
 
 The [adopted 1.2 roadmap](Roadmap-1.2.md) shipped metrics, and the
-[proposed 1.3 roadmap](Roadmap-1.3.md) covers the next scope decision. This document
+[adopted 1.3 roadmap](Roadmap-1.3.md) records the next adopted scope. This document
 retains the adopted 1.1 design and acceptance criteria.
 
 ## Package and compatibility constraints

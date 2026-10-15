@@ -77,9 +77,9 @@ comparison checksum. It prepares the three archives, notes and checksums under
 `Artifacts/release/1.2.0` without creating a tag or release. Qualify the merged
 main commit again before any separately requested publication.
 
-## Proposed 1.3 release gates
+## Adopted 1.3 release gates
 
-The [1.3 roadmap](Roadmap-1.3.md) proposes bounded partial-dependency inspection
+The [1.3 roadmap](Roadmap-1.3.md) adopts bounded partial-dependency inspection
 and an explicit CLI dependency mode. Scope adoption and public API/JSON contracts
 precede implementation. Preserve all 1.0–1.2 APIs, existing inspection/metrics
 schemas, root package products/dependency graph and pinned fixture accounting.
@@ -89,4 +89,4 @@ resolution, missing/dynamic reference, cycle, cancellation and concurrency cases
 an independent public consumer and CLI schema/failure checks. Compare existing
 workloads against immutable 1.2.0 and measure graph construction separately.
 The roadmap defines the delivery sequence, analysis bounds and acceptance gates;
-this proposal does not change the runtime or authorize a version publication.
+scope adoption authorizes implementation; version publication requires a separate request.
