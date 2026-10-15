@@ -90,8 +90,8 @@ extension Renderer {
         case .continue:
             throw LoopControlSignal.continueLoop
 
-        case .cycle(let group, let items):
-            return try await renderCycle(group: group, items: items)
+        case .cycle(let group, let items, let site):
+            return try await renderCycle(group: group, items: items, site: site)
 
         case .raw(let content):
             return content.string

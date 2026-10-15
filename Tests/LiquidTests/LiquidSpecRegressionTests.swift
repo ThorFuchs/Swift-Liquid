@@ -92,4 +92,49 @@ struct LiquidSpecRegressionTests {
         }
     }
 
+    // Provenance: liquid-spec 84bf25e, basics/cycle.yml:55 and :66;
+    // pinned Ruby tags/cycle.rb#maybe_dup_lookup. No mutable AST state.
+    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
+    func unnamedVariableCyclesUseParsedSiteIdentity(mode: LiquidSyntaxMode) async throws {
+        let engine = LiquidEngine()
+        let context: LiquidObject = ["x": "1", "obj": ["x": "1"]]
+        for (source, expected) in [
+            ("{% cycle x, '2' %}{% cycle x, '2' %}", "11"),
+            ("{% for i in (1..3) %}{% cycle x, '2' %}{% cycle x, '2' %}{% endfor %}", "112211"),
+            ("{% cycle obj.x, '2' %}{% cycle obj.x, '2' %}", "11"),
+            ("{% cycle 'a', 'b' %}{% cycle 'a', 'b' %}{% cycle 'a', 'b' %}", "aba"),
+            ("{% cycle 'named': x, '2' %}{% cycle 'named': x, '2' %}", "12")
+        ] {
+            let parsed = try LiquidTemplate(source, syntaxMode: mode)
+            for _ in 0..<2 {
+                #expect(try await engine.render(parsed, context: context) == expected)
+                #expect(try await engine.render(template: source, context: context, syntaxMode: mode) == expected)
+                let recovered = try await engine.renderWithDiagnostics(parsed, context: context)
+                #expect(recovered.output == expected && recovered.diagnostics.isEmpty)
+            }
+        }
+        // Include reuses the same parsed partial site; render isolates/restores it.
+        let root = try LiquidTemplate("{% include 'a' %}{% include 'a' %}{% include 'b' %}{% render 'a', x: x %}{% include 'a' %}", syntaxMode: mode)
+        let partials = try ["a": LiquidTemplate("{% cycle x, '2' %}", syntaxMode: mode),
+                            "b": LiquidTemplate("{% cycle x, '2' %}", syntaxMode: mode)]
+        #expect(try await engine.render(root, context: context, templates: partials) == "12111")
+    }
+
+    @Test func concurrentRendersKeepCycleSitesImmutable() async throws {
+        let engine = LiquidEngine()
+        let parsed = try LiquidTemplate("{% for i in (1..3) %}{% cycle x, '2' %}{% cycle x, '2' %}{% endfor %}")
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for index in 0..<32 {
+                group.addTask { () async throws -> Void in
+                    let x = String(index)
+                    let context: LiquidObject = ["x": .string(x)]
+                    let expected = x + x + "22" + x + x
+                    #expect(try await engine.render(parsed, context: context) == expected)
+                    #expect(try await engine.renderWithDiagnostics(parsed, context: context).output == expected)
+                }
+            }
+            try await group.waitForAll()
+        }
+    }
+
 }

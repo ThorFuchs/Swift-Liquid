@@ -163,6 +163,7 @@ internal final class RenderingContext {
     private var variablePathCache: [ScalarKey: CachedVariablePath] = [:]
     private var loopDepth: Int = 0
     private var counters: [String: Int] = [:]
+    private var cycleCounters: [ObjectIdentifier: Int] = [:]
     
     
     func setVariables(
@@ -174,6 +175,7 @@ internal final class RenderingContext {
         }
         currentScope = nil
         loopDepth = 0
+        cycleCounters.removeAll(keepingCapacity: true)
         if !counters.isEmpty {
             counters.removeAll(keepingCapacity: true)
         }
@@ -306,6 +308,14 @@ internal final class RenderingContext {
         counters[name] = value
     }
 
+    func getCycleCounter(_ site: CycleSiteIdentity) -> Int? {
+        cycleCounters[ObjectIdentifier(site)]
+    }
+
+    func setCycleCounter(_ site: CycleSiteIdentity, value: Int) {
+        cycleCounters[ObjectIdentifier(site)] = value
+    }
+
     
     func pushScope(_ scope: RuntimeVariables = [:]) {
         if let currentScope {
@@ -416,6 +426,7 @@ internal final class RenderingContext {
         let scopes: [RuntimeVariables]
         let currentScope: RuntimeVariables?
         let counters: [String: Int]
+        let cycleCounters: [ObjectIdentifier: Int]
         let loopDepth: Int
     }
 
@@ -425,6 +436,7 @@ internal final class RenderingContext {
             scopes: scopes,
             currentScope: currentScope,
             counters: counters,
+            cycleCounters: cycleCounters,
             loopDepth: loopDepth
         )
     }
@@ -434,6 +446,7 @@ internal final class RenderingContext {
         scopes = state.scopes
         currentScope = state.currentScope
         counters = state.counters
+        cycleCounters = state.cycleCounters
         loopDepth = state.loopDepth
     }
 
@@ -443,6 +456,7 @@ internal final class RenderingContext {
         scopes.removeAll(keepingCapacity: true)
         currentScope = nil
         counters.removeAll(keepingCapacity: true)
+        cycleCounters.removeAll(keepingCapacity: true)
         for (key, value) in bindings {
             variables[key] = value
         }
