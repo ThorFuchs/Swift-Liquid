@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and
+  variance review flags, larger workload observations and coordinated cancellation
+  response evidence. Require complete measurements and bound review during packaging.
+- Cover explicitly released host callbacks across every rendering policy without
+  timing-sensitive correctness assertions; preserve production APIs and behavior.
+
 - Verify GitHub-hosted contribution isolation and enforce runner provenance,
   read-only qualification, pinned actions and main-only Pages publishing with
   semantic policy regressions. Retain external-contributor approval controls.

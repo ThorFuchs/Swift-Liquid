@@ -3,8 +3,9 @@
 """Regression cases for admission of release measurements, without timing code."""
 import copy
 import unittest
-from compare_benchmarks import index_records, comparisons
+from compare_benchmarks import index_records, comparisons, distribution
 from prepare_release import validate_dependency_benchmarks
+from maintenance_evidence import validate as validate_maintenance, SOURCES, OUTPUTS, UNITS, PARTIAL, POLICIES, checksum
 
 
 def common_result():
@@ -73,6 +74,21 @@ class ReleaseEvidenceTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(RuntimeError):
                 comparisons(runs, {'baseline': first, 'candidate': second}, ['baseline', 'candidate'])
 
+    def test_observed_variance_cannot_hide_behind_equal_medians(self):
+        self.assertEqual(distribution([9, 10, 10, 10, 10, 11])['medianAbsoluteDeviationNanoseconds'], 0)
+        self.assertEqual(distribution([9, 10, 10, 10, 10, 11])['rangePercent'], 20)
+        for values in [[], [0], [float('nan')], [float('inf')], [-1]]:
+            with self.subTest(values=values), self.assertRaises(RuntimeError): distribution(values)
+        first = index_records(common_result()); second = copy.deepcopy(first)
+        second[('interpolation', 'reused-template')]['medianNanoseconds'] = 26
+        runs = [{'name': str(i), 'version': 'baseline' if i % 2 == 0 else 'candidate'} for i in range(12)]
+        indexed = {r['name']: first for r in runs}; indexed['0'] = second
+        rows = comparisons(runs, indexed, ['baseline', 'candidate'])
+        row = next(r for r in rows if r['name'] == 'interpolation' and r['mode'] == 'reused-template')
+        self.assertFalse(row['requiresReview'])
+        self.assertTrue(row['varianceRequiresReview'])
+        self.assertEqual(row['runMedianDistributions']['baseline']['observations'], 6)
+
     def test_graph_shapes_checksums_modes_and_samples_are_bound(self):
         validate_dependency_benchmarks(graph_result())
         for field, value in [('nodes', 65), ('checksumFNV1a64', 'different'), ('samples', 24),
@@ -83,6 +99,77 @@ class ReleaseEvidenceTests(unittest.TestCase):
         changed = graph_result(); changed['records'].pop()
         with self.assertRaises(RuntimeError):
             validate_dependency_benchmarks(changed)
+
+
+def maintenance_result():
+    def timings():
+        return {'samples': 25, 'warmupSamples': 5, 'medianNanoseconds': 13,
+                'p95Nanoseconds': 24, 'minimumNanoseconds': 1, 'maximumNanoseconds': 25}
+    large = [dict(timings(), workload=name, mode=mode, repetitions=1, units=UNITS[name],
+                  sourceBytes=len(SOURCES[name].encode()) + (len(PARTIAL.encode()) if name == 'partial-fanout' else 0),
+                  outputBytes=len(output.encode()), checksumFNV1a64=checksum(output), nanosecondsPerOperation=list(range(1, 26)))
+             for name, output in OUTPUTS.items() for mode in ['source', 'parsed']]
+    cancellation = [dict(timings(), policy=policy, mode=mode, host=host, cancelledSamples=25,
+                         continuedSamples=0, healthyReuse=True, cancelToCompletionNanoseconds=list(range(1, 26)),
+                         cancelToReleaseNanoseconds=[0.5] * 25 if host == 'explicit-release' else [],
+                         releaseToCompletionNanoseconds=[i - 0.5 for i in range(1, 26)] if host == 'explicit-release' else [])
+                    for policy in POLICIES for mode in ['source', 'parsed'] for host in ['cooperative', 'explicit-release']]
+    return {'schemaVersion': 1, 'configuration': 'release', 'operation': 'measured-maintenance',
+            'schedulerConfiguration': 'generic-executor controller and detached workers',
+            'largeWorkloads': large, 'cancellation': cancellation,
+            'runnableCancellation': [dict(workload='runnable-escape', policy=policy, mode=mode, samples=25,
+                warmupSamples=5, inputBytes=UNITS['large-escape'], expectedOutputBytes=len(OUTPUTS['large-escape'].encode()),
+                checksumFNV1a64=checksum(OUTPUTS['large-escape']), healthyReuse=True,
+                observations=[{'outcome': 'cancelled', 'completionRelativeToRequestNanoseconds': i} for i in range(1, 26)],
+                cancelledSamples=25, completedSamples=0, cancelledMedianNanoseconds=13, cancelledP95Nanoseconds=24)
+                for policy in POLICIES for mode in ['source', 'parsed']]}
+
+
+class MaintenanceEvidenceTests(unittest.TestCase):
+    def test_complete_observations_have_no_latency_deadline(self):
+        result = validate_maintenance(maintenance_result())
+        self.assertEqual((result['largeRecords'], result['cancellationRecords']), (6, 16))
+        self.assertIsNone(result['latencyDeadline'])
+        slower = maintenance_result()
+        for record in slower['largeWorkloads']:
+            for field in ['medianNanoseconds', 'p95Nanoseconds', 'minimumNanoseconds', 'maximumNanoseconds']:
+                record[field] *= 1_000_000
+            record['nanosecondsPerOperation'] = [value * 1_000_000 for value in record['nanosecondsPerOperation']]
+        validate_maintenance(slower)  # Admission is completeness/correctness, not a speed contest.
+
+    def test_racing_completions_are_not_cancellation_successes(self):
+        result = maintenance_result(); record = result['runnableCancellation'][0]
+        record.update(observations=[{'outcome': 'completed-before-request', 'completionRelativeToRequestNanoseconds': -1}] * 25,
+                      cancelledSamples=0, completedSamples=25, cancelledMedianNanoseconds=None, cancelledP95Nanoseconds=None)
+        validate_maintenance(result)
+        record['cancelledSamples'] = 25
+        with self.assertRaises(RuntimeError): validate_maintenance(result)
+        result = maintenance_result(); result['runnableCancellation'][0]['observations'][0]['completionRelativeToRequestNanoseconds'] = -1
+        with self.assertRaises(RuntimeError): validate_maintenance(result)
+
+    def test_missing_duplicate_or_corrupted_large_workloads_fail(self):
+        for change in ['missing', 'duplicate', 'checksum', 'units', 'raw', 'summary']:
+            result = maintenance_result(); records = result['largeWorkloads']
+            if change == 'missing': records.pop()
+            elif change == 'duplicate': records[-1] = copy.deepcopy(records[0])
+            elif change == 'checksum': records[0]['checksumFNV1a64'] = 'different'
+            elif change == 'units': records[0]['units'] += 1
+            elif change == 'raw': records[0]['nanosecondsPerOperation'][0] = float('nan')
+            else: records[0]['p95Nanoseconds'] = 25
+            with self.subTest(change=change), self.assertRaises(RuntimeError): validate_maintenance(result)
+
+    def test_cancellation_accounting_and_shared_clock_boundaries_are_required(self):
+        for change in ['missing', 'duplicate', 'completed', 'continued', 'reuse', 'host', 'interval', 'zero']:
+            result = maintenance_result(); records = result['cancellation']
+            if change == 'missing': records.pop()
+            elif change == 'duplicate': records[-1] = copy.deepcopy(records[0])
+            elif change == 'completed': records[0]['cancelledSamples'] = 24
+            elif change == 'continued': records[0]['continuedSamples'] = 1
+            elif change == 'reuse': records[0]['healthyReuse'] = False
+            elif change == 'host': records[0]['cancelToReleaseNanoseconds'] = [1] * 25
+            elif change == 'interval': records[1]['releaseToCompletionNanoseconds'] = [100] * 25
+            else: records[0]['cancelToCompletionNanoseconds'][0] = 0
+            with self.subTest(change=change), self.assertRaises(RuntimeError): validate_maintenance(result)
 
 
 if __name__ == '__main__':

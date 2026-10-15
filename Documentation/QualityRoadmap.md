@@ -55,7 +55,7 @@ qualification and retained source-bound CI evidence.
 
 ## Sprint 3 — contribution isolation and package discovery
 
-The audit verified that `xcode-27` is already GitHub's hosted macOS preview image;
+Sprint 3 was merged in PR #13. The audit verified that `xcode-27` is already GitHub's hosted macOS preview image;
 it is not self-hosted. No self-hosted runners were registered in the repository at
 the audit date. Sprint 3 makes this hosted path explicit and enforceable:
 
@@ -78,11 +78,26 @@ No core runtime, public API, fixture pin or root dependency changes are required
 
 ## Sprint 4 — measured maintenance
 
-Review benchmark variance, cancellation responsiveness and representative larger
-workloads. Select the immutable 1.3.0 baseline when preparing the next release's
-matched comparison; retain historical measurements. Investigate material flags
-without rerunning until a preferred result appears. Keep logical quota, elapsed
-latency and process-memory claims separate.
+Sprint 4 implements [measured maintenance](MeasuredMaintenance.md):
+
+- Advance the matched library baseline to immutable 1.3.0, preserving common
+  workload hashes, sampling policy and every historical comparison.
+- Retain run-median MAD/range and separate variance flags, including equal-median
+  observations with material spread; recompute them during release admission.
+- Measure source/parsed larger loops, escaping and partial fanout with explicit
+  output oracles and timing boundaries.
+- Observe callback-boundary cancellation across all four render policies, with
+  cooperative and explicitly released hosts, plus runnable escaping observations
+  that retain completed races separately. Assert noncooperative return/error
+  cancellation precedence and healthy engine reuse without timing thresholds.
+- Admit complete raw observations and bound review flags; preserve flagged runs
+  and investigate a specific cause before repeating measurements.
+
+Acceptance includes native/sanitizer correctness, negative evidence regressions,
+release-mode larger/cancellation observations, matched measurements, documentation
+and a clean source archive. Logical quota, elapsed latency and process-memory
+claims remain separate. The production engine, public API, CLI schemas, root graph
+and fixture pins remain unchanged.
 
 New platform support or language extensions remain explicit scope decisions.
 A release requires all gates and a separate publication request; these sprints

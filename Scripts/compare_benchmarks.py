@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Compare the pinned 1.2.0 harness and opt-in metrics with serial ABBA runs."""
+"""Compare the pinned 1.3.0 harness and opt-in metrics with serial ABBA runs."""
 import hashlib
 import io
 import json
@@ -14,7 +14,8 @@ import tarfile
 import tempfile
 from ci import ROOT, environment, swift
 
-BASELINE = '8676da8059e71905632c233cffb438f8edbf51d2'
+BASELINE = '9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e'
+BASELINE_VERSION = '1.3.0'
 HARNESS = 'Tools/Benchmarks/Sources/LiquidBenchmarks/main.swift'
 HARNESS_SHA256 = '2aed7fe384085e4b4b5ba26dcb2545f4006248822b21a864ef515cc51d3c985f'
 MANIFEST_SHA256 = 'aaf1bad0e6c4c7165b35320bf95878a2a3ac20a5efa9362066901ac9836b4439'
@@ -90,6 +91,19 @@ def index_records(result, metrics_mode=None):
     return records
 
 
+def distribution(values):
+    """Describe observed spread, without an independence or confidence claim."""
+    if not values or any(not 0 < value < float('inf') for value in values):
+        raise RuntimeError('Variance requires finite positive observations')
+    median = statistics.median(values)
+    mad = statistics.median(abs(value - median) for value in values)
+    return {'observations': len(values), 'minimumNanoseconds': min(values),
+            'maximumNanoseconds': max(values), 'medianNanoseconds': median,
+            'medianAbsoluteDeviationNanoseconds': mad,
+            'relativeMADPercent': mad / median * 100,
+            'rangePercent': (max(values) - min(values)) / median * 100}
+
+
 def comparisons(runs, indexed, labels):
     reference = indexed[runs[0]['name']]
     rows = []
@@ -108,7 +122,9 @@ def comparisons(runs, indexed, labels):
                      labels[1] + 'MedianNanoseconds': second, 'medianChangePercent': change,
                      labels[0] + 'RunMedians': measurements[labels[0]], labels[1] + 'RunMedians': measurements[labels[1]],
                      'outputBytes': expected['outputBytes'], 'fnv1aChecksum': expected['fnv1aChecksum'],
-                     'requiresReview': abs(change) >= 10})
+                     'requiresReview': abs(change) >= 10,
+                     'runMedianDistributions': {label: distribution(values) for label, values in measurements.items()},
+                     'varianceRequiresReview': any(distribution(values)['rangePercent'] >= 10 for values in measurements.values())})
     return rows
 
 
@@ -126,13 +142,13 @@ def main():
     if hashlib.sha256(manifest).hexdigest() != MANIFEST_SHA256:
         raise RuntimeError('Pinned benchmark manifest changed')
     toolchain = run(swift() + ['--version'], 'toolchain')
-    metadata = {'schemaVersion': 3, 'baselineVersion': '1.2.0', 'baselineCommit': BASELINE, 'candidateCommit': candidate,
+    metadata = {'schemaVersion': 4, 'baselineVersion': BASELINE_VERSION, 'baselineCommit': BASELINE, 'candidateCommit': candidate,
                 'harnessSHA256': HARNESS_SHA256, 'manifestSHA256': hashlib.sha256(manifest).hexdigest(),
                 'toolchain': toolchain, 'platform': platform.platform(), 'architecture': platform.machine(),
                 'logicalCPUs': os.cpu_count(), 'swiftPMFlags': shlex.split(ENV.get('LIQUID_SWIFTPM_FLAGS', '')),
                 'developerDirectory': ENV.get('DEVELOPER_DIR'), 'commands': COMMANDS, 'order': ['baseline', 'candidate', 'candidate', 'baseline'] * 3,
                 'protocol': 'Build both first; three sequential ABBA blocks; six runs per version; median of run medians.',
-                'reviewThresholdPercent': 10, 'runs': []}
+                'reviewThresholdPercent': 10, 'varianceReviewThresholdPercent': 10, 'runs': []}
     if platform.system() == 'Darwin':
         metadata['hardware'] = {key: run(['sysctl', '-n', key], 'host-' + key.replace('.', '-'), required=False) or 'unavailable'
                                 for key in ['hw.model', 'hw.physicalcpu', 'hw.memsize', 'machdep.cpu.brand_string']}
@@ -167,6 +183,7 @@ def main():
                                      'loadAverageBefore': before, 'loadAverageAfter': os.getloadavg()})
         metrics = {'candidateCommit': candidate, 'librarySHA256': metadata['candidateLibrarySHA256'],
                    'harnessSHA256': metadata['metricsHarnessSHA256'], 'reviewThresholdPercent': 10,
+                   'varianceReviewThresholdPercent': 10,
                    'order': ['ordinary', 'metrics', 'metrics', 'ordinary'] * 3, 'runs': [],
                    'protocol': 'Same candidate binary; three serial ABBA blocks; six runs per mode; externally timed calls.'}
         for index, mode in enumerate(metrics['order']):
@@ -189,13 +206,17 @@ def main():
                 raise RuntimeError(f'Metrics harness differs from common workload: {key}, {field}')
     metrics['comparisons'] = comparisons(metrics['runs'], metric_records, ['ordinary', 'metrics'])
     metrics['reviewRequired'] = [r['name'] + '/' + r['mode'] for r in metrics['comparisons'] if r['requiresReview']]
+    for phase in [metadata, metrics]:
+        phase['varianceReviewRequired'] = [r['name'] + '/' + r['mode'] for r in phase['comparisons'] if r['varianceRequiresReview']]
     metadata['metrics'] = metrics
     metadata['status'] = 'measured'
     (OUTPUT / 'comparison.json').write_text(json.dumps(metadata, indent=2) + '\n')
     print(json.dumps({'baselineCommit': BASELINE, 'candidateCommit': candidate, 'runs': len(metadata['runs']),
                       'recordsCompared': len(metadata['comparisons']), 'reviewRequired': metadata['reviewRequired'],
                       'metricsRuns': len(metrics['runs']), 'metricsRecords': len(metrics['comparisons']),
-                      'metricsReviewRequired': metrics['reviewRequired']}, indent=2))
+                      'metricsReviewRequired': metrics['reviewRequired'],
+                      'varianceReviewRequired': metadata['varianceReviewRequired'],
+                      'metricsVarianceReviewRequired': metrics['varianceReviewRequired']}, indent=2))
 
 
 if __name__ == '__main__':

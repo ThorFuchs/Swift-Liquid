@@ -80,9 +80,9 @@ including when the process exits unsuccessfully. Counts describe runner executio
 not successful Liquid renders: recovered reference errors and the 35 date-year
 policy boundaries retain their separate [conformance accounting](Conformance.md).
 
-The native lane repeats the 14 selected adversarial/cancellation/barrier functions
+The native lane repeats the 15 selected adversarial/cancellation/barrier functions
 twice under normal parallel execution, each with its own exact inventory. The
-full current baseline is 73 functions and 2,104 parameter cases; nonparameterized
+full current baseline is 74 functions and 2,120 parameter cases; nonparameterized
 functions do not emit case events. Published 1.3.0 receipts remain unchanged.
 
 `Scripts/check_test_evidence.py` rejects truncated, malformed, duplicated,
@@ -95,3 +95,13 @@ conformance successes. Their raw streams, logs, commands and admission decisions
 are retained in the native lane's `runner-probe/` directory. Update the reviewed
 inventory alongside intentional test additions; never regenerate it automatically
 as part of qualification.
+
+## Noncooperative hosts
+
+`CancellationMaintenanceTests` adds 16 source/policy/host-result combinations. A
+checked continuation requires an explicit release after cancellation; both a
+successful return and a recoverable host error must preserve `CancellationError`,
+prevent subsequent filter evaluation and leave sibling/reused invocations healthy.
+The release happens before assertions and no sleep or timing deadline determines
+success. Separate [response measurements](MeasuredMaintenance.md) report elapsed
+observations and scheduling limits without making correctness timing-sensitive.

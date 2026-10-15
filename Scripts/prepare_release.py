@@ -13,7 +13,8 @@ import shutil
 import subprocess
 import tarfile
 from ci import ROOT, source_snapshot
-from compare_benchmarks import BASELINE, COMMON_RECORD_COUNT, HARNESS_SHA256, MANIFEST_SHA256, index_records, comparisons
+from maintenance_evidence import validate as validate_maintenance
+from compare_benchmarks import BASELINE, BASELINE_VERSION, COMMON_RECORD_COUNT, HARNESS_SHA256, MANIFEST_SHA256, index_records, comparisons
 
 
 def validate_dependency_benchmarks(result):
@@ -64,6 +65,7 @@ def main():
         if receipt['status'] != 'passed' or receipt['sources'] != expected_sources:
             raise RuntimeError(f'{lane} is failed or does not match the candidate source inventory')
     validate_dependency_benchmarks(json.loads((evidence / 'liquid-performance/dependencies.json').read_text()))
+    validate_maintenance(json.loads((evidence / 'liquid-performance/maintenance.json').read_text()))
     archive_root = evidence / 'liquid-archive'
     archive_receipt = json.loads((archive_root / 'archive.json').read_text())
     if not archive_receipt['byteIdenticalRepeatedSourceArchives'] or archive_receipt['cleanNativeQualification'] != 'passed':
@@ -90,7 +92,7 @@ def main():
     matched_root = evidence / 'liquid-matched-performance'
     comparison_bytes = (matched_root / 'comparison.json').read_bytes()
     matched = json.loads(comparison_bytes)
-    if (matched['schemaVersion'] != 3 or matched['baselineVersion'] != '1.2.0'
+    if (matched['schemaVersion'] != 4 or matched['baselineVersion'] != BASELINE_VERSION
             or matched['candidateCommit'] != archive_receipt['candidateCommit'] or matched['baselineCommit'] != BASELINE
             or matched['harnessSHA256'] != HARNESS_SHA256 or matched['manifestSHA256'] != MANIFEST_SHA256
             or matched['order'] != ['baseline', 'candidate', 'candidate', 'baseline'] * 3
@@ -111,7 +113,11 @@ def main():
     if comparisons(metrics['runs'], metric_records, ['ordinary', 'metrics']) != metrics['comparisons']:
         raise RuntimeError('Metrics summary differs from retained measurements')
     for result in [matched, metrics]:
+        if result['reviewThresholdPercent'] != 10 or result['varianceReviewThresholdPercent'] != 10:
+            raise RuntimeError('Benchmark review threshold changed')
         flags = [r['name'] + '/' + r['mode'] for r in result['comparisons'] if r['requiresReview']]
+        if result['varianceReviewRequired'] != [r['name'] + '/' + r['mode'] for r in result['comparisons'] if r['varianceRequiresReview']]:
+            raise RuntimeError('Benchmark variance flags differ from retained comparisons')
         if result['reviewRequired'] != flags:
             raise RuntimeError('Benchmark flag list differs from retained comparisons')
     review = json.loads((evidence / 'benchmark-review.json').read_text())
@@ -119,7 +125,9 @@ def main():
             or review['comparisonSHA256'] != hashlib.sha256(comparison_bytes).hexdigest()
             or review['baselineCommit'] != BASELINE or review['candidateLibrarySHA256'] != matched['candidateLibrarySHA256']
             or sorted(review['reviewedCompatibilityFlags']) != sorted(matched['reviewRequired'])
-            or sorted(review['reviewedMetricsFlags']) != sorted(metrics['reviewRequired'])):
+            or sorted(review['reviewedMetricsFlags']) != sorted(metrics['reviewRequired'])
+            or sorted(review['reviewedCompatibilityVarianceFlags']) != sorted(matched['varianceReviewRequired'])
+            or sorted(review['reviewedMetricsVarianceFlags']) != sorted(metrics['varianceReviewRequired'])):
         raise RuntimeError('Benchmark review is missing, incomplete or belongs to different measurements')
     output = ROOT / 'Artifacts/release' / args.version
     output.mkdir(parents=True, exist_ok=True)

@@ -347,6 +347,28 @@
         "Verify index absence and prepare separate one-URL registration without claiming a live index page or unqualified platform support."
       ],
       "qualification": "Affected Scripts/ci.py workflow, native, documentation, installation and clean-archive gates plus actual provider-hosted CI evidence. No runtime, API, fixture, license or root dependency changes."
+    },
+    {
+      "area": "Measured maintenance and cancellation responsiveness",
+      "scopeDecision": "Maintainer authorized quality sprint 4 and merging PR #13 on 2026-10-15.",
+      "files": [
+        "Tools/MaintenanceBenchmarks",
+        "Scripts/compare_benchmarks.py",
+        "Scripts/maintenance_evidence.py",
+        "Scripts/check_release_evidence.py",
+        "Scripts/prepare_release.py",
+        "Scripts/ci.py",
+        "Tests/LiquidTests/CancellationMaintenanceTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/MeasuredMaintenance.md"
+      ],
+      "changes": [
+        "Advance only future comparison selection to immutable 1.3.0 while preserving the identical pinned common harness and historical releases.",
+        "Describe observed run-median MAD/range and admit separate variance flags without statistical independence or speedup claims.",
+        "Author larger-input, runnable escaping and cooperative/explicit-release callback measurements using public checked-Sendable APIs, independent output evidence and externally timed boundaries.",
+        "Require complete retained samples, cancellation identity/continuation/reuse accounting and checksum-bound reviews; add noncooperative return/error correctness cases without sleeps or deadlines."
+      ],
+      "qualification": "Affected Scripts/ci.py native, safety, performance, matched-performance, documentation and archive gates. Production Swift, root products/dependencies, public declaration baseline, fixture metadata/licenses/checksums and CLI schemas remain unchanged."
     }
   ]
 }

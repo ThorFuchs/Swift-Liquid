@@ -132,6 +132,8 @@ def main():
         else:
             run(swift() + ['run', '-c', 'release', '--package-path', 'Tools/Benchmarks', 'LiquidBenchmarks', str(output / 'benchmarks.json')], 'benchmarks')
             run(swift() + ['run', '-c', 'release', '--package-path', 'Tools/DependencyBenchmarks', 'LiquidDependencyBenchmarks', str(output / 'dependencies.json')], 'dependency-benchmarks')
+            run(swift() + ['run', '-c', 'release', '-Xswiftc', '-warnings-as-errors', '--package-path', 'Tools/MaintenanceBenchmarks', 'LiquidMaintenanceBenchmarks', str(output / 'maintenance.json')], 'maintenance-benchmarks')
+            run([sys.executable, '-B', 'Scripts/maintenance_evidence.py', str(output / 'maintenance.json')], 'maintenance-admission')
         receipt['status'] = 'passed'
     except (RuntimeError, OSError) as error:
         receipt['error'] = str(error)

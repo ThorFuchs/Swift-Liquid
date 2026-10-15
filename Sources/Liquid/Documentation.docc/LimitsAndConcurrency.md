@@ -30,3 +30,11 @@ Applications remain responsible for context retention and publication of output.
 Cancellation is checked at operation entry and execution boundaries and remains
 Swift's `CancellationError`. Treat a failed render as terminal; retrying with a
 fresh full budget does not preserve a cumulative limit across separate operations.
+
+
+Cancellation is cooperative. Application filters can suspend or perform work that
+does not observe cancellation; the engine checks again when the callback returns
+or throws. Logical capacities do not preempt host code. Deterministic tests cover
+both callback exits and healthy engine reuse. Separate
+[maintenance measurements](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/MeasuredMaintenance.md)
+retain observed response intervals, including scheduling, without a latency guarantee.
