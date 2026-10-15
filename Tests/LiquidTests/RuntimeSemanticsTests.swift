@@ -123,4 +123,27 @@ struct RuntimeSemanticsTests {
         #expect(try await LiquidEngine(limits: .init(outputBytes: 2)).render(parsed, context: context) == "2!")
     }
 
+    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
+    func concurrentRendersKeepCaseAndSizeImmutable(mode: LiquidSyntaxMode) async throws {
+        let engine = LiquidEngine()
+        let source = "{% case choice %}{% when null %}{{ obj.size }}|{{ obj['size'] }}{% else %}E{% endcase %}"
+        let parsed = try LiquidTemplate(source, syntaxMode: mode)
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for index in 0..<16 {
+                group.addTask { () async throws -> Void in
+                    let object = LiquidObject((0..<index).map { .init(String($0), .integer($0)) })
+                    let choice: LiquidValue = index.isMultiple(of: 2) ? .null : false
+                    let context: LiquidObject = ["choice": choice, "obj": .object(object)]
+                    let expected = index.isMultiple(of: 2) ? "\(index)|" : "E"
+                    #expect(try await engine.render(template: source, context: context, syntaxMode: mode) == expected)
+                    #expect(try await engine.render(parsed, context: context) == expected)
+                    let recovered = try await engine.renderWithDiagnostics(parsed, context: context)
+                    #expect(recovered.output == expected && recovered.diagnostics.isEmpty)
+                    #expect(try engine.inspect(parsed).variableRoots == ["choice", "obj"])
+                }
+            }
+            try await group.waitForAll()
+        }
+    }
+
 }

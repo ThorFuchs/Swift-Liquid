@@ -449,7 +449,8 @@
         "Replace the null sentinel for case fallback with an internal checked-Sendable branch type. Preserve sequential duplicate matches, early else, normalization, static traversal and blank suppression.",
         "Retain dot-command identity for size access; use one typed-domain size calculation with exact real-key precedence, bracket-key semantics, scalar string counts and the existing filter fallback. Preserve forloop.length fields.",
         "Add supplementary all-mode public source/parsed, raising/recovered, traversal and operational regression controls with pinned Ruby provenance. Preserve all existing fixture bytes and assertions.",
-        "Attempt a host-root/local-overlay design for C, observe forty unchanged historical assertion failures, and revert its implementation. Retain the failure and require a signed visibility-contract decision before further code."
+        "Attempt a host-root/local-overlay design for C, observe forty unchanged historical assertion failures, and revert its implementation. Retain the failure and require a signed visibility-contract decision before further code.",
+        "Add direct shared-engine/parsed-template concurrency coverage for case and property-size composition in all modes; include it in the exact ThreadSanitizer inventory."
       ],
       "qualification": "Integration-only native/independent baseline equals R2. Separate A/B independent runs with unchanged eligibility and zero qualified regressions. Final clean-head native, safety, docs, platforms, installation, reference and failed independent gates required. No performance measurement, E3 RFC edit, API addition or root dependency."
     }

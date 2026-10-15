@@ -38,9 +38,9 @@ source/parse-once entry points, raising/recovered rendering, repeated and early
 else branches, duplicate matches, unreachable errors, partials, exact Unicode keys,
 nested/dynamic access and output/step/cancellation bounds. The reference probes
 record 55 controls × three parser modes × two render policies; the C subset
-remains research evidence. Existing concurrency tests and all pinned fixtures
-are retained unchanged. Current inventory: 83 functions, 2,141 argument cases,
-16 repeated adversarial/cancellation functions and six TSan functions.
+remains research evidence. An additional all-mode shared-template concurrency regression exercises both rules. Existing concurrency tests and all pinned fixtures
+are retained unchanged. Current inventory: 84 functions, 2,144 argument cases,
+16 repeated adversarial/cancellation functions and seven TSan functions.
 
 Post-A/B independent results are 2,265 qualified matches, 2,349 mismatches and ten
 operational errors. The raw upstream comparator reports 2,292 matches and 2,332

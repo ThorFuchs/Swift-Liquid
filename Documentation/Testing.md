@@ -3,7 +3,7 @@
 Tests protect the released 1.0–1.3 contracts while keeping the root dependency graph
 empty. Run affected qualification through `Scripts/ci.py`; the native lane includes
 debug/release tests, repeated boundary tests, public consumers and CLI checks. The
-safety lane runs the full suite with AddressSanitizer and the six shared-engine
+safety lane runs the full suite with AddressSanitizer and the seven shared-engine
 concurrency tests with ThreadSanitizer.
 
 ## Reproduce a boundary
@@ -82,7 +82,7 @@ policy boundaries retain their separate [conformance accounting](Conformance.md)
 
 The native lane repeats the 16 selected adversarial/cancellation/barrier functions
 twice under normal parallel execution, each with its own exact inventory. The
-full current baseline is 83 functions and 2,141 parameter cases; nonparameterized
+full current baseline is 84 functions and 2,144 parameter cases; nonparameterized
 functions do not emit case events. Published 1.3.0 receipts remain unchanged.
 
 `Scripts/check_test_evidence.py` rejects truncated, malformed, duplicated,
