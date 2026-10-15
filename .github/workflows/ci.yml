@@ -1,80 +1,11 @@
-name: Swift-Liquid CI
+name: Swift-Liquid interpolation investigation
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
-concurrency:
-  group: liquid-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 jobs:
-  qualify:
-    name: Swift 6.4 / ${{ matrix.lane }}
-    runs-on: xcode-27
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        lane: [native, safety, docs, performance, reference, platforms, installation]
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
-      PYTHONDONTWRITEBYTECODE: '1'
-    steps:
-      - name: Require GitHub-hosted isolation
-        env:
-          RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: |
-          test "$RUNNER_ENVIRONMENT" = "github-hosted"
-          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          persist-credentials: false
-      - name: Set up pinned Ruby reference runtime
-        if: matrix.lane == 'reference'
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
-        with:
-          ruby-version: '4.0.1'
-      - name: Prepare pinned reference
-        if: matrix.lane == 'reference'
-        env:
-          LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
-        run: |
-          gem install date --version 3.5.1 --no-document
-          gem install time --version 0.4.2 --no-document
-          git init "$LIQUID_REFERENCE_PATH"
-          git -C "$LIQUID_REFERENCE_PATH" remote add origin https://github.com/Shopify/liquid.git
-          git -C "$LIQUID_REFERENCE_PATH" fetch --depth 1 origin 4e39ae4cc3da73921923c0669e0fc84a66b2f696
-          git -C "$LIQUID_REFERENCE_PATH" checkout --detach FETCH_HEAD
-      - name: Qualify
-        if: matrix.lane != 'reference'
-        run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
-      - name: Qualify reference behavior
-        if: matrix.lane == 'reference'
-        env:
-          LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
-        run: python3 -B Scripts/ci.py --lane reference --reference-path "$LIQUID_REFERENCE_PATH"
-      - name: Retain qualification evidence
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: liquid-${{ matrix.lane }}
-          path: |
-            Artifacts/${{ matrix.lane }}/
-            !Artifacts/docs/Liquid.doccarchive/**
-            !Artifacts/docs/site/**
-          if-no-files-found: error
-          retention-days: 30
-      - name: Package documentation site
-        if: matrix.lane == 'docs'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: Artifacts/docs/site/
-          include-hidden-files: true
-  matched-performance:
-    name: Matched benchmarks against 1.3.0
-    needs: qualify
+  study:
+    name: Bounded interpolation hypotheses and identical-source controls
     runs-on: xcode-27
     timeout-minutes: 45
     env:
@@ -90,71 +21,17 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
-      - name: Fetch immutable 1.3.0 baseline
-        run: git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
-      - run: python3 -B Scripts/ci.py --lane matched-performance
-      - name: Retain matched measurements
+      - name: Fetch immutable study source and harness
+        run: |
+          git fetch --no-tags --depth 1 origin fb81cf4ff01f1bf098ceb5fff65638b1271294e0
+          git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
+      - name: Run the recorded investigation
+        run: python3 -B Scripts/hosted_interpolation_study.py
+      - name: Retain every observation and source patch
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: liquid-matched-performance
+          name: liquid-interpolation-investigation
           path: Artifacts/matched-performance/
           if-no-files-found: error
           retention-days: 30
-  archive:
-    name: Qualify clean source archive
-    needs: [qualify, matched-performance]
-    runs-on: xcode-27
-    timeout-minutes: 45
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
-      PYTHONDONTWRITEBYTECODE: '1'
-    steps:
-      - name: Require GitHub-hosted isolation
-        env:
-          RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: |
-          test "$RUNNER_ENVIRONMENT" = "github-hosted"
-          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7 (Node 24)
-        with:
-          name: liquid-docs
-          path: Artifacts/docs
-      - run: python3 -B Scripts/ci.py --lane archive
-      - name: Retain release candidate assets
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-        with:
-          name: liquid-archive
-          path: Artifacts/archive/
-          if-no-files-found: error
-          retention-days: 30
-  publish-docs:
-    name: Publish qualified documentation
-    needs: [qualify, archive]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
-    steps:
-      - name: Require GitHub-hosted isolation
-        env:
-          RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: |
-          test "$RUNNER_ENVIRONMENT" = "github-hosted"
-          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-      - id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
