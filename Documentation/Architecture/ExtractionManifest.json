@@ -424,6 +424,34 @@
         "Record exact starting/ending source revision and snapshots for qualification; document E3 only, deferring other API studies."
       ],
       "qualification": "Three separate pinned independent runs with unchanged eligibility, public Swift Testing regressions and full final-head native/safety/docs/reference/platform/consumer qualification. Historical fixtures and 1.0\u20131.3 public API unchanged; independent failures retained."
+    },
+    {
+      "area": "LQ1-R3 runtime semantics and source integration",
+      "scopeDecision": "Maintainer requested bounded local R3 with at most three general runtime repairs. Implement A/B; C experiment reverted and deferred after an unchanged historical expectation failed. No merge, release or public API authorization.",
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Syntax/Expression.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Support/RuntimeSize.swift",
+        "Sources/Liquid/Support/TemplateValidation.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Tests/LiquidTests/RuntimeSemanticsTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R3"
+      ],
+      "changes": [
+        "Replay all ten R2 commits onto qualified main 2a9e787. Preserve sprint-4 cancellation, maintenance, release and hosted policy bytes; retain both source-history tracks and audited conflict resolutions.",
+        "Replace the null sentinel for case fallback with an internal checked-Sendable branch type. Preserve sequential duplicate matches, early else, normalization, static traversal and blank suppression.",
+        "Retain dot-command identity for size access; use one typed-domain size calculation with exact real-key precedence, bracket-key semantics, scalar string counts and the existing filter fallback. Preserve forloop.length fields.",
+        "Add supplementary all-mode public source/parsed, raising/recovered, traversal and operational regression controls with pinned Ruby provenance. Preserve all existing fixture bytes and assertions.",
+        "Attempt a host-root/local-overlay design for C, observe forty unchanged historical assertion failures, and revert its implementation. Retain the failure and require a signed visibility-contract decision before further code."
+      ],
+      "qualification": "Integration-only native/independent baseline equals R2. Separate A/B independent runs with unchanged eligibility and zero qualified regressions. Final clean-head native, safety, docs, platforms, installation, reference and failed independent gates required. No performance measurement, E3 RFC edit, API addition or root dependency."
     }
   ]
 }

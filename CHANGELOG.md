@@ -2,6 +2,13 @@
 
 ## 1.3.1 — 2026-10-15
 
+- Integrate the independent conformance work with quality sprint 4; preserve its
+  cancellation, maintenance/release and hosted-workflow protections.
+- Distinguish real null-valued case branches from else, and qualify typed size
+  property lookup with exact-key precedence, bracket semantics and scalar counts.
+- Defer render-global visibility after a historical assertion conflict; retain
+  the failed experiment and decision record without changing its expected bytes.
+
 - Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and
   variance review flags, larger workload observations and coordinated cancellation
   response evidence. Require complete measurements and bound review during packaging.

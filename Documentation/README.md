@@ -21,6 +21,7 @@ guides that are compiled from the public Swift symbol graph.
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
 | [Peer API crosswalk](Comparisons/README.md) | Pinned task-oriented API comparisons and evidence grades |
+| [LQ1-R3 runtime review](LQ1-R3/README.md) | Current-main integration, case/size repairs and deferred host-input contract |
 | [LQ1-R2 triage](LQ1-R2/README.md) | Three bounded semantic repairs, diagnostic ledger and source-aware RFC |
 | [LQ1 independent conformance](LQ1/README.md) | Isolated liquid-spec tooling, exact failures and next review gate |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
