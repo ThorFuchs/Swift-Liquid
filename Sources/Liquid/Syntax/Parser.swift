@@ -751,6 +751,15 @@ internal final class Parser {
             return .range(start: startExpr, end: endExpr)
             
         case .leftBracket:
+            // Shopify strict2 requires an explicit receiver for bracket access.
+            // Older parser modes retain their indirect root lookup semantics.
+            if syntaxMode == .strict2 {
+                throw LiquidError.syntax(
+                    message: "Bare bracket access is not allowed. Use self['...'] instead",
+                    line: currentToken.line + lineOffset,
+                    column: currentToken.column
+                )
+            }
             // Top-level bracket access: {{ [something] }} or {{ ["key"] }}
             // This is an indirect variable lookup: look up the bracket contents,
             // then use the result to look up in the root context
