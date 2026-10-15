@@ -115,3 +115,19 @@ Exact-commit receipts, benchmark review, source inventory and clean archive
 rebuilding evidence accompany the
 [1.1.0 release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.1.0).
 The 1.0.0 tag and assets remain unchanged.
+
+### 1.3 candidate tooling qualification
+
+Bounded [dependency inspection](Dependencies.md) reuses the AST authority and
+adds whole-bundle admission, renderer-compatible lookup, missing/dynamic findings,
+iterative cycle groups and concurrent render/metrics reuse. Eleven regression
+functions and a fifth independent public consumer cover this separate API scope.
+The CLI adds 24 cases; published Swift-JSON qualifies six positive and nineteen
+negative JSON Schema vectors in isolated tooling. These add no core render cases.
+Canonical duplicate filenames cannot coexist on the qualification macOS volume,
+so that conditional CLI vector is unavailable rather than counted as passed.
+API tests cover exact spellings, equality and canonical lookup independently.
+
+The 1.3 candidate retains all 116 public 1.2 declarations and every prior fixture
+pin. Final gate receipts, source/DocC archives and matched 1.2.0 measurements are
+prepared separately from publication; see the [candidate notes](Releases/1.3.0.md).

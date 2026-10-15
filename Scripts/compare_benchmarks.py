@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Compare the pinned 1.1.0 harness and opt-in metrics with serial ABBA runs."""
+"""Compare the pinned 1.2.0 harness and opt-in metrics with serial ABBA runs."""
 import hashlib
 import io
 import json
@@ -14,10 +14,11 @@ import tarfile
 import tempfile
 from ci import ROOT, environment, swift
 
-BASELINE = '1107ec865b9ae7ed35e1245386ba882db3abd93d'
+BASELINE = '8676da8059e71905632c233cffb438f8edbf51d2'
 HARNESS = 'Tools/Benchmarks/Sources/LiquidBenchmarks/main.swift'
-HARNESS_SHA256 = 'cdaa1ce76d114eb12ef163a8e5445704a7da6ae5563a17abffd6de5c2d2de77f'
+HARNESS_SHA256 = '2aed7fe384085e4b4b5ba26dcb2545f4006248822b21a864ef515cc51d3c985f'
 MANIFEST_SHA256 = 'aaf1bad0e6c4c7165b35320bf95878a2a3ac20a5efa9362066901ac9836b4439'
+COMMON_RECORD_COUNT = 26
 RENDER_NAMES = ['interpolation', 'filter-chain', 'loop', 'partial', 'date', 'custom-filter']
 OUTPUT = ROOT / 'Artifacts/matched-performance'
 OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -62,6 +63,9 @@ def index_records(result, metrics_mode=None):
     expected = {(name, mode) for name in RENDER_NAMES
                 for mode in ['parse-and-render', 'reused-template']}
     if metrics_mode is None:
+        if result.get('renderMode') != 'all':
+            raise RuntimeError('Common comparison requires all baseline modes')
+        expected |= {(name, mode + '-metrics') for name, mode in expected.copy()}
         expected |= {('inspection', 'parse-and-inspect'), ('inspection', 'inspect-reused-template')}
     elif result.get('renderMode') != metrics_mode:
         raise RuntimeError('Incorrect candidate metrics benchmark mode')
@@ -75,15 +79,14 @@ def index_records(result, metrics_mode=None):
         for field in ['medianNanoseconds', 'p95Nanoseconds', 'minimumNanoseconds', 'maximumNanoseconds']:
             if not 0 < record[field] < float('inf'):
                 raise RuntimeError('Invalid benchmark timing')
-        if metrics_mode is not None:
-            if not record['mode'].endswith(suffix) or (not suffix and record['mode'].endswith('-metrics')):
-                raise RuntimeError('Incorrect metrics record mode')
-            samples = record.get('sampleNanoseconds', [])
-            if len(samples) != 25 or any(not 0 < sample < float('inf') for sample in samples):
-                raise RuntimeError('Missing or invalid retained samples')
-            ordered = sorted(samples)
-            if (record['medianNanoseconds'], record['p95Nanoseconds'], record['minimumNanoseconds'], record['maximumNanoseconds']) != (ordered[12], ordered[23], ordered[0], ordered[-1]):
-                raise RuntimeError('Metrics timing summary differs from retained samples')
+        if metrics_mode is not None and (not record['mode'].endswith(suffix) or (not suffix and record['mode'].endswith('-metrics'))):
+            raise RuntimeError('Incorrect metrics record mode')
+        samples = record.get('sampleNanoseconds', [])
+        if len(samples) != 25 or any(not 0 < sample < float('inf') for sample in samples):
+            raise RuntimeError('Missing or invalid retained samples')
+        ordered = sorted(samples)
+        if (record['medianNanoseconds'], record['p95Nanoseconds'], record['minimumNanoseconds'], record['maximumNanoseconds']) != (ordered[12], ordered[23], ordered[0], ordered[-1]):
+            raise RuntimeError('Timing summary differs from retained samples')
     return records
 
 
@@ -123,7 +126,7 @@ def main():
     if hashlib.sha256(manifest).hexdigest() != MANIFEST_SHA256:
         raise RuntimeError('Pinned benchmark manifest changed')
     toolchain = run(swift() + ['--version'], 'toolchain')
-    metadata = {'schemaVersion': 2, 'baselineVersion': '1.1.0', 'baselineCommit': BASELINE, 'candidateCommit': candidate,
+    metadata = {'schemaVersion': 3, 'baselineVersion': '1.2.0', 'baselineCommit': BASELINE, 'candidateCommit': candidate,
                 'harnessSHA256': HARNESS_SHA256, 'manifestSHA256': hashlib.sha256(manifest).hexdigest(),
                 'toolchain': toolchain, 'platform': platform.platform(), 'architecture': platform.machine(),
                 'logicalCPUs': os.cpu_count(), 'swiftPMFlags': shlex.split(ENV.get('LIQUID_SWIFTPM_FLAGS', '')),

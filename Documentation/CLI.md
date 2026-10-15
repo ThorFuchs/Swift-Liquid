@@ -8,7 +8,7 @@ Use `swift run liquid --help` while developing, or the built release executable.
 | `render TEMPLATE` | Render a UTF-8 file or `-` for stdin |
 | `validate TEMPLATE` | Parse a UTF-8 template and fail on invalid syntax |
 | `analyze TEMPLATE` | Inspect parsed references without rendering (1.1) |
-| `--version` | Show the candidate version (`Swift-Liquid 1.2.0`) |
+| `--version` | Show the candidate version (`Swift-Liquid 1.3.0`) |
 | `--help` | Show commands and options |
 
 Render options:
@@ -59,7 +59,7 @@ liquid analyze page.liquid --syntax-mode strict2 --format json
 printf '{{ name | upcase }}' | liquid analyze -
 ```
 
-## Partial dependencies (1.3 development)
+## Partial dependencies (1.3)
 
 ```sh
 liquid analyze page.liquid --dependencies --partials ./partials --format json

@@ -24,8 +24,8 @@ LiquidBenchmarks /tmp/metrics.json --render-mode metrics
 ```
 
 Each explicit mode emits 24 throwing/diagnostic render records with all sample values. The matched lane
-builds both versions with the unchanged pinned 1.1.0 common harness, then compares
+builds both versions with the unchanged pinned 1.2.0 common harness (all 26 records), then compares
 metrics modes in a separate candidate binary. Both phases use three serial ABBA
 blocks; all three binaries are built before timing. The package manifest and
 library fingerprints, checksums, sampling, distributions and review flags are
-retained. Historical 1.0/1.1 artifacts remain unchanged.
+retained. Historical 1.0–1.2 artifacts remain unchanged.
