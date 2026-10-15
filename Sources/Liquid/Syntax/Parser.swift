@@ -711,7 +711,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                 }
                 startExpr = expr
             } else {
@@ -736,7 +736,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                 }
                 endExpr = expr
             } else {
@@ -791,7 +791,7 @@ internal final class Parser {
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
-                expr = .access(expr: expr, key: .literal(.string(prop)))
+                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
             }
             return expr
 
@@ -821,7 +821,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                     hasMoreAccess = true
                 }
             }
@@ -925,7 +925,7 @@ internal final class Parser {
 
             var expr: LiquidExpression = .variable(name)
             for property in components.dropFirst() {
-                expr = .access(expr: expr, key: .literal(.string(property)))
+                expr = .access(expr: expr, key: .literal(.string(property)), command: true)
             }
 
             // Handle bracket and dot access chains: items[0], items["key"].prop, items[0][1]
@@ -947,7 +947,7 @@ internal final class Parser {
                     guard case .identifier(let prop) = nextTokenStorage.type else { break }
                     advance() // consume .
                     advance() // consume identifier
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                     hasMoreAccess = true
                 }
             }

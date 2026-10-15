@@ -50,6 +50,28 @@ private let runtimeControlsA: [RuntimeRuleControl] = [
     .init(name: "case-partials", source: "{% case value %}{% when null %}{% render \"n\" %}{% else %}{% include \"e\" %}{% endcase %}", context: LiquidObject([.init("value", .string("other"))]), partials: ["n": "N", "e": "E"], expected: "E")
 ]
 
+private let runtimeControlsB: [RuntimeRuleControl] = [
+    .init(name: "map", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("a", .integer(1)), .init("b", .integer(2))]))), .init("key", .string("size"))]), partials: [:], expected: "2|||||2"),
+    .init(name: "map-size", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("size", .integer(9)), .init("a", .integer(1))]))), .init("key", .string("size"))]), partials: [:], expected: "9||9||9|2"),
+    .init(name: "map-length", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("length", .integer(7)), .init("a", .integer(1))]))), .init("key", .string("size"))]), partials: [:], expected: "2|7||7||2"),
+    .init(name: "map-both", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("size", .integer(9)), .init("length", .integer(7))]))), .init("key", .string("size"))]), partials: [:], expected: "9|7|9|7|9|2"),
+    .init(name: "map-null-size", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("size", .null), .init("length", .integer(7))]))), .init("key", .string("size"))]), partials: [:], expected: "|7||7||2"),
+    .init(name: "empty-map", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .object(LiquidObject([]))), .init("key", .string("size"))]), partials: [:], expected: "0|||||0"),
+    .init(name: "string", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .string("é👩‍💻")), .init("key", .string("size"))]), partials: [:], expected: "5|||||5"),
+    .init(name: "array", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .array([.integer(1), .integer(2), .integer(3)])), .init("key", .string("size"))]), partials: [:], expected: "3|||||3"),
+    .init(name: "empty-string", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .string("")), .init("key", .string("size"))]), partials: [:], expected: "0|||||0"),
+    .init(name: "null", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .null), .init("key", .string("size"))]), partials: [:], expected: "|||||0"),
+    .init(name: "integer", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .integer(42)), .init("key", .string("size"))]), partials: [:], expected: "8|||||8"),
+    .init(name: "double", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .number(1.5)), .init("key", .string("size"))]), partials: [:], expected: "|||||0"),
+    .init(name: "boolean", source: "{{ obj.size }}|{{ obj.length }}|{{ obj[\"size\"] }}|{{ obj[\"length\"] }}|{{ obj[key] }}|{{ obj | size }}", context: LiquidObject([.init("obj", .bool(true)), .init("key", .string("size"))]), partials: [:], expected: "|||||0"),
+    .init(name: "nested-and-dynamic", source: "{{ root.child.size }}|{{ root[key].size }}|{{ root.child | size }}|{{ root.child[\"size\"] }}", context: LiquidObject([.init("root", .object(LiquidObject([.init("child", .object(LiquidObject([.init("a", .integer(1)), .init("b", .integer(2))])))]))), .init("key", .string("child"))]), partials: [:], expected: "2|2|2|"),
+    .init(name: "nested-unicode", source: "{{ root.child.size }}|{{ root[key].size }}|{{ root.child | size }}", context: LiquidObject([.init("root", .object(LiquidObject([.init("child", .string("é👩‍💻"))]))), .init("key", .string("child"))]), partials: [:], expected: "5|5|5"),
+    .init(name: "forloop-length", source: "{% for x in xs %}{{ forloop.length }}:{{ forloop.size }};{% endfor %}", context: LiquidObject([.init("xs", .array([.integer(1), .integer(2)]))]), partials: [:], expected: "2:;2:;"),
+    .init(name: "size-condition", source: "{% if obj.size > 0 %}Y{% endif %}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("a", .integer(1)), .init("b", .integer(2))])))]), partials: [:], expected: "Y"),
+    .init(name: "scalar-keys", source: "{{ obj.size }}|{{ obj[\"é\"] }}|{{ obj[\"é\"] }}|{{ obj.length }}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("é", .integer(1)), .init("é", .integer(2)), .init("length", .integer(7))])))]), partials: [:], expected: "3|1|2|7"),
+    .init(name: "review-object-property-size", source: "{{ obj.size }}|{{ obj | size }}|{% if obj.size > 0 %}Y{% endif %}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("a", .integer(1)), .init("b", .integer(2))])))]), partials: [:], expected: "2|2|Y")
+]
+
 @Suite("Pinned runtime semantic regressions", .timeLimit(.minutes(1)))
 struct RuntimeSemanticsTests {
     // liquid-spec 84bf25e, liquid_ruby/specs.yml:6701/:6728;
@@ -88,4 +110,17 @@ struct RuntimeSemanticsTests {
         await #expect(throws: CancellationError.self) { try await cancelled.value }
         #expect(try await engine.render(parsed, context: ["value": "other"], templates: ["e": LiquidTemplate("E")]) == "E")
     }
+    // liquid-spec 84bf25e, partials/partials.yml:1022; pinned Ruby
+    // variable_lookup.rb#evaluate distinguishes command flags from bracket keys.
+    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
+    func sizeLookupPreservesCommandsKeysAndScalars(mode: LiquidSyntaxMode) async throws {
+        try await checkRuntimeControls(runtimeControlsB, mode: mode)
+        let source = "{{ obj.size }}!"
+        let context: LiquidObject = ["obj": ["a": 1, "b": 2]]
+        let parsed = try LiquidTemplate(source, syntaxMode: mode)
+        let tight = LiquidEngine(limits: .init(outputBytes: 1))
+        await #expect(throws: LiquidError.self) { try await tight.renderWithDiagnostics(parsed, context: context) }
+        #expect(try await LiquidEngine(limits: .init(outputBytes: 2)).render(parsed, context: context) == "2!")
+    }
+
 }

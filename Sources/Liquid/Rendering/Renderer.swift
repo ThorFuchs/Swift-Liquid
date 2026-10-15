@@ -195,17 +195,7 @@ internal final class RenderingContext {
                 if let baseValue = lookupValue(named: path.baseName) {
                     switch path.components[0] {
                     case .size:
-                        if let dict = baseValue as? [String: Any], let v = dict["size"] ?? dict["length"] {
-                            value = v
-                        } else if let ordered = baseValue as? RuntimeObject, let v = ordered["size"] ?? ordered["length"] {
-                            value = v
-                        } else if let array = baseValue as? [Any] {
-                            value = array.count
-                        } else if let string = baseValue as? String {
-                            value = string.unicodeScalars.count
-                        } else {
-                            value = 0
-                        }
+                        value = runtimeSizeProperty(baseValue)
                     case .first:
                         if let dict = baseValue as? [String: Any], let v = dict["first"] {
                             value = v
@@ -256,8 +246,6 @@ internal final class RenderingContext {
                             } else if key == "last", !ordered.isEmpty {
                                 let lastPair = ordered.elements[ordered.count - 1]
                                 value = [lastPair.key, lastPair.value] as [Any]
-                            } else if key == "size" || key == "length" {
-                                value = ordered.count
                             } else {
                                 value = nil
                             }
@@ -542,7 +530,7 @@ internal final class RenderingContext {
 
         for rawComponent in rawComponents {
             switch rawComponent {
-            case "size", "length":
+            case "size":
                 parsedComponents.append(.size)
             case "first":
                 parsedComponents.append(.first)
@@ -566,21 +554,7 @@ internal final class RenderingContext {
     private func resolve(_ component: PathComponent, from value: Any) -> Any? {
         switch component {
         case .size:
-            // Dictionary key "size" or "length" takes priority (e.g., forloop.length)
-            if let dict = value as? [String: Any] {
-                if let val = dict["size"] { return val }
-                if let val = dict["length"] { return val }
-            }
-            if let ordered = value as? RuntimeObject {
-                if let val = ordered["size"] { return val }
-                if let val = ordered["length"] { return val }
-            }
-            if let array = value as? [Any] {
-                return array.count
-            } else if let string = value as? String {
-                return string.count
-            }
-            return 0
+            return runtimeSizeProperty(value)
 
         case .first:
             // Dictionary key "first" takes priority (e.g., forloop.first)

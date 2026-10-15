@@ -448,7 +448,7 @@ extension Renderer {
         case .test(let expr, _):
             return expressionReferencesVariable(expr, named: variableName)
 
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return expressionReferencesVariable(expr, named: variableName)
                 || expressionReferencesVariable(key, named: variableName)
 
@@ -464,7 +464,7 @@ extension Renderer {
         switch expression {
         case .variable(let name):
             return name.string
-        case .access(let base, let key):
+        case .access(let base, let key, _):
             let basePath = expressionToPath(base)
             switch key {
             case .literal(.string(let keyName)):
