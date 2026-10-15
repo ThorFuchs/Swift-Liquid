@@ -57,7 +57,8 @@ The maintainer adopted the [1.2 roadmap](Roadmap-1.2.md) on 2026-10-15: opt-in
 render metrics and a CLI JSON metrics file. The [metrics contract](Metrics.md)
 defines the API and schema. The roadmap retains compatibility and failure contracts,
 public acceptance cases, measurement against immutable 1.1.0 and all eight final
-qualification lanes. Publication remains a later explicit maintainer decision.
+qualification lanes. Publication requires completed gates and an explicit
+maintainer request.
 
 Retain all 1.0/1.1 compatibility gates, 54 test functions, four public consumers,
 60 CLI cases, full AddressSanitizer coverage and four ThreadSanitizer concurrency

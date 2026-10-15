@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.2.0 — Release candidate
+## 1.2.0 — 2026-10-15
 
 - Add opt-in source/parsed render metrics with monotonic durations and existing
   invocation budget consumption, including explicit diagnostic rendering.
@@ -13,10 +13,11 @@
 - Qualify 54 test functions, four public consumers, 60 CLI cases, AddressSanitizer,
   four ThreadSanitizer concurrency cases and four simulator-SDK library builds.
 - Compare all 14 common workload/mode records with immutable 1.1.0 using its
-  unchanged harness; measure 24 candidate metrics-enabled/disabled pairs across both error policies in
-  separate ABBA blocks with retained samples, checksums and review flags.
-- Prepare source, DocC and qualification archives with checksums and
-  [release notes](Documentation/Releases/1.2.0.md). Publication is a separate step.
+  unchanged harness; measure 24 candidate metrics-enabled/disabled pairs across
+  both error policies in separate ABBA blocks with retained samples, checksums
+  and review flags.
+- Include source, DocC and qualification archives with checksums and
+  [release notes](Documentation/Releases/1.2.0.md).
 
 ## 1.1.0 — 2026-10-14
 

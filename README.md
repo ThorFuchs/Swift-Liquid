@@ -10,9 +10,9 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.2.0 release candidate** adds opt-in render metrics and separate
+**Swift-Liquid 1.2.0** adds opt-in render metrics and separate
 CLI JSON metrics while preserving the 1.0/1.1 APIs and dependency-free core.
-The latest published version is 1.1.0. See the
+See the
 [1.2.0 release notes](Documentation/Releases/1.2.0.md)
 and [compatibility evidence](Documentation/Conformance.md). Maintained by
 [Thorsten Fuchs](https://github.com/ThorFuchs).
@@ -43,11 +43,8 @@ Swift tools/compiler **6.4 or later**, in Swift language mode 6.
 Add Swift-Liquid to your package dependencies:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.1.0")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.2.0")
 ```
-
-This selects the published release line. The 1.2 metrics APIs below require the
-candidate source until 1.2.0 is published.
 
 Add the library to your target:
 
