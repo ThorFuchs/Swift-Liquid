@@ -2,6 +2,9 @@
 // Adapted from RhoeLiquid; Copyright 2024-2026 Thor Fuchs.
 // Modified for Swift-Liquid: standard syntax only; authoring and legacy nodes removed.
 
+// An immutable parsed-site identity. Counters live in RenderingContext, never here.
+internal final class CycleSiteIdentity: Sendable {}
+
 internal indirect enum ASTNode: Sendable {
     case template([ASTNode])
     case text(InlineString)
@@ -11,7 +14,7 @@ internal indirect enum ASTNode: Sendable {
     case `case`(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
     case `for`(variable: InlineString, in: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams)
     case tablerow(variable: InlineString, in: LiquidExpression, body: [ASTNode], params: TableRowParams)
-    case cycle(group: LiquidExpression?, items: [LiquidExpression])
+    case cycle(group: LiquidExpression?, items: [LiquidExpression], site: CycleSiteIdentity)
     case assign(variable: InlineString, value: LiquidExpression, location: RenderLocation? = nil)
     case capture(variable: InlineString, body: [ASTNode])
     case increment(name: InlineString)
@@ -45,7 +48,7 @@ internal indirect enum ASTNode: Sendable {
         case .case(let value, let branches, _): return [value] + branches.map { $0.0 }
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
         case .tablerow(_, let value, _, _): return [value]
-        case .cycle(let group, let values): return values + (group.map { [$0] } ?? [])
+        case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
         case .include(_, let reference, let values, _): return [reference] + (values.map { Array($0.values) } ?? [])
         default: return []
         }

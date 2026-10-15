@@ -1943,7 +1943,7 @@ internal final class Parser {
         }
 
         try consumeTagEnd()
-        return .cycle(group: group, items: values)
+        return .cycle(group: group, items: values, site: CycleSiteIdentity())
     }
     
     private func parseIncludeTag() throws ->ASTNode {

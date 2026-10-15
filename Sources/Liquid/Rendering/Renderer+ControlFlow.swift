@@ -584,10 +584,18 @@ extension Renderer {
 
 
     
-    internal func renderCycle(group: LiquidExpression?, items: [LiquidExpression]) async throws -> String {
+    internal func renderCycle(group: LiquidExpression?, items: [LiquidExpression], site: CycleSiteIdentity) async throws -> String {
         guard !items.isEmpty else { return "" }
 
-        // Build cycle key from group expression (evaluated to get dynamic group names)
+        // Pinned Ruby duplicates top-level VariableLookup values before deriving
+        // an unnamed key. Each parsed variable-cycle site therefore owns a counter.
+        // Literal and named cycles keep their existing grouping semantics.
+        let usesSiteCounter = group == nil && items.contains { item in
+            switch item {
+            case .variable, .access: return true
+            default: return false
+            }
+        }
         let cycleKey: String
         if let group {
             let groupValue = try await evaluateExpression(group)
@@ -598,7 +606,9 @@ extension Renderer {
         }
 
         let counterKey = "__cycle_\(cycleKey)"
-        let currentIndex = context.getCounter(counterKey) ?? 0
+        let currentIndex = usesSiteCounter
+            ? context.getCycleCounter(site) ?? 0
+            : context.getCounter(counterKey) ?? 0
 
         // Ruby Liquid behavior: use counter as direct index into CURRENT items array
         // If out of bounds → output nothing. Reset to 0 when counter >= items.count.
@@ -615,7 +625,11 @@ extension Renderer {
         if nextIndex >= items.count {
             nextIndex = 0
         }
-        context.setCounter(counterKey, value: nextIndex)
+        if usesSiteCounter {
+            context.setCycleCounter(site, value: nextIndex)
+        } else {
+            context.setCounter(counterKey, value: nextIndex)
+        }
 
         return result
     }
