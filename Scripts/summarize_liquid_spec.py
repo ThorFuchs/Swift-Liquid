@@ -12,6 +12,10 @@ def key(row):
     return (row['suite'], row['case'], row['parserMode'], row['renderMode'], row['sourceLocation']['file'], str(row['sourceLocation']['line']))
 
 
+def comparison(row):
+    return row.get('qualificationComparison', row['comparison'])
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('reports', type=Path)
@@ -23,25 +27,25 @@ def main():
     assert len(rows) == runs['observedRows'] == sum(s['expandedVariants'] for s in runs['suites'])
     assert len({key(row) for row in rows}) == len(rows), 'Duplicate case/mode identities'
     selected = [row for row in rows if row['selected']]
-    failures = [row for row in selected if row['comparison'] != 'matched']
+    failures = [row for row in selected if comparison(row) != 'matched']
     assert all(row['resultDigest'] and row['sourceLocation']['file'] for row in rows)
-    counts = Counter(row['comparison'] for row in selected)
+    counts = Counter(comparison(row) for row in selected)
     lines = ['# Independent liquid-spec mismatch receipts', '',
              'Generated from the unchanged raw matrix. A comparator match may be exact output or required error/output patterns.',
-             'Parser/render phase is also checked. No exclusions, operational errors or reference failures are counted as renders.', '',
+             'Raw upstream verdicts remain in the matrix; this table uses qualificationComparison (additional phase/operation checks). Parser/render phase is also checked. No exclusions, operational errors or reference failures are counted as renders.', '',
              f'Matrix SHA-256: `{hashlib.sha256(matrix_path.read_bytes()).hexdigest()}`.', '',
              f'{len(rows)} rows; {len(selected)} selected; {dict(counts)}; {len(rows)-len(selected)} not executed.', '',
              '| Suite | Source cases | Variants | Selected | Matched | Mismatched | Operational | Disabled |',
              '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for suite in runs['suites']:
-        c = suite['comparisons']
+        c = suite.get('qualificationComparisons', suite['comparisons'])
         lines.append(f"| {suite['suite']} | {suite['loadedSourceCases']} | {suite['expandedVariants']} | {suite['selected']} | {c.get('matched', 0)} | {c.get('mismatched', 0)} | {c.get('operational-error', 0)} | {suite['disabledCases']} |")
     lines += ['', '## Classification', '', 'Unresolved means no reviewed general-rule repair has been applied. Symptom labels do not establish root cause.', '']
     triage = []
     for row in failures:
         category = 'unresolved'
         note = 'Requires minimal reproduction, domain review and general-rule analysis before a core repair.'
-        if row.get('referenceComparison') != 'matched':
+        if row.get('referenceQualificationComparison', row.get('referenceComparison')) != 'matched':
             category = 'test-suite-concern'
             note = 'Pinned Ruby also differs from this expectation under the recorded runner/hosting policy; review reference policy before an engine repair.'
         elif row['observedCategory'] == 'operational-error' and (row.get('reportedErrors') or {}).get('message', '').startswith('Limit exceeded:'):
@@ -62,7 +66,7 @@ def main():
         location = row['sourceLocation']
         url = 'https://github.com/Shopify/liquid-spec/blob/84bf25e0edbca5f7e530574788b0f875ab331f50/' + location['file'] + '#L' + str(location['line'])
         lines.append(f"| {row['suite']} / {name} | {row['parserMode']} / {row['renderMode']} | [{location['file']}:{location['line']}]({url}) | {row['expectedCategory']} → {row['observedCategory']} | {row['comparison']} / {finding['category']} | `{row['resultDigest']}` |")
-    refs = [r for r in rows if r.get('referenceComparison') == 'mismatched']
+    refs = [r for r in rows if r.get('referenceQualificationComparison', r.get('referenceComparison')) == 'mismatched']
     lines += ['', '## Pinned reference expectation mismatches', '']
     lines += ['- ' + r['suite'] + ' / ' + r['case'] for r in refs]
     lines += ['', '## Exclusion accounting', '']
@@ -74,7 +78,7 @@ def main():
             before = initial.get(key(row))
             if before and not before['selected']:
                 admissions.append({'identity': key(row), 'previousReason': before['reason'], 'comparison': row['comparison'], 'observedCategory': row['observedCategory'], 'resultDigest': row['resultDigest']})
-            if before and before['selected'] and before['comparison'] != 'matched' and row['comparison'] == 'matched':
+            if before and before['selected'] and comparison(before) != 'matched' and comparison(row) == 'matched':
                 repairs.append({'identity': key(row), 'beforeActual': before.get('actual'), 'afterActual': row.get('actual'),
                                 'beforeResultDigest': before['resultDigest'], 'afterResultDigest': row['resultDigest'],
                                 'referenceComparison': row['referenceComparison'], 'sourceLocation': row['sourceLocation']})

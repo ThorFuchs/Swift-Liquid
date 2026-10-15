@@ -96,7 +96,7 @@ reference.on_compile do |ctx, source, parse_options|
     ctx[:template] = Liquid::Template.parse(source, **parse_options)
   rescue StandardError => error
     reference_observation[:category] = error.is_a?(Liquid::SyntaxError) ? 'parse-error' : 'operational-error'
-    reference_observation[:error] = { type: error.class.name, message: error.message }
+    reference_observation[:error] = { type: error.class.name, message: error.message, line: error.respond_to?(:line_number) ? error.line_number : nil, column: error.respond_to?(:column) ? error.column : nil }
     raise
   end
 end
@@ -110,7 +110,7 @@ reference.on_render do |ctx, assigns, render_options|
     rendered
   rescue StandardError => error
     reference_observation[:category] = error.is_a?(Liquid::Error) ? 'render-error' : 'operational-error'
-    reference_observation[:error] = { type: error.class.name, message: error.message }
+    reference_observation[:error] = { type: error.class.name, message: error.message, line: error.respond_to?(:line_number) ? error.line_number : nil, column: error.respond_to?(:column) ? error.column : nil }
     raise
   end
 end
@@ -151,20 +151,32 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:reason] = reason
         row[:observedCategory] = if reason.include?('transport-inapplicable:') then 'transport-inapplicable' elsif reason.include?('unsupported-by-domain:') then 'unsupported-by-domain' elsif reason.include?('operational-error:') then 'operational-error' else 'unsupported' end
         row[:comparison] = 'not-executed'
+        row[:qualificationComparison] = 'not-executed'
         row[:disabled] = true
       else
         row[:selected] = true; row[:disabled] = false; row[:reason] = 'portable primitive JSON; declared parser/render modes; explicit partial map'
         result = adapter.run_single(spec)
         row[:observedCategory] = bridge.observed || 'operational-error'
         row[:resultDigest] = bridge.result_digest
+        verdict = receipt_value({ status: result.status, passed: result.passed?, output: result.output, expected: result.expected })
+        verdict[:sha256] = Digest::SHA256.hexdigest(JSON.generate(verdict))
+        row[:upstreamVerdict] = verdict
         row[:comparison] = result.passed? ? 'matched' : 'mismatched'
+        row[:qualificationComparison] = row[:comparison]
+        row[:compileOutcome] = bridge.compile_outcome
+        row[:renderedOutput] = bridge.last_result && bridge.last_result['output']
+        row[:semanticResultDigest] = Digest::SHA256.hexdigest(JSON.generate(bridge.last_result))
+        row[:diagnosticEvidence] = {
+          messagePatternsMatch: spec.errors.empty? ? nil : adapter.send(:matches_error_patterns?, spec, result.output.to_s),
+          locationMatch: spec.errors.empty? ? nil : (spec.expects_output_patterns? ? adapter.send(:matches_output_location?, spec, result.output.to_s) : adapter.send(:matches_error_location?, spec, bridge.exception))
+        }
         row[:actual] = result.output
         row[:expected] = result.expected
         row[:reportedErrors] = bridge.detail
         if %w[operational-error protocol-error domain-divergence compile].include?(row[:observedCategory])
-          row[:comparison] = row[:observedCategory] == 'domain-divergence' ? 'domain-divergence' : 'operational-error'
+          row[:qualificationComparison] = row[:observedCategory] == 'domain-divergence' ? 'domain-divergence' : 'operational-error'
         elsif %w[parse-error render-error].include?(row[:expectedCategory]) && row[:expectedCategory] != row[:observedCategory]
-          row[:comparison] = 'mismatched'
+          row[:qualificationComparison] = 'mismatched'
         end
         # Independent pinned-Ruby result, with the same upstream comparator and clock.
         reference_observation.clear
@@ -172,10 +184,13 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:referenceObservedCategory] = reference_observation[:category]
         row[:referenceReportedErrors] = reference_observation[:error] || reference_observation[:errors]
         reference_phase_matches = !%w[parse-error render-error].include?(row[:expectedCategory]) || row[:expectedCategory] == reference_observation[:category]
-        row[:referenceComparison] = ref.passed? && reference_phase_matches ? 'matched' : 'mismatched'
-        row[:referenceActual] = ref.output unless row[:referenceComparison] == 'matched' && row[:comparison] == 'matched'
-        if row[:comparison] != 'matched'
-          row[:failureCategory] = row[:referenceComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
+        row[:referenceUpstreamVerdict] = receipt_value({ status: ref.status, passed: ref.passed?, output: ref.output, expected: ref.expected })
+        row[:referenceUpstreamVerdict][:sha256] = Digest::SHA256.hexdigest(JSON.generate(row[:referenceUpstreamVerdict]))
+        row[:referenceComparison] = ref.passed? ? 'matched' : 'mismatched'
+        row[:referenceQualificationComparison] = ref.passed? && reference_phase_matches ? 'matched' : 'mismatched'
+        row[:referenceActual] = ref.output unless row[:referenceQualificationComparison] == 'matched' && row[:qualificationComparison] == 'matched'
+        if row[:qualificationComparison] != 'matched'
+          row[:failureCategory] = row[:referenceQualificationComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
         end
       end
       row = receipt_value(row)
@@ -184,13 +199,13 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
       File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n") if index % 500 == 0
     end
     selected = rows[start..]
-    failures = selected.select { |r| r[:selected] && r[:comparison] != 'matched' }
+    failures = selected.select { |r| r[:selected] && r[:qualificationComparison] != 'matched' }
     first = failures.map { |r| r[:complexity] }.min
     summary = { suite: suite, loadedSourceCases: specs.size, expandedVariants: variants.size,
-      selected: selected.count { |r| r[:selected] }, comparisons: selected.map { |r| r[:comparison] }.tally,
+      selected: selected.count { |r| r[:selected] }, qualificationComparisons: selected.map { |r| r[:qualificationComparison] }.tally, comparisons: selected.map { |r| r[:comparison] }.tally,
       observedCategories: selected.map { |r| r[:observedCategory] }.tally,
       lowestFailingEligibleComplexity: first, eligibleCasesClearBelow: first,
-      lowestUnqualifiedSourceComplexity: selected.select { |r| r[:disabled] || r[:comparison] != 'matched' }.map { |r| r[:complexity] }.min,
+      lowestUnqualifiedSourceComplexity: selected.select { |r| r[:disabled] || r[:qualificationComparison] != 'matched' }.map { |r| r[:complexity] }.min,
       complexityScope: 'eligible variants only; disabled cases prevent full-source clearance; no full language claim',
       disabledCases: selected.count { |r| r[:disabled] },
       skipped: selected.count { |r| r[:observedCategory] == 'skipped' }, fullLanguageClaim: false,
@@ -209,11 +224,11 @@ ensure
   trace.close
 end
 File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n")
-report = { schemaVersion: 1, suiteVersion: Liquid::Spec::VERSION, rubyVersion: RUBY_DESCRIPTION, liquidVersion: Liquid::VERSION,
+report = { schemaVersion: 2, comparatorPolicy: 'comparison/upstreamVerdict preserve original result.passed?; qualificationComparison additionally rejects operational and parse/render-phase failures; supplemental dimensions never create passes', suiteVersion: Liquid::Spec::VERSION, rubyVersion: RUBY_DESCRIPTION, liquidVersion: Liquid::VERSION,
   missingFeatures: LQ1::MISSING_FEATURES, featurePolicies: LQ1::FEATURE_POLICIES,
   numericDomainPolicy: 'Int64 plus finite binary Double; context is preflighted; source-literal/arithmetic mismatches require individual domain review', parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / CLI::Runner.expand_error_mode_variants',
   shutdownError: shutdown_error, suites: runs, gems: Gem.loaded_specs.transform_values { |s| s.version.to_s }, observedRows: rows.size }
 File.write(File.join(output, 'SPEC_RUNS.json'), JSON.pretty_generate(report) + "\n")
 puts JSON.generate(report.reject { |k, _| k == :missingFeatures })
 # A mismatch is a nonzero command result, even though the evidence packet was produced.
-exit(shutdown_error || rows.any? { |r| r[:selected] && r[:comparison] != 'matched' } ? 1 : 0)
+exit(shutdown_error || rows.any? { |r| r[:selected] && r[:qualificationComparison] != 'matched' } ? 1 : 0)

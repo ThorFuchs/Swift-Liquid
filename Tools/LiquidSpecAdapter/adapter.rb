@@ -92,7 +92,7 @@ module LQ1
   end
 
   class Bridge
-    attr_reader :observed, :detail, :result_digest
+    attr_reader :observed, :detail, :result_digest, :last_result, :exception, :compile_outcome
     attr_accessor :case_key
     def initialize(command, trace)
       @command, @trace = command, trace
@@ -100,7 +100,8 @@ module LQ1
       @process.initialize!
     end
     def reset_observation
-      @observed, @detail, @result_digest = nil, nil, nil
+      @observed, @detail, @result_digest, @last_result, @exception = nil, nil, nil, nil, nil
+      @compile_outcome = 'not-attempted'
     end
     def send_request(method, params)
       @process.case_key = @case_key
@@ -118,24 +119,30 @@ module LQ1
         raise OperationalError, JSON.generate(@detail)
       end
       result = response.fetch('result')
+      @last_result = result
       if result['error']
         @detail = result['error']
         @observed = { 'syntax_error' => 'parse-error', 'render_error' => 'render-error', 'domain_error' => 'domain-divergence' }.fetch(@detail['type'], 'operational-error')
         klass = { 'parse-error' => SyntaxError, 'render-error' => RenderError, 'domain-divergence' => DomainError }.fetch(@observed, OperationalError)
         raise klass, @detail.fetch('message') unless [SyntaxError, RenderError].include?(klass)
-        raise klass.new(@detail)
+        @compile_outcome = @observed if method == 'compile'
+        @exception = klass.new(@detail)
+        raise @exception
       end
       result
     end
     def compile(source, options)
       @observed = 'compile'
+      @compile_outcome = 'attempted'
       unless @process.running?
         @process = Process.new(@command, @trace)
         @process.case_key = @case_key
         @process.initialize!
       end
       files = options[:file_system]&.to_h || {}
-      send_request('compile', 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true }, 'filesystem' => files).fetch('template_id')
+      id = send_request('compile', 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true }, 'filesystem' => files).fetch('template_id')
+      @compile_outcome = 'compiled'
+      id
     end
     def render(id, environment, options)
       registers = { 'current_time' => options.fetch(:registers).fetch(:current_time).iso8601 }
