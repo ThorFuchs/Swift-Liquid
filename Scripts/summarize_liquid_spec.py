@@ -79,7 +79,7 @@ def main():
         lines += ['', '## Changed outcomes from retained initial run', '']
         lines += ['- ' + ' / '.join(r['identity']) + ': failing comparison → matched (see CORE_REPAIR.json).' for r in repairs]
     (args.reports / 'TRIAGE.json').write_text(json.dumps(triage, indent=2) + '\n')
-    (args.reports / 'CORE_REPAIR.json').write_text(json.dumps({'repairs': repairs, 'historicalFixturesChanged': False}, indent=2) + '\n')
+    (args.reports / 'CORE_REPAIR.json').write_text(json.dumps({'repairs': repairs, 'historicalFixtureValidation': 'Separate public-check receipts required; this summarizer does not validate fixtures'}, indent=2) + '\n')
     (args.reports / 'MISMATCHES.md').write_text('\n'.join(lines) + '\n')
     print(json.dumps({'rows': len(rows), 'selected': len(selected), 'comparisons': counts,
                       'disabled': len(rows)-len(selected), 'triage': Counter(r['category'] for r in triage),
