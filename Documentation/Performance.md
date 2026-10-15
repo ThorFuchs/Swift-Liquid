@@ -130,3 +130,8 @@ mode. See [measured maintenance](MeasuredMaintenance.md) for its workload shapes
 timing boundaries, admission and cancellation limitations. These observations are
 separate from the common cross-version and metrics comparisons. No runtime
 optimization or latency guarantee follows from adding a measurement.
+
+The [1.3.1 maintenance review](PerformanceReview-1.3.1.md) records the PR #14
+flags and the independent-host investigation of possible output-checkpoint cost.
+The final qualification archive retains every observation and the bound release
+decision; earlier measurements are not substituted for the final candidate.

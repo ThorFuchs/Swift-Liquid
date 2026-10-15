@@ -8,7 +8,7 @@ Use `swift run liquid --help` while developing, or the built release executable.
 | `render TEMPLATE` | Render a UTF-8 file or `-` for stdin |
 | `validate TEMPLATE` | Parse a UTF-8 template and fail on invalid syntax |
 | `analyze TEMPLATE` | Inspect parsed references without rendering (1.1) |
-| `--version` | Show the version (`Swift-Liquid 1.3.0`) |
+| `--version` | Show the version (`Swift-Liquid 1.3.1`) |
 | `--help` | Show commands and options |
 
 Render options:

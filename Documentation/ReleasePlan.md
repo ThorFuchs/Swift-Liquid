@@ -115,3 +115,32 @@ run-median spread and separate variance-review flags. Retain six larger-workload
 and sixteen coordinated plus eight runnable cancellation-response records, admitted by `Scripts/maintenance_evidence.py`.
 Release review acknowledges all four flag lists. Existing released evidence above
 retains its historical baselines. See [measured maintenance](MeasuredMaintenance.md).
+
+## 1.3.1 maintenance candidate
+
+[1.3.1](Releases/1.3.1.md) packages the four quality sprints with two runtime fixes:
+iterative ordered-JSON container parsing at the existing admitted depth and
+cancellation before output admission. Preserve released 1.0–1.3 APIs, fixture
+bytes and metadata, CLI schemas, package products and the empty root dependency
+graph. The CLI candidate version is 1.3.1; public installation remains pinned to
+the immutable published 1.3.0 anchor until a separately reviewed change.
+
+Qualification requires all nine current lanes against the candidate's exact
+source inventory. Admit 75 Swift Testing functions and 2,123 parameter cases in
+debug/release and AddressSanitizer, five ThreadSanitizer functions and the
+16-function/43-case repeat profile twice. Keep the five independent consumers,
+README examples, CLI/schema vectors, reference accounting and four simulator SDK
+builds. Counts do not establish complete conformance or performance.
+
+Review all 26 common and 24 opt-in metrics comparisons against immutable 1.3.0,
+including both median-change lists and both run-median-spread lists. Retain the
+prior PR #14 observations and one independent-host study of its possible
+checkpoint cost; do not replace flagged runs. The final candidate's checksum-bound
+review must assess every new flag before packaging. Keep graph, larger workload
+and cancellation observations separate. See the
+[benchmark review](PerformanceReview-1.3.1.md) for findings and limits.
+
+Prepare source, compiled DocC and qualification archives, notes and checksums
+without publication. The candidate must pass all gates; merging the preparation
+and publishing 1.3.1 require a later maintainer request and exact-main
+requalification. Historical 1.0–1.3 releases and their evidence remain unchanged.

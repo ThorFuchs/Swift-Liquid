@@ -45,22 +45,21 @@ published URL path. It is part of the CI matrix and release-evidence admission.
 
 ## Package-index status
 
-On 2026-10-15, the official
-[Swift Package Index package list](https://github.com/SwiftPackageIndex/PackageList)
-contained Swift-JSON and RhoeLiquid, but did not contain Swift-Liquid. An index
-submission is a separate registration change, not an automatic listing. Do not add
-an index badge or claim index build/platform results until a live package page
-supports it. Recheck the official list and page when the registration is accepted.
+The one-URL [registration PR #15709](https://github.com/SwiftPackageIndex/PackageList/pull/15709)
+was merged into the official package list on 2026-10-15 at commit
+`7673fcc82964a8619d1b3b6b523f241661ef4832`. The registered URL is
+`https://github.com/ThorFuchs/Swift-Liquid.git`. Before submission, the list was
+refreshed and checked for equivalent URLs and pending registrations; the patch
+preserved its case-insensitive ordering and `.git` suffix.
 
-The separately submitted [registration PR #15709](https://github.com/SwiftPackageIndex/PackageList/pull/15709)
-adds only this URL, preserving the list's case-insensitive
-ordering and `.git` suffix. Before submission, the list was refreshed and checked for equivalent URLs or
-pending registrations. Acceptance and ingestion are controlled by the index. The index's
+Registration acceptance and live ingestion are separate. A live package page and
+its compiler/platform matrix have not been qualified here, so no index badge or
+index build claim is added. The index's
 [inclusion requirements](https://github.com/SwiftPackageIndex/PackageList#the-swift-package-index)
 include a public valid package, a semantic-version release, successful compilation
-and valid `swift package dump-package` output. Our installation receipt checks those
-package properties with Swift 6.4; it does not imply the index currently offers every
-required compiler or that its maintainers have accepted the package.
+and valid `swift package dump-package` output. Our installation receipt checks
+those package properties with Swift 6.4; it does not imply that the index offers
+every required compiler. Recheck the live page before adding its badges.
 
 ## Platform claims
 

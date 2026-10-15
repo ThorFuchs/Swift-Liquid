@@ -35,7 +35,7 @@ concurrency tests. Sanitizers supplement behavioral evidence.
 ## Read release qualification
 
 Every release requires native, safety, reference, platform, documentation,
-performance, matched-performance and clean-archive gates. The docs gate requires
+performance, matched-performance, published-installation and clean-archive gates. The docs gate requires
 summaries and parameter comments on authored public declarations and validates
 static site routes. Benchmark reviews retain raw samples and threshold flags;
 logical capacities do not imply process-memory or latency guarantees.

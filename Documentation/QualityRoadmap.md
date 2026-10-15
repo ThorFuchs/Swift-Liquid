@@ -78,7 +78,7 @@ No core runtime, public API, fixture pin or root dependency changes are required
 
 ## Sprint 4 — measured maintenance
 
-Sprint 4 implements [measured maintenance](MeasuredMaintenance.md):
+Sprint 4 was merged in PR #14 and implements [measured maintenance](MeasuredMaintenance.md):
 
 - Advance the matched library baseline to immutable 1.3.0, preserving common
   workload hashes, sampling policy and every historical comparison.
