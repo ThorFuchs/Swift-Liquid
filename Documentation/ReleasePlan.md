@@ -50,3 +50,10 @@ lane receipts, archives and checksums with the
 inventories and assets and packages the evidence without creating a tag or release.
 Publication still requires the maintainer's explicit request, exact-commit main
 qualification and version-resolution verification.
+
+## Proposed 1.2 work
+
+The [1.2 roadmap](Roadmap-1.2.md) proposes opt-in render metrics and a CLI JSON
+metrics file. It defines scope adoption, compatibility and failure contracts,
+public acceptance cases, measurement against immutable 1.1.0 and all eight final
+qualification lanes. The proposal changes no current release gate or behavior.

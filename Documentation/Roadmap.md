@@ -13,9 +13,12 @@ features retained in RhoeLiquid and the implementation boundaries behind this
 selection. Both [typed custom filters](CustomFilters.md) and the
 [AST summary and CLI JSON contract](Inspection.md) are implemented. The 1.1.0
 release includes [reuse guidance](Reuse.md), matched benchmarks and final
-qualification. Publication remains a separate step. The scope decision
+qualification, and was published on 2026-10-15. The scope decision
 authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 version
 requires an explicit maintainer request, provided for 1.1.0 on 2026-10-14.
+
+The [proposed 1.2 roadmap](Roadmap-1.2.md) covers the next scope decision. This
+document retains the adopted 1.1 design and acceptance criteria.
 
 ## Package and compatibility constraints
 
