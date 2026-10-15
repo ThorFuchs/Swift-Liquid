@@ -18,6 +18,12 @@ Standard surface:
 | Utility tags | raw, comment, inline comment, doc, echo, liquid, ifchanged |
 | Filters | Standard string, HTML, URL, Base64, numeric, date, and array filters, including squish and remove_last |
 
+An isolated `render` retains the original host inputs, with explicit bindings
+shadowing those inputs locally. Caller assignments, captures, generated loop
+locals and counters do not cross into it. Nested render sees the original inputs,
+not the outer partial's local bindings. `include` continues to share caller state.
+See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
+
 Only nil and false are falsy. Output is not automatically HTML-escaped. Logical
 operators associate right to left. `blank` and `empty` are distinct comparison
 literals; they do not resolve an identically named input property unless followed

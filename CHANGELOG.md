@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Adopt Ruby's isolated-render host-input semantics: retain original admitted roots
+  beneath local assignments and explicit partial bindings. Correct the single
+  maintainer-reviewed authored assertion; keep pinned fixtures unchanged.
+
 - Integrate the independent conformance work with quality sprint 4; preserve its
   cancellation, maintenance/release and hosted-workflow protections.
 - Distinguish real null-valued case branches from else, and qualify typed size

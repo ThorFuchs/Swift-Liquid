@@ -454,6 +454,26 @@
         "After PR #15 merged during qualification, rebase the complete R3 history onto fb81cf4; preserve the upstream CLI 1.3.1 version/checker and published release records, move only independent changes to Unreleased, and requalify latest-main/R2 and final source."
       ],
       "qualification": "Integration-only native/independent baseline equals R2. Separate A/B independent runs with unchanged eligibility and zero qualified regressions. Final clean-head native, safety, docs, platforms, installation, reference and failed independent gates required. No performance measurement, E3 RFC edit, API addition or root dependency."
+    },
+    {
+      "area": "LQ1-R3 C approved render host-input correction",
+      "scopeDecision": "Maintainer explicitly adopted Ruby host-global semantics on 2026-10-16 and authorized correcting only InspectionTests.swift:114. No pinned fixture changes, merge, release or public API addition.",
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Tests/LiquidTests/InspectionTests.swift",
+        "Tests/LiquidTests/RuntimeSemanticsTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R3/RENDER-GLOBALS-ADR.md",
+        "Sources/Liquid/Documentation.docc/RenderingAndPartials.md",
+        "Documentation/Language.md"
+      ],
+      "changes": [
+        "Restore the previously retained C design: admit original host roots once and resolve them beneath mutable invocation-local scope overlays.",
+        "Keep isolated assignments, nested bindings, counters, loop locals, scope save/restore, cumulative budgets and cancellation intact without copying or readmitting all host data.",
+        "Change exactly one existing authored output assertion from N(index) to N(index)n(index) with pinned Ruby provenance. Add supplementary all-mode, all-policy, concurrency and deterministic cancellation controls.",
+        "Preserve both original R3 and new source-bound evidence, the original independent denominator/comparator and all pinned fixtures. Defer case-operand reevaluation, range properties and grammar findings."
+      ],
+      "qualification": "New clean-head native Debug/Release, ASan/TSan, docs/DocC, platforms, published 1.3.0 installation, pinned Ruby reference and failed independent lane; exact commands, source hashes, original baseline and outcomes retained in follow-up return. No performance measurement."
     }
   ]
 }

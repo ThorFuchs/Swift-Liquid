@@ -120,7 +120,8 @@ let output = try await LiquidEngine().render(
 print(output) // <h2>Swift &amp; Liquid</h2>
 ```
 
-`render` isolates local variables; `include` follows Liquid's shared-scope behavior.
+`render` sees the original host inputs and explicit bindings while isolating caller
+assignments, loop locals and counters. `include` follows Liquid's shared-scope behavior.
 Supply partials as sources or parsed templates. HTML escaping is explicit: use
 `escape` or `escape_once` when inserting text into HTML. Read the
 [rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).

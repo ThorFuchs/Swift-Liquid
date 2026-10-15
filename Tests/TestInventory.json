@@ -56,9 +56,12 @@
     "LiquidTests.QualityPropertyTests/dependencyCyclesAgreeWithReachabilityOracle(seed:)": 4,
     "LiquidTests.QualityPropertyTests/renderingEntryPointsAgree(seed:)": 4,
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()": null,
+    "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)": 2,
     "LiquidTests.RuntimeSemanticsTests/caseBranchesKeepNullSeparateFromElse(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/caseInspectionAndOperationalBoundsRemainExplicit()": null,
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)": 3,
+    "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)": 3,
+    "LiquidTests.RuntimeSemanticsTests/isolatedRenderKeepsOriginalInputsAndHidesCallerLocals(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/sizeLookupPreservesCommandsKeysAndScalars(mode:)": 3,
     "LiquidTests.arithmeticOverflowAndNonfiniteContextThrow()": null,
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)": 2,
@@ -93,6 +96,7 @@
     "LiquidTests.LiquidSpecRegressionTests/concurrentRendersKeepCycleSitesImmutable()",
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)",
+    "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"
   ],
   "adversarialFunctions": [
@@ -111,6 +115,7 @@
     "LiquidTests.MetricsTests/cancellationSurvivesSuspendingHostCode(recovering:)",
     "LiquidTests.MetricsTests/suspensionIsInsideTotalDuration()",
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()",
+    "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)",
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)"
   ]
 }

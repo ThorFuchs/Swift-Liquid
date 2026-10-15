@@ -157,6 +157,9 @@ internal final class RenderingContext {
         let components: [PathComponent]
     }
 
+    // Admitted once at render entry, then shared read-only by every partial.
+    // Liquid assignments remain in separate invocation-owned scope overlays.
+    private var hostInputs: RuntimeVariables = [:]
     private var variables: RuntimeVariables = [:]
     private var scopes: [RuntimeVariables] = []
     private var currentScope: RuntimeVariables?
@@ -169,7 +172,8 @@ internal final class RenderingContext {
     func setVariables(
         _ vars: RuntimeVariables
     ) {
-        variables = vars
+        hostInputs = vars
+        variables = [:]
         if !scopes.isEmpty {
             scopes.removeAll(keepingCapacity: true)
         }
@@ -438,6 +442,8 @@ internal final class RenderingContext {
     }
 
     func isolateScope(with bindings: RuntimeVariables) {
+        // A fresh local overlay keeps original host roots visible without
+        // copying them into each nested render or admitting them again.
         loopDepth = 0
         variables = [:]
         scopes.removeAll(keepingCapacity: true)
@@ -475,6 +481,9 @@ internal final class RenderingContext {
         }
         // Check normal variables first, then fall back to counter namespace
         if let value = variables[name] {
+            return value
+        }
+        if let value = hostInputs[name] {
             return value
         }
         // Fall back to increment/decrement counter namespace

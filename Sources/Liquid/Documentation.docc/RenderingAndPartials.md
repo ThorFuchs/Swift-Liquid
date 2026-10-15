@@ -27,8 +27,12 @@ let output = try await LiquidEngine().render(
 )
 ```
 
-`render` isolates local variables. `include` follows Liquid's shared-scope
-behavior. Both operate under the invoking render's cumulative budget. Syntax
+`render` retains the original host context inputs and explicit named bindings.
+Caller assignments, captures, loop locals and counters stay isolated. A named
+binding, including null, shadows a host input only within that partial; nested
+render starts again from the original host inputs unless bindings are passed.
+`include` follows Liquid's shared-scope behavior. Both operate under the invoking
+render's cumulative budget. Host inputs are admitted once for the invocation. Syntax
 errors, missing partials, invalid operations, and exhausted budgets throw.
 An operation returns one complete String after successful rendering.
 

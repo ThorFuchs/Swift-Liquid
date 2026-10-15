@@ -1,9 +1,9 @@
 # ADR: isolated render host-input visibility
 
-Status: **deferred; C implementation reverted**.
-Signed **Codex, 2026-10-15**. Maintainer decision pending.
+Status: **adopted; C implemented after explicit maintainer approval**.
+Signed **Codex, 2026-10-16**, recording the maintainer’s instruction in this session.
 
-## Evidence and incompatible requirements
+## Historical deferral at `8ab1632`
 
 Pinned Ruby `context.rb#new_isolated_subcontext` preserves `static_environments`,
 while `tags/render.rb` starts a fresh local scope. The liquid-spec runner supplies
@@ -33,7 +33,7 @@ a targeted Ruby match alone cannot authorize it. Final source reverts C complete
 and retains A/B. The experiment's two independent improvements are excluded from
 final repair credit. This is a scope decision, not a claim that Ruby lacks globals.
 
-## Proposed future contract, requiring approval
+## Adopted contract
 
 Map original `LiquidEngine` context inputs to immutable admitted host roots.
 Keep assign/capture/loop aliases and explicitly passed partial bindings in local
@@ -47,14 +47,28 @@ whole input into each nested render. Save/restore only mutable overlays and
 counters. Preserve shared cumulative budgets, diagnostics and cancellation. No
 loader, implicit I/O, reflection, public strict-variable option or global registry.
 
-## Required next decision and qualification
+## Maintainer decision and bounded assertion correction
 
-Review whether the old authored expectation is an intentional supported contract
-or an incorrect test of Ruby host-input semantics. Explicitly authorize any
-expectation change with provenance; never alter Golden/reference/spec fixtures.
-Then replay the retained C patch, add the exact conflicting case as a reviewed
-public regression and re-run all source/parsed policies, all modes, alias/null/
-nesting controls, concurrency, quotas and deterministic callback cancellation.
-Full historical and independent gates must bind to the final reviewed SHA.
-If the existing visibility behavior is retained, document the divergence and
-leave the two source-backed failures measured. No silent compatibility switch.
+On 2026-10-16 the maintainer explicitly instructed: “adopt Ruby’s render
+host-global semantics, correct only the conflicting authored assertion, implement
+C, and rerun all gates. Keep pinned fixtures unchanged; no merge or release.”
+This resolves the historical gate conflict. The single existing assertion changes
+from `N\(index)` to `N\(index)n\(index)`; its source, forty tasks and inspection
+checks remain intact. Pinned Ruby returns `N7n7` in all three parser modes and
+raising/recovery for the exact `n7` reproduction. No pinned expectation changes.
+
+The implementation restores the retained host-root/local-overlay design.
+Supplementary regressions cover original inputs, local shadows, named/null
+bindings, nested render, render-for, includes, counters, exact old-assertion
+reproduction, error recovery/location, no ambient loader, admission/output/step/
+nesting limits, shared-template concurrency and deterministic cancellation.
+Root inputs are admitted once and retained beneath scope overlays; nested render
+neither copies the root map nor resets cumulative budgets. No public API change.
+
+All final gates bind to one clean source commit after the last code/docs edit.
+The return retains the original partial packet, failed C experiment and revert,
+this explicit decision, exact assertion diff and new source-bound receipts.
+Independent mismatches remain failures; the existing suite population, eligibility,
+reference pins, expected bytes and comparator remain unchanged. The separate
+case-operand reevaluation difference and range-property failures remain deferred.
+No merge, tag, publication or performance exercise is part of this correction.

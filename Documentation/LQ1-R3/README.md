@@ -1,8 +1,12 @@
 # LQ1-R3: runtime semantics and integration
 
-Status: **partial by scope**. Two runtime rules are implemented; render-global
-visibility is deferred with a [compatibility decision record](RENDER-GLOBALS-ADR.md).
-This is a local evidence milestone, not a release or independent-conformance pass.
+The original `8ab1632` return was **partial by scope**, with A/B qualified and
+render-global visibility deferred. The maintainer has now explicitly adopted
+Ruby's host-input semantics and authorized the one conflicting authored assertion
+correction. C is implemented under the [adopted decision](RENDER-GLOBALS-ADR.md).
+The follow-up return binds new qualification to its exact clean source; the
+original partial packet and all failed experiment receipts remain immutable.
+This is a local correctness milestone, not a release or independent-conformance pass.
 
 ## Integration before repairs
 
@@ -47,10 +51,10 @@ else branches, duplicate matches, unreachable errors, partials, exact Unicode ke
 nested/dynamic access and output/step/cancellation bounds. The reference probes
 record 55 controls × three parser modes × two render policies; the C subset
 remains research evidence. An additional all-mode shared-template concurrency regression exercises both rules. Existing concurrency tests and all pinned fixtures
-are retained unchanged. Current inventory: 84 functions, 2,144 argument cases,
-16 repeated adversarial/cancellation functions and seven TSan functions.
+are retained unchanged. Current inventory after C: 87 functions, 2,152 argument cases,
+17 repeated adversarial/cancellation functions and eight TSan functions.
 
-Post-A/B independent results are 2,265 qualified matches, 2,349 mismatches and ten
+The retained pre-C A/B independent results are 2,265 qualified matches, 2,349 mismatches and ten
 operational errors. The raw upstream comparator reports 2,292 matches and 2,332
 mismatches. All twelve improvements are exact previously failing identities;
 there are no qualified match-to-failure transitions. Eligibility, source digests,
@@ -66,11 +70,20 @@ was expected to hide host `name: n7`; Ruby and C instead render `N7n7`.
 All forty concurrent instances failed that unchanged assertion. The experiment's
 targeted tests passed, but that does not qualify it against the existing contract.
 
-R3 does not change that expectation. C was explicitly reverted; final runtime
-bytes equal the qualified A/B implementation. Its two independent improvements
-are **not** credited to the return. The packet retains the attempted commit,
-revert, patch, full failed gate and exact all-mode reproduction. Approval of the
-[scope decision](RENDER-GLOBALS-ADR.md) is required before another implementation.
+The original R3 return left this expectation unchanged and reverted C, crediting
+none of its experimental gains. On 2026-10-16 the maintainer explicitly adopted
+Ruby's semantics, authorized correction of only this authored assertion, and
+requested C plus all gates. The assertion now includes the original host name in
+the partial output. No pinned fixture changes. The retained design is restored;
+its new all-mode controls also include the exact old assertion source, deterministic
+cancellation, host admission once, output/step/nesting limits and all four rendering
+policies under concurrent parsed-template reuse. Read the
+[qualification scope](RENDER-GLOBALS-QUALIFICATION.md) and decision record.
+
+The new return compares final C against `8ab1632` and R2 at the same original
+5,099/5,112/4,624/488 population. Exact gains and all changed still-failing outputs
+come from the new runner, never from the old experiment's numerator. All final
+receipts must bind to the source after these code, test and documentation edits.
 
 ## Remaining boundaries and next gate
 
@@ -79,7 +92,9 @@ The original 25 wrong-phase parser acceptances and 52 lax parse rejections remai
 dotted loop arguments, mixed-type sorting, render's include prohibition and
 unused-partial eager admission remain separate findings. The two complex partial
 cases are distinct: object-size correction repairs the cart case; nested-layout
-host visibility remains unresolved after deferring C. Ten pinned-Ruby expectation
+host visibility is a C qualification target. The additional pre-existing
+case-operand reevaluation difference and four changed-but-still-failing range
+property cases remain deferred; neither receives new repair credit. Ten pinned-Ruby expectation
 concerns and all operational failures remain explicit, not successful renders.
 
 The 1.0–1.3 API/CLI schemas, 126 declarations, one library/CLI, empty root dependency
@@ -93,6 +108,7 @@ pinned reference and full liquid-spec. The return binds every lane to that SHA
 and retains raw reports, commands and actual exits. No performance lane runs.
 macOS runtime and simulator compilation remain distinct platform claims.
 
-Recommended next gate: review the C historical-contract conflict and authorize or
-defer a narrowly scoped host-input visibility decision before any further source
-integration, semantic change, public API proposal, merge or release.
+After exact-source qualification, review the local source and return evidence.
+Any merge, release, public API proposal or further semantic repair requires its
+own scope. The remaining case-operand, range-property and grammar findings do not
+expand this approved host-input correction.
