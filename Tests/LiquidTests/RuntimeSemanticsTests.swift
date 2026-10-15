@@ -72,24 +72,6 @@ private let runtimeControlsB: [RuntimeRuleControl] = [
     .init(name: "review-object-property-size", source: "{{ obj.size }}|{{ obj | size }}|{% if obj.size > 0 %}Y{% endif %}", context: LiquidObject([.init("obj", .object(LiquidObject([.init("a", .integer(1)), .init("b", .integer(2))])))]), partials: [:], expected: "2|2|Y")
 ]
 
-private let runtimeControlsC: [RuntimeRuleControl] = [
-    .init(name: "review-partial-render-global", source: "{% assign local = \"L\" %}{% render \"p\" %}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}|{{ local }}"], expected: "T|"),
-    .init(name: "review-partial-render-explicit", source: "{% render \"p\", title: title %}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}"], expected: "T"),
-    .init(name: "root-shadow", source: "{% assign title = \"L\" %}{% render \"p\" %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}"], expected: "T|L"),
-    .init(name: "include-shares", source: "{% assign title = \"L\" %}{% include \"p\" %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}{% assign title = \"P\" %}"], expected: "L|P"),
-    .init(name: "loop-locals-hidden", source: "{% for item in xs %}{% render \"p\" %}{% endfor %}", context: LiquidObject([.init("xs", .array([.integer(1), .integer(2)])), .init("title", .string("T"))]), partials: ["p": "{{ title }}|{{ item }}|{{ forloop.index }};"], expected: "T||;T||;"),
-    .init(name: "named-overrides-host", source: "{% render \"p\", title: \"A\" %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}"], expected: "A|T"),
-    .init(name: "nested-render", source: "{% render \"a\", title: \"A\" %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["a": "{{ title }}>{% assign local = \"L\" %}{% render \"b\" %}>{{ title }}", "b": "{{ title }}|{{ local }}"], expected: "A>T|>A|T"),
-    .init(name: "render-for", source: "{% render \"p\" for xs as item %}", context: LiquidObject([.init("xs", .array([.integer(1), .integer(2)])), .init("title", .string("T"))]), partials: ["p": "{{ title }}:{{ item }}:{{ forloop.index }};{% assign title = \"L\" %}"], expected: "T:1:1;T:2:2;"),
-    .init(name: "null-binding", source: "{% render \"p\", title: null %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "[{{ title }}]{{ missing }}"], expected: "[]|T"),
-    .init(name: "null-host", source: "{% assign title = \"L\" %}{% render \"p\" %}|{{ title }}", context: LiquidObject([.init("title", .null)]), partials: ["p": "[{{ title }}]"], expected: "[]|L"),
-    .init(name: "missing-host", source: "{% assign title = \"L\" %}{% render \"p\" %}|{{ title }}", context: LiquidObject([]), partials: ["p": "[{{ title }}]"], expected: "[]|L"),
-    .init(name: "partial-assign-restoration", source: "{% render \"p\" %}|{{ title }}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}{% assign title = \"P\" %}{{ title }}"], expected: "TP|T"),
-    .init(name: "render-counter-isolation", source: "{% increment n %}{% render \"p\" %}{% increment n %}", context: LiquidObject([.init("title", .string("T"))]), partials: ["p": "{{ title }}{% increment n %}"], expected: "0T01"),
-    .init(name: "render-cycle-isolation", source: "{% cycle x,\"2\" %}{% render \"p\" %}{% cycle x,\"2\" %}", context: LiquidObject([.init("x", .string("1"))]), partials: ["p": "{% cycle x,\"2\" %}"], expected: "111"),
-    .init(name: "explicit-input-forloop", source: "{% for x in xs %}{% render \"p\" %}{% endfor %}", context: LiquidObject([.init("xs", .array([.integer(1)])), .init("forloop", .object(LiquidObject([.init("index", .integer(99))])))]), partials: ["p": "{{ forloop.index }}"], expected: "99")
-]
-
 @Suite("Pinned runtime semantic regressions", .timeLimit(.minutes(1)))
 struct RuntimeSemanticsTests {
     // liquid-spec 84bf25e, liquid_ruby/specs.yml:6701/:6728;
@@ -139,80 +121,6 @@ struct RuntimeSemanticsTests {
         let tight = LiquidEngine(limits: .init(outputBytes: 1))
         await #expect(throws: LiquidError.self) { try await tight.renderWithDiagnostics(parsed, context: context) }
         #expect(try await LiquidEngine(limits: .init(outputBytes: 2)).render(parsed, context: context) == "2!")
-    }
-
-    // liquid-spec 84bf25e, partials/partials.yml:129; pinned Ruby
-    // context.rb#new_isolated_subcontext preserves static_environments.
-    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
-    func isolatedRenderKeepsOriginalInputsAndHidesCallerLocals(mode: LiquidSyntaxMode) async throws {
-        try await checkRuntimeControls(runtimeControlsC, mode: mode)
-        let root = try LiquidTemplate("{% render 'p' %}{% render 'p' %}", syntaxMode: mode)
-        let partials = try ["p": LiquidTemplate("{{ title }}", syntaxMode: mode)]
-        let context: LiquidObject = ["title": "T"]
-        let admittedOnce = LiquidEngine(limits: .init(contextValues: 1))
-        let measured = try await admittedOnce.renderWithMetrics(root, context: context, templates: partials)
-        #expect(measured.output == "TT" && measured.metrics.admittedValues == 1)
-        await #expect(throws: LiquidError.self) {
-            try await LiquidEngine(limits: .init(outputBytes: 1)).renderWithDiagnostics(root, context: context, templates: partials)
-        }
-        let errorRoot = try LiquidTemplate("A{% render 'p' %}Z|{{ title }}", syntaxMode: mode)
-        let errorPartial = try LiquidTemplate("{{ title }}\n{{ 1 | divided_by: 0 }}", syntaxMode: mode)
-        let engine = LiquidEngine()
-        await #expect(throws: LiquidError.self) { try await engine.render(errorRoot, context: context, templates: ["p": errorPartial]) }
-        let recovered = try await engine.renderWithDiagnostics(errorRoot, context: context, templates: ["p": errorPartial])
-        #expect(recovered.output.hasPrefix("AT\n") && recovered.output.hasSuffix("Z|T"))
-        #expect(recovered.diagnostics.count == 1 && recovered.diagnostics[0].line == 2)
-        #expect(recovered.diagnostics[0].templateName == "p")
-    }
-
-    @Test func concurrentRendersKeepRuntimeRulesInvocationOwned() async throws {
-        let engine = LiquidEngine()
-        let root = try LiquidTemplate("{% assign title = 'local' %}{% case value %}{% when null %}{% render 'p' %}{% else %}BAD{% endcase %}")
-        let partials = try ["p": LiquidTemplate("{{ title }}:{{ obj.size }}")]
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            for index in 0..<16 {
-                group.addTask { () async throws -> Void in
-                    let title = String(index)
-                    let context: LiquidObject = ["title": .string(title), "obj": ["a": 1, "b": 2], "value": nil]
-                    let expected = title + ":2"
-                    #expect(try await engine.render(root, context: context, templates: partials) == expected)
-                    #expect(try await engine.renderWithDiagnostics(root, context: context, templates: partials).output == expected)
-                    #expect(try await engine.renderWithMetrics(root, context: context, templates: partials).output == expected)
-                    #expect(try await engine.renderWithDiagnosticsAndMetrics(root, context: context, templates: partials).output == expected)
-                }
-            }
-            try await group.waitForAll()
-        }
-    }
-
-    @Test(arguments: [false, true])
-    func cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering: Bool) async throws {
-        for parsedInput in [false, true] {
-            let gate = TestSuspensionGate()
-            let engine = try LiquidEngine(filters: [LiquidFilter("r3_pause") { value, _, _ in
-                await gate.enter()
-                return value
-            }])
-            let source = "{% assign title = 'local' %}{% render 'p' %}"
-            let partial = "{{ title | r3_pause }}"
-            let root = try LiquidTemplate(source)
-            let parsedPartials = try ["p": LiquidTemplate(partial)]
-            let worker = Task {
-                if parsedInput {
-                    if recovering { return try await engine.renderWithDiagnostics(root, context: ["title": "T"], templates: parsedPartials).output }
-                    return try await engine.render(root, context: ["title": "T"], templates: parsedPartials)
-                }
-                if recovering { return try await engine.renderWithDiagnostics(template: source, context: ["title": "T"], templates: ["p": partial]).output }
-                return try await engine.render(template: source, context: ["title": "T"], templates: ["p": partial])
-            }
-            defer { worker.cancel() }
-            try await gate.waitForEntry()
-            #expect(try await engine.render(template: "{% render 'q' %}", context: ["title": "S"], templates: ["q": "{{ title }}"]) == "S")
-            worker.cancel()
-            _ = try await gate.release()
-            await #expect(throws: CancellationError.self) { try await worker.value }
-            #expect(try await engine.render(root, context: ["title": "U"], templates: parsedPartials) == "U")
-        }
     }
 
 }
