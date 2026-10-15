@@ -855,7 +855,6 @@ extension Renderer {
 
     
     internal func renderCase(value: LiquidExpression, branches: [CaseBranch]) async throws -> String {
-        let caseValue = try await evaluateExpression(value)
         var output = ""
         var anyPrecedingWhenMatched = false
 
@@ -866,6 +865,9 @@ extension Renderer {
             case .otherwise(let nodes):
                 if !anyPrecedingWhenMatched { output += try await renderNodeListFast(nodes) }
             case .when(let expression, let nodes):
+                // Ruby Condition evaluates left then right for each comparison;
+                // earlier branch bodies may have changed either expression.
+                let caseValue = try await evaluateExpression(value)
                 let whenValue = try await evaluateExpression(expression)
                 if isEqual(caseValue, whenValue) {
                     anyPrecedingWhenMatched = true

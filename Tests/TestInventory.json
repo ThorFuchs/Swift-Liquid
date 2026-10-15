@@ -8,6 +8,11 @@
     "LiquidTests.AdversarialTests/utf8CapacitiesRejectOneByteBelowWithoutRecovery(seed:)": 4,
     "LiquidTests.CancellationMaintenanceTests/cancellationAtOutputAdmissionPrecedesQuota(output:)": 3,
     "LiquidTests.CancellationMaintenanceTests/cancellationWaitsForUncooperativeHostAndPreservesReuse(parsedInput:scenario:)": 16,
+    "LiquidTests.CaseReevaluationTests/cancellationBetweenCaseBranchesKeepsSiblingHealthy(recovering:)": 2,
+    "LiquidTests.CaseReevaluationTests/caseMutationPreservesErrorsAndRecovery(mode:)": 3,
+    "LiquidTests.CaseReevaluationTests/caseOperandsReevaluateBeforeEveryComparison(mode:)": 3,
+    "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)": 3,
+    "LiquidTests.CaseReevaluationTests/reevaluationChargesWorkAndSkipsUnusedOperand(mode:)": 3,
     "LiquidTests.CustomFilterTests/boundariesShareCumulativeValuesAndEvaluatorSteps()": null,
     "LiquidTests.CustomFilterTests/cancellationAfterSuspendingCallbackTakesPrecedenceOverRecovery(throwsFailure:)": 2,
     "LiquidTests.CustomFilterTests/cancellationAtEntryDoesNotInvokeCallback()": null,
@@ -90,6 +95,7 @@
     "LiquidTests.truthinessAndComparisonLiteralsRemainDistinct()": null
   },
   "threadFunctions": [
+    "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
     "LiquidTests.CustomFilterTests/concurrentRendersKeepFilterConfigurationsIsolated()",
     "LiquidTests.DependencyInspectionTests/concurrentRendersMetricsAndDependencyInspection()",
     "LiquidTests.InspectionTests/concurrentRendersAndInspectionShareOnlyImmutableTemplates()",
@@ -107,6 +113,7 @@
     "LiquidTests.AdversarialTests/utf8CapacitiesRejectOneByteBelowWithoutRecovery(seed:)",
     "LiquidTests.CancellationMaintenanceTests/cancellationAtOutputAdmissionPrecedesQuota(output:)",
     "LiquidTests.CancellationMaintenanceTests/cancellationWaitsForUncooperativeHostAndPreservesReuse(parsedInput:scenario:)",
+    "LiquidTests.CaseReevaluationTests/cancellationBetweenCaseBranchesKeepsSiblingHealthy(recovering:)",
     "LiquidTests.CustomFilterTests/cancellationAfterSuspendingCallbackTakesPrecedenceOverRecovery(throwsFailure:)",
     "LiquidTests.CustomFilterTests/cancellationAtEntryDoesNotInvokeCallback()",
     "LiquidTests.DependencyInspectionTests/cancellationAtCoordinatedInspectionEntryLeavesReuseHealthy(parsedInput:)",

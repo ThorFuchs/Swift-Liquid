@@ -24,6 +24,11 @@ locals and counters do not cross into it. Nested render sees the original inputs
 not the outer partial's local bindings. `include` continues to share caller state.
 See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
 
+A case evaluates its current operand before each when value, in source order.
+Earlier branch bodies can change that operand. Comma/or alternatives each compare
+again, and an else tests only preceding matches without evaluating the operand.
+See [case evaluation](LQ1-R3/CASE-REEVALUATION.md) for the pinned Ruby rule and evidence.
+
 Only nil and false are falsy. Output is not automatically HTML-escaped. Logical
 operators associate right to left. `blank` and `empty` are distinct comparison
 literals; they do not resolve an identically named input property unless followed

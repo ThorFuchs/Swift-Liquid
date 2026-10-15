@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Reevaluate the case operand for every when comparison, following pinned Ruby
+  through branch mutations, repeated alternatives and else-only cases. Charge
+  performed work normally; preserve fixture bytes and existing expectations.
+
 - Adopt Ruby's isolated-render host-input semantics: retain original admitted roots
   beneath local assignments and explicit partial bindings. Correct the single
   maintainer-reviewed authored assertion; keep pinned fixtures unchanged.

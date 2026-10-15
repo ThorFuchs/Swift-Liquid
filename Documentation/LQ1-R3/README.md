@@ -7,6 +7,9 @@ correction. C is implemented under the [adopted decision](RENDER-GLOBALS-ADR.md)
 The follow-up return binds new qualification to its exact clean source; the
 original partial packet and all failed experiment receipts remain immutable.
 This is a local correctness milestone, not a release or independent-conformance pass.
+The later [case-operand correction](CASE-REEVALUATION.md) addresses the previously
+retained reevaluation finding under a separate explicit maintainer request;
+the original R3 and C return packets remain immutable historical evidence.
 
 ## Integration before repairs
 
@@ -51,8 +54,8 @@ else branches, duplicate matches, unreachable errors, partials, exact Unicode ke
 nested/dynamic access and output/step/cancellation bounds. The reference probes
 record 55 controls × three parser modes × two render policies; the C subset
 remains research evidence. An additional all-mode shared-template concurrency regression exercises both rules. Existing concurrency tests and all pinned fixtures
-are retained unchanged. Current inventory after C: 87 functions, 2,152 argument cases,
-17 repeated adversarial/cancellation functions and eight TSan functions.
+are retained unchanged. Current inventory after case reevaluation: 92 functions, 2,166 argument cases,
+18 repeated adversarial/cancellation functions and nine TSan functions.
 
 The retained pre-C A/B independent results are 2,265 qualified matches, 2,349 mismatches and ten
 operational errors. The raw upstream comparator reports 2,292 matches and 2,332
@@ -93,8 +96,8 @@ dotted loop arguments, mixed-type sorting, render's include prohibition and
 unused-partial eager admission remain separate findings. The two complex partial
 cases are distinct: object-size correction repairs the cart case; nested-layout
 host visibility is a C qualification target. The additional pre-existing
-case-operand reevaluation difference and four changed-but-still-failing range
-property cases remain deferred; neither receives new repair credit. Ten pinned-Ruby expectation
+case-operand finding is addressed by the separately approved follow-up. Four
+changed-but-still-failing range property cases remain deferred and uncredited. Ten pinned-Ruby expectation
 concerns and all operational failures remain explicit, not successful renders.
 
 The 1.0–1.3 API/CLI schemas, 126 declarations, one library/CLI, empty root dependency
@@ -110,5 +113,5 @@ macOS runtime and simulator compilation remain distinct platform claims.
 
 After exact-source qualification, review the local source and return evidence.
 Any merge, release, public API proposal or further semantic repair requires its
-own scope. The remaining case-operand, range-property and grammar findings do not
-expand this approved host-input correction.
+own scope. Range-property, grammar and hosting findings do not expand the approved
+case-operand correction; each retains a separate scope.

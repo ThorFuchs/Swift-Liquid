@@ -474,6 +474,24 @@
         "Preserve both original R3 and new source-bound evidence, the original independent denominator/comparator and all pinned fixtures. Defer case-operand reevaluation, range properties and grammar findings."
       ],
       "qualification": "New clean-head native Debug/Release, ASan/TSan, docs/DocC, platforms, published 1.3.0 installation, pinned Ruby reference and failed independent lane; exact commands, source hashes, original baseline and outcomes retained in follow-up return. No performance measurement."
+    },
+    {
+      "area": "Approved case-operand reevaluation follow-up",
+      "scopeDecision": "Maintainer requested the deferred case rule and all gates on 2026-10-16. No fixture or existing authored expectation changes, merge, release, API or grammar change.",
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/CaseReevaluationTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R3/CASE-REEVALUATION.md",
+        "Documentation/Language.md"
+      ],
+      "changes": [
+        "Evaluate the current case operand before each when expression, in Ruby condition order, instead of caching it once before the branch loop.",
+        "Preserve the disjoint when/else AST and preceding-match policy; do not evaluate the operand for else or a case with no when.",
+        "Charge each performed reevaluation through the existing evaluator budget and cancellation checks without resetting or relaxing finite limits.",
+        "Add pinned-Ruby supplemental all-mode controls for mutable operands, comma/or alternatives, dynamic lookup, partials, errors/recovery, budgets, concurrent immutable-template reuse and deterministic cancellation. Preserve all existing test bodies and fixtures."
+      ],
+      "qualification": "One final clean SHA for native Debug/Release, ASan/TSan, docs, platforms, immutable 1.3.0 installation, pinned reference and independent lane. Preserve denominator, raw/qualified comparisons, actual exits and all old returns; no benchmark claims."
     }
   ]
 }
