@@ -13,10 +13,10 @@ extension Renderer {
     // MARK: - Filter Helper Functions
     
     internal func truncateString(_ str: String, length: Int, ending: String) -> String {
-        guard length > 0 else { return "" }
         if str.unicodeScalars.count <= length { return str }
         
-        let truncateLength = max(0, length - ending.unicodeScalars.count)
+        let endingLength = ending.unicodeScalars.count
+        let truncateLength = length > endingLength ? length - endingLength : 0
         return String(String.UnicodeScalarView(str.unicodeScalars.prefix(truncateLength))) + ending
     }
     
