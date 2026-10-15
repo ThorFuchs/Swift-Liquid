@@ -67,23 +67,26 @@ def main():
     lines += ['- ' + r['suite'] + ' / ' + r['case'] for r in refs]
     lines += ['', '## Exclusion accounting', '']
     lines += [f'- {reason}: {count}' for reason, count in sorted(Counter(r['reason'] for r in rows if not r['selected']).items())]
-    repairs = []
+    repairs = []; admissions = []
     if args.initial:
         initial = {key(r): r for r in json.loads(args.initial.read_text())}
         for row in selected:
             before = initial.get(key(row))
-            if before and before['comparison'] != 'matched' and row['comparison'] == 'matched':
+            if before and not before['selected']:
+                admissions.append({'identity': key(row), 'previousReason': before['reason'], 'comparison': row['comparison'], 'observedCategory': row['observedCategory'], 'resultDigest': row['resultDigest']})
+            if before and before['selected'] and before['comparison'] != 'matched' and row['comparison'] == 'matched':
                 repairs.append({'identity': key(row), 'beforeActual': before.get('actual'), 'afterActual': row.get('actual'),
                                 'beforeResultDigest': before['resultDigest'], 'afterResultDigest': row['resultDigest'],
                                 'referenceComparison': row['referenceComparison'], 'sourceLocation': row['sourceLocation']})
         lines += ['', '## Changed outcomes from retained initial run', '']
         lines += ['- ' + ' / '.join(r['identity']) + ': failing comparison → matched (see CORE_REPAIR.json).' for r in repairs]
+    (args.reports / 'ELIGIBILITY_CHANGES.json').write_text(json.dumps(admissions, indent=2) + '\n')
     (args.reports / 'TRIAGE.json').write_text(json.dumps(triage, indent=2) + '\n')
     (args.reports / 'CORE_REPAIR.json').write_text(json.dumps({'repairs': repairs, 'historicalFixtureValidation': 'Separate public-check receipts required; this summarizer does not validate fixtures'}, indent=2) + '\n')
     (args.reports / 'MISMATCHES.md').write_text('\n'.join(lines) + '\n')
     print(json.dumps({'rows': len(rows), 'selected': len(selected), 'comparisons': counts,
                       'disabled': len(rows)-len(selected), 'triage': Counter(r['category'] for r in triage),
-                      'referenceMismatches': len(refs), 'changedOutcomes': len(repairs)}))
+                      'referenceMismatches': len(refs), 'changedOutcomes': len(repairs), 'newlyAdmitted': len(admissions)}))
 
 
 if __name__ == '__main__':

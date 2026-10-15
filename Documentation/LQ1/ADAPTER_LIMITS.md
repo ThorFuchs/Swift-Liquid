@@ -91,3 +91,9 @@ labelled encoding/byte-count/base64/SHA-256 objects. This is report serializatio
 not a Liquid value converter. Repeated runs retain previous reports and logs in
 a timestamped `history/` directory; stale successful reports cannot qualify a
 new failed run.
+
+The broad upstream `ruby_types` tag is reviewed per case, not globally disabled:
+primitive-JSON cases remain eligible, including object/array formatting probes.
+Actual Ruby classes, symbol keys, cycles and numeric-domain violations receive
+specific preflight reasons. `SPEC_RUNS.json.featurePolicies` records this choice;
+it does not advertise general Ruby runtime type support.
