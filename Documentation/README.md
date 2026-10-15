@@ -27,7 +27,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
-| [1.3.1 candidate notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
+| [1.3.1 release notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
 | [1.3.0 release notes](Releases/1.3.0.md) | Additive dependency tooling, compatibility, measurements and release assets |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
 | [1.3 roadmap](Roadmap-1.3.md) | Adopted bounded partial-dependency inspection, explicit CLI mode and acceptance gates |

@@ -3,7 +3,7 @@
 The canonical package URL is
 `https://github.com/ThorFuchs/Swift-Liquid.git`. Public releases use immutable
 semantic-version tags; the current stable release is
-[1.3.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0). The README
+[1.3.1](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.1). The README
 links to that release, qualification archives, Apache-2.0 terms and the hosted
 [documentation](https://thorfuchs.github.io/Swift-Liquid/). `.spi.yml` directs the
 package index to that same documentation site.
@@ -14,7 +14,7 @@ Use Swift tools/compiler 6.4 or later, in Swift language mode 6. To build the
 published CLI from a clean directory:
 
 ```sh
-git clone --branch 1.3.0 --depth 1 https://github.com/ThorFuchs/Swift-Liquid.git
+git clone --branch 1.3.1 --depth 1 https://github.com/ThorFuchs/Swift-Liquid.git
 cd Swift-Liquid
 swift build -c release --product liquid
 swift run -c release liquid --version

@@ -14,8 +14,8 @@ metrics when you need them. Each operation owns its mutable state.
 [Read the documentation →](https://thorfuchs.github.io/Swift-Liquid/)
 
 Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The latest stable
-release is [1.3.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0).
-The [1.3.1 candidate notes](Documentation/Releases/1.3.1.md) describe the upcoming
+release is [1.3.1](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.1).
+The [1.3.1 release notes](Documentation/Releases/1.3.1.md) describe the
 maintenance release. Use a released version for applications; `main` and the
 documentation site track ongoing development. Release assets include the source,
 compiled DocC reference, qualification evidence and SHA-256 checksums for that exact version.
@@ -58,7 +58,7 @@ tool uses [Swift-JSON](https://github.com/ThorFuchs/Swift-JSON); applications li
 Add the package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.0")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.1")
 ```
 
 Then add the library product to your target:

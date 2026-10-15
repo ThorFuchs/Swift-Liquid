@@ -116,14 +116,15 @@ and sixteen coordinated plus eight runnable cancellation-response records, admit
 Release review acknowledges all four flag lists. Existing released evidence above
 retains its historical baselines. See [measured maintenance](MeasuredMaintenance.md).
 
-## 1.3.1 maintenance candidate
+## 1.3.1 maintenance release
 
 [1.3.1](Releases/1.3.1.md) packages the four quality sprints with two runtime fixes:
 iterative ordered-JSON container parsing at the existing admitted depth and
 cancellation before output admission. Preserve released 1.0–1.3 APIs, fixture
 bytes and metadata, CLI schemas, package products and the empty root dependency
-graph. The CLI candidate version is 1.3.1; public installation remains pinned to
-the immutable published 1.3.0 anchor until a separately reviewed change.
+graph. The CLI version is 1.3.1. The public installation qualification lane keeps
+its immutable 1.3.0 compatibility anchor; publication additionally checks exact
+1.3.1 resolution from a fresh public-URL consumer.
 
 Qualification requires all nine current lanes against the candidate's exact
 source inventory. Admit 75 Swift Testing functions and 2,123 parameter cases in
@@ -140,7 +141,7 @@ review must assess every new flag before packaging. Keep graph, larger workload
 and cancellation observations separate. See the
 [benchmark review](PerformanceReview-1.3.1.md) for findings and limits.
 
-Prepare source, compiled DocC and qualification archives, notes and checksums
-without publication. The candidate must pass all gates; merging the preparation
-and publishing 1.3.1 require a later maintainer request and exact-main
-requalification. Historical 1.0–1.3 releases and their evidence remain unchanged.
+Publish source, compiled DocC and qualification archives, notes and checksums
+only after exact-main qualification, benchmark review and the maintainer's
+explicit publication request. Historical 1.0–1.3 releases and their evidence
+remain unchanged.

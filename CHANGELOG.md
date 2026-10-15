@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1
+## 1.3.1 — 2026-10-15
 
 - Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and
   variance review flags, larger workload observations and coordinated cancellation

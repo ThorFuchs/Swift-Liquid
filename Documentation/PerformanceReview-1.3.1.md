@@ -109,6 +109,38 @@ The final candidate's archive contains its own raw measurements, all four exact
 flag lists and checksum-bound decision. No repeated measurement was selected to
 obtain an unflagged result.
 
+## Hosted checkpoint control with the pinned harness
+
+The final PR #15 [comparison](https://github.com/ThorFuchs/Swift-Liquid/actions/runs/38803456604)
+retained nine common median flags, including four loop changes from +17.07% to
++36.11%. A separate [hosted diagnostic run](https://github.com/ThorFuchs/Swift-Liquid/actions/runs/38806847671)
+used the same Liquid Swift-source fingerprint, pinned common harness, manifest,
+Swift 6.4 compiler and sample protocol. The diagnostic branch remains separate
+from the release source. All binaries built before timing. Three interleaved ABBA
+blocks compared the checkpoint engine with a control omitting only that check,
+and compared two independently built copies of the identical checkpoint source.
+Every raw sample, source inventory, control diff and comparison is retained in
+the qualification archive.
+
+The four loop checkpoint changes were +2.02%, +1.96%, +0.83% and +1.20%; their
+identical-source controls ranged from −0.29% to +0.20%. The larger final-PR loop
+changes did not reproduce as isolated checkpoint costs. This does not establish
+that they were solely environmental or that the release has no regression.
+
+Measured reused interpolation changed from 19.490 to 23.248 µs, or +19.28%, with
+three block effects of `[24.69, 18.59, 23.21]%`. Its identical-source comparison
+was −4.08%. The checkpoint comparison retained eleven spread flags; the
+identical-source comparison retained eight and no median-change flags. All other
+checkpoint median changes ranged from −5.98% to +3.83%. A VM's scheduling, thermal
+conditions and physical-host isolation remain uncontrolled. Separate builds may
+also change optimization and code layout; the result is an observed variant cost,
+not a portable instruction cost or a universal bound.
+
+This stronger control supports accepting a measurable cost for a small
+metrics-enabled call in return for the reproduced cancellation-correctness fix.
+Fresh main measurements must still be reviewed on their own merits. The control
+study corroborates that review; it does not qualify main's source inventory.
+
 ## Release decision
 
 For the final candidate, recompute both comparison phases from raw samples,
@@ -125,8 +157,7 @@ A possible latency increase on these small calls is acceptable for fixing that
 reproduced defect; this is not a no-regression or zero-overhead verdict. The bound
 review must assess every final flag and any additional material regression rather
 than inheriting this decision mechanically. Fresh exact-main qualification and review are
-required after the release preparation merges and before separately authorized
-publication.
+required on the final main commit before the authorized publication.
 
 Graph construction, larger workloads and cancellation response have distinct
 timing boundaries. Retain their output checks and all cancellation outcomes;
