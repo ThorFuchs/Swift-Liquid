@@ -1425,8 +1425,18 @@ internal final class Parser {
         var limitExpression: LiquidExpression? = nil
         var offsetExpression: LiquidExpression? = nil
         
-        // Skip optional comma before first parameter (Shopify allows commas between params)
-        if currentToken.type == .comma { advance() }
+        // `reversed` is a modifier immediately after the collection. Once
+        // attribute parsing starts, strict modes accept only limit/offset.
+        var reversedMayAppear = true
+        func invalidAttribute() -> LiquidError {
+            .syntax(message: "Invalid attribute in for loop. Valid attributes are limit and offset",
+                    line: currentToken.line + lineOffset, column: currentToken.column)
+        }
+        if currentToken.type == .comma {
+            reversedMayAppear = false
+            advance()
+            if syntaxMode != .lax && currentToken.type == .tagEnd { throw invalidAttribute() }
+        }
         while let paramName = peekIdentifierName() {
             guard paramName.equals("limit")
                     || paramName.equals("offset")
@@ -1434,12 +1444,20 @@ internal final class Parser {
                 break
             }
 
+            if paramName.equals("reversed") && !reversedMayAppear && syntaxMode != .lax {
+                throw invalidAttribute()
+            }
             advance() // consume parameter name
             
             if paramName.equals("reversed") {
-                reversed = true
+                if reversedMayAppear {
+                    reversed = true
+                }
+                // Ruby's lax parser ignores modifiers after the initial one.
+                reversedMayAppear = false
                 continue
             }
+            reversedMayAppear = false
 
             guard currentToken.type == .colon else {
                 throw ParserError.unexpectedToken(currentToken)
@@ -1479,8 +1497,12 @@ internal final class Parser {
                     throw ParserError.unexpectedToken(currentToken)
                 }
             }
-            // Skip optional trailing comma after parameter value
-            if currentToken.type == .comma { advance() }
+            // Commas separate attributes; they do not terminate the list in
+            // strict modes. Lax retains its existing acceptance of a suffix.
+            if currentToken.type == .comma {
+                advance()
+                if syntaxMode != .lax && currentToken.type == .tagEnd { throw invalidAttribute() }
+            }
         }
 
         let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression)

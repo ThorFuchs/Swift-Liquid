@@ -60,4 +60,36 @@ struct LiquidSpecRegressionTests {
         _ = try LiquidTemplate("{{ self['x'] }}", syntaxMode: mode)
     }
 
+    // Provenance: liquid-spec 84bf25e, parser_errors/adversarial_boundaries.yml:52;
+    // pinned Ruby tags/for.rb#strict_parse and #lax_parse.
+    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
+    func forModifiersPrecedeNamedAttributes(mode: LiquidSyntaxMode) async throws {
+        let engine = LiquidEngine()
+        let context: LiquidObject = ["xs": [1, 2, 3]]
+        for suffix in ["reversed limit: 2", "reversed limit: 2, offset: 0"] {
+            let source = "{% for x in xs \(suffix) %}{{ x }}{% endfor %}"
+            let parsed = try LiquidTemplate(source, syntaxMode: mode)
+            #expect(try await engine.render(parsed, context: context) == "21")
+            #expect(try await engine.render(template: source, context: context, syntaxMode: mode) == "21")
+        }
+        for (suffix, laxOutput) in [("limit: 2 reversed", "12"), (", reversed", "123"),
+                                    ("reversed reversed", "321"), ("limit: 2,", "12"), (",", "123")] {
+            let source = "{% for x in xs \(suffix) %}{{ x }}{% endfor %}"
+            if mode == .lax {
+                let parsed = try LiquidTemplate(source, syntaxMode: mode)
+                #expect(try await engine.render(parsed, context: context) == laxOutput)
+                let recovered = try await engine.renderWithDiagnostics(template: source, context: context, syntaxMode: mode)
+                #expect(recovered.output == laxOutput && recovered.diagnostics.isEmpty)
+            } else {
+                let error = #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: mode) }
+                if case .syntax(let message, let line, _)? = error {
+                    #expect(message.contains("Invalid attribute in for loop")); #expect(line == 1)
+                } else { Issue.record("Invalid attribute order must fail while parsing") }
+                await #expect(throws: LiquidError.self) {
+                    try await engine.renderWithDiagnostics(template: source, context: context, syntaxMode: mode)
+                }
+            }
+        }
+    }
+
 }
