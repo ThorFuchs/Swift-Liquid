@@ -81,6 +81,11 @@ after all eight qualification lanes pass, with Pages/OIDC permissions confined
 to that job. PRs compile and verify the site without deploying it. Actions are
 pinned by commit.
 
+Raw DocC and site trees contain Swift declaration filenames with colons. They are
+excluded from the general ZIP evidence artifact, whose uploader rejects those
+characters. Evidence retains the compiled DocC tar archive and site file manifest;
+the separate Pages tar artifact carries the complete qualified site.
+
 `build-info.json` identifies clean source, compiler and CI run. Dirty local builds
 are marked as local previews and do not claim their HEAD commit represents the
 modified source. The website tracks `main`; a release's compiled DocC archive

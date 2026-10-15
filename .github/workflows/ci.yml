@@ -57,6 +57,7 @@ jobs:
           path: |
             Artifacts/${{ matrix.lane }}/
             !Artifacts/docs/Liquid.doccarchive/**
+            !Artifacts/docs/site/**
           if-no-files-found: error
           retention-days: 30
       - name: Package documentation site
