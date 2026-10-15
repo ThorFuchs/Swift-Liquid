@@ -33,6 +33,14 @@ class WorkflowPolicyTests(unittest.TestCase):
             else: job['steps'].append({'uses': 'actions/cache@' + 'a' * 40})
             with self.subTest(change=change), self.assertRaises(RuntimeError): validate(changed)
 
+    def test_runner_context_must_be_exported_from_a_step(self):
+        changed = copy.deepcopy(self.document)
+        changed['jobs']['qualify']['env']['LIQUID_RUNNER_ENVIRONMENT'] = '${{ runner.environment }}'
+        with self.assertRaises(RuntimeError): validate(changed)
+        changed = copy.deepcopy(self.document)
+        changed['jobs']['archive']['steps'][0]['run'] = 'test "$RUNNER_ENVIRONMENT" = "github-hosted"'
+        with self.assertRaises(RuntimeError): validate(changed)
+
     def test_publishing_requires_main_complete_gates_and_no_checkout(self):
         for change in ['condition', 'needs', 'checkout', 'script', 'permissions', 'environment']:
             changed = copy.deepcopy(self.document); job = changed['jobs']['publish-docs']

@@ -38,7 +38,8 @@ puts JSON.generate(document)
 HOST_GUARD = {
     'name': 'Require GitHub-hosted isolation',
     'env': {'RUNNER_ENVIRONMENT': '${{ runner.environment }}'},
-    'run': 'test "$RUNNER_ENVIRONMENT" = "github-hosted"'
+    'run': 'test "$RUNNER_ENVIRONMENT" = "github-hosted"\n'
+           'echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"\n'
 }
 PAGES_CONDITION = "github.ref == 'refs/heads/main' && github.event_name != 'pull_request'"
 
@@ -76,8 +77,8 @@ def validate(document):
         if name != 'publish-docs':
             if job.get('permissions', {'contents': 'read'}) != {'contents': 'read'} or 'environment' in job:
                 raise RuntimeError('Qualification cannot receive publishing permissions/environments')
-            if job.get('env', {}).get('LIQUID_RUNNER_ENVIRONMENT') != '${{ runner.environment }}':
-                raise RuntimeError('Qualification must retain actual runner provenance')
+            if 'runner.' in json.dumps(job.get('env', {})):
+                raise RuntimeError('Runner context is unavailable in job-level env; export it from the guard step')
         else:
             if job.get('if') != PAGES_CONDITION or job.get('needs') != ['qualify', 'archive']:
                 raise RuntimeError('Pages must depend on qualified main-only artifacts')

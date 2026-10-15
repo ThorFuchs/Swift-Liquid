@@ -18,7 +18,11 @@ shared host to this public repository's contribution workflows.
 Both same-repository and approved fork pull requests use `pull_request` and the
 same hosted qualification path. GitHub disposes of the hosted job environment;
 no repository workflow restores shared build caches. Before checkout, each job
-requires `runner.environment == github-hosted`. Qualification receipts retain the
+requires `runner.environment == github-hosted` and exports its verified value through
+`GITHUB_ENV` for subsequent steps. GitHub permits the runner context in step-level
+environment values, not job-level environment values; see the
+[context availability table](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability).
+Qualification receipts retain the
 provider environment, OS, architecture, image identifiers and checkout SHA. Read
 [GitHub's hosted-runner documentation](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)
 for the provider boundary and [compromised runners](https://docs.github.com/en/actions/concepts/security/compromised-runners)
