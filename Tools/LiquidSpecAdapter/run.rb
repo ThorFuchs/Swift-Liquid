@@ -6,6 +6,7 @@ require 'bundler/setup'
 require 'optparse'
 require 'json'
 require 'digest'
+require 'base64'
 require 'set'
 require 'date'
 require 'time'
@@ -50,6 +51,19 @@ def transport_reason(value, ancestors = Set.new, depth = 0)
     end
     nil
   else "transport-inapplicable: Ruby #{value.class} has no JSON value equivalent"
+  end
+end
+
+# Evidence encoding only: never turn binary values into an engine context.
+def receipt_value(value)
+  case value
+  when String
+    return value if value.valid_encoding? && (value.encoding == Encoding::UTF_8 || value.ascii_only?)
+    { receiptEncoding: value.encoding.name, byteLength: value.bytesize,
+      bytesBase64: Base64.strict_encode64(value), sha256: Digest::SHA256.hexdigest(value) }
+  when Array then value.map { |item| receipt_value(item) }
+  when Hash then value.transform_values { |item| receipt_value(item) }
+  else value
   end
 end
 
@@ -154,11 +168,12 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:referenceReportedErrors] = reference_observation[:error] || reference_observation[:errors]
         reference_phase_matches = !%w[parse-error render-error].include?(row[:expectedCategory]) || row[:expectedCategory] == reference_observation[:category]
         row[:referenceComparison] = ref.passed? && reference_phase_matches ? 'matched' : 'mismatched'
-        row[:referenceActual] = ref.output unless ref.passed? && result.passed?
+        row[:referenceActual] = ref.output unless row[:referenceComparison] == 'matched' && row[:comparison] == 'matched'
         if row[:comparison] != 'matched'
           row[:failureCategory] = row[:referenceComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
         end
       end
+      row = receipt_value(row)
       row[:resultDigest] ||= Digest::SHA256.hexdigest(JSON.generate(row.reject { |k, _| k == :resultDigest }))
       rows << row
       File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n") if index % 500 == 0
