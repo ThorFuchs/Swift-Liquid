@@ -236,7 +236,8 @@ python3 -B Scripts/ci.py --lane docs
 ```
 
 Performance evidence retains workloads, sample distributions, checksums, compiler
-and source identity. Review [methodology](Documentation/Performance.md) and the
+and source identity. Review [methodology](Documentation/Performance.md),
+[variance and cancellation observations](Documentation/MeasuredMaintenance.md) and the
 [released qualification archives](https://github.com/ThorFuchs/Swift-Liquid/releases).
 No inherited speedup, zero-overhead or process-memory claim is made.
 

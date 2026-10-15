@@ -109,3 +109,9 @@ separate authorization and exact-main qualification after merging preparation.
 
 Sprint 3 adds the published-URL `installation` lane to the eight original lanes.
 Its immutable 1.3.0 anchor remains independent of an unpublished candidate version.
+
+Sprint 4 advances future matched qualification to immutable 1.3.0, with schema-4
+run-median spread and separate variance-review flags. Retain six larger-workload
+and sixteen coordinated plus eight runnable cancellation-response records, admitted by `Scripts/maintenance_evidence.py`.
+Release review acknowledges all four flag lists. Existing released evidence above
+retains its historical baselines. See [measured maintenance](MeasuredMaintenance.md).

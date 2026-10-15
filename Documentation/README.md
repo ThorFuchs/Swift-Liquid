@@ -22,6 +22,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
+| [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |

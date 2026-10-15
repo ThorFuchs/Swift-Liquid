@@ -38,11 +38,11 @@ No speedup claim is carried over from RhoeLiquid. The [1.1 benchmark review](Per
 records the initial comparison and its limits. Each release-candidate CI run retains
 its own complete comparison and review flags.
 
-## Matched 1.2.0 comparison
+## Matched 1.3.0 comparison
 
 Run `python3 -B Scripts/ci.py --lane matched-performance` from a clean candidate
-commit with immutable 1.2.0 commit
-`8676da8059e71905632c233cffb438f8edbf51d2` available locally. The common harness is
+commit with immutable 1.3.0 commit
+`9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e` available locally. The common harness is
 copied unchanged from that commit into both library checkouts. Its SHA-256 is
 `2aed7fe384085e4b4b5ba26dcb2545f4006248822b21a864ef515cc51d3c985f`; the manifest
 SHA-256 is `aaf1bad0e6c4c7165b35320bf95878a2a3ac20a5efa9362066901ac9836b4439`.
@@ -51,10 +51,10 @@ No floating branch or tag selects the baseline.
 This phase compares all 26 records: ordinary and measured source/reused rendering
 of interpolation, standard filters, loops, partials, dates and custom filters,
 plus source/reused inspection. All common inputs, modes, output checksums and
-sampling come from the unchanged 1.2 harness.
+sampling come from the unchanged 1.3 harness.
 Three serial ABBA blocks run baseline, candidate, candidate, baseline, producing
 six complete runs per version. Each uses 25 measured samples, ten warmup samples
-and 100 repetitions per sample. The unchanged 1.2 harness retains every individual sample, each run's
+and 100 repetitions per sample. The unchanged 1.3 harness retains every individual sample, each run's
 median, p95, minimum, maximum and output checksum. The gate recomputes summary
 statistics from those samples. The comparison reports the
 median of six run medians, with every run retained.
@@ -83,13 +83,25 @@ and environment; investigate material slowdowns and repeat when needed. Report
 opt-in cost without implying the ordinary path has zero overhead or claiming a
 speedup from noisy faster samples.
 
-The schema-3 comparison records compiler, OS, architecture, CPU/model, memory,
+The schema-4 comparison records compiler, OS, architecture, CPU/model, memory,
 library/harness hashes, exact commands, run order and load averages. CI waits for
 its other qualification lanes before this job. That reduces interference from
 this repository, but does not establish idle hardware, thermal stability or
 isolation from unrelated jobs.
 
-The historical [1.1 review](PerformanceReview-1.1.md) and released 1.0–1.2 evidence
+Each comparison also retains both sides' six run medians, their median absolute
+deviation (MAD), relative MAD, and `(maximum - minimum) / median` as a percentage.
+A range at or above 10% adds a separate variance-review flag, even when the two
+aggregate medians agree. This describes observed spread; it is not a confidence
+interval, a proof of independent samples or an estimate of population variance.
+Release admission recomputes these fields and both variance flag lists from the
+retained runs, and requires the bound review to acknowledge them.
+
+The 1.3.0 common harness and manifest have the same hashes as the previously used
+1.2.0 harness. Advancing the pinned library baseline changes no common workload,
+output or sample policy. Historical comparisons retain their original baseline.
+
+The historical [1.1 review](PerformanceReview-1.1.md) and released 1.0–1.3 evidence
 remain unchanged. Final candidate CI is authoritative for that source inventory;
 inspect both flag lists before preparing release assets. Packaging requires a
 separate reviewed record bound to the comparison SHA-256. These measurements
@@ -105,8 +117,16 @@ ten warmups, 25 measured samples of 20 repetitions, stable name checksums and
 full result equality audits inside the timed boundary. The packaging gate checks
 the four shapes/modes, sample policy, checksums and recomputed median/p95.
 
-These observations measure a new operation separately. They are not render
-latencies, and 1.2.0 has no graph API for a matched comparison. Their result
+These observations measure graph inspection separately. They are not render
+latencies or a matched graph comparison; no graph speedup claim follows. Their result
 checking costs remain in the observations. Source/library/toolchain receipts
 accompany both benchmark packages; final qualification and its bound review are
 authoritative for the candidate source inventory.
+
+## Larger workloads and cancellation response
+
+The performance lane additionally runs `Tools/MaintenanceBenchmarks` in release
+mode. See [measured maintenance](MeasuredMaintenance.md) for its workload shapes,
+timing boundaries, admission and cancellation limitations. These observations are
+separate from the common cross-version and metrics comparisons. No runtime
+optimization or latency guarantee follows from adding a measurement.
