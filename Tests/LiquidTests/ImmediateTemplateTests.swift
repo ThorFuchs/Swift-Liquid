@@ -33,6 +33,21 @@ struct ImmediateTemplateTests {
     ])
     func generalRendererBudgetParity(recovering: Bool, source: String) async throws {
         let template = try LiquidTemplate(source)
+        let immediateSources: Set<String> = [
+            "", "plain", "{{ value }}", "A{{ value }}", "{{ value }}B", "A{{ value }}B",
+            "{{ value }}{{ missing }}", "{{ value }}{{ missing }}!",
+            "{% raw %}raw{% endraw %}{{ value }}",
+        ]
+        let probe = Renderer()
+        probe.context.setVariables(["value": "Swift"])
+        let immediate = try probe.renderImmediateTemplate(template.ast)
+        #expect((immediate != nil) == immediateSources.contains(source))
+        if immediate == nil {
+            #expect(probe.budget.remainingSteps == probe.budget.limits.renderSteps)
+            #expect(probe.budget.remainingValues == probe.budget.limits.contextValues)
+            #expect(probe.budget.activeDepth == 0 && probe.diagnostics.isEmpty)
+            #expect(probe.context.getVariable("value") as? String == "Swift")
+        }
         let profiles: [LiquidLimits] = [
             .default, .init(renderSteps: 1), .init(renderSteps: 2), .init(renderSteps: 3),
             .init(outputBytes: 1), .init(outputBytes: 5), .init(nestingDepth: 1), .init(nestingDepth: 2),

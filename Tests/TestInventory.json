@@ -41,6 +41,7 @@
     "LiquidTests.InspectionTests/inspectionDoesNotEvaluateCallbacksOrLoadPartials()": null,
     "LiquidTests.InspectionTests/parsingModesAndFailuresMatchTemplateParsing()": null,
     "LiquidTests.InspectionTests/sourceAndReusedTemplatesRespectCapacities()": null,
+    "LiquidTests.InterpolationTests/concurrentRendersKeepImmediateTemplatesInvocationOwned()": null,
     "LiquidTests.InterpolationTests/interpolationPreservesBytesTypesMetricsAndQuotas(parsedInput:policy:)": 8,
     "LiquidTests.JSONNumbersKeepIntegersAndBooleansDistinct()": null,
     "LiquidTests.MetricsTests/cancellationSurvivesSuspendingHostCode(recovering:)": 2,
@@ -84,6 +85,7 @@
     "LiquidTests.CustomFilterTests/concurrentRendersKeepFilterConfigurationsIsolated()",
     "LiquidTests.DependencyInspectionTests/concurrentRendersMetricsAndDependencyInspection()",
     "LiquidTests.InspectionTests/concurrentRendersAndInspectionShareOnlyImmutableTemplates()",
+    "LiquidTests.InterpolationTests/concurrentRendersKeepImmediateTemplatesInvocationOwned()",
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"
   ],

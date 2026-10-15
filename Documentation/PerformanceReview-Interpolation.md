@@ -77,3 +77,70 @@ cancellation during stringification; existing callback cancellation tests; and
 the affected `Scripts/ci.py` gates. Tests use no sleep or timing deadline as an
 oracle. Published fixture bytes, parser modes, licenses, API baselines and 1.3.1
 release assets remain unchanged.
+
+## Frozen-candidate follow-up results
+
+The [follow-up study](https://github.com/ThorFuchs/Swift-Liquid/actions/runs/38822674933)
+first passed `Scripts/ci.py --lane development`: 78 functions and 2,166 parameter
+cases, public consumers and CLI/schema checks for the frozen candidate. Its first
+preflight attempt passed those tests but stopped at a consumer because the temporary
+checkout basename changed SwiftPM's local package identity. The corrected checkout
+uses `Swift-Liquid`; no benchmark sample existed before that setup correction.
+Both attempts and all failed setup logs remain retained.
+
+The measured source is commit `65f66404e2ad1e62862d22db12c8c5a59001635b`, with
+Liquid fingerprint `6ea971af19d213c84e2f20701eb514262a0bd04e2fcf981286e7ec46abf8027a`.
+The final proposed library retains those exact Swift-source bytes; later changes
+add concurrency coverage and this report. The baseline is immutable 1.3.1 commit
+`fb81cf4ff01f1bf098ceb5fff65638b1271294e0`. The unchanged common harness is still
+selected by its recorded 1.3.0 commit, never a floating branch.
+
+Six binaries built before timing. Three serial ABBA blocks per candidate/control
+and driver retained 48 complete runs and 104 comparisons. All raw summaries,
+checksums, source manifests, flag lists and block effects were independently
+recomputed; development streams were checked against the frozen candidate's
+reviewed inventory. Existing budget methods remain byte-identical to 1.3.1.
+
+| Caller | Interpolation mode | 1.3.1 µs | Candidate µs | Change | Identical-source change |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Common | Source | 17.910 | 19.030 | +6.25% | −0.85% |
+| Common | Source, metrics | 18.618 | 18.639 | +0.11% | −0.52% |
+| Common | Reused | 19.132 | 19.945 | +4.25% | −3.59% |
+| Common | Reused, metrics | 25.136 | 18.870 | −24.93% | −4.16% |
+| Concurrent | Source | 4.305 | 3.927 | −8.78% | −0.15% |
+| Concurrent | Source, metrics | 4.521 | 4.127 | −8.72% | −0.97% |
+| Concurrent | Reused | 2.366 | 2.014 | −14.86% | −3.19% |
+| Concurrent | Reused, metrics | 2.550 | 2.166 | −15.04% | −1.12% |
+
+Concurrent reused block effects were `[-15.75, -14.29, -13.21]%` ordinary and
+`[-16.42, -15.12, -11.24]%` with metrics. Their control effects were
+`[-2.51, -9.74, -2.33]%` and `[1.09, -9.47, -0.17]%`. Candidate run-median
+ranges for these rows were 5.71%/9.69%, versus baseline 2.69%/3.59%. This supports
+a reduction in rendering work on this host under that caller, beyond the observed
+aggregate control effects. It does not establish a universal percentage.
+
+Common measured-reuse block effects were `[-32.74, -15.52, -15.05]%`; controls were
+`[-13.24, -5.34, -11.28]%`. That improvement is corroborated, with material spread
+retained. Common ordinary reuse changed by +4.25%, with blocks
+`[-7.47, 3.44, 9.44]%`; it does not establish an improvement. Common source changed
+by +6.25%, with blocks `[7.10, 6.89, -8.76]%`, and measured source by +0.11%.
+Those adverse/subthreshold observations remain part of the decision. No claim is
+made that all original caller-sensitive regressions are resolved. Comparisons
+from different runs must not be multiplied to infer a return to 1.3.0 latency.
+
+Other workload median changes ranged from −5.32% to +3.48% common and −0.39% to
++2.01% concurrent; none added a positive 10% median flag. The candidate common phase
+retains one faster median flag and 21 spread flags; concurrent retains two faster
+flags and 15 spread flags. Identical-source phases retain no median flags, with
+14 common and 23 concurrent spread flags. Every flag and observation is retained.
+One-minute guest load was 1.65–1.97 on the three-vCPU Apple M1 VM. Ranges and MAD
+remain descriptive, without physical-host, thermal or statistical-independence
+claims.
+
+Adopt the bounded synchronous candidate because the reused rendering reductions
+are corroborated under the concurrent caller and measured common caller, with
+unchanged output and budget contracts. Keep ordinary common-caller uncertainty
+explicit. The existing loop-body fast helpers have different charging rules;
+they cannot replace this path's original root/child steps and output checks.
+The source-bound review retains the failed setup, rejected variants, controls and
+all raw data; final CI must still qualify the complete proposed source inventory.

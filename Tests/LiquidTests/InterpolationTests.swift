@@ -71,4 +71,36 @@ struct InterpolationTests {
             }
         }
     }
+
+    @Test func concurrentRendersKeepImmediateTemplatesInvocationOwned() async throws {
+        let source = "A{{ value }}B"
+        let parsed = try LiquidTemplate(source)
+        let engine = LiquidEngine(limits: .init(sourceBytes: source.utf8.count, outputBytes: 8,
+            loopIterations: 1, nestingDepth: 8, renderSteps: 4, contextValues: 1))
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for index in 0..<64 {
+                group.addTask {
+                    let value = "\(index):e\u{301}"
+                    let context: LiquidObject = ["value": .string(value)]
+                    let expected = Array(("A" + value + "B").utf8)
+                    let ordinary = try await engine.render(parsed, context: context)
+                    #expect(Array(ordinary.utf8) == expected)
+                    let diagnostic = try await engine.renderWithDiagnostics(template: source, context: context)
+                    #expect(Array(diagnostic.output.utf8) == expected && diagnostic.diagnostics.isEmpty)
+                    let measured = try await engine.renderWithMetrics(parsed, context: context)
+                    let combined = try await engine.renderWithDiagnosticsAndMetrics(template: source, context: context)
+                    for result in [measured, combined] {
+                        #expect(Array(result.output.utf8) == expected && result.diagnostics.isEmpty)
+                        #expect(result.metrics.sourceBytes == source.utf8.count)
+                        #expect(result.metrics.outputBytes == expected.count)
+                        #expect(result.metrics.renderSteps == 4 && result.metrics.admittedValues == 1)
+                        #expect(result.metrics.loopIterations == 0)
+                    }
+                    #expect(measured.metrics.parseDuration == nil && combined.metrics.parseDuration != nil)
+                }
+            }
+            try await group.waitForAll()
+        }
+    }
+
 }
