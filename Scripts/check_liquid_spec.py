@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Opt-in independent functional conformance gate; never runs timing suites."""
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -21,6 +22,12 @@ def main():
     parser.add_argument('--output', type=Path, default=ROOT / 'Artifacts/liquid-spec')
     args = parser.parse_args()
     output = args.output.resolve(); output.mkdir(parents=True, exist_ok=True)
+    prior = [path for path in output.iterdir() if path.name != 'history']
+    if prior:
+        history = output / 'history' / datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+        history.mkdir(parents=True)
+        for path in prior:
+            shutil.move(str(path), history / path.name)
     env = environment(); env['TZ'] = 'UTC'
     ruby = os.environ.get('LIQUID_RUBY') or shutil.which('ruby')
     if not ruby:

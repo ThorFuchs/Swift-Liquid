@@ -85,3 +85,9 @@ filters, objects and policy flags are outside scope. Resource-score fixtures are
 unsupported because Ruby scores have no verified Swift quota mapping. There is
 no blanket `:core` exclusion. Production recordings and Dawn need a separate
 portability review; the benchmark suite is excluded from this wave.
+
+Binary expectation bytes for excluded cases are preserved only in evidence, as
+labelled encoding/byte-count/base64/SHA-256 objects. This is report serialization,
+not a Liquid value converter. Repeated runs retain previous reports and logs in
+a timestamped `history/` directory; stale successful reports cannot qualify a
+new failed run.
