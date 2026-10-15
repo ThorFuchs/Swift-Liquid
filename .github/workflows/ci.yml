@@ -1,11 +1,11 @@
-name: Swift-Liquid interpolation investigation
+name: Swift-Liquid synchronous interpolation investigation
 on:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   study:
-    name: Bounded interpolation hypotheses and identical-source controls
+    name: Synchronous interpolation, correctness preflight and identical-source controls
     runs-on: xcode-27
     timeout-minutes: 45
     env:
@@ -23,6 +23,7 @@ jobs:
           persist-credentials: false
       - name: Fetch immutable study source and harness
         run: |
+          git fetch --no-tags --depth 1 origin 65f66404e2ad1e62862d22db12c8c5a59001635b
           git fetch --no-tags --depth 1 origin fb81cf4ff01f1bf098ceb5fff65638b1271294e0
           git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
       - name: Run the recorded investigation
@@ -31,7 +32,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: liquid-interpolation-investigation
+          name: liquid-interpolation-followup
           path: Artifacts/matched-performance/
           if-no-files-found: error
           retention-days: 30
