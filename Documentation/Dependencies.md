@@ -1,6 +1,6 @@
 # Bounded partial-dependency inspection
 
-The Swift-Liquid 1.3 candidate adds opt-in inspection of an explicit template bundle.
+Swift-Liquid 1.3 adds opt-in inspection of an explicit template bundle.
 The 1.0–1.2 rendering, filters, single-template inspection and metrics APIs keep
 their behavior. No dependency, context, callback or I/O is added to the core.
 

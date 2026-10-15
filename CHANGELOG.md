@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 — release candidate
+## 1.3.0 — 2026-10-15
 
 - Adopt the [1.3 roadmap](Documentation/Roadmap-1.3.md) and add bounded source/parsed
   partial-dependency inspection, retaining exact names, missing/dynamic references

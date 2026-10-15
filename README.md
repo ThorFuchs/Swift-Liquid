@@ -10,10 +10,10 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.3.0 release candidate** adds bounded partial-dependency inspection
+**Swift-Liquid 1.3.0** adds bounded partial-dependency inspection
 and an explicit CLI dependency report, preserving the 1.0–1.2 APIs and dependency-free core.
 See the
-[1.3.0 candidate notes](Documentation/Releases/1.3.0.md)
+[1.3.0 release notes](Documentation/Releases/1.3.0.md)
 and [compatibility evidence](Documentation/Conformance.md). Maintained by
 [Thorsten Fuchs](https://github.com/ThorFuchs).
 
@@ -40,11 +40,10 @@ empty arrays, and zero are truthy.
 
 Swift tools/compiler **6.4 or later**, in Swift language mode 6.
 
-The published version is 1.2.0. The 1.3 candidate API below requires a candidate
-checkout until publication. Add the stable package dependency:
+Add the stable package dependency:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.2.0")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.0")
 ```
 
 Add the library to your target:

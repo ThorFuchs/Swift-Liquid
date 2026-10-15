@@ -174,7 +174,7 @@ stderr convention and emit no graph. An automatic CI rejection policy or a new
 ## Delivery sequence and release gates
 
 The implementation in PR #9 was merged for release preparation on 2026-10-15.
-The [1.3.0 candidate notes](Releases/1.3.0.md) describe the delivered API and CLI.
+The [1.3.0 release notes](Releases/1.3.0.md) describe the delivered API and CLI.
 Final qualification compares all 26 common 1.2 records and the 24-pair candidate
 metrics phase; the four new graph workloads remain separate observations.
 

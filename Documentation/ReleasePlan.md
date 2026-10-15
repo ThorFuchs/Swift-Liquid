@@ -91,7 +91,7 @@ workloads against immutable 1.2.0 and measure graph construction separately.
 The roadmap defines the delivery sequence, analysis bounds and acceptance gates;
 scope adoption authorizes implementation; version publication requires a separate request.
 
-The 1.3 candidate retains 65 test functions, five public consumers, 60 legacy CLI
+Swift-Liquid 1.3 retains 65 test functions, five public consumers, 60 legacy CLI
 cases and 24 dependency CLI cases, plus six positive/nineteen negative report-
 schema vectors evaluated by Swift-JSON. Five concurrency cases run under
 ThreadSanitizer; AddressSanitizer runs the full fixture suite. The duplicate-path
