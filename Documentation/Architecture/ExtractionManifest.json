@@ -492,6 +492,28 @@
         "Add pinned-Ruby supplemental all-mode controls for mutable operands, comma/or alternatives, dynamic lookup, partials, errors/recovery, budgets, concurrent immutable-template reuse and deterministic cancellation. Preserve all existing test bodies and fixtures."
       ],
       "qualification": "One final clean SHA for native Debug/Release, ASan/TSan, docs, platforms, immutable 1.3.0 installation, pinned reference and independent lane. Preserve denominator, raw/qualified comparisons, actual exits and all old returns; no benchmark claims."
+    },
+    {
+      "area": "Approved range-property follow-up",
+      "scopeDecision": "Maintainer requested pinned Ruby first/last/size range properties and all gates on 2026-10-16. No fixtures, existing authored expectations, merge, release, public API, grammar or numeric-domain changes.",
+      "files": [
+        "Sources/Liquid/Support/LiquidSpecialValue.swift",
+        "Sources/Liquid/Support/RuntimeSize.swift",
+        "Sources/Liquid/Syntax/Expression.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/RangePropertyTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R3/RANGE-PROPERTIES.md"
+      ],
+      "changes": [
+        "Preserve admitted typed range endpoints and count, including zero-cardinality descending ranges.",
+        "Use typed lazy range commands in static/multicomponent/evaluated access and argument-free standard filters; preserve bracket-key identity for all three command names.",
+        "Retain range construction admission and empty descending iteration without widening indexing, reflection, coercion or public surface.",
+        "Add all-mode source/parsed raising/recovery/metrics, partial, finite-budget, shared-template and coordinated cancellation regressions; preserve existing tests and corpus."
+      ],
+      "qualification": "Fresh clean-head native Debug/Release, ASan/TSan, docs/DocC, platforms, published 1.3.0 installation, pinned reference and failed independent lane, with exact transitions, unchanged denominator and retained receipts. No performance measurements."
     }
   ]
 }

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Support range `first`, `last` and `size` dot commands with pinned Ruby
+  semantics, including descending endpoints and bracket-key separation.
+  Keep finite admission and pinned fixtures unchanged.
+
 - Reevaluate the case operand for every when comparison, following pinned Ruby
   through branch mutations, repeated alternatives and else-only cases. Charge
   performed work normally; preserve fixture bytes and existing expectations.

@@ -36,6 +36,8 @@ extension Renderer {
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
         let value: Any
         if let range = input as? RuntimeRange {
+            if filter.arguments.isEmpty, filter.namedArguments.isEmpty,
+               let result = range.commandValue(for: filter.name.string) { return result }
             let arrayFilters: Set<String> = ["join", "first", "last", "size", "sort", "sort_natural", "reverse", "map", "where", "reject", "find", "find_index", "has", "sum", "uniq", "compact", "concat"]
             value = arrayFilters.contains(filter.name.string) ? range.values : range.description
         } else { value = input }

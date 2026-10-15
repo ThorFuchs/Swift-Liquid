@@ -115,3 +115,7 @@ After exact-source qualification, review the local source and return evidence.
 Any merge, release, public API proposal or further semantic repair requires its
 own scope. Range-property, grammar and hosting findings do not expand the approved
 case-operand correction; each retains a separate scope.
+
+The separately authorized [range-property follow-up](RANGE-PROPERTIES.md) corrects
+`first`, `last` and `size`, retaining range identity for descending endpoints.
+Its fresh source-bound qualification preserves the original corpus and denominator.

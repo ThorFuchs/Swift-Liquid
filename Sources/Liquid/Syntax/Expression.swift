@@ -297,9 +297,10 @@ extension LiquidExpression {
             return name.isEmpty ? nil : [name.string]
 
         case .access(let expr, let key, let command):
-            // Bracket lookup does not invoke the `size` command. Preserve it
+            // Bracket lookup does not invoke range commands. Preserve it
             // for evaluation instead of collapsing it into a dotted fast path.
-            if !command, case .literal(.string(let name)) = key, name.equals("size") { return nil }
+            if !command, case .literal(.string(let name)) = key,
+               name.equals("size") || name.equals("first") || name.equals("last") { return nil }
             guard var components = expr.staticVariablePathComponents else {
                 return nil
             }

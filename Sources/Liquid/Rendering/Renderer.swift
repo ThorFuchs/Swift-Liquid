@@ -201,7 +201,9 @@ internal final class RenderingContext {
                     case .size:
                         value = runtimeSizeProperty(baseValue)
                     case .first:
-                        if let dict = baseValue as? [String: Any], let v = dict["first"] {
+                        if let range = baseValue as? RuntimeRange {
+                            value = range.commandValue(for: "first")
+                        } else if let dict = baseValue as? [String: Any], let v = dict["first"] {
                             value = v
                         } else if let ordered = baseValue as? RuntimeObject {
                             if let v = ordered["first"] {
@@ -220,7 +222,9 @@ internal final class RenderingContext {
                             value = nil
                         }
                     case .last:
-                        if let dict = baseValue as? [String: Any], let v = dict["last"] {
+                        if let range = baseValue as? RuntimeRange {
+                            value = range.commandValue(for: "last")
+                        } else if let dict = baseValue as? [String: Any], let v = dict["last"] {
                             value = v
                         } else if let ordered = baseValue as? RuntimeObject, let v = ordered["last"] {
                             value = v
@@ -566,6 +570,7 @@ internal final class RenderingContext {
             return runtimeSizeProperty(value)
 
         case .first:
+            if let range = value as? RuntimeRange { return range.commandValue(for: "first") }
             // Dictionary key "first" takes priority (e.g., forloop.first)
             if let dict = value as? [String: Any], let val = dict["first"] {
                 return val
@@ -579,6 +584,7 @@ internal final class RenderingContext {
             return nil
 
         case .last:
+            if let range = value as? RuntimeRange { return range.commandValue(for: "last") }
             // Dictionary key "last" takes priority (e.g., forloop.last)
             if let dict = value as? [String: Any], let val = dict["last"] {
                 return val

@@ -61,6 +61,11 @@
     "LiquidTests.QualityPropertyTests/dependencyCyclesAgreeWithReachabilityOracle(seed:)": 4,
     "LiquidTests.QualityPropertyTests/renderingEntryPointsAgree(seed:)": 4,
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()": null,
+    "LiquidTests.RangePropertyTests/cancellationBeforeRangeCommandsPreservesSiblingReuse(recovering:)": 2,
+    "LiquidTests.RangePropertyTests/concurrentRangeCommandsKeepParsedTemplatesImmutable(mode:)": 3,
+    "LiquidTests.RangePropertyTests/rangeCommandsPreserveRaisingAndRecoveredErrors(mode:)": 3,
+    "LiquidTests.RangePropertyTests/rangePropertiesMatchPinnedRubyAcrossPolicies(mode:)": 3,
+    "LiquidTests.RangePropertyTests/rangePropertiesRetainFiniteAdmissionAndWork(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)": 2,
     "LiquidTests.RuntimeSemanticsTests/caseBranchesKeepNullSeparateFromElse(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/caseInspectionAndOperationalBoundsRemainExplicit()": null,
@@ -101,6 +106,7 @@
     "LiquidTests.InspectionTests/concurrentRendersAndInspectionShareOnlyImmutableTemplates()",
     "LiquidTests.LiquidSpecRegressionTests/concurrentRendersKeepCycleSitesImmutable()",
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()",
+    "LiquidTests.RangePropertyTests/concurrentRangeCommandsKeepParsedTemplatesImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"
@@ -122,6 +128,7 @@
     "LiquidTests.MetricsTests/cancellationSurvivesSuspendingHostCode(recovering:)",
     "LiquidTests.MetricsTests/suspensionIsInsideTotalDuration()",
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()",
+    "LiquidTests.RangePropertyTests/cancellationBeforeRangeCommandsPreservesSiblingReuse(recovering:)",
     "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)",
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)"
   ]

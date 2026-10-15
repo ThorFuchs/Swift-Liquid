@@ -3,6 +3,7 @@
 // The typed public value domain. Nil means no size command; the filter's
 // documented nil/unsupported fallback is zero. Text counts Unicode scalars.
 internal func runtimeValueSize(_ value: Any) -> Int? {
+    if let range = value as? RuntimeRange { return range.count }
     if value is Int { return MemoryLayout<Int>.size }
     if let string = value as? String { return string.unicodeScalars.count }
     if let array = value as? [Any] { return array.count }

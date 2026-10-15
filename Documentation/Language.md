@@ -70,3 +70,8 @@ The golden suite is evidence of tested behavior, not a formal proof that every
 possible Liquid program agrees with Shopify. Known or newly discovered
 differences must be documented in [conformance evidence](Conformance.md) and
 resolved or explicitly scoped before a stable compatibility claim is released.
+
+Range dot commands `first`, `last` and `size` read admitted endpoints and count.
+For `(5..1)` they return `5`, `1`, `0`; iteration remains empty. Bracket strings
+are key lookups and do not invoke range commands. See the
+[reference-backed range decision](LQ1-R3/RANGE-PROPERTIES.md) for scope and limits.

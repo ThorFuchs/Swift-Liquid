@@ -191,6 +191,10 @@ extension Renderer {
 
     @inline(__always)
     internal func evaluateAccessValueWithStringKey(baseValue: Any, key: String, command: Bool = false) -> Any {
+        if let range = baseValue as? RuntimeRange {
+            guard command, let value = range.commandValue(for: key) else { return NSNull() }
+            return value
+        }
         // Dictionary lookup takes priority — enables forloop.first, forloop.last, forloop.length
         if let val = dictValue(baseValue, forKey: key) { return val }
         if isDictLike(baseValue) { /* key not found, fall through */ }
@@ -348,11 +352,11 @@ extension Renderer {
               let endInt = Int(exactly: endNum.rounded(.towardZero)) else { throw RenderError.custom("Range bound exceeds integer range") }
 
         if startInt > endInt {
-            return [Any]()
+            return RuntimeRange(start: startInt, end: endInt, count: 0)
         }
         let (distance, overflow) = endInt.subtractingReportingOverflow(startInt)
         guard !overflow, distance < budget.limits.loopIterations else { throw RenderError.custom("Range exceeds iteration limit") }
-        return RuntimeRange(start: startInt, end: endInt)
+        return RuntimeRange(start: startInt, end: endInt, count: distance + 1)
     }
     
     internal func evaluateTest(expr: LiquidExpression, test: TestOp) async throws -> Any {
