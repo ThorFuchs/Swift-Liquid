@@ -70,11 +70,30 @@ adapter.on_render { |ctx, assigns, render_options| bridge.render(ctx.fetch(:temp
 adapter.ensure_setup!
 reference = Liquid::Spec::AdapterRunner.new(name: 'Pinned Ruby Liquid')
 reference.on_setup { |_ctx| }
-reference.on_compile { |ctx, source, parse_options| ctx[:template] = Liquid::Template.parse(source, **parse_options) }
+reference_observation = {}
+reference.on_compile do |ctx, source, parse_options|
+  reference_observation[:category] = 'compile'
+  begin
+    ctx[:template] = Liquid::Template.parse(source, **parse_options)
+  rescue StandardError => error
+    reference_observation[:category] = error.is_a?(Liquid::SyntaxError) ? 'parse-error' : 'operational-error'
+    reference_observation[:error] = { type: error.class.name, message: error.message }
+    raise
+  end
+end
 reference.on_render do |ctx, assigns, render_options|
   context = Liquid::Context.build(static_environments: assigns,
     registers: Liquid::Registers.new(render_options.fetch(:registers)), rethrow_errors: render_options.fetch(:strict_errors))
-  ctx.fetch(:template).render(context)
+  begin
+    rendered = ctx.fetch(:template).render(context)
+    reference_observation[:category] = ctx.fetch(:template).errors.empty? ? 'successful-render' : 'recovered-error'
+    reference_observation[:errors] = ctx.fetch(:template).errors.map { |error| { type: error.class.name, message: error.message, line: error.line_number } }
+    rendered
+  rescue StandardError => error
+    reference_observation[:category] = error.is_a?(Liquid::Error) ? 'render-error' : 'operational-error'
+    reference_observation[:error] = { type: error.class.name, message: error.message }
+    raise
+  end
 end
 reference.ensure_setup!
 rows = []; runs = []
@@ -129,11 +148,15 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
           row[:comparison] = 'mismatched'
         end
         # Independent pinned-Ruby result, with the same upstream comparator and clock.
+        reference_observation.clear
         ref = reference.run_single(spec)
-        row[:referenceComparison] = ref.passed? ? 'matched' : 'mismatched'
+        row[:referenceObservedCategory] = reference_observation[:category]
+        row[:referenceReportedErrors] = reference_observation[:error] || reference_observation[:errors]
+        reference_phase_matches = !%w[parse-error render-error].include?(row[:expectedCategory]) || row[:expectedCategory] == reference_observation[:category]
+        row[:referenceComparison] = ref.passed? && reference_phase_matches ? 'matched' : 'mismatched'
         row[:referenceActual] = ref.output unless ref.passed? && result.passed?
         if row[:comparison] != 'matched'
-          row[:failureCategory] = ref.passed? ? 'unresolved' : 'test-suite-concern'
+          row[:failureCategory] = row[:referenceComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
         end
       end
       row[:resultDigest] ||= Digest::SHA256.hexdigest(JSON.generate(row.reject { |k, _| k == :resultDigest }))
