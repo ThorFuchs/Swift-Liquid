@@ -44,8 +44,9 @@ def source_snapshot():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance'], default='native')
-    parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference lane only)')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'liquid-spec'], default='native')
+    parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
+    parser.add_argument('--spec-path', type=Path, help='Clean pinned liquid-spec checkout for the opt-in functional lane')
     args = parser.parse_args()
     output = ROOT / 'Artifacts' / args.lane
     output.mkdir(parents=True, exist_ok=True)
@@ -110,6 +111,11 @@ def main():
         elif args.lane == 'safety':
             run_tests(['--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run_tests(['--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread', profile='thread')
+        elif args.lane == 'liquid-spec':
+            if not args.spec_path or not args.reference_path:
+                raise RuntimeError('liquid-spec requires --spec-path and --reference-path')
+            run([sys.executable, '-B', 'Scripts/check_liquid_spec.py', '--spec-path', str(args.spec_path),
+                 '--reference-path', str(args.reference_path), '--output', str(output / 'independent')], 'liquid-spec')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')

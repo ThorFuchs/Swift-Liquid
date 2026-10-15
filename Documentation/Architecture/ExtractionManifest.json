@@ -296,7 +296,7 @@
         "Adapt compiler-derived comment/parameter coverage and exact README-fence qualification from the Apache-2.0 Swift-JSON tooling, preserving one Liquid product and an empty root graph.",
         "Adapt the native DocC landing and base-path route/asset checks for one Liquid catalog, source-bound public build metadata and stable existing API URLs; retain an unchanged navigator-index alias for legacy article routes on Swift 6.4.",
         "Protect 126 authored public declarations from the qualified 1.3.0 graph; allow compatible additions and exclude compiler synthesis from the source baseline.",
-        "Add fixed-seed public entry-point properties and an independent Floyd\u2013Warshall cycle-group oracle; replace test-only noncancellable continuation barriers with checked actor/AsyncStream barriers."
+        "Add fixed-seed public entry-point properties and an independent Floyd–Warshall cycle-group oracle; replace test-only noncancellable continuation barriers with checked actor/AsyncStream barriers."
       ],
       "qualification": "Native/debug/release and public consumers, exact README output, public comment/API admission, static route checks, sanitizers, existing fixture/reference accounting and clean source rebuild through Scripts/ci.py. No runtime semantics or fixture bytes changed.",
       "referenceCommit": "037e735dc6224789e4d04d2c18d15b8d27440198",
@@ -323,7 +323,30 @@
         "Qualify the adapter with independent negative admission cases and actual failed, disabled, known-issue, empty and filtered runner probes.",
         "Replace recursive JSON container descent with a bounded explicit stack after the 128-level regression exposes sanitizer stack exhaustion; preserve the public depth, scalar-key, ordering, numeric and error contracts."
       ],
-      "qualification": "Affected Scripts/ci.py native, sanitizer and documentation lanes; selected adversarial/cancellation repetitions under parallel execution. Synchronous traversal coverage claims entry cancellation, not selected-phase latency. Root dependencies and released 1.0\u20131.3 contracts remain unchanged."
+      "qualification": "Affected Scripts/ci.py native, sanitizer and documentation lanes; selected adversarial/cancellation repetitions under parallel execution. Synchronous traversal coverage claims entry cancellation, not selected-phase latency. Root dependencies and released 1.0–1.3 contracts remain unchanged."
+    },
+    {
+      "area": "LQ1 independent liquid-spec qualification",
+      "scopeDecision": "Maintainer authorized local gated LQ1 implementation on 2026-10-15; no publication or public API mutation.",
+      "files": [
+        "Tools/LiquidSpecAdapter",
+        "Scripts/check_liquid_spec.py",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Documentation/LQ1",
+        "Documentation/Comparisons",
+        "Examples/*/Package.swift",
+        "Scripts/summarize_liquid_spec.py"
+      ],
+      "changes": [
+        "Author an isolated public-API JSON-RPC adapter and use the pinned upstream runner/comparator with visible eligibility and exact failure receipts.",
+        "Handle upstream render result.error and graceful quit in the local bridge; retain all unsupported parser-mode records.",
+        "Fix nonpositive truncate lengths to retain the ending without Int.min subtraction overflow; no corpus or defaults changed.",
+        "Document source-confirmed peer APIs and additive design studies without implementing new public surface.",
+        "Explicitly name local package dependencies in six consumer manifests so an isolated checkout with another directory name can run unchanged public examples."
+      ],
+      "qualification": "Separate failed independent gate; historical native, safety, docs, reference and platform receipts reported separately. Truncate provenance: liquid-spec basics/filter-edge-cases.yml:282 at 84bf25e."
     }
   ]
 }

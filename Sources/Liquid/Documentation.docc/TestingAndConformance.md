@@ -63,3 +63,14 @@ not add conformance renders or change published release receipts.
 See the repository's
 [testing and evidence contract](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Testing.md)
 for fixed seeds, repeat runs, adapter limitations and retained artifact paths.
+
+## Independent liquid-spec track
+
+The opt-in LQ1 development adapter runs portable suites from
+[Shopify/liquid-spec](https://github.com/Shopify/liquid-spec/tree/84bf25e0edbca5f7e530574788b0f875ab331f50)
+using only the public module. The broader independent gate currently fails with
+open parser, diagnostic and rendering differences. Transport exclusions and
+operational limits remain visible; none revises the immutable historical corpus
+or proves complete language compatibility. See the
+[LQ1 verdict and reproduction](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/LQ1/README.md)
+and [peer API crosswalk](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Comparisons/README.md).

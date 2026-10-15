@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "liquidSpec": {
+    "repository": "https://github.com/Shopify/liquid-spec",
+    "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+    "version": "2.0.0",
+    "license": "MIT"
+  },
+  "rubyLiquid": {
+    "repository": "https://github.com/Shopify/liquid",
+    "commit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+    "version": "5.14.0",
+    "license": "MIT"
+  },
+  "swiftLiquid": {
+    "publishedVersion": "1.3.0",
+    "publishedCommit": "9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e",
+    "implementationBase": "aeecc4f267aa4a19980b061ff7906f7ada3ac6c1"
+  },
+  "advertisedSourceCounts": {
+    "source": "https://github.com/Shopify/liquid-spec/blob/84bf25e0edbca5f7e530574788b0f875ab331f50/README.md#test-suites",
+    "basics": 955,
+    "liquid_ruby": 2106,
+    "liquid_ruby_lax": 121,
+    "parser_errors": 1905,
+    "partials": 12,
+    "benchmarks": 10,
+    "shopify_production_recordings": 2260,
+    "shopify_theme_dawn": 26
+  },
+  "defaultCorrectnessSuites": [
+    "basics",
+    "liquid_ruby",
+    "liquid_ruby_lax",
+    "parser_errors",
+    "partials"
+  ],
+  "excludedSuites": {
+    "benchmarks": "LQ1 excludes performance work",
+    "shopify_production_recordings": "separate hosted-feature and transport portability review required",
+    "shopify_theme_dawn": "separate hosted-feature and transport portability review required"
+  }
+}

@@ -18,6 +18,8 @@ guides that are compiled from the public Swift symbol graph.
 | [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
+| [Peer API crosswalk](Comparisons/README.md) | Pinned task-oriented API comparisons and evidence grades |
+| [LQ1 independent conformance](LQ1/README.md) | Isolated liquid-spec tooling, exact failures and next review gate |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
