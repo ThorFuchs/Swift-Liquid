@@ -370,6 +370,36 @@
         "Explicitly name local package dependencies in six consumer manifests so an isolated checkout with another directory name can run unchanged public examples."
       ],
       "qualification": "Separate failed independent gate; historical native, safety, docs, reference and platform receipts reported separately. Truncate provenance: liquid-spec basics/filter-edge-cases.yml:282 at 84bf25e."
+    },
+    {
+      "area": "LQ1-R2 independent conformance triage and integration",
+      "scopeDecision": "Maintainer authorized local constrained R2 implementation; at most three semantic repairs; no publication, merge, API or parser-default change.",
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter",
+        "Scripts/ci.py",
+        "Scripts/check_liquid_spec.py",
+        "Scripts/analyze_liquid_spec.py",
+        "Scripts/liquid_spec_diagnostics.py",
+        "Scripts/check_liquid_spec_diagnostics.py",
+        "Scripts/summarize_liquid_spec.py",
+        "Documentation/LQ1-R2"
+      ],
+      "changes": [
+        "Replay all five LQ1 commits onto qualified c683b620 with content-aware CI/documentation reconciliation; preserve hosted/installation/source-inventory controls.",
+        "Preserve original upstream result.passed? and evidence digests; retain phase/operational qualification separately; add diagnostic dimensions and negative accounting controls.",
+        "Reject bare bracket primary expressions only in strict2; preserve older parser modes.",
+        "Enforce for reversed modifier order and strict separator termination without expanding accepted grammar; lax ignores late modifiers.",
+        "Keep immutable checked-Sendable cycle-site identity in AST; invocation-owned counters save/restore with partial scope and remain isolated across concurrent renders.",
+        "Record exact starting/ending source revision and snapshots for qualification; document E3 only, deferring other API studies."
+      ],
+      "qualification": "Three separate pinned independent runs with unchanged eligibility, public Swift Testing regressions and full final-head native/safety/docs/reference/platform/consumer qualification. Historical fixtures and 1.0\u20131.3 public API unchanged; independent failures retained."
     }
   ]
 }

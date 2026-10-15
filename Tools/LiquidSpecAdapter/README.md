@@ -39,3 +39,8 @@ is retried to obtain a passing result. Both adaptations are local to tooling.
 Read [the LQ1 contract and verdict](../../Documentation/LQ1/README.md),
 [adapter limits](../../Documentation/LQ1/ADAPTER_LIMITS.md) and the
 [pinned upstream protocol](https://github.com/Shopify/liquid-spec/blob/84bf25e0edbca5f7e530574788b0f875ab331f50/docs/json-rpc-protocol.md).
+
+R2 records the original upstream `result.passed?` unchanged in `upstreamVerdict`
+and `comparison`. The separate `qualificationComparison` retains LQ1's stricter
+phase/operational checks. Diagnostic dimensions are explanatory, never a
+replacement comparator. See [R2 evidence semantics](../../Documentation/LQ1-R2/README.md).

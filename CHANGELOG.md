@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Reconcile LQ1 with quality sprint 3, preserve raw upstream comparison verdicts,
+  add a supplemental diagnostic ledger and bind gates to their exact source revision.
+- Correct strict2 bare-bracket rejection, for-modifier ordering and unnamed
+  variable-cycle site identity with public, concurrency and parser-mode regressions.
+- Document remaining acceptance/output differences and the design-only E3 RFC;
+  independent conformance remains a failed, separately reported gate.
+
 - Add an opt-in, isolated Shopify liquid-spec correctness lane with pinned sources,
   explicit transport/domain eligibility, raw protocol evidence and honest failures.
   This independent track does not revise any released fixture or receipt.
