@@ -347,6 +347,29 @@
         "Verify index absence and prepare separate one-URL registration without claiming a live index page or unqualified platform support."
       ],
       "qualification": "Affected Scripts/ci.py workflow, native, documentation, installation and clean-archive gates plus actual provider-hosted CI evidence. No runtime, API, fixture, license or root dependency changes."
+    },
+    {
+      "area": "LQ1 independent liquid-spec qualification",
+      "scopeDecision": "Maintainer authorized local gated LQ1 implementation on 2026-10-15; no publication or public API mutation.",
+      "files": [
+        "Tools/LiquidSpecAdapter",
+        "Scripts/check_liquid_spec.py",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Documentation/LQ1",
+        "Documentation/Comparisons",
+        "Examples/*/Package.swift",
+        "Scripts/summarize_liquid_spec.py"
+      ],
+      "changes": [
+        "Author an isolated public-API JSON-RPC adapter and use the pinned upstream runner/comparator with visible eligibility and exact failure receipts.",
+        "Handle upstream render result.error and graceful quit in the local bridge; retain all unsupported parser-mode records.",
+        "Fix nonpositive truncate lengths to retain the ending without Int.min subtraction overflow; no corpus or defaults changed.",
+        "Document source-confirmed peer APIs and additive design studies without implementing new public surface.",
+        "Explicitly name local package dependencies in six consumer manifests so an isolated checkout with another directory name can run unchanged public examples."
+      ],
+      "qualification": "Separate failed independent gate; historical native, safety, docs, reference and platform receipts reported separately. Truncate provenance: liquid-spec basics/filter-edge-cases.yml:282 at 84bf25e."
     }
   ]
 }

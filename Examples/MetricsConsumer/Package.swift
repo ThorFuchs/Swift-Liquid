@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "LiquidMetricsConsumer",
     platforms: [.macOS(.v14)],
-    dependencies: [.package(path: "../..")],
+    dependencies: [.package(name: "Swift-Liquid", path: "../..")],
     targets: [.executableTarget(name: "LiquidMetricsConsumer", dependencies: [.product(name: "Liquid", package: "Swift-Liquid")])],
     swiftLanguageModes: [.v6]
 )

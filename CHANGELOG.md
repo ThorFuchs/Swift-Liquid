@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Add an opt-in, isolated Shopify liquid-spec correctness lane with pinned sources,
+  explicit transport/domain eligibility, raw protocol evidence and honest failures.
+  This independent track does not revise any released fixture or receipt.
+- Fix nonpositive `truncate` lengths to retain the ending, including overflow-safe
+  `Int.min` handling; add public regressions in all three parser modes.
+- Make the six public consumer packages independent of checkout directory name.
+- Add a source-backed peer API crosswalk and five deferred design studies; keep
+  the root dependency graph, default policies and released public API unchanged.
+
+
 - Verify GitHub-hosted contribution isolation and enforce runner provenance,
   read-only qualification, pinned actions and main-only Pages publishing with
   semantic policy regressions. Retain external-contributor approval controls.

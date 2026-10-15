@@ -77,3 +77,14 @@ An additional installation gate clones the immutable published 1.3.0 anchor,
 builds its CLI and resolves an independent public-URL library consumer using fresh
 storage. It complements the current candidate's consumers and clean source archive.
 Package-index acceptance and unqualified platform execution are separate observations.
+
+## Independent liquid-spec track
+
+The opt-in LQ1 development adapter runs portable suites from
+[Shopify/liquid-spec](https://github.com/Shopify/liquid-spec/tree/84bf25e0edbca5f7e530574788b0f875ab331f50)
+using only the public module. The broader independent gate currently fails with
+open parser, diagnostic and rendering differences. Transport exclusions and
+operational limits remain visible; none revises the immutable historical corpus
+or proves complete language compatibility. See the
+[LQ1 verdict and reproduction](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/LQ1/README.md)
+and [peer API crosswalk](https://github.com/ThorFuchs/Swift-Liquid/blob/main/Documentation/Comparisons/README.md).
