@@ -23,7 +23,7 @@ LiquidBenchmarks /tmp/ordinary.json --render-mode ordinary
 LiquidBenchmarks /tmp/metrics.json --render-mode metrics
 ```
 
-Each mode emits twelve render records with all sample values. The matched lane
+Each explicit mode emits 24 throwing/diagnostic render records with all sample values. The matched lane
 builds both versions with the unchanged pinned 1.1.0 common harness, then compares
 metrics modes in a separate candidate binary. Both phases use three serial ABBA
 blocks; all three binaries are built before timing. The package manifest and

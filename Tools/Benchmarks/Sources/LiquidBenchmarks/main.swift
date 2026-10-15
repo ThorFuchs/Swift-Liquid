@@ -57,33 +57,49 @@ struct Benchmarks {
             else { activeEngine = try LiquidEngine(filters: workload.filters) }
             let parsed = try LiquidTemplate(workload.source)
             let partials = try workload.partials.mapValues { try LiquidTemplate($0) }
-            for measured in measuredModes {
-                for reuse in [false, true] {
-                    var timings: [Double] = []
-                    var checksum: UInt64 = 14_695_981_039_346_656_037
-                    for sample in -10..<samples {
-                        let start = clock.now
-                        for _ in 0..<repetitions {
-                            let output: String
-                            if measured {
-                                if reuse { output = try await activeEngine.renderWithMetrics(parsed, context: workload.context, templates: partials).output }
-                                else { output = try await activeEngine.renderWithMetrics(template: workload.source, context: workload.context, templates: workload.partials).output }
-                            } else if reuse { output = try await activeEngine.render(parsed, context: workload.context, templates: partials) }
-                            else { output = try await activeEngine.render(template: workload.source, context: workload.context, templates: workload.partials) }
-                            guard output == workload.expected else { throw BenchmarkFailure("Output mismatch for \(workload.name)") }
-                            for byte in output.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+            for diagnostic in (renderMode == "all" ? [false] : [false, true]) {
+                for measured in measuredModes {
+                    for reuse in [false, true] {
+                        var timings: [Double] = []
+                        var checksum: UInt64 = 14_695_981_039_346_656_037
+                        for sample in -10..<samples {
+                            let start = clock.now
+                            for _ in 0..<repetitions {
+                                let output: String
+                                if diagnostic {
+                                    let diagnostics: [LiquidDiagnostic]
+                                    if measured {
+                                        let result: LiquidMeasuredRenderResult
+                                        if reuse { result = try await activeEngine.renderWithDiagnosticsAndMetrics(parsed, context: workload.context, templates: partials) }
+                                        else { result = try await activeEngine.renderWithDiagnosticsAndMetrics(template: workload.source, context: workload.context, templates: workload.partials) }
+                                        output = result.output; diagnostics = result.diagnostics
+                                    } else {
+                                        let result: LiquidRenderResult
+                                        if reuse { result = try await activeEngine.renderWithDiagnostics(parsed, context: workload.context, templates: partials) }
+                                        else { result = try await activeEngine.renderWithDiagnostics(template: workload.source, context: workload.context, templates: workload.partials) }
+                                        output = result.output; diagnostics = result.diagnostics
+                                    }
+                                    guard diagnostics.isEmpty else { throw BenchmarkFailure("Unexpected diagnostic") }
+                                } else if measured {
+                                    if reuse { output = try await activeEngine.renderWithMetrics(parsed, context: workload.context, templates: partials).output }
+                                    else { output = try await activeEngine.renderWithMetrics(template: workload.source, context: workload.context, templates: workload.partials).output }
+                                } else if reuse { output = try await activeEngine.render(parsed, context: workload.context, templates: partials) }
+                                else { output = try await activeEngine.render(template: workload.source, context: workload.context, templates: workload.partials) }
+                                guard output == workload.expected else { throw BenchmarkFailure("Output mismatch for \(workload.name)") }
+                                for byte in output.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+                            }
+                            let duration = start.duration(to: clock.now).components
+                            if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
                         }
-                        let duration = start.duration(to: clock.now).components
-                        if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
+                        let rawTimings = timings
+                        timings.sort()
+                        records.append(["name": workload.name, "mode": (diagnostic ? "diagnostic-" : "") + (reuse ? "reused-template" : "parse-and-render") + (measured ? "-metrics" : ""),
+                                        "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
+                                        "sampleNanoseconds": rawTimings,
+                                        "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
+                                        "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
+                                        "outputBytes": workload.expected.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
                     }
-                    let rawTimings = timings
-                    timings.sort()
-                    records.append(["name": workload.name, "mode": (reuse ? "reused-template" : "parse-and-render") + (measured ? "-metrics" : ""),
-                                    "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
-                                    "sampleNanoseconds": rawTimings,
-                                    "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
-                                    "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
-                                    "outputBytes": workload.expected.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
                 }
             }
         }
@@ -133,7 +149,7 @@ struct Benchmarks {
                              "disabledMedianNanoseconds": disabled, "enabledMedianNanoseconds": enabled,
                              "medianChangePercent": (enabled / disabled - 1) * 100])
         }
-        guard records.count == (renderMode == "all" ? 26 : 12), overhead.count == (renderMode == "all" ? 12 : 0) else { throw BenchmarkFailure("Incomplete benchmark run") }
+        guard records.count == (renderMode == "all" ? 26 : 24), overhead.count == (renderMode == "all" ? 12 : 0) else { throw BenchmarkFailure("Incomplete benchmark run") }
         let result: [String: Any] = ["schemaVersion": 1, "platform": ProcessInfo.processInfo.operatingSystemVersionString,
                                      "configuration": "release", "renderMode": renderMode, "workloads": records, "metricsOverhead": overhead]
         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])

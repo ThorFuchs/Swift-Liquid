@@ -65,6 +65,8 @@ def index_records(result, metrics_mode=None):
         expected |= {('inspection', 'parse-and-inspect'), ('inspection', 'inspect-reused-template')}
     elif result.get('renderMode') != metrics_mode:
         raise RuntimeError('Incorrect candidate metrics benchmark mode')
+    else:
+        expected |= {(name, 'diagnostic-' + mode) for name, mode in expected.copy()}
     if len(result['workloads']) != len(expected) or set(records) != expected:
         raise RuntimeError('Missing or duplicate benchmark records')
     for record in records.values():
@@ -79,6 +81,9 @@ def index_records(result, metrics_mode=None):
             samples = record.get('sampleNanoseconds', [])
             if len(samples) != 25 or any(not 0 < sample < float('inf') for sample in samples):
                 raise RuntimeError('Missing or invalid retained samples')
+            ordered = sorted(samples)
+            if (record['medianNanoseconds'], record['p95Nanoseconds'], record['minimumNanoseconds'], record['maximumNanoseconds']) != (ordered[12], ordered[23], ordered[0], ordered[-1]):
+                raise RuntimeError('Metrics timing summary differs from retained samples')
     return records
 
 
@@ -175,8 +180,9 @@ def main():
     metric_records = {r['name']: index_records(json.loads((OUTPUT / r['result']).read_text()), r['version']) for r in metrics['runs']}
     common = all_records[metadata['runs'][0]['name']]
     for key, record in metric_records[metrics['runs'][0]['name']].items():
+        common_key = (key[0], key[1].removeprefix('diagnostic-'))
         for field in ['outputBytes', 'fnv1aChecksum', 'samples', 'warmupSamples', 'repetitionsPerSample']:
-            if record[field] != common[key][field]:
+            if record[field] != common[common_key][field]:
                 raise RuntimeError(f'Metrics harness differs from common workload: {key}, {field}')
     metrics['comparisons'] = comparisons(metrics['runs'], metric_records, ['ordinary', 'metrics'])
     metrics['reviewRequired'] = [r['name'] + '/' + r['mode'] for r in metrics['comparisons'] if r['requiresReview']]

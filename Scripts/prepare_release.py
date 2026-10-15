@@ -79,11 +79,16 @@ def main():
     if (metrics['candidateCommit'] != matched['candidateCommit'] or metrics['librarySHA256'] != matched['candidateLibrarySHA256']
             or metrics['harnessSHA256'] != matched['metricsHarnessSHA256']
             or metrics['order'] != ['ordinary', 'metrics', 'metrics', 'ordinary'] * 3
-            or [r['version'] for r in metrics['runs']] != metrics['order'] or len(metrics['comparisons']) != 12):
+            or [r['version'] for r in metrics['runs']] != metrics['order'] or len(metrics['comparisons']) != 24
+            or metrics['harnessSHA256'] != hashlib.sha256((ROOT / 'Tools/Benchmarks/Sources/LiquidBenchmarks/main.swift').read_bytes()).hexdigest()):
         raise RuntimeError('Metrics comparison is incomplete or uses another library')
     metric_records = {r['name']: index_records(json.loads((matched_root / r['result']).read_text()), r['version']) for r in metrics['runs']}
     if comparisons(metrics['runs'], metric_records, ['ordinary', 'metrics']) != metrics['comparisons']:
         raise RuntimeError('Metrics summary differs from retained measurements')
+    for result in [matched, metrics]:
+        flags = [r['name'] + '/' + r['mode'] for r in result['comparisons'] if r['requiresReview']]
+        if result['reviewRequired'] != flags:
+            raise RuntimeError('Benchmark flag list differs from retained comparisons')
     review = json.loads((evidence / 'benchmark-review.json').read_text())
     if (review['status'] != 'reviewed' or review['releaseQualification'] != 'passed'
             or review['comparisonSHA256'] != hashlib.sha256(comparison_bytes).hexdigest()

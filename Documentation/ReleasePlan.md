@@ -64,7 +64,7 @@ Retain all 1.0/1.1 compatibility gates, 54 test functions, four public consumers
 cases. Qualify all simulator SDKs, compile DocC and rebuild a clean source archive.
 
 The matched lane pins immutable 1.1.0 and its unchanged 14-record harness. It also
-runs twelve candidate enabled/disabled metrics comparisons using the same binary,
+runs 24 candidate enabled/disabled metrics comparisons across both error policies using the same binary,
 with separate three-block ABBA sequences. All binaries build before timing.
 Retain common per-run summaries, individual metrics samples, output checksums,
 environment receipts and both flag lists. Review every flagged result before

@@ -59,12 +59,11 @@ median of six run medians, with every run retained.
 ## Matched metrics overhead
 
 A second phase uses one candidate binary with the current benchmark harness.
-`--render-mode ordinary` and `--render-mode metrics` select the twelve render
-records independently. Three further ABBA blocks alternate ordinary, metrics,
+`--render-mode ordinary` and `--render-mode metrics` select 24 render records across throwing and diagnostic policies independently. Three further ABBA blocks alternate ordinary, metrics,
 metrics, ordinary, yielding six runs per mode. The source, context, partials,
 filters, sampling and expected outputs match the common workloads. All 25 sample
 latencies per metrics-phase record are retained, along with checksums, six run
-medians per side and twelve summary comparisons.
+medians per side and 24 summary comparisons.
 
 The baseline, common candidate and metrics candidate binaries all build before
 any timing begins. Candidate library fingerprints must match across the two
