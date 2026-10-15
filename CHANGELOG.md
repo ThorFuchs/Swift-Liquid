@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Propose a focused [1.3 roadmap](Documentation/Roadmap-1.3.md) for bounded partial
+  dependency inspection and an explicit CLI mode; update the RhoeLiquid feature
+  review against published 1.2.0. This is documentation, with no runtime changes.
+
 ## 1.2.0 — 2026-10-15
 
 - Add opt-in source/parsed render metrics with monotonic durations and existing

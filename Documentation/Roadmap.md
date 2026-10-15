@@ -17,8 +17,9 @@ qualification, and was published on 2026-10-15. The scope decision
 authorizes these additions under [AGENTS.md](../AGENTS.md); publishing a 1.1 version
 requires an explicit maintainer request, provided for 1.1.0 on 2026-10-14.
 
-The [proposed 1.2 roadmap](Roadmap-1.2.md) covers the next scope decision. This
-document retains the adopted 1.1 design and acceptance criteria.
+The [adopted 1.2 roadmap](Roadmap-1.2.md) shipped metrics, and the
+[proposed 1.3 roadmap](Roadmap-1.3.md) covers the next scope decision. This document
+retains the adopted 1.1 design and acceptance criteria.
 
 ## Package and compatibility constraints
 

@@ -13,8 +13,9 @@ This scope follows [1.1.0](Releases/1.1.0.md), which shipped typed custom
 filters and AST inspection. The updated [RhoeLiquid review](Architecture/UpstreamFeatureReview.md)
 compares the remaining features against that release. The
 [metrics contract](Metrics.md) specifies the public API and CLI schema.
-Metrics and CLI implementation are complete. The [1.2.0 release notes](Releases/1.2.0.md)
-cover the release, with matched 1.1.0 measurements and final release qualification.
+Metrics and CLI implementation shipped in [1.2.0](Releases/1.2.0.md), published
+on 2026-10-15 with matched 1.1.0 measurements and final release qualification.
+The [proposed 1.3 roadmap](Roadmap-1.3.md) covers the next scope decision.
 The [adopted 1.1 roadmap](Roadmap.md) remains the
 record of the previous scope decision.
 
