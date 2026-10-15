@@ -56,8 +56,11 @@
     "LiquidTests.QualityPropertyTests/dependencyCyclesAgreeWithReachabilityOracle(seed:)": 4,
     "LiquidTests.QualityPropertyTests/renderingEntryPointsAgree(seed:)": 4,
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()": null,
+    "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)": 2,
     "LiquidTests.RuntimeSemanticsTests/caseBranchesKeepNullSeparateFromElse(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/caseInspectionAndOperationalBoundsRemainExplicit()": null,
+    "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned()": null,
+    "LiquidTests.RuntimeSemanticsTests/isolatedRenderKeepsOriginalInputsAndHidesCallerLocals(mode:)": 3,
     "LiquidTests.RuntimeSemanticsTests/sizeLookupPreservesCommandsKeysAndScalars(mode:)": 3,
     "LiquidTests.arithmeticOverflowAndNonfiniteContextThrow()": null,
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)": 2,
@@ -91,6 +94,7 @@
     "LiquidTests.InspectionTests/concurrentRendersAndInspectionShareOnlyImmutableTemplates()",
     "LiquidTests.LiquidSpecRegressionTests/concurrentRendersKeepCycleSitesImmutable()",
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()",
+    "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned()",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"
   ],
   "adversarialFunctions": [
@@ -109,6 +113,7 @@
     "LiquidTests.MetricsTests/cancellationSurvivesSuspendingHostCode(recovering:)",
     "LiquidTests.MetricsTests/suspensionIsInsideTotalDuration()",
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()",
+    "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)",
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)"
   ]
 }
