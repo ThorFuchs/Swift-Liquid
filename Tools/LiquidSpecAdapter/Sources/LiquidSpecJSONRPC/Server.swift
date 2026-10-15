@@ -37,8 +37,9 @@ private func encode(_ value: LiquidValue) throws -> String {
     }
 }
 
-// Validate integer lexemes before LiquidValue's documented finite-Double fallback.
-// The adapter declines integers outside native Int instead of silently rounding them.
+// After validating JSON syntax, inspect integer lexemes before engine admission.
+// The public reader may already have used its finite-Double fallback internally;
+// the adapter rejects that out-of-Int value rather than rendering rounded data.
 private func admitNumbers(_ bytes: [UInt8]) throws {
     var index = 0
     var quoted = false

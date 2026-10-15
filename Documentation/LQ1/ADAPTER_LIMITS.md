@@ -60,8 +60,9 @@ operational errors, not accepted Liquid language errors or empty output.
 
 Primitive JSON maps directly into typed `LiquidValue`: native signed 64-bit Int on
 this host, finite binary Double, ordered string-keyed objects, arrays, booleans,
-null and UTF-8 strings. Integer lexemes outside Int are rejected before the public
-JSON bridge's documented finite-Double fallback can round them. No arbitrary
+null and UTF-8 strings. Integer lexemes outside Int are rejected before engine admission. The public
+reader may already have decoded one through its documented finite-Double fallback;
+that rounded value is never passed to rendering. No arbitrary
 Double conversion, Ruby object inspection, model reflection or second engine
 interprets values. Decimal/exponent numbers use the declared binary Double domain;
 Ruby arbitrary integers, BigDecimal, nonfinite floats, symbols, cycles, binary
