@@ -27,6 +27,7 @@ struct LiquidCommand {
       --data JSON                       Context file with a JSON object root
       --partials DIRECTORY              Explicit directory of .liquid partials
       --output FILE                     Atomically write complete rendered output
+      --metrics FILE                    Write opt-in render metrics as separate JSON
       --format text|json                Inspection output format (default: text)
     """
 
@@ -49,7 +50,7 @@ struct LiquidCommand {
         var options: [String: String] = [:]
         var strictFilters = false
         var index = 1
-        let valueOptions: Set<String> = ["--data", "--partials", "--output", "--syntax-mode", "--format"]
+        let valueOptions: Set<String> = ["--data", "--partials", "--output", "--syntax-mode", "--format", "--metrics"]
         while index < arguments.count {
             let argument = arguments[index]
             if argument == "--strict-filters" {
@@ -94,17 +95,30 @@ struct LiquidCommand {
         }
 
         let context: LiquidObject
+        var inputFiles = path == "-" ? [] : [URL(fileURLWithPath: path)]
         if let dataPath = options["--data"] {
             let value = try LiquidValue(json: readText(dataPath, maximumBytes: 8_388_608))
             guard case .object(let object) = value else { throw CLIError("JSON context root must be an object") }
             context = object
+            if dataPath != "-" { inputFiles.append(URL(fileURLWithPath: dataPath)) }
         } else { context = [:] }
         var partials: [String: LiquidTemplate] = [:]
-        if let directory = options["--partials"] { partials = try readPartials(directory, syntaxMode: mode) }
-        let output = try await LiquidEngine(strictFilters: strictFilters).render(template, context: context, templates: partials)
+        if let directory = options["--partials"] { partials = try readPartials(directory, syntaxMode: mode, inputFiles: &inputFiles) }
+        let metricsFile = try options["--metrics"].map { try MetricsFile(path: $0, inputs: inputFiles, output: options["--output"]) }
+        let engine = LiquidEngine(strictFilters: strictFilters)
+        let output: String
+        let metrics: LiquidRenderMetrics?
+        if metricsFile != nil {
+            let measured = try await engine.renderWithMetrics(template, context: context, templates: partials)
+            output = measured.output; metrics = measured.metrics
+        } else {
+            output = try await engine.render(template, context: context, templates: partials)
+            metrics = nil
+        }
         let bytes = Data(output.utf8)
         if let destination = options["--output"] { try bytes.write(to: URL(fileURLWithPath: destination), options: .atomic) }
         else { try FileHandle.standardOutput.write(contentsOf: bytes) }
+        if let metricsFile, let metrics { try metricsFile.write(metrics) }
     }
 
     private static func writeInspection(_ result: LiquidTemplateInspection, format: String) throws {
@@ -142,7 +156,7 @@ struct LiquidCommand {
         return text
     }
 
-    private static func readPartials(_ path: String, syntaxMode: LiquidSyntaxMode) throws -> [String: LiquidTemplate] {
+    private static func readPartials(_ path: String, syntaxMode: LiquidSyntaxMode, inputFiles: inout [URL]) throws -> [String: LiquidTemplate] {
         let root = URL(fileURLWithPath: path, isDirectory: true).standardizedFileURL.resolvingSymlinksInPath()
         var isDirectory: ObjCBool = false
         guard FileManager.default.fileExists(atPath: root.path, isDirectory: &isDirectory), isDirectory.boolValue else {
@@ -165,6 +179,7 @@ struct LiquidCommand {
             let relative = normalized.pathComponents.dropFirst(rootComponents.count).joined(separator: "/")
             let key = String(relative.dropLast(".liquid".count))
             partials[key] = try LiquidTemplate(source, syntaxMode: syntaxMode)
+            inputFiles.append(normalized)
         }
         return partials
     }

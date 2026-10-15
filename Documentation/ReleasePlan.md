@@ -51,9 +51,10 @@ inventories and assets and packages the evidence without creating a tag or relea
 Publication still requires the maintainer's explicit request, exact-commit main
 qualification and version-resolution verification.
 
-## Proposed 1.2 work
+## 1.2 development
 
-The [1.2 roadmap](Roadmap-1.2.md) proposes opt-in render metrics and a CLI JSON
-metrics file. It defines scope adoption, compatibility and failure contracts,
+The maintainer adopted the [1.2 roadmap](Roadmap-1.2.md) on 2026-10-15: opt-in
+render metrics and a CLI JSON metrics file. The [metrics contract](Metrics.md)
+defines the API and schema. The roadmap retains compatibility and failure contracts,
 public acceptance cases, measurement against immutable 1.1.0 and all eight final
-qualification lanes. The proposal changes no current release gate or behavior.
+qualification lanes. Publication remains a later explicit maintainer decision.

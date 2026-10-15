@@ -91,7 +91,7 @@ def main():
                 log = (output / (name + '.log')).read_text()
                 require_fixtures(log)
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 46:
+                if not summary or int(summary.group(1)) < 54:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
                 receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
                     'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
@@ -99,14 +99,15 @@ def main():
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
             run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
             run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
+            run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
         elif args.lane == 'safety':
             run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
             require_fixtures((output / 'address.log').read_text())
-            if not re.search(r'Test run with 3 tests .* passed', (output / 'thread.log').read_text()):
-                raise RuntimeError('ThreadSanitizer did not execute core, filter and inspection concurrency tests')
+            if not re.search(r'Test run with 4 tests .* passed', (output / 'thread.log').read_text()):
+                raise RuntimeError('ThreadSanitizer did not execute core, filter, inspection and metrics concurrency tests')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')

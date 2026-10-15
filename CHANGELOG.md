@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add opt-in source/parsed render metrics with monotonic durations and existing
+  invocation budget consumption, including explicit diagnostic rendering.
+- Add `liquid render --metrics PATH` with separate schema-versioned JSON, protected
+  input/output destinations and atomic metrics writing after output delivery.
+- Preserve 1.0/1.1 APIs, default rendering, fixture pins and the dependency-free
+  core; add public metrics regressions, a fourth consumer and measured workloads.
+
 ## 1.1.0 — 2026-10-14
 
 - Add typed, immutable engine-scoped `LiquidFilter` callbacks with positional and

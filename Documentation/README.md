@@ -10,6 +10,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
 | [Custom filters](CustomFilters.md) | Typed engine-scoped callbacks, arguments, admission and failures |
 | [Inspection](Inspection.md) | AST summary, syntactic references, limits and CLI JSON schema |
+| [Metrics](Metrics.md) | Opt-in elapsed durations, logical budget counts, recovery and CLI metrics schema |
 | [Application reuse](Reuse.md) | Retained root/partial bundles, explicit domain mapping and bounded application caches |
 | [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
@@ -18,7 +19,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Performance](Performance.md) | Repeatable release-mode measurements |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |
-| [1.2 roadmap](Roadmap-1.2.md) | Proposed opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
+| [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
 | [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |
 
 Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go

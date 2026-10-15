@@ -22,6 +22,20 @@ reused template. It checks all summary fields through a stable payload/checksum;
 its timings include payload verification and hashing. These records are not render
 latencies and do not execute callbacks or load partials.
 
+The 1.2 development harness adds metrics-enabled source and parsed calls for all
+six render workloads, yielding 26 records including inspection. Each enabled
+record must retain the ordinary record's output checksum. The JSON retains all
+25 sample values and reports twelve enabled/disabled median comparisons. These
+measure whole API calls externally, not their returned durations. Execution is
+sequential in a fixed order; a single run does not isolate drift, background load
+or thermal effects. Treat these comparisons as instrumentation observations,
+not a release regression verdict or a speedup claim.
+
+The matched release gate still retains its pinned 1.0.0 common harness. Updating
+the baseline to 1.1.0 and extending it to all common 1.1 workloads belongs to final
+1.2 release preparation, as specified by the adopted roadmap. Historical receipts
+remain unchanged.
+
 Measurements describe this host and workload. They do not establish superiority
 over Ruby, Liquid-C, or another Swift implementation, and latency does not imply
 process-memory usage. A matched reference comparison needs the same fixtures,

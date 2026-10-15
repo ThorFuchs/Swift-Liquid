@@ -18,6 +18,7 @@ Render options:
 | `--data PATH` | Read a JSON object as the context |
 | `--partials DIRECTORY` | Load `.liquid` files recursively under one explicit directory |
 | `--output PATH` | Atomically write completed output to a file |
+| `--metrics PATH` | Write opt-in render metrics to a separate JSON file (1.2 development) |
 | `--syntax-mode lax\|strict\|strict2` | Select parsing behavior; default lax |
 | `--strict-filters` | Fail on unknown filters |
 
@@ -57,3 +58,23 @@ Unicode ordering and schema 1 evolution policy.
 liquid analyze page.liquid --syntax-mode strict2 --format json
 printf '{{ name | upcase }}' | liquid analyze -
 ```
+
+## Render metrics (1.2 development)
+
+```sh
+liquid render page.liquid --data context.json --output page.html --metrics metrics.json
+```
+
+Metrics use the library's measured parsed-template API after CLI preparation.
+They exclude CLI file I/O and parsing; parse time is null. Rendered stdout and
+the existing output option keep their behavior. Metrics have their own schema 1
+with integer nanosecond durations and logical counts. They contain no source,
+context or paths. See [metrics](Metrics.md) for the complete schema and evolution
+policy.
+
+`--metrics` accepts an explicit regular-file destination, rejecting `-`, directories,
+input/output aliases and a missing or unwritable parent. The CLI checks this
+destination before rendering and writes metrics atomically after output delivery.
+Render failure preserves any old metrics file. A late metrics write failure exits
+1 with stderr even if rendered output was delivered. Output and metrics are not
+one transaction. `analyze` and `validate` reject this option.

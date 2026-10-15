@@ -39,6 +39,11 @@ Unexpected host errors propagate unchanged, and cancellation is checked again
 after awaiting a callback. See [custom filters](CustomFilters.md) for value
 admission, shared budgets and the 1.1 extension contract.
 
+The 1.2 development APIs `renderWithMetrics` and
+`renderWithDiagnosticsAndMetrics` preserve these respective throwing/recovering
+policies. Failed invocations return no metrics or wrapped error. See
+[metrics](Metrics.md).
+
 The independent corpus's unchanged `reject: missing` case is qualified against
 both its empty output and its recorded error. Its sidecar annotation is pinned
 separately and checked by both runtimes. Reference receipts count recovered

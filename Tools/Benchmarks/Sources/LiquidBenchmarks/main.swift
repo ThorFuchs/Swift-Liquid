@@ -47,27 +47,34 @@ struct Benchmarks {
             else { activeEngine = try LiquidEngine(filters: workload.filters) }
             let parsed = try LiquidTemplate(workload.source)
             let partials = try workload.partials.mapValues { try LiquidTemplate($0) }
-            for reuse in [false, true] {
-                var timings: [Double] = []
-                var checksum: UInt64 = 14_695_981_039_346_656_037
-                for sample in -10..<samples {
-                    let start = clock.now
-                    for _ in 0..<repetitions {
-                        let output: String
-                        if reuse { output = try await activeEngine.render(parsed, context: workload.context, templates: partials) }
-                        else { output = try await activeEngine.render(template: workload.source, context: workload.context, templates: workload.partials) }
-                        guard output == workload.expected else { throw BenchmarkFailure("Output mismatch for \(workload.name)") }
-                        for byte in output.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+            for measured in [false, true] {
+                for reuse in [false, true] {
+                    var timings: [Double] = []
+                    var checksum: UInt64 = 14_695_981_039_346_656_037
+                    for sample in -10..<samples {
+                        let start = clock.now
+                        for _ in 0..<repetitions {
+                            let output: String
+                            if measured {
+                                if reuse { output = try await activeEngine.renderWithMetrics(parsed, context: workload.context, templates: partials).output }
+                                else { output = try await activeEngine.renderWithMetrics(template: workload.source, context: workload.context, templates: workload.partials).output }
+                            } else if reuse { output = try await activeEngine.render(parsed, context: workload.context, templates: partials) }
+                            else { output = try await activeEngine.render(template: workload.source, context: workload.context, templates: workload.partials) }
+                            guard output == workload.expected else { throw BenchmarkFailure("Output mismatch for \(workload.name)") }
+                            for byte in output.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+                        }
+                        let duration = start.duration(to: clock.now).components
+                        if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
                     }
-                    let duration = start.duration(to: clock.now).components
-                    if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
+                    let rawTimings = timings
+                    timings.sort()
+                    records.append(["name": workload.name, "mode": (reuse ? "reused-template" : "parse-and-render") + (measured ? "-metrics" : ""),
+                                    "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
+                                    "sampleNanoseconds": rawTimings,
+                                    "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
+                                    "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
+                                    "outputBytes": workload.expected.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
                 }
-                timings.sort()
-                records.append(["name": workload.name, "mode": reuse ? "reused-template" : "parse-and-render",
-                                "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
-                                "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
-                                "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
-                                "outputBytes": workload.expected.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
             }
         }
         // Inspection is measured separately from rendering. Its stable payload includes
@@ -91,15 +98,32 @@ struct Benchmarks {
                 let duration = start.duration(to: clock.now).components
                 if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
             }
+            let rawTimings = timings
             timings.sort()
             records.append(["name": "inspection", "mode": reuse ? "inspect-reused-template" : "parse-and-inspect",
                 "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
+                "sampleNanoseconds": rawTimings,
                 "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
                 "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
                 "outputBytes": expectedInspection.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
         }
+        var overhead: [[String: Any]] = []
+        for record in records where (record["mode"] as? String)?.hasSuffix("-metrics") == true {
+            guard let mode = record["mode"] as? String, let name = record["name"] as? String,
+                  let ordinary = records.first(where: { $0["name"] as? String == name && $0["mode"] as? String == String(mode.dropLast(8)) }),
+                  let enabled = record["medianNanoseconds"] as? Double,
+                  let disabled = ordinary["medianNanoseconds"] as? Double,
+                  enabled > 0, disabled > 0,
+                  record["fnv1aChecksum"] as? String == ordinary["fnv1aChecksum"] as? String else {
+                throw BenchmarkFailure("Missing comparable metrics workload")
+            }
+            overhead.append(["name": name, "mode": String(mode.dropLast(8)),
+                             "disabledMedianNanoseconds": disabled, "enabledMedianNanoseconds": enabled,
+                             "medianChangePercent": (enabled / disabled - 1) * 100])
+        }
+        guard records.count == 26, overhead.count == 12 else { throw BenchmarkFailure("Incomplete benchmark run") }
         let result: [String: Any] = ["schemaVersion": 1, "platform": ProcessInfo.processInfo.operatingSystemVersionString,
-                                     "configuration": "release", "workloads": records]
+                                     "configuration": "release", "workloads": records, "metricsOverhead": overhead]
         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
         if CommandLine.arguments.count > 1 { try data.write(to: URL(fileURLWithPath: CommandLine.arguments[1]), options: .atomic) }
         print(String(decoding: data, as: UTF8.self))

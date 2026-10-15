@@ -230,6 +230,23 @@
         "Replace upstream regex-oriented CLI analysis with the public library summary; freeze CLI JSON schema 1 and retain the existing 1.0 public API and default rendering."
       ],
       "qualification": "Public source/reused inspection cases in all parser modes, exact Unicode, limits, cancellation and concurrent rendering; independent consumer, CLI behavior checks and measured release inspection workloads. Core fixture pins remain unchanged."
+    },
+    {
+      "area": "Opt-in invocation render metrics",
+      "scopeDecision": "Maintainer adopted the 1.2 roadmap and authorized metrics implementation on 2026-10-15.",
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidRenderMetrics.swift",
+        "Sources/LiquidCLI/LiquidCommand.swift",
+        "Sources/LiquidCLI/MetricsFile.swift"
+      ],
+      "changes": [
+        "Author immutable checked-Sendable measured results for source and parsed throwing/diagnostic renders, sharing the existing execution and error paths.",
+        "Snapshot existing invocation budgets after final output admission; keep ordinary APIs free of timing reads, and keep measurement clocks independent of Liquid dates.",
+        "Report monotonic total and optional parse durations, cumulative supplied-source bytes, final output bytes and consumed step/iteration/value capacities without re-evaluation or AST scans.",
+        "Add explicit CLI metrics-file schema 1 with checked integer nanoseconds, protected input/output aliases and separate atomic writing after successful output delivery; retain existing CLI preparation order."
+      ],
+      "qualification": "Public source/parsed, counter-capacity, recovery, operational failure, suspension, cancellation and concurrent reuse regressions; independent metrics consumer and CLI JSON/I/O failure checks. Core fixture pins remain unchanged."
     }
   ]
 }

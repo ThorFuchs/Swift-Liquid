@@ -43,6 +43,12 @@ or `escape_once` when inserting text into HTML.
 - <doc:TemplateInspection>
 - ``LiquidTemplateInspection``
 
+### Opt-in render metrics
+
+- <doc:RenderMetrics>
+- ``LiquidRenderMetrics``
+- ``LiquidMeasuredRenderResult``
+
 ### Input values
 
 - ``LiquidValue``
