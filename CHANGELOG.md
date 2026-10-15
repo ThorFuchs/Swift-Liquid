@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.3.0 — release candidate
 
 - Adopt the [1.3 roadmap](Documentation/Roadmap-1.3.md) and add bounded source/parsed
   partial-dependency inspection, retaining exact names, missing/dynamic references
@@ -9,6 +9,9 @@
   bounded directory admission and public consumer. Preserve 1.0–1.2 behavior.
 - Qualify the dependency-report JSON Schema with published Swift-JSON 1.3.0 in a
   standalone tool; retain the empty root dependency graph.
+- Prepare matched qualification against immutable 1.2.0 with all 26 common
+  records, retained samples, the separate metrics phase and graph workloads.
+  Add release-evidence admission regressions and polished 1.3.0 notes.
 
 ## 1.2.0 — 2026-10-15
 

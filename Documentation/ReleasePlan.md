@@ -90,3 +90,19 @@ an independent public consumer and CLI schema/failure checks. Compare existing
 workloads against immutable 1.2.0 and measure graph construction separately.
 The roadmap defines the delivery sequence, analysis bounds and acceptance gates;
 scope adoption authorizes implementation; version publication requires a separate request.
+
+The 1.3 candidate retains 65 test functions, five public consumers, 60 legacy CLI
+cases and 24 dependency CLI cases, plus six positive/nineteen negative report-
+schema vectors evaluated by Swift-JSON. Five concurrency cases run under
+ThreadSanitizer; AddressSanitizer runs the full fixture suite. The duplicate-path
+CLI vector is unavailable on normalizing macOS filesystems and is not a success.
+
+Matched qualification pins immutable 1.2.0 commit
+`8676da8059e71905632c233cffb438f8edbf51d2` and its unchanged 26-record harness,
+including measured renders. Keep the separate 24-pair candidate metrics phase
+and four graph construction records. All samples, output checksums, source and
+harness identities must match the documented policy. The packaging gate rejects
+missing measured-render records, missing samples, inconsistent summaries and
+changed graph shapes/checksums. Review both threshold lists before preparing the
+three archives, checksums and [1.3.0 notes](Releases/1.3.0.md). Publication requires
+separate authorization and exact-main qualification after merging preparation.

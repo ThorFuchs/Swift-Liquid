@@ -22,13 +22,13 @@ The maintainer must explicitly request publication; CI does not create releases.
 If a required gate fails, keep the repository at development status and record
 the gap. A green fixture suite alone does not qualify a stable release.
 
-For 1.2, matched measurements use the immutable 1.1.0 harness and library commit;
+For 1.3, matched measurements use the immutable 1.2.0 harness and library commit;
 see [performance](Documentation/Performance.md). Download every successful lane
 artifact and save `gh run view --json status,conclusion,headSha,url` output as
 `github-run.json` in the evidence directory. From the clean candidate checkout:
 
 ```sh
-python3 -B Scripts/prepare_release.py --version 1.2.0 --evidence /path/to/evidence \
+python3 -B Scripts/prepare_release.py --version 1.3.0 --evidence /path/to/evidence \
   --run-url https://github.com/ThorFuchs/Swift-Liquid/actions/runs/RUN_ID
 ```
 
@@ -40,7 +40,9 @@ explaining the distributions, flags and material limitations. Unresolved materia
 regressions cannot be accepted by setting a status field.
 
 The script verifies all eight receipts against the current source inventory,
-compares every source-archive file, recomputes both benchmark summaries, validates the bound review, verifies archive checksums, and prepares
+compares every source-archive file, recomputes all 26 common and 24 metrics
+comparisons, validates retained samples and the four graph benchmark records,
+checks the bound review and archive checksums, and prepares
 three archives, checksums, release notes and a manifest under `Artifacts/release`.
 It performs no publication or tag mutation. A PR qualification may test a GitHub
 merge commit with the same tree; after merging, qualify the actual release commit

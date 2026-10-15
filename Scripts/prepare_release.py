@@ -13,7 +13,30 @@ import shutil
 import subprocess
 import tarfile
 from ci import ROOT, source_snapshot
-from compare_benchmarks import BASELINE, HARNESS_SHA256, MANIFEST_SHA256, index_records, comparisons
+from compare_benchmarks import BASELINE, COMMON_RECORD_COUNT, HARNESS_SHA256, MANIFEST_SHA256, index_records, comparisons
+
+
+def validate_dependency_benchmarks(result):
+    if result.get('schemaVersion') != 1 or result.get('operation') != 'dependency-inspection':
+        raise RuntimeError('Missing dependency benchmark identity')
+    records = result.get('records', [])
+    expected = {
+        ('shared-diamond', mode): (66, 128, 0, '454aa4f819527175') for mode in ['source', 'parsed']
+    } | {('cycle', mode): (129, 129, 128, '33d9c72009eceaa5') for mode in ['source', 'parsed']}
+    if len(records) != 4 or {(r['workload'], r['mode']) for r in records} != set(expected):
+        raise RuntimeError('Incomplete dependency benchmark modes')
+    for record in records:
+        shape = (record['nodes'], record['edges'], record['cycleMembers'], record['checksumFNV1a64'])
+        if shape != expected[(record['workload'], record['mode'])]:
+            raise RuntimeError('Dependency graph shape or checksum changed')
+        if (record['samples'], record['warmupSamples'], record['repetitions']) != (25, 10, 20):
+            raise RuntimeError('Dependency benchmark sampling changed')
+        samples = record.get('nanosecondsPerOperation', [])
+        if len(samples) != 25 or any(not 0 < sample < float('inf') for sample in samples):
+            raise RuntimeError('Missing dependency benchmark samples')
+        ordered = sorted(samples)
+        if (record['medianNanoseconds'], record['p95Nanoseconds']) != (ordered[12], ordered[23]):
+            raise RuntimeError('Dependency benchmark summary differs from samples')
 
 
 def main():
@@ -40,6 +63,7 @@ def main():
         receipt = json.loads((evidence / ('liquid-' + lane) / 'receipt.json').read_text())
         if receipt['status'] != 'passed' or receipt['sources'] != expected_sources:
             raise RuntimeError(f'{lane} is failed or does not match the candidate source inventory')
+    validate_dependency_benchmarks(json.loads((evidence / 'liquid-performance/dependencies.json').read_text()))
     archive_root = evidence / 'liquid-archive'
     archive_receipt = json.loads((archive_root / 'archive.json').read_text())
     if not archive_receipt['byteIdenticalRepeatedSourceArchives'] or archive_receipt['cleanNativeQualification'] != 'passed':
@@ -66,11 +90,12 @@ def main():
     matched_root = evidence / 'liquid-matched-performance'
     comparison_bytes = (matched_root / 'comparison.json').read_bytes()
     matched = json.loads(comparison_bytes)
-    if (matched['candidateCommit'] != archive_receipt['candidateCommit'] or matched['baselineCommit'] != BASELINE
+    if (matched['schemaVersion'] != 3 or matched['baselineVersion'] != '1.2.0'
+            or matched['candidateCommit'] != archive_receipt['candidateCommit'] or matched['baselineCommit'] != BASELINE
             or matched['harnessSHA256'] != HARNESS_SHA256 or matched['manifestSHA256'] != MANIFEST_SHA256
             or matched['order'] != ['baseline', 'candidate', 'candidate', 'baseline'] * 3
             or [r['version'] for r in matched['runs']] != matched['order']
-            or len(matched['comparisons']) != 14):
+            or len(matched['comparisons']) != COMMON_RECORD_COUNT):
         raise RuntimeError('Matched comparison is incomplete or belongs to another candidate')
     common_records = {r['name']: index_records(json.loads((matched_root / r['result']).read_text())) for r in matched['runs']}
     if comparisons(matched['runs'], common_records, ['baseline', 'candidate']) != matched['comparisons']:

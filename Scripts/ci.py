@@ -79,6 +79,7 @@ def main():
             raise RuntimeError('Swift 6.4 or later is required')
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
         if args.lane in ['native', 'development']:
+            run([sys.executable, '-B', 'Scripts/check_release_evidence.py'], 'release-evidence-contract')
             run(swift() + ['build', '-Xswiftc', '-warnings-as-errors'], 'debug-build')
             run(swift() + ['test'], 'debug-tests')
             test_names = ['debug-tests']
