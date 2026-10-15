@@ -3,7 +3,7 @@ import Foundation
 import Liquid
 import Testing
 
-@Suite("Opt-in render metrics")
+@Suite("Opt-in render metrics", .timeLimit(.minutes(1)))
 struct MetricsTests {
     @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
     func sourceAndParsedRenderingPreserveBehavior(mode: LiquidSyntaxMode) async throws {
@@ -141,20 +141,21 @@ struct MetricsTests {
     }
 
     @Test func suspensionIsInsideTotalDuration() async throws {
-        let gate = MetricsGate()
+        let gate = TestSuspensionGate()
         let engine = try LiquidEngine(filters: [LiquidFilter("wait") { _, _, _ in
             await gate.enter(); return "done"
         }])
         let task = Task { try await engine.renderWithMetrics(template: "{{ '' | wait }}") }
-        await gate.waitForEntry()
-        let interval = await gate.release()
+        defer { task.cancel() }
+        try await gate.waitForEntry()
+        let interval = try await gate.release()
         let result = try await task.value
         #expect(result.output == "done" && result.metrics.totalDuration >= interval)
     }
 
     @Test(arguments: [false, true])
     func cancellationSurvivesSuspendingHostCode(recovering: Bool) async throws {
-        let gate = MetricsGate()
+        let gate = TestSuspensionGate()
         let engine = try LiquidEngine(filters: [LiquidFilter("wait") { _, _, _ in
             await gate.enter(); throw LiquidFilterFailure("must not recover cancellation")
         }])
@@ -163,9 +164,10 @@ struct MetricsTests {
             if recovering { return try await engine.renderWithDiagnosticsAndMetrics(parsed) }
             return try await engine.renderWithMetrics(parsed)
         }
-        await gate.waitForEntry()
+        defer { task.cancel() }
+        try await gate.waitForEntry()
         task.cancel()
-        _ = await gate.release()
+        _ = try await gate.release()
         await #expect(throws: CancellationError.self) { try await task.value }
         let cancelled = Task {
             withUnsafeCurrentTask { $0?.cancel() }
@@ -197,25 +199,5 @@ struct MetricsTests {
             }
             try await group.waitForAll()
         }
-    }
-}
-
-private actor MetricsGate {
-    private var start: ContinuousClock.Instant?
-    private var waiters: [CheckedContinuation<Void, Never>] = []
-    private var continuation: CheckedContinuation<Void, Never>?
-    func enter() async {
-        start = ContinuousClock().now
-        for waiter in waiters { waiter.resume() }
-        waiters = []
-        await withCheckedContinuation { continuation = $0 }
-    }
-    func waitForEntry() async {
-        if start == nil { await withCheckedContinuation { waiters.append($0) } }
-    }
-    func release() -> Duration {
-        let interval = start!.duration(to: ContinuousClock().now)
-        continuation?.resume(); continuation = nil
-        return interval
     }
 }

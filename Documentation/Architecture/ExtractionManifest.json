@@ -266,6 +266,41 @@
         "Add explicit bounded CLI directory admission and separate dependency report schema; use published Swift-JSON JSONSchema only in isolated qualification tooling."
       ],
       "qualification": "Public source/parsed graph cases, Unicode lookup/equality, diamonds/cycles, parser modes, unused admission failures, capacities, cancellation and concurrent rendering/metrics; independent public consumer, CLI boundary tests and Swift-JSON positive/negative schema verdicts. Pinned core fixtures remain unchanged."
+    },
+    {
+      "area": "Public quality and documentation qualification",
+      "scopeDecision": "Maintainer requested QA and public-repository polishing sprints after 1.3.0 on 2026-10-15.",
+      "referenceRepository": "https://github.com/ThorFuchs/Swift-JSON",
+      "referenceFiles": [
+        {
+          "path": "Scripts/documentation_catalog.py",
+          "sha256": "fe0d168ac02adc3eb461e62228a801f1b9c785ebd45f4de1506aba6e3b850a34"
+        },
+        {
+          "path": "Scripts/build_documentation_site.py",
+          "sha256": "df5a9daa05a3375f67004a41cba0935b2699b79ff9e02cf5a53f6257152ded92"
+        }
+      ],
+      "files": [
+        "Scripts/documentation_catalog.py",
+        "Scripts/build_documentation.py",
+        "Scripts/build_documentation_site.py",
+        "Scripts/check_documentation_contract.py",
+        "Scripts/check_readme_examples.py",
+        "Examples/READMEConsumer",
+        "Documentation/PublicAPI-1.3.0.json",
+        "Tests/LiquidTests/QualityPropertyTests.swift",
+        "Tests/LiquidTests/TestSuspensionGate.swift"
+      ],
+      "changes": [
+        "Adapt compiler-derived comment/parameter coverage and exact README-fence qualification from the Apache-2.0 Swift-JSON tooling, preserving one Liquid product and an empty root graph.",
+        "Adapt the native DocC landing and base-path route/asset checks for one Liquid catalog, source-bound public build metadata and stable existing API URLs; retain an unchanged navigator-index alias for legacy article routes on Swift 6.4.",
+        "Protect 126 authored public declarations from the qualified 1.3.0 graph; allow compatible additions and exclude compiler synthesis from the source baseline.",
+        "Add fixed-seed public entry-point properties and an independent Floyd\u2013Warshall cycle-group oracle; replace test-only noncancellable continuation barriers with checked actor/AsyncStream barriers."
+      ],
+      "qualification": "Native/debug/release and public consumers, exact README output, public comment/API admission, static route checks, sanitizers, existing fixture/reference accounting and clean source rebuild through Scripts/ci.py. No runtime semantics or fixture bytes changed.",
+      "referenceCommit": "037e735dc6224789e4d04d2c18d15b8d27440198",
+      "referenceState": "Both referenced tooling files were clean at this commit when adapted."
     }
   ]
 }

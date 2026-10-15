@@ -15,6 +15,10 @@ public struct LiquidTemplateInspection: Sendable, Equatable {
     public let hasDynamicPartials: Bool
 
     /// Compares exact spellings, without Unicode canonical-equivalence folding.
+    /// - Parameters:
+    ///   - lhs: Left value, compared using exact UTF-8 spellings.
+    ///   - rhs: Right value, compared using exact UTF-8 spellings.
+    /// - Returns: Whether all identity and retained-content fields are equal.
     public static func == (lhs: Self, rhs: Self) -> Bool {
         func equal(_ left: [String], _ right: [String]) -> Bool {
             left.count == right.count && zip(left, right).allSatisfy { $0.utf8.elementsEqual($1.utf8) }

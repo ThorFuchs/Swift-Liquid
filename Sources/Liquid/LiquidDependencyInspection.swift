@@ -9,6 +9,10 @@ public struct LiquidDependencyLimits: Sendable, Equatable {
     /// Maximum unique literal edges retained from reachable nodes, including missing references.
     public let edges: Int
     /// Creates a profile. Template capacity must be positive; other capacities may be zero.
+    /// - Parameters:
+    ///   - templates: Maximum supplied templates, including the root and unused partials.
+    ///   - nameBytes: Aggregate UTF-8 capacity of every supplied partial key.
+    ///   - edges: Maximum retained unique literal edges, including missing references.
     public init(templates: Int = 4_096, nameBytes: Int = 262_144, edges: Int = 65_536) {
         self.templates = templates; self.nameBytes = nameBytes; self.edges = edges
     }
@@ -30,6 +34,10 @@ public enum LiquidDependencyNodeID: Sendable, Hashable {
     case partial(String)
 
     /// Compares exact UTF-8 spelling, without canonical-equivalence folding.
+    /// - Parameters:
+    ///   - lhs: Left value, compared using exact UTF-8 spellings.
+    ///   - rhs: Right value, compared using exact UTF-8 spellings.
+    /// - Returns: Whether all identity and retained-content fields are equal.
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.root, .root): true
@@ -38,6 +46,7 @@ public enum LiquidDependencyNodeID: Sendable, Hashable {
         }
     }
     /// Hashes exact UTF-8 spelling consistently with identity equality.
+    /// - Parameter hasher: Hasher receiving the root discriminator or exact partial-name bytes.
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .root: hasher.combine(0)
@@ -64,6 +73,10 @@ public struct LiquidDependencyEdge: Sendable, Equatable {
     public let resolvedName: String?
 
     /// Compares exact UTF-8 spelling for both requested and supplied names.
+    /// - Parameters:
+    ///   - lhs: Left value, compared using exact UTF-8 spellings.
+    ///   - rhs: Right value, compared using exact UTF-8 spellings.
+    /// - Returns: Whether all identity and retained-content fields are equal.
     public static func == (lhs: Self, rhs: Self) -> Bool {
         let resolved: Bool
         switch (lhs.resolvedName, rhs.resolvedName) {
@@ -114,6 +127,12 @@ extension LiquidEngine {
 
     /// Inspects a parsed bundle without reparsing, retaining each template's selected parser mode.
     /// Current cumulative source and syntax-depth limits apply even to unused partials.
+    /// - Parameters:
+    ///   - template: The reusable root template, distinct from all named partial identities.
+    ///   - templates: Explicit parsed partials, including unused templates in admission and inspection.
+    ///   - analysisLimits: Finite template-count, name-byte and retained-edge capacities.
+    /// - Returns: Deterministically ordered literal-reachable nodes, references and cycle groups.
+    /// - Throws: Syntax/depth, invalid-limit, capacity or cancellation errors; no partial graph is returned.
     public func inspectDependencies(_ template: LiquidTemplate, templates: [String: LiquidTemplate] = [:],
                                     analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection {
         try admitDependencies(root: template.source, templates: templates, source: { $0.source }, analysisLimits: analysisLimits)

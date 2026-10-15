@@ -41,12 +41,17 @@ public struct LiquidObject: Sendable, Equatable, ExpressibleByDictionaryLiteral 
         public let key: String
         /// The property value.
         public let value: LiquidValue
-        /// Creates a property.
+        /// Creates a property without normalizing its key or coercing its value.
+        /// - Parameters:
+        ///   - key: Property name with its exact Unicode scalar spelling.
+        ///   - value: Typed property value.
         public init(_ key: String, _ value: LiquidValue) { self.key = key; self.value = value }
     }
     /// Properties in insertion order.
     public private(set) var entries: [Entry]
     /// Creates an object from ordered entries.
+    /// Exact repeated keys replace the value at the first occurrence's position.
+    /// - Parameter entries: Properties in the desired iteration order.
     public init(_ entries: [Entry] = []) {
         self.entries = []
         var positions: [ScalarKey: Int] = [:]
@@ -57,22 +62,39 @@ public struct LiquidObject: Sendable, Equatable, ExpressibleByDictionaryLiteral 
         }
     }
     /// Creates an object from a Swift dictionary literal, preserving literal order.
+    /// - Parameter elements: Key/value pairs; exact repeated keys replace in place.
     public init(dictionaryLiteral elements: (String, LiquidValue)...) {
         self.init(elements.map { Entry($0.0, $0.1) })
     }
-    /// Looks up a property without coercion.
+    /// Looks up a property by exact Unicode scalar spelling, without coercion.
+    /// - Parameter key: Exact property name; canonical-equivalent spellings remain distinct.
+    /// - Returns: The retained value, or nil when the property is absent.
     public subscript(key: String) -> LiquidValue? { entries.first { ScalarKey($0.key) == ScalarKey(key) }?.value }
 }
 
 extension LiquidValue: ExpressibleByStringLiteral, ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral,
     ExpressibleByBooleanLiteral, ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral, ExpressibleByNilLiteral {
+    /// Creates a text value from a Swift string literal.
+    /// - Parameter value: Text retained without Unicode normalization.
     public init(stringLiteral value: String) { self = .string(value) }
+    /// Creates a machine-width integer from a Swift literal.
+    /// - Parameter value: Exact native integer value.
     public init(integerLiteral value: Int) { self = .integer(value) }
+    /// Creates a floating-point value; operations reject non-finite numbers.
+    /// - Parameter value: Native Double value; this is not an exact decimal model.
     public init(floatLiteral value: Double) { self = .number(value) }
+    /// Creates a Boolean value from a Swift literal.
+    /// - Parameter value: The Boolean value, distinct from native integers.
     public init(booleanLiteral value: Bool) { self = .bool(value) }
+    /// Creates an ordered array from a Swift literal.
+    /// - Parameter elements: Typed values in their literal order.
     public init(arrayLiteral elements: LiquidValue...) { self = .array(elements) }
+    /// Creates an ordered object from a Swift literal.
+    /// - Parameter elements: Key/value pairs; exact repeated keys replace in place.
     public init(dictionaryLiteral elements: (String, LiquidValue)...) {
         self = .object(LiquidObject(elements.map { .init($0.0, $0.1) }))
     }
+    /// Creates the Liquid null value from Swift nil.
+    /// - Parameter nilLiteral: The empty payload supplied by the nil-literal protocol.
     public init(nilLiteral: ()) { self = .null }
 }

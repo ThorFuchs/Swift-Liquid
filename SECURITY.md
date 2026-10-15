@@ -10,5 +10,8 @@ files. Resource limits and cancellation are operation controls, not a process
 sandbox or a guarantee about process RSS. Applications remain responsible for
 output escaping, input policy, and publication of rendered content.
 
-During pre-1.0 development, report against the current main revision. Release
-support policy will be recorded when 1.0 is published.
+Report against the latest published 1.x release or the current `main` revision.
+Include the exact resolved commit, compiler/OS, minimal affected input and resource
+profile. Fixes are developed on `main`; older release lines have no promised
+backport window. Published tags remain unchanged. See [SUPPORT.md](SUPPORT.md)
+for maintenance scope.

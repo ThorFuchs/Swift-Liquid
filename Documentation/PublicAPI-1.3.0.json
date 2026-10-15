@@ -1,0 +1,1000 @@
+{
+  "schemaVersion": 1,
+  "release": "1.3.0",
+  "commit": "9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e",
+  "sourceGraphSHA256": "0fa789104adaee230252eec7a9eb9ef3687c7ea67e6e4fe2b514ce88835d515c",
+  "policy": "Authored public declarations only; compiler synthesis and extension containers excluded. Compatible additions are allowed; published declarations must remain unchanged.",
+  "declarations": [
+    {
+      "identifier": "s:6Liquid0A10DiagnosticV",
+      "path": [
+        "LiquidDiagnostic"
+      ],
+      "declaration": "struct LiquidDiagnostic"
+    },
+    {
+      "identifier": "s:6Liquid0A10DiagnosticV12templateNameSSSgvp",
+      "path": [
+        "LiquidDiagnostic",
+        "templateName"
+      ],
+      "declaration": "let templateName: String?"
+    },
+    {
+      "identifier": "s:6Liquid0A10DiagnosticV4lineSiSgvp",
+      "path": [
+        "LiquidDiagnostic",
+        "line"
+      ],
+      "declaration": "let line: Int?"
+    },
+    {
+      "identifier": "s:6Liquid0A10DiagnosticV7messageSSvp",
+      "path": [
+        "LiquidDiagnostic",
+        "message"
+      ],
+      "declaration": "let message: String"
+    },
+    {
+      "identifier": "s:6Liquid0A10SyntaxModeO",
+      "path": [
+        "LiquidSyntaxMode"
+      ],
+      "declaration": "enum LiquidSyntaxMode"
+    },
+    {
+      "identifier": "s:6Liquid0A10SyntaxModeO3laxyA2CmF",
+      "path": [
+        "LiquidSyntaxMode",
+        "lax"
+      ],
+      "declaration": "case lax"
+    },
+    {
+      "identifier": "s:6Liquid0A10SyntaxModeO6strictyA2CmF",
+      "path": [
+        "LiquidSyntaxMode",
+        "strict"
+      ],
+      "declaration": "case strict"
+    },
+    {
+      "identifier": "s:6Liquid0A10SyntaxModeO7strict2yA2CmF",
+      "path": [
+        "LiquidSyntaxMode",
+        "strict2"
+      ],
+      "declaration": "case strict2"
+    },
+    {
+      "identifier": "s:6Liquid0A12RenderResultV",
+      "path": [
+        "LiquidRenderResult"
+      ],
+      "declaration": "struct LiquidRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A12RenderResultV11diagnosticsSayAA0A10DiagnosticVGvp",
+      "path": [
+        "LiquidRenderResult",
+        "diagnostics"
+      ],
+      "declaration": "let diagnostics: [LiquidDiagnostic]"
+    },
+    {
+      "identifier": "s:6Liquid0A12RenderResultV6outputSSvp",
+      "path": [
+        "LiquidRenderResult",
+        "output"
+      ],
+      "declaration": "let output: String"
+    },
+    {
+      "identifier": "s:6Liquid0A13FilterFailureV",
+      "path": [
+        "LiquidFilterFailure"
+      ],
+      "declaration": "struct LiquidFilterFailure"
+    },
+    {
+      "identifier": "s:6Liquid0A13FilterFailureV11descriptionSSvp",
+      "path": [
+        "LiquidFilterFailure",
+        "description"
+      ],
+      "declaration": "var description: String { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A13FilterFailureV7messageSSvp",
+      "path": [
+        "LiquidFilterFailure",
+        "message"
+      ],
+      "declaration": "let message: String"
+    },
+    {
+      "identifier": "s:6Liquid0A13FilterFailureVyACSScfc",
+      "path": [
+        "LiquidFilterFailure",
+        "init(_:)"
+      ],
+      "declaration": "init(_ message: String)"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV",
+      "path": [
+        "LiquidRenderMetrics"
+      ],
+      "declaration": "struct LiquidRenderMetrics"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV11outputBytesSivp",
+      "path": [
+        "LiquidRenderMetrics",
+        "outputBytes"
+      ],
+      "declaration": "let outputBytes: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV11renderStepsSivp",
+      "path": [
+        "LiquidRenderMetrics",
+        "renderSteps"
+      ],
+      "declaration": "let renderSteps: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV11sourceBytesSivp",
+      "path": [
+        "LiquidRenderMetrics",
+        "sourceBytes"
+      ],
+      "declaration": "let sourceBytes: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV13parseDurations0E0VSgvp",
+      "path": [
+        "LiquidRenderMetrics",
+        "parseDuration"
+      ],
+      "declaration": "let parseDuration: Duration?"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV13totalDurations0E0Vvp",
+      "path": [
+        "LiquidRenderMetrics",
+        "totalDuration"
+      ],
+      "declaration": "let totalDuration: Duration"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV14admittedValuesSivp",
+      "path": [
+        "LiquidRenderMetrics",
+        "admittedValues"
+      ],
+      "declaration": "let admittedValues: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A13RenderMetricsV14loopIterationsSivp",
+      "path": [
+        "LiquidRenderMetrics",
+        "loopIterations"
+      ],
+      "declaration": "let loopIterations: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyEdgeV",
+      "path": [
+        "LiquidDependencyEdge"
+      ],
+      "declaration": "struct LiquidDependencyEdge"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyEdgeV12resolvedNameSSSgvp",
+      "path": [
+        "LiquidDependencyEdge",
+        "resolvedName"
+      ],
+      "declaration": "let resolvedName: String?"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyEdgeV13requestedNameSSvp",
+      "path": [
+        "LiquidDependencyEdge",
+        "requestedName"
+      ],
+      "declaration": "let requestedName: String"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyEdgeV2eeoiySbAC_ACtFZ",
+      "path": [
+        "LiquidDependencyEdge",
+        "==(_:_:)"
+      ],
+      "declaration": "static func == (lhs: `Self`, rhs: `Self`) -> Bool"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyEdgeV6originAA0aB6NodeIDOvp",
+      "path": [
+        "LiquidDependencyEdge",
+        "origin"
+      ],
+      "declaration": "let origin: LiquidDependencyNodeID"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyNodeV",
+      "path": [
+        "LiquidDependencyNode"
+      ],
+      "declaration": "struct LiquidDependencyNode"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyNodeV10inspectionAA0A18TemplateInspectionVvp",
+      "path": [
+        "LiquidDependencyNode",
+        "inspection"
+      ],
+      "declaration": "let inspection: LiquidTemplateInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A14DependencyNodeV2idAA0abC2IDOvp",
+      "path": [
+        "LiquidDependencyNode",
+        "id"
+      ],
+      "declaration": "let id: LiquidDependencyNodeID"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV",
+      "path": [
+        "LiquidDependencyLimits"
+      ],
+      "declaration": "struct LiquidDependencyLimits"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV5edgesSivp",
+      "path": [
+        "LiquidDependencyLimits",
+        "edges"
+      ],
+      "declaration": "let edges: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV7defaultACvpZ",
+      "path": [
+        "LiquidDependencyLimits",
+        "default"
+      ],
+      "declaration": "static let `default`: LiquidDependencyLimits"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV9nameBytesSivp",
+      "path": [
+        "LiquidDependencyLimits",
+        "nameBytes"
+      ],
+      "declaration": "let nameBytes: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV9templates9nameBytes5edgesACSi_S2itcfc",
+      "path": [
+        "LiquidDependencyLimits",
+        "init(templates:nameBytes:edges:)"
+      ],
+      "declaration": "init(templates: Int = 4_096, nameBytes: Int = 262_144, edges: Int = 65_536)"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyLimitsV9templatesSivp",
+      "path": [
+        "LiquidDependencyLimits",
+        "templates"
+      ],
+      "declaration": "let templates: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyNodeIDO",
+      "path": [
+        "LiquidDependencyNodeID"
+      ],
+      "declaration": "enum LiquidDependencyNodeID"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyNodeIDO2eeoiySbAC_ACtFZ",
+      "path": [
+        "LiquidDependencyNodeID",
+        "==(_:_:)"
+      ],
+      "declaration": "static func == (lhs: `Self`, rhs: `Self`) -> Bool"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyNodeIDO4hash4intoys6HasherVz_tF",
+      "path": [
+        "LiquidDependencyNodeID",
+        "hash(into:)"
+      ],
+      "declaration": "func hash(into hasher: inout Hasher)"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyNodeIDO4rootyA2CmF",
+      "path": [
+        "LiquidDependencyNodeID",
+        "root"
+      ],
+      "declaration": "case root"
+    },
+    {
+      "identifier": "s:6Liquid0A16DependencyNodeIDO7partialyACSScACmF",
+      "path": [
+        "LiquidDependencyNodeID",
+        "partial(_:)"
+      ],
+      "declaration": "case partial(String)"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV",
+      "path": [
+        "LiquidTemplateInspection"
+      ],
+      "declaration": "struct LiquidTemplateInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV11filterNamesSaySSGvp",
+      "path": [
+        "LiquidTemplateInspection",
+        "filterNames"
+      ],
+      "declaration": "let filterNames: [String]"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV13variableRootsSaySSGvp",
+      "path": [
+        "LiquidTemplateInspection",
+        "variableRoots"
+      ],
+      "declaration": "let variableRoots: [String]"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV18hasDynamicPartialsSbvp",
+      "path": [
+        "LiquidTemplateInspection",
+        "hasDynamicPartials"
+      ],
+      "declaration": "let hasDynamicPartials: Bool"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV19literalPartialNamesSaySSGvp",
+      "path": [
+        "LiquidTemplateInspection",
+        "literalPartialNames"
+      ],
+      "declaration": "let literalPartialNames: [String]"
+    },
+    {
+      "identifier": "s:6Liquid0A18TemplateInspectionV2eeoiySbAC_ACtFZ",
+      "path": [
+        "LiquidTemplateInspection",
+        "==(_:_:)"
+      ],
+      "declaration": "static func == (lhs: `Self`, rhs: `Self`) -> Bool"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV",
+      "path": [
+        "LiquidDependencyInspection"
+      ],
+      "declaration": "struct LiquidDependencyInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV17dynamicReferencesSayAA0aB6NodeIDOGvp",
+      "path": [
+        "LiquidDependencyInspection",
+        "dynamicReferences"
+      ],
+      "declaration": "var dynamicReferences: [LiquidDependencyNodeID] { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV17missingReferencesSayAA0aB4EdgeVGvp",
+      "path": [
+        "LiquidDependencyInspection",
+        "missingReferences"
+      ],
+      "declaration": "var missingReferences: [LiquidDependencyEdge] { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV5edgesSayAA0aB4EdgeVGvp",
+      "path": [
+        "LiquidDependencyInspection",
+        "edges"
+      ],
+      "declaration": "let edges: [LiquidDependencyEdge]"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV5nodesSayAA0aB4NodeVGvp",
+      "path": [
+        "LiquidDependencyInspection",
+        "nodes"
+      ],
+      "declaration": "let nodes: [LiquidDependencyNode]"
+    },
+    {
+      "identifier": "s:6Liquid0A20DependencyInspectionV6cyclesSaySayAA0aB6NodeIDOGGvp",
+      "path": [
+        "LiquidDependencyInspection",
+        "cycles"
+      ],
+      "declaration": "let cycles: [[LiquidDependencyNodeID]]"
+    },
+    {
+      "identifier": "s:6Liquid0A20MeasuredRenderResultV",
+      "path": [
+        "LiquidMeasuredRenderResult"
+      ],
+      "declaration": "struct LiquidMeasuredRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A20MeasuredRenderResultV11diagnosticsSayAA0A10DiagnosticVGvp",
+      "path": [
+        "LiquidMeasuredRenderResult",
+        "diagnostics"
+      ],
+      "declaration": "let diagnostics: [LiquidDiagnostic]"
+    },
+    {
+      "identifier": "s:6Liquid0A20MeasuredRenderResultV6outputSSvp",
+      "path": [
+        "LiquidMeasuredRenderResult",
+        "output"
+      ],
+      "declaration": "let output: String"
+    },
+    {
+      "identifier": "s:6Liquid0A20MeasuredRenderResultV7metricsAA0aC7MetricsVvp",
+      "path": [
+        "LiquidMeasuredRenderResult",
+        "metrics"
+      ],
+      "declaration": "let metrics: LiquidRenderMetrics"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO",
+      "path": [
+        "LiquidError"
+      ],
+      "declaration": "enum LiquidError"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO11descriptionSSvp",
+      "path": [
+        "LiquidError",
+        "description"
+      ],
+      "declaration": "var description: String { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO12invalidValueyACSScACmF",
+      "path": [
+        "LiquidError",
+        "invalidValue(_:)"
+      ],
+      "declaration": "case invalidValue(String)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO13limitExceededyACSScACmF",
+      "path": [
+        "LiquidError",
+        "limitExceeded(_:)"
+      ],
+      "declaration": "case limitExceeded(String)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO6syntaxyACSS_SiSgAEtcACmF",
+      "path": [
+        "LiquidError",
+        "syntax(message:line:column:)"
+      ],
+      "declaration": "case syntax(message: String, line: Int?, column: Int?)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ErrorO9renderingyACSScACmF",
+      "path": [
+        "LiquidError",
+        "rendering(_:)"
+      ],
+      "declaration": "case rendering(String)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO",
+      "path": [
+        "LiquidValue"
+      ],
+      "declaration": "indirect enum LiquidValue"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO10nilLiteralACyt_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(nilLiteral:)"
+      ],
+      "declaration": "init(nilLiteral: ())"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO12arrayLiteralA2Cd_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(arrayLiteral:)"
+      ],
+      "declaration": "init(arrayLiteral elements: LiquidValue...)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO12floatLiteralACSd_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(floatLiteral:)"
+      ],
+      "declaration": "init(floatLiteral value: Double)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO13stringLiteralACSS_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(stringLiteral:)"
+      ],
+      "declaration": "init(stringLiteral value: String)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO14booleanLiteralACSb_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(booleanLiteral:)"
+      ],
+      "declaration": "init(booleanLiteral value: Bool)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO14integerLiteralACSi_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(integerLiteral:)"
+      ],
+      "declaration": "init(integerLiteral value: Int)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO17dictionaryLiteralACSS_ACtd_tcfc",
+      "path": [
+        "LiquidValue",
+        "init(dictionaryLiteral:)"
+      ],
+      "declaration": "init(dictionaryLiteral elements: (String, LiquidValue)...)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO4boolyACSbcACmF",
+      "path": [
+        "LiquidValue",
+        "bool(_:)"
+      ],
+      "declaration": "case bool(Bool)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO4jsonACSS_tKcfc",
+      "path": [
+        "LiquidValue",
+        "init(json:)"
+      ],
+      "declaration": "init(json: String) throws"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO4nullyA2CmF",
+      "path": [
+        "LiquidValue",
+        "null"
+      ],
+      "declaration": "case null"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO5arrayyACSayACGcACmF",
+      "path": [
+        "LiquidValue",
+        "array(_:)"
+      ],
+      "declaration": "case array([LiquidValue])"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO6numberyACSdcACmF",
+      "path": [
+        "LiquidValue",
+        "number(_:)"
+      ],
+      "declaration": "case number(Double)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO6objectyAcA0A6ObjectVcACmF",
+      "path": [
+        "LiquidValue",
+        "object(_:)"
+      ],
+      "declaration": "case object(LiquidObject)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO6stringyACSScACmF",
+      "path": [
+        "LiquidValue",
+        "string(_:)"
+      ],
+      "declaration": "case string(String)"
+    },
+    {
+      "identifier": "s:6Liquid0A5ValueO7integeryACSicACmF",
+      "path": [
+        "LiquidValue",
+        "integer(_:)"
+      ],
+      "declaration": "case integer(Int)"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV",
+      "path": [
+        "LiquidEngine"
+      ],
+      "declaration": "struct LiquidEngine"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV13referenceTime10Foundation4DateVSgvp",
+      "path": [
+        "LiquidEngine",
+        "referenceTime"
+      ],
+      "declaration": "let referenceTime: Date?"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV13strictFiltersSbvp",
+      "path": [
+        "LiquidEngine",
+        "strictFilters"
+      ],
+      "declaration": "let strictFilters: Bool"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV17renderWithMetrics8template7context9templates10syntaxModeAA0A20MeasuredRenderResultVSS_AA0A6ObjectVSDyS2SGAA0a6SyntaxJ0OtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithMetrics(template:context:templates:syntaxMode:)"
+      ],
+      "declaration": "func renderWithMetrics(template: String, context: LiquidObject = [:], templates: [String : String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV17renderWithMetrics_7context9templatesAA0A20MeasuredRenderResultVAA0A8TemplateV_AA0A6ObjectVSDySSAJGtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithMetrics(_:context:templates:)"
+      ],
+      "declaration": "func renderWithMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String : LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV19inspectDependencies8template9templates10syntaxMode14analysisLimitsAA0A20DependencyInspectionVSS_SDyS2SGAA0a6SyntaxH0OAA0akJ0VtKF",
+      "path": [
+        "LiquidEngine",
+        "inspectDependencies(template:templates:syntaxMode:analysisLimits:)"
+      ],
+      "declaration": "func inspectDependencies(template: String, templates: [String : String] = [:], syntaxMode: LiquidSyntaxMode = .lax, analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV19inspectDependencies_9templates14analysisLimitsAA0A20DependencyInspectionVAA0A8TemplateV_SDySSAJGAA0ahG0VtKF",
+      "path": [
+        "LiquidEngine",
+        "inspectDependencies(_:templates:analysisLimits:)"
+      ],
+      "declaration": "func inspectDependencies(_ template: LiquidTemplate, templates: [String : LiquidTemplate] = [:], analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV21renderWithDiagnostics8template7context9templates10syntaxModeAA0A12RenderResultVSS_AA0A6ObjectVSDyS2SGAA0a6SyntaxJ0OtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithDiagnostics(template:context:templates:syntaxMode:)"
+      ],
+      "declaration": "func renderWithDiagnostics(template: String, context: LiquidObject = [:], templates: [String : String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV21renderWithDiagnostics_7context9templatesAA0A12RenderResultVAA0A8TemplateV_AA0A6ObjectVSDySSAJGtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithDiagnostics(_:context:templates:)"
+      ],
+      "declaration": "func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String : LiquidTemplate] = [:]) async throws -> LiquidRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV31renderWithDiagnosticsAndMetrics8template7context9templates10syntaxModeAA0A20MeasuredRenderResultVSS_AA0A6ObjectVSDyS2SGAA0a6SyntaxL0OtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithDiagnosticsAndMetrics(template:context:templates:syntaxMode:)"
+      ],
+      "declaration": "func renderWithDiagnosticsAndMetrics(template: String, context: LiquidObject = [:], templates: [String : String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV31renderWithDiagnosticsAndMetrics_7context9templatesAA0A20MeasuredRenderResultVAA0A8TemplateV_AA0A6ObjectVSDySSAJGtYaKF",
+      "path": [
+        "LiquidEngine",
+        "renderWithDiagnosticsAndMetrics(_:context:templates:)"
+      ],
+      "declaration": "func renderWithDiagnosticsAndMetrics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String : LiquidTemplate] = [:]) async throws -> LiquidMeasuredRenderResult"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV6limits13strictFilters13referenceTimeAcA0A6LimitsV_Sb10Foundation4DateVSgtcfc",
+      "path": [
+        "LiquidEngine",
+        "init(limits:strictFilters:referenceTime:)"
+      ],
+      "declaration": "init(limits: LiquidLimits = .default, strictFilters: Bool = false, referenceTime: Date? = nil)"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV6limitsAA0A6LimitsVvp",
+      "path": [
+        "LiquidEngine",
+        "limits"
+      ],
+      "declaration": "let limits: LiquidLimits"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV6render8template7context9templates10syntaxModeS2S_AA0A6ObjectVSDyS2SGAA0a6SyntaxH0OtYaKF",
+      "path": [
+        "LiquidEngine",
+        "render(template:context:templates:syntaxMode:)"
+      ],
+      "declaration": "func render(template: String, context: LiquidObject = [:], templates: [String : String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> String"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV6render_7context9templatesSSAA0A8TemplateV_AA0A6ObjectVSDySSAHGtYaKF",
+      "path": [
+        "LiquidEngine",
+        "render(_:context:templates:)"
+      ],
+      "declaration": "func render(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String : LiquidTemplate] = [:]) async throws -> String"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV7filters6limits13strictFilters13referenceTimeACSayAA0A6FilterVG_AA0A6LimitsVSb10Foundation4DateVSgtKcfc",
+      "path": [
+        "LiquidEngine",
+        "init(filters:limits:strictFilters:referenceTime:)"
+      ],
+      "declaration": "init(filters: [LiquidFilter], limits: LiquidLimits = .default, strictFilters: Bool = false, referenceTime: Date? = nil) throws"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV7inspect8template10syntaxModeAA0A18TemplateInspectionVSS_AA0a6SyntaxF0OtKF",
+      "path": [
+        "LiquidEngine",
+        "inspect(template:syntaxMode:)"
+      ],
+      "declaration": "func inspect(template: String, syntaxMode: LiquidSyntaxMode = .lax) throws -> LiquidTemplateInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A6EngineV7inspectyAA0A18TemplateInspectionVAA0aD0VKF",
+      "path": [
+        "LiquidEngine",
+        "inspect(_:)"
+      ],
+      "declaration": "func inspect(_ template: LiquidTemplate) throws -> LiquidTemplateInspection"
+    },
+    {
+      "identifier": "s:6Liquid0A6FilterV",
+      "path": [
+        "LiquidFilter"
+      ],
+      "declaration": "struct LiquidFilter"
+    },
+    {
+      "identifier": "s:6Liquid0A6FilterV4nameSSvp",
+      "path": [
+        "LiquidFilter",
+        "name"
+      ],
+      "declaration": "let name: String"
+    },
+    {
+      "identifier": "s:6Liquid0A6FilterV_4bodyACSS_AA0A5ValueOAF_SayAFGAA0A6ObjectVtYaYbKctcfc",
+      "path": [
+        "LiquidFilter",
+        "init(_:body:)"
+      ],
+      "declaration": "init(_ name: String, body: @escaping @Sendable (LiquidValue, [LiquidValue], LiquidObject) async throws -> LiquidValue)"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV",
+      "path": [
+        "LiquidLimits"
+      ],
+      "declaration": "struct LiquidLimits"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV11outputBytesSivp",
+      "path": [
+        "LiquidLimits",
+        "outputBytes"
+      ],
+      "declaration": "var outputBytes: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV11renderStepsSivp",
+      "path": [
+        "LiquidLimits",
+        "renderSteps"
+      ],
+      "declaration": "var renderSteps: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV11sourceBytes06outputD014loopIterations12nestingDepth11renderSteps13contextValuesACSi_S5itcfc",
+      "path": [
+        "LiquidLimits",
+        "init(sourceBytes:outputBytes:loopIterations:nestingDepth:renderSteps:contextValues:)"
+      ],
+      "declaration": "init(sourceBytes: Int = 1_048_576, outputBytes: Int = 8_388_608, loopIterations: Int = 100_000, nestingDepth: Int = 64, renderSteps: Int = 1_000_000, contextValues: Int = 100_000)"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV11sourceBytesSivp",
+      "path": [
+        "LiquidLimits",
+        "sourceBytes"
+      ],
+      "declaration": "var sourceBytes: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV12nestingDepthSivp",
+      "path": [
+        "LiquidLimits",
+        "nestingDepth"
+      ],
+      "declaration": "var nestingDepth: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV13contextValuesSivp",
+      "path": [
+        "LiquidLimits",
+        "contextValues"
+      ],
+      "declaration": "var contextValues: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV14loopIterationsSivp",
+      "path": [
+        "LiquidLimits",
+        "loopIterations"
+      ],
+      "declaration": "var loopIterations: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A6LimitsV7defaultACvpZ",
+      "path": [
+        "LiquidLimits",
+        "default"
+      ],
+      "declaration": "static let `default`: LiquidLimits"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV",
+      "path": [
+        "LiquidObject"
+      ],
+      "declaration": "struct LiquidObject"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV17dictionaryLiteralACSS_AA0A5ValueOtd_tcfc",
+      "path": [
+        "LiquidObject",
+        "init(dictionaryLiteral:)"
+      ],
+      "declaration": "init(dictionaryLiteral elements: (String, LiquidValue)...)"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV5EntryV",
+      "path": [
+        "LiquidObject",
+        "Entry"
+      ],
+      "declaration": "struct Entry"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV5EntryV3keySSvp",
+      "path": [
+        "LiquidObject",
+        "Entry",
+        "key"
+      ],
+      "declaration": "let key: String"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV5EntryV5valueAA0A5ValueOvp",
+      "path": [
+        "LiquidObject",
+        "Entry",
+        "value"
+      ],
+      "declaration": "let value: LiquidValue"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV5EntryVyAESS_AA0A5ValueOtcfc",
+      "path": [
+        "LiquidObject",
+        "Entry",
+        "init(_:_:)"
+      ],
+      "declaration": "init(_ key: String, _ value: LiquidValue)"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectV7entriesSayAC5EntryVGvp",
+      "path": [
+        "LiquidObject",
+        "entries"
+      ],
+      "declaration": "var entries: [Entry] { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectVyAA0A5ValueOSgSScip",
+      "path": [
+        "LiquidObject",
+        "subscript(_:)"
+      ],
+      "declaration": "subscript(key: String) -> LiquidValue? { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A6ObjectVyACSayAC5EntryVGcfc",
+      "path": [
+        "LiquidObject",
+        "init(_:)"
+      ],
+      "declaration": "init(_ entries: [Entry] = [])"
+    },
+    {
+      "identifier": "s:6Liquid0A8TemplateV",
+      "path": [
+        "LiquidTemplate"
+      ],
+      "declaration": "struct LiquidTemplate"
+    },
+    {
+      "identifier": "s:6Liquid0A8TemplateV6sourceSSvp",
+      "path": [
+        "LiquidTemplate",
+        "source"
+      ],
+      "declaration": "let source: String"
+    },
+    {
+      "identifier": "s:6Liquid0A8TemplateV_10syntaxMode6limitsACSS_AA0a6SyntaxD0OAA0A6LimitsVtKcfc",
+      "path": [
+        "LiquidTemplate",
+        "init(_:syntaxMode:limits:)"
+      ],
+      "declaration": "init(_ source: String, syntaxMode: LiquidSyntaxMode = .lax, limits: LiquidLimits = .default) throws"
+    },
+    {
+      "identifier": "s:6Liquid0A9JSONErrorV",
+      "path": [
+        "LiquidJSONError"
+      ],
+      "declaration": "struct LiquidJSONError"
+    },
+    {
+      "identifier": "s:6Liquid0A9JSONErrorV10byteOffsetSivp",
+      "path": [
+        "LiquidJSONError",
+        "byteOffset"
+      ],
+      "declaration": "let byteOffset: Int"
+    },
+    {
+      "identifier": "s:6Liquid0A9JSONErrorV11descriptionSSvp",
+      "path": [
+        "LiquidJSONError",
+        "description"
+      ],
+      "declaration": "var description: String { get }"
+    },
+    {
+      "identifier": "s:6Liquid0A9JSONErrorV7messageSSvp",
+      "path": [
+        "LiquidJSONError",
+        "message"
+      ],
+      "declaration": "let message: String"
+    }
+  ]
+}
