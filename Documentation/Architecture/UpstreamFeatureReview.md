@@ -1,7 +1,7 @@
 # RhoeLiquid feature review
 
 Swift-Liquid 1.2.0 ships scoped typed custom filters, AST inspection and opt-in
-render metrics, including separate CLI JSON metrics. The recommended 1.3 scope
+render metrics, including separate CLI JSON metrics. The adopted 1.3 scope
 is bounded partial-dependency inspection over explicitly supplied templates,
 with an opt-in CLI mode. Other remaining capabilities add language, shared state,
 I/O or hosting policies that need independent scope decisions.
@@ -13,10 +13,10 @@ The source repository's remote HEAD still matched that commit on 2026-10-15. Fea
 names below describe the reviewed implementation; they do not transfer its
 qualification or performance claims to Swift-Liquid.
 
-The [proposed 1.3 roadmap](../Roadmap-1.3.md) defines the next scope decision.
+The [adopted 1.3 roadmap](../Roadmap-1.3.md) records the adopted scope.
 The adopted [1.2](../Roadmap-1.2.md) and [1.1](../Roadmap.md) roadmaps retain their
-shipped scope and acceptance criteria. This review proposes work; it does not
-authorize implementation of the remaining extensions.
+shipped scope and acceptance criteria. The maintainer adopted the 1.3 roadmap
+on 2026-10-15; remaining extensions need independent scope decisions.
 
 ## Feature disposition after 1.2
 
@@ -24,8 +24,8 @@ authorize implementation of the remaining extensions.
 | --- | --- | --- |
 | Registry-backed custom filters | Shipped in 1.1 with a typed, immutable configuration | `LiquidValue` callbacks, ordered arguments and explicit admission/failure semantics replace the `Any` boundary and mutable registration API. |
 | Supplemental collection filters such as `group_by`, `sort_by`, `pluck`, `limit` and `offset` | Leave as application filters or later opt-in examples | A custom-filter API can support these without adding Rhoe filter names to the default Shopify surface. |
-| Template analysis and manifests | Shipped a small AST summary in 1.1; propose bounded dependency inspection for 1.3 | Follow literal references through caller-supplied partials; report missing/dynamic references and cycle groups without evaluating templates. |
-| CLI `analyze` | Shipped in 1.1; propose explicit dependency mode for 1.3 | Preserve ordinary analysis and its schema while presenting the new library result with explicit CLI file inputs. |
+| Template analysis and manifests | Shipped a small AST summary in 1.1; adopt bounded dependency inspection for 1.3 | Follow literal references through caller-supplied partials; report missing/dynamic references and cycle groups without evaluating templates. |
+| CLI `analyze` | Shipped in 1.1; adopt explicit dependency mode for 1.3 | Preserve ordinary analysis and its schema while presenting the new library result with explicit CLI file inputs. |
 | Runtime custom tags and parser adapters | Defer to a separate API design | Parsing, nested content, scope mutation, lifecycle hooks, and budgets substantially widen the extension boundary. |
 | AST cache, compiled templates, optimizer, renderer pooling | Reuse guide shipped in 1.1; defer runtime machinery | Public Sendable `LiquidTemplate` supports parse-once reuse. Eviction, identity, promotion and shared state need separate correctness and measurement work. Some optimizer/cache settings are archived compatibility shims. |
 | Render metrics | Shipped in 1.2 as opt-in source/parsed APIs and a CLI JSON file | Snapshot invocation counters with a monotonic clock; ordinary calls collect no timing. Cache statistics, storage estimates and a parallel measured renderer remain excluded. |
@@ -77,12 +77,12 @@ internal AST and returns immutable summaries. Raw text and comments do not
 introduce false dependencies. Variable references cannot certify required inputs
 or the templates that a dynamic name might select.
 
-### Bounded dependency inspection is the focused 1.3 candidate
+### Bounded dependency inspection is the adopted 1.3 feature
 
 Rhoe's `buildManifest` and AST walker collect a direct `referencedTemplates` set.
 Its broader analysis also resolves files and validates macro/input contracts.
 Those paths are not a bounded Shopify-core graph over host-supplied partials.
-The 1.3 proposal extends Swift-Liquid's own inspection with that smaller model;
+The adopted 1.3 scope extends Swift-Liquid's own inspection with that smaller model;
 it does not import the upstream analysis subsystem or its heuristic scores.
 
 The existing [partial resolver](../../Sources/Liquid/Support/TemplateLoader.swift)
@@ -188,5 +188,5 @@ code can still introduce ambient I/O or application policy.
 
 Future integration packages should depend on Swift-Liquid. Swift-Liquid should
 retain an empty package dependency list, one public library, one executable,
-and host-owned I/O. The [1.3 roadmap](../Roadmap-1.3.md) proposes one tooling feature
+and host-owned I/O. The [1.3 roadmap](../Roadmap-1.3.md) adopts one tooling feature
 and its acceptance gates; no other upstream subsystem is a stretch goal.

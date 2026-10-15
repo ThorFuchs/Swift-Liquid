@@ -43,6 +43,15 @@ or `escape_once` when inserting text into HTML.
 - <doc:TemplateInspection>
 - ``LiquidTemplateInspection``
 
+### Partial dependencies
+
+- <doc:PartialDependencies>
+- ``LiquidDependencyInspection``
+- ``LiquidDependencyNode``
+- ``LiquidDependencyNodeID``
+- ``LiquidDependencyEdge``
+- ``LiquidDependencyLimits``
+
 ### Opt-in render metrics
 
 - <doc:RenderMetrics>

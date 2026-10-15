@@ -27,7 +27,7 @@ blocks do not contribute references. Parser-discarded tokens do not appear.
 
 Inspection never evaluates expressions, invokes callbacks, renders output or
 loads partials. Unknown filters and missing partials are permitted. Inspect each
-partial independently; no partial graph is followed. Engine filter registration
+partial independently, or use <doc:PartialDependencies> for an explicit bounded bundle. Engine filter registration
 and strict-filter policy have no effect on the summary.
 
 Source inspection uses the normal parser mode. Reused inspection checks the
@@ -49,6 +49,6 @@ including empty lists. Consumers ignore unknown fields and reject unsupported
 schema versions; changes to existing field names, types or meaning require a new
 version. Formatting and key order are not part of the schema.
 
-The command reads one UTF-8 file or `-` for stdin. It accepts only parser mode and
+Without `--dependencies`, the command reads one UTF-8 file or `-` for stdin. It accepts only parser mode and
 format options, writes summaries to stdout, and uses the existing stderr/exit-1
 failure convention. No context or partial sources are loaded.

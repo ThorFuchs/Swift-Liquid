@@ -247,6 +247,24 @@
         "Add explicit CLI metrics-file schema 1 with checked integer nanoseconds, protected input/output aliases and separate atomic writing after successful output delivery; retain existing CLI preparation order."
       ],
       "qualification": "Public source/parsed, counter-capacity, recovery, operational failure, suspension, cancellation and concurrent reuse regressions; independent metrics consumer and CLI JSON/I/O failure checks. Core fixture pins remain unchanged."
+    },
+    {
+      "area": "Bounded partial-dependency inspection",
+      "scopeDecision": "Maintainer adopted the 1.3 roadmap and authorized implementation and Swift-JSON schema qualification on 2026-10-15.",
+      "files": [
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/LiquidCLI/DependencyCommand.swift",
+        "Sources/LiquidCLI/LiquidCommand.swift",
+        "Tools/SchemaQualification"
+      ],
+      "changes": [
+        "Author a new invocation-owned graph over the existing AST inspection authority; no upstream graph implementation is copied.",
+        "Admit all supplied sources, names and template counts; expand reachable literal references once and detect strongly connected groups iteratively under an explicit edge bound.",
+        "Match renderer dictionary lookup while retaining requested and actual supplied UTF-8 spellings and a separate root identity.",
+        "Keep source/parsed results checked Sendable, rendering budgets untouched, and ordinary APIs and JSON schemas unchanged.",
+        "Add explicit bounded CLI directory admission and separate dependency report schema; use published Swift-JSON JSONSchema only in isolated qualification tooling."
+      ],
+      "qualification": "Public source/parsed graph cases, Unicode lookup/equality, diamonds/cycles, parser modes, unused admission failures, capacities, cancellation and concurrent rendering/metrics; independent public consumer, CLI boundary tests and Swift-JSON positive/negative schema verdicts. Pinned core fixtures remain unchanged."
     }
   ]
 }

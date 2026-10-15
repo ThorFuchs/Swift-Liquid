@@ -91,23 +91,25 @@ def main():
                 log = (output / (name + '.log')).read_text()
                 require_fixtures(log)
                 summary = re.search(r'Test run with (\d+) tests .* passed', log)
-                if not summary or int(summary.group(1)) < 54:
+                if not summary or int(summary.group(1)) < 65:
                     raise RuntimeError(f'{name} has an absent or reduced test run')
                 receipt['testLanes'].append({'name': name, 'goldenCases': 1098, 'compatibilityProbes': 221,
                     'grammarCases': 337, 'dateFilterCases': 376, 'outsideSupportedYears': 35,
-                    'hostExtensionCases': 15, 'inspectionCases': 8, 'testFunctions': int(summary.group(1)), 'skipped': 0})
+                    'hostExtensionCases': 15, 'inspectionCases': 8, 'dependencyTestFunctions': 11, 'testFunctions': int(summary.group(1)), 'skipped': 0})
             run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 'consumer')
             run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
             run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
             run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
+            run(swift() + ['run', '--package-path', 'Examples/DependencyConsumer', 'LiquidDependencyConsumer'], 'dependency-consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')
+            run([sys.executable, '-B', 'Scripts/check_dependencies.py', str(Path(binary_path) / 'liquid')], 'dependency-cli-schema')
         elif args.lane == 'safety':
             run(swift() + ['test', '--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run(swift() + ['test', '--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread')
             require_fixtures((output / 'address.log').read_text())
-            if not re.search(r'Test run with 4 tests .* passed', (output / 'thread.log').read_text()):
-                raise RuntimeError('ThreadSanitizer did not execute core, filter, inspection and metrics concurrency tests')
+            if not re.search(r'Test run with 5 tests .* passed', (output / 'thread.log').read_text()):
+                raise RuntimeError('ThreadSanitizer did not execute core, filter, inspection, metrics and dependency concurrency tests')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')
@@ -122,6 +124,7 @@ def main():
             run([sys.executable, '-B', 'Scripts/check_archive.py'], 'archive')
         else:
             run(swift() + ['run', '-c', 'release', '--package-path', 'Tools/Benchmarks', 'LiquidBenchmarks', str(output / 'benchmarks.json')], 'benchmarks')
+            run(swift() + ['run', '-c', 'release', '--package-path', 'Tools/DependencyBenchmarks', 'LiquidDependencyBenchmarks', str(output / 'dependencies.json')], 'dependency-benchmarks')
         receipt['status'] = 'passed'
     except (RuntimeError, OSError) as error:
         receipt['error'] = str(error)

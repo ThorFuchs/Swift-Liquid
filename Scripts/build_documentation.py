@@ -49,4 +49,5 @@ run(swift() + ['run', '--package-path', 'Examples/Consumer', 'LiquidConsumer'], 
 run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFiltersConsumer'], 'filters-consumer')
 run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
 run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
+run(swift() + ['run', '--package-path', 'Examples/DependencyConsumer', 'LiquidDependencyConsumer'], 'dependency-consumer')
 print(f'DocC compiled with {len(symbols)} public symbols: {archive}')
