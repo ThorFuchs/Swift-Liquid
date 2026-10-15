@@ -38,6 +38,7 @@
     "LiquidTests.InspectionTests/parsingModesAndFailuresMatchTemplateParsing()": null,
     "LiquidTests.InspectionTests/sourceAndReusedTemplatesRespectCapacities()": null,
     "LiquidTests.JSONNumbersKeepIntegersAndBooleansDistinct()": null,
+    "LiquidTests.LiquidSpecRegressionTests/bareBracketRequiresReceiverOnlyInStrict2(mode:)": 3,
     "LiquidTests.LiquidSpecRegressionTests/truncateRetainsEndingAtNonpositiveLength(mode:)": 3,
     "LiquidTests.MetricsTests/cancellationSurvivesSuspendingHostCode(recovering:)": 2,
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()": null,
