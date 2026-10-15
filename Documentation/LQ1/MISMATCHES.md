@@ -7,20 +7,24 @@ summarizes findings and does not replace those receipts.
 
 | Suite | Source cases | Mode variants | Selected | Matched | Mismatched | Operational | Disabled |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| basics | 955 | 955 | 897 | 803 | 85 | 9 | 58 |
-| liquid_ruby | 2,106 | 2,119 | 1,608 | 1,335 | 272 | 1 | 511 |
-| liquid_ruby_lax | 121 | 121 | 114 | 54 | 60 | 0 | 7 |
+| basics | 955 | 955 | 898 | 803 | 86 | 9 | 57 |
+| liquid_ruby | 2,106 | 2,119 | 1,694 | 1,351 | 342 | 1 | 425 |
+| liquid_ruby_lax | 121 | 121 | 115 | 55 | 60 | 0 | 6 |
 | parser_errors | 1,905 | 1,905 | 1,905 | 3 | 1,902 | 0 | 0 |
 | partials | 12 | 12 | 12 | 10 | 2 | 0 | 0 |
-| Total | 5,099 | 5,112 | 4,536 | 2,205 | 2,321 | 10 | 576 |
+| Total | 5,099 | 5,112 | 4,624 | 2,222 | 2,392 | 10 | 488 |
 
 A match uses the pinned comparator (exact output or required patterns) plus an
 explicit error-phase check. Successful-render **outcome** does not mean matching
 output. Recovered diagnostics remain recovered-error outcomes even if matched.
-No skipped variants were reported. All 576 unexecuted rows have visible reasons:
-547 transport-inapplicable, 7 outside numeric domain and 22 unsupported policy/mode
+No skipped variants were reported. All 488 unexecuted rows have visible reasons:
+459 transport-inapplicable, 7 outside numeric domain and 22 unsupported policy/mode
 variants. Six unsupported `warn` records are preserved; the upstream expansion
-helper would otherwise omit them. None is counted as passed.
+helper would otherwise omit them. None is counted as passed. The broad `ruby_types` tag is handled by per-case
+primitive-JSON admission: 88 source cases are portable, adding 17 matches and 71
+failures compared with the retained earlier profile. Ruby classes, symbols,
+non-string keys, cycles and out-of-domain integers remain explicitly excluded.
+These newly selected cases are eligibility changes, not engine repairs.
 
 ## Verified repair
 
@@ -65,7 +69,7 @@ Ten expectations also mismatch pinned Ruby under this runner/hosting policy:
 `security_var_name_no_interpolation`, three strict2 blank-body cases, five
 filesystem/recursion cases and `assign_swallows_filter_error`. They require
 reference/suite review before engine changes. No expected bytes were rewritten.
-The remaining 2,312 selected failures are unresolved; symptom labels such as
+The remaining 2,383 selected failures are unresolved; symptom labels such as
 parser diagnostics or unexpected rejection do not establish a verified root cause.
 
 ## Reproduce and retain

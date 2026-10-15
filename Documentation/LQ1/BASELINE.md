@@ -12,7 +12,7 @@ ZIP SHA-256: `97fa00909921dcdefa58454e4774eee75ceddae8b475aed1ae009590cea7bf31`.
 | Shopify Liquid | Clean checkout `4e39ae4cc3da73921923c0669e0fc84a66b2f696`; `Liquid::VERSION == 5.14.0` |
 | Shopify liquid-spec | Clean checkout `84bf25e0edbca5f7e530574788b0f875ab331f50`; `Liquid::Spec::VERSION == 2.0.0` |
 | Swift | Apple Swift 6.4, swiftlang-6.4.0.34.1, clang-2100.3.34.1; Swift language mode 6 |
-| Xcode | Xcode-beta.app developer directory; complete version in gate logs |
+| Xcode | Xcode 27.2 / build 27B5019j in Xcode-beta.app; complete version in gate logs |
 | Native host | macOS 27.0 / build 26A5416b / arm64; Apple M1 Max, 10 logical CPUs, 32 GiB |
 | Reference Ruby | Homebrew Ruby 4.0.1, revision e04267a14b, arm64-darwin25; Date 3.5.1, Time 0.4.2; UTC |
 
