@@ -301,6 +301,29 @@
       "qualification": "Native/debug/release and public consumers, exact README output, public comment/API admission, static route checks, sanitizers, existing fixture/reference accounting and clean source rebuild through Scripts/ci.py. No runtime semantics or fixture bytes changed.",
       "referenceCommit": "037e735dc6224789e4d04d2c18d15b8d27440198",
       "referenceState": "Both referenced tooling files were clean at this commit when adapted."
+    },
+    {
+      "area": "Adversarial testing and structured execution evidence",
+      "scopeDecision": "Maintainer authorized quality sprint 2 on 2026-10-15.",
+      "files": [
+        "Tests/LiquidTests/AdversarialTests.swift",
+        "Tests/LiquidTests/DependencyInspectionTests.swift",
+        "Tests/LiquidTests/PublicContractTests.swift",
+        "Tests/TestInventory.json",
+        "Scripts/ci.py",
+        "Scripts/test_evidence.py",
+        "Scripts/check_test_evidence.py",
+        "Tools/TestEvidenceProbe",
+        "Sources/Liquid/LiquidJSON.swift"
+      ],
+      "changes": [
+        "Author fixed-seed scalar, JSON, grammar and byte-capacity oracles without changing pinned fixtures.",
+        "Replace scheduling-delay and immediate-cancel assumptions with checked test barriers, explicit entry/callback cancellation and independent invocation reuse.",
+        "Admit Swift Testing v0 events against an exact reviewed inventory, including the Swift 6.4 case-metadata adapter; retain raw streams and failure summaries.",
+        "Qualify the adapter with independent negative admission cases and actual failed, disabled, known-issue, empty and filtered runner probes.",
+        "Replace recursive JSON container descent with a bounded explicit stack after the 128-level regression exposes sanitizer stack exhaustion; preserve the public depth, scalar-key, ordering, numeric and error contracts."
+      ],
+      "qualification": "Affected Scripts/ci.py native, sanitizer and documentation lanes; selected adversarial/cancellation repetitions under parallel execution. Synchronous traversal coverage claims entry cancellation, not selected-phase latency. Root dependencies and released 1.0\u20131.3 contracts remain unchanged."
     }
   ]
 }

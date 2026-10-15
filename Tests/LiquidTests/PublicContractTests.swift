@@ -98,12 +98,28 @@ func malformedJSONIsRejected(source: String) {
     #expect(throws: LiquidError.self) { try LiquidTemplate(source) }
 }
 
-@Test func cancellationStopsStaticLoops() async throws {
-    let task = Task {
-        try await LiquidEngine().render(template: "{% for x in (1..100000) %}x{% endfor %}")
+@Test(.timeLimit(.minutes(1)), arguments: [false, true])
+func cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput: Bool) async throws {
+    let gate = TestSuspensionGate()
+    let engine = try LiquidEngine(filters: [LiquidFilter("pause") { value, _, _ in
+        await gate.enter()
+        return value // The engine must observe cancellation after a successful callback.
+    }, LiquidFilter("unreachable") { _, _, _ in
+        Issue.record("Cancelled loop reached a later callback")
+        return nil
+    }])
+    let parsed = try LiquidTemplate("{% increment n %}{% for x in (1..3) %}{{ x | pause | unreachable }}{% endfor %}")
+    let worker = Task {
+        if parsedInput { return try await engine.render(parsed) }
+        return try await engine.render(template: parsed.source)
     }
-    task.cancel()
-    await #expect(throws: CancellationError.self) { try await task.value }
+    defer { worker.cancel() }
+    try await gate.waitForEntry()
+    #expect(try await engine.render(template: "{% increment n %}healthy") == "0healthy")
+    worker.cancel()
+    _ = try await gate.release()
+    await #expect(throws: CancellationError.self) { try await worker.value }
+    #expect(try await engine.render(template: "{% increment n %}healthy") == "0healthy")
 }
 
 @Test func arithmeticOverflowAndNonfiniteContextThrow() async throws {

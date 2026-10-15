@@ -2,7 +2,7 @@
 @testable import Liquid
 import Testing
 
-@Suite("Bounded partial-dependency inspection")
+@Suite("Bounded partial-dependency inspection", .timeLimit(.minutes(1)))
 struct DependencyInspectionTests {
     @Test func diamondsRepeatedRequestsAndDeterministicMapOrder() throws {
         let source = "{% render 'b' %}{% render 'a' %}{% include 'a' %}"
@@ -134,26 +134,26 @@ struct DependencyInspectionTests {
         await task.value
     }
 
-    @Test func cancellationOfLargeInFlightOperations() async throws {
-        let empty = try LiquidTemplate("")
-        let partials = Dictionary(uniqueKeysWithValues: (0..<100_000).map { ("p\($0)", empty) })
-        let inspection = Task.detached {
-            try LiquidEngine().inspectDependencies(empty, templates: partials,
-                analysisLimits: .init(templates: 100_001, nameBytes: 1_000_000))
+    @Test(arguments: [false, true])
+    func cancellationAtCoordinatedInspectionEntryLeavesReuseHealthy(parsedInput: Bool) async throws {
+        let engine = LiquidEngine()
+        let root = try LiquidTemplate("{% include 'a' %}")
+        let partials = ["a": try LiquidTemplate("{% include 'a' %}")]
+        let expected = try engine.inspectDependencies(root, templates: partials)
+        let gate = TestSuspensionGate()
+        let worker = Task {
+            await gate.enter()
+            if parsedInput { return try engine.inspectDependencies(root, templates: partials) }
+            return try engine.inspectDependencies(template: root.source, templates: partials.mapValues(\.source))
         }
-        try await Task.sleep(for: .milliseconds(2))
-        inspection.cancel()
-        do { _ = try await inspection.value; Issue.record("Large inspection completed without observing cancellation") }
-        catch is CancellationError { }
-
-        // A large prebuilt cycle isolates cancellation in the SCC operation from parsing/admission.
-        let count = 200_000
-        let adjacency = (0..<count).map { [($0 + 1) % count] }
-        let cycles = Task.detached { try dependencyCycles(adjacency, reachable: Array(0..<count)) }
-        try await Task.sleep(for: .milliseconds(2))
-        cycles.cancel()
-        do { _ = try await cycles.value; Issue.record("Large SCC operation completed without observing cancellation") }
-        catch is CancellationError { }
+        defer { worker.cancel() }
+        try await gate.waitForEntry()
+        worker.cancel()
+        _ = try await gate.release()
+        await #expect(throws: CancellationError.self) { try await worker.value }
+        // Synchronous traversal has no public suspension point. This proves entry
+        // cancellation and independent reuse, not cancellation at a chosen SCC step.
+        #expect(try engine.inspectDependencies(root, templates: partials) == expected)
     }
 
     @Test func concurrentRendersMetricsAndDependencyInspection() async throws {

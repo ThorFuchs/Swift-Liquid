@@ -241,6 +241,7 @@ No inherited speedup, zero-overhead or process-memory claim is made.
 
 - [Documentation site](https://thorfuchs.github.io/Swift-Liquid/), [API reference](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/) and [guide index](Documentation/README.md)
 - [Contributing](CONTRIBUTING.md), [community standards](CODE_OF_CONDUCT.md), [support](SUPPORT.md) and [private security reporting](SECURITY.md)
+- [Adversarial testing and structured evidence](Documentation/Testing.md)
 - [Architecture and provenance](Documentation/Architecture/README.md), [documentation tooling](Documentation/DocumentationTooling.md) and [quality sprints](Documentation/QualityRoadmap.md)
 - [Changelog](CHANGELOG.md), [release process](RELEASING.md) and [adopted feature roadmaps](Documentation/README.md)
 
