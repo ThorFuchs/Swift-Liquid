@@ -141,6 +141,9 @@ with tempfile.TemporaryDirectory() as directory:
     hardlink = root / 'input-hardlink'
     os.link(data, hardlink)
     run(args + ['--metrics', str(hardlink)], '', succeeds=False)
+    dangling = root / 'dangling-metrics'
+    dangling.symlink_to(root / 'absent-target')
+    run(args + ['--metrics', str(dangling)], '', succeeds=False)
     new_output = root / 'new-output'
     run(args + ['--output', str(new_output), '--metrics', str(root / '.' / 'new-output')], '', succeeds=False)
     parent_link = root / 'parent-link'
