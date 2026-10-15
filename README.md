@@ -15,9 +15,10 @@ metrics when you need them. Each operation owns its mutable state.
 
 Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The latest stable
 release is [1.3.0](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0).
-Use a released version for applications; `main` and the documentation site track
-ongoing development. Release assets include the source, compiled DocC reference,
-qualification evidence and SHA-256 checksums for that exact version.
+The [1.3.1 candidate notes](Documentation/Releases/1.3.1.md) describe the upcoming
+maintenance release. Use a released version for applications; `main` and the
+documentation site track ongoing development. Release assets include the source,
+compiled DocC reference, qualification evidence and SHA-256 checksums for that exact version.
 
 ## Why Swift-Liquid?
 
