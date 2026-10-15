@@ -46,49 +46,60 @@ struct QualityPropertyTests {
     @Test(arguments: [UInt64(0), 1, 0x5eed, .max])
     func dependencyCyclesAgreeWithReachabilityOracle(seed: UInt64) throws {
         var random = SeededValues(state: seed)
-        let count = 16
-        var adjacency = [[Bool]](repeating: [Bool](repeating: false, count: count), count: count)
-        for origin in 0..<count {
-            for target in 0..<count { adjacency[origin][target] = random.next(5) == 0 }
-        }
-        func name(_ index: Int) -> String { "p\(index)" }
-        func stored(_ index: Int) -> String { name(index) + (index.isMultiple(of: 2) ? "" : ".liquid") }
-        let entries = (0..<count).map { origin in
-            (stored(origin), (0..<count).filter { adjacency[origin][$0] }.map { "{% include '\(name($0))' %}" }.joined())
-        }
-        let source = (0..<count).map { "{% include '\(name($0))' %}" }.joined()
-            + "{% include 'missing' %}{% include 'missing' %}{% include selected %}"
-        let engine = LiquidEngine()
-        let report = try engine.inspectDependencies(template: source, templates: Dictionary(uniqueKeysWithValues: entries))
-        let reordered = try engine.inspectDependencies(template: source, templates: Dictionary(uniqueKeysWithValues: entries.reversed()))
-        let parsed = try Dictionary(uniqueKeysWithValues: entries).mapValues { try LiquidTemplate($0) }
-        #expect(try engine.inspectDependencies(LiquidTemplate(source), templates: parsed) == report)
-        #expect(reordered == report)
-        #expect(report.nodes.count == count + 1)
-        #expect(report.edges.count == count + 1 + adjacency.flatMap { $0 }.filter { $0 }.count)
-        #expect(report.missingReferences.map(\.requestedName) == ["missing"])
-        #expect(report.dynamicReferences == [.root])
-
-        // Floyd–Warshall reachability is independent of the production iterative SCC algorithm.
-        var reachable = adjacency
-        for via in 0..<count {
+        // Exercise DAGs, disconnected groups, self-loops and dense graphs for every seed.
+        for shape in 0..<4 {
+            let count = 16
+            var adjacency = [[Bool]](repeating: [Bool](repeating: false, count: count), count: count)
             for origin in 0..<count {
                 for target in 0..<count {
-                    reachable[origin][target] = reachable[origin][target] || (reachable[origin][via] && reachable[via][target])
+                    let selected = random.next(5) == 0
+                    switch shape {
+                    case 0: adjacency[origin][target] = origin < target && selected
+                    case 1: adjacency[origin][target] = origin / 4 == target / 4 && selected
+                    case 2: adjacency[origin][target] = (target == origin + 1 || target == origin) && selected
+                    default: adjacency[origin][target] = selected
+                    }
                 }
             }
-        }
-        var remaining = Set(0..<count)
-        var expected: [[LiquidDependencyNodeID]] = []
-        for origin in 0..<count where remaining.contains(origin) {
-            let members = (0..<count).filter { reachable[origin][$0] && reachable[$0][origin] }
-            if !members.isEmpty {
-                expected.append(members.map { .partial(stored($0)) }.sorted { key($0).utf8.lexicographicallyPrecedes(key($1).utf8) })
-                remaining.subtract(members)
+            func name(_ index: Int) -> String { "p\(index)" }
+            func stored(_ index: Int) -> String { name(index) + (index.isMultiple(of: 2) ? "" : ".liquid") }
+            let entries = (0..<count).map { origin in
+                (stored(origin), (0..<count).filter { adjacency[origin][$0] }.map { "{% include '\(name($0))' %}" }.joined())
             }
+            let source = (0..<count).map { "{% include '\(name($0))' %}" }.joined()
+                + "{% include 'missing' %}{% include 'missing' %}{% include selected %}"
+            let engine = LiquidEngine()
+            let report = try engine.inspectDependencies(template: source, templates: Dictionary(uniqueKeysWithValues: entries))
+            let reordered = try engine.inspectDependencies(template: source, templates: Dictionary(uniqueKeysWithValues: entries.reversed()))
+            let parsed = try Dictionary(uniqueKeysWithValues: entries).mapValues { try LiquidTemplate($0) }
+            #expect(try engine.inspectDependencies(LiquidTemplate(source), templates: parsed) == report)
+            #expect(reordered == report)
+            #expect(report.nodes.count == count + 1)
+            #expect(report.edges.count == count + 1 + adjacency.flatMap { $0 }.filter { $0 }.count)
+            #expect(report.missingReferences.map(\.requestedName) == ["missing"])
+            #expect(report.dynamicReferences == [.root])
+
+            // Floyd–Warshall reachability is independent of the production iterative SCC algorithm.
+            var reachable = adjacency
+            for via in 0..<count {
+                for origin in 0..<count {
+                    for target in 0..<count {
+                        reachable[origin][target] = reachable[origin][target] || (reachable[origin][via] && reachable[via][target])
+                    }
+                }
+            }
+            var remaining = Set(0..<count)
+            var expected: [[LiquidDependencyNodeID]] = []
+            for origin in 0..<count where remaining.contains(origin) {
+                let members = (0..<count).filter { reachable[origin][$0] && reachable[$0][origin] }
+                if !members.isEmpty {
+                    expected.append(members.map { .partial(stored($0)) }.sorted { key($0).utf8.lexicographicallyPrecedes(key($1).utf8) })
+                    remaining.subtract(members)
+                }
+            }
+            expected.sort { key($0[0]).utf8.lexicographicallyPrecedes(key($1[0]).utf8) }
+            #expect(report.cycles == expected)
         }
-        expected.sort { key($0[0]).utf8.lexicographicallyPrecedes(key($1[0]).utf8) }
-        #expect(report.cycles == expected)
     }
 
     @Test func suspensionBarriersDoNotStrandCancelledObserversOrHosts() async throws {
