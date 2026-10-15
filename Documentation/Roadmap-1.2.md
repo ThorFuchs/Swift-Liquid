@@ -14,6 +14,8 @@ filters and AST inspection. The updated [RhoeLiquid review](Architecture/Upstrea
 compares the remaining features against that release. The
 [metrics contract](Metrics.md) specifies the public API and CLI schema.
 Publication requires a later explicit request and completed release gates.
+Metrics and CLI implementation are complete. The [1.2.0 release notes](Releases/1.2.0.md)
+cover the candidate, with matched 1.1.0 measurements and final release qualification.
 The [adopted 1.1 roadmap](Roadmap.md) remains the
 record of the previous scope decision.
 

@@ -22,19 +22,11 @@ reused template. It checks all summary fields through a stable payload/checksum;
 its timings include payload verification and hashing. These records are not render
 latencies and do not execute callbacks or load partials.
 
-The 1.2 development harness adds metrics-enabled source and parsed calls for all
-six render workloads, yielding 26 records including inspection. Each enabled
-record must retain the ordinary record's output checksum. The JSON retains all
-25 sample values and reports twelve enabled/disabled median comparisons. These
-measure whole API calls externally, not their returned durations. Execution is
-sequential in a fixed order; a single run does not isolate drift, background load
-or thermal effects. Treat these comparisons as instrumentation observations,
-not a release regression verdict or a speedup claim.
-
-The matched release gate still retains its pinned 1.0.0 common harness. Updating
-the baseline to 1.1.0 and extending it to all common 1.1 workloads belongs to final
-1.2 release preparation, as specified by the adopted roadmap. Historical receipts
-remain unchanged.
+The 1.2 harness adds metrics-enabled source and parsed calls for all six render
+workloads, yielding 26 records including inspection. It retains 25 sample values
+per record and twelve enabled/disabled summaries. Whole calls are timed externally;
+returned metrics durations are not used as benchmark measurements. A fixed-order
+single run is an observation, not a release regression verdict.
 
 Measurements describe this host and workload. They do not establish superiority
 over Ruby, Liquid-C, or another Swift implementation, and latency does not imply
@@ -46,26 +38,57 @@ No speedup claim is carried over from RhoeLiquid. The [1.1 benchmark review](Per
 records the initial comparison and its limits. Each release-candidate CI run retains
 its own complete comparison and review flags.
 
-## Matched 1.0.0 comparison
+## Matched 1.1.0 comparison
 
 Run `python3 -B Scripts/ci.py --lane matched-performance` from a clean candidate
-commit with the 1.0.0 commit available locally. CI fetches the exact commit
-`d36018e6b6822ae408a6c1c439c2307484525b7b`; no floating branch or tag resolution
-selects the baseline. Both libraries are built with the unchanged 1.0.0 benchmark
-source and manifest, with a pinned harness SHA-256. The root package is unchanged.
+commit with immutable 1.1.0 commit
+`1107ec865b9ae7ed35e1245386ba882db3abd93d` available locally. The common harness is
+copied unchanged from that commit into both library checkouts. Its SHA-256 is
+`cdaa1ce76d114eb12ef163a8e5445704a7da6ae5563a17abffd6de5c2d2de77f`; the manifest
+SHA-256 is `aaf1bad0e6c4c7165b35320bf95878a2a3ac20a5efa9362066901ac9836b4439`.
+No floating branch or tag selects the baseline.
 
-Both binaries are built before timing. Three sequential ABBA blocks run baseline,
-candidate, candidate, baseline, yielding six complete runs per version. Each run
-uses the original 25 samples, 10 warmup samples and 100 repetitions per sample.
-The report compares the median of six run medians for each of ten workload/mode
-pairs and retains every run's latency summary, checksum and run order. Positive change
-means higher latency. Changes of either sign at or above 10% require review;
-mechanical measurement success does not resolve a review flag.
+This phase compares 14 records: source/reused rendering of interpolation, standard
+filters, loops, partials, dates and custom filters, plus source/reused inspection.
+Three serial ABBA blocks run baseline, candidate, candidate, baseline, producing
+six complete runs per version. Each uses 25 measured samples, ten warmup samples
+and 100 repetitions per sample. The unchanged 1.1 harness retains each run's
+median, p95, minimum, maximum and output checksum. The comparison reports the
+median of six run medians, with every run retained.
 
-The receipt records toolchain, OS, architecture, CPU/model, memory, source hashes,
-common harness hash and load averages. Comparisons run in one process sequence
-on one host; no builds occur during timing. The CI comparison waits for this
-repository's other qualification jobs, reducing interference from those jobs.
-It does not establish an idle machine, thermal stability or unrelated-workload
-isolation. Review outliers and repeat a comparison when they leave a material
-regression unresolved.
+## Matched metrics overhead
+
+A second phase uses one candidate binary with the current benchmark harness.
+`--render-mode ordinary` and `--render-mode metrics` select 24 render records across throwing and diagnostic policies independently. Three further ABBA blocks alternate ordinary, metrics,
+metrics, ordinary, yielding six runs per mode. The source, context, partials,
+filters, sampling and expected outputs match the common workloads. All 25 sample
+latencies per metrics-phase record are retained, along with checksums, six run
+medians per side and 24 summary comparisons.
+
+The baseline, common candidate and metrics candidate binaries all build before
+any timing begins. Candidate library fingerprints must match across the two
+harnesses. Every output checksum and sampling policy must match across compared
+runs and across phases. No build occurs between timed runs. Inspection is excluded
+from the metrics phase because it does not render.
+
+## Review and evidence
+
+Positive change means higher latency. Absolute median changes at or above 10%
+produce review flags in each phase, including faster results. Mechanical success
+is not a regression or overhead verdict. Review distributions, workload meaning
+and environment; investigate material slowdowns and repeat when needed. Report
+opt-in cost without implying the ordinary path has zero overhead or claiming a
+speedup from noisy faster samples.
+
+The schema-2 comparison records compiler, OS, architecture, CPU/model, memory,
+library/harness hashes, exact commands, run order and load averages. CI waits for
+its other qualification lanes before this job. That reduces interference from
+this repository, but does not establish idle hardware, thermal stability or
+isolation from unrelated jobs.
+
+The historical [1.1 review](PerformanceReview-1.1.md) and released 1.0/1.1 evidence
+remain unchanged. Final candidate CI is authoritative for that source inventory;
+inspect both flag lists before preparing release assets. Packaging requires a
+separate reviewed record bound to the comparison SHA-256. These measurements
+cover small workloads and do not establish process-memory use or superiority to
+another engine.

@@ -13,6 +13,7 @@ import shutil
 import subprocess
 import tarfile
 from ci import ROOT, source_snapshot
+from compare_benchmarks import BASELINE, HARNESS_SHA256, MANIFEST_SHA256, index_records, comparisons
 
 
 def main():
@@ -62,9 +63,39 @@ def main():
                 seen.add(member.name)
         if seen != set(archive_receipt['inventory']):
             raise RuntimeError('Missing source archive files')
-    matched = json.loads((evidence / 'liquid-matched-performance/comparison.json').read_text())
-    if matched['candidateCommit'] != archive_receipt['candidateCommit'] or len(matched['runs']) != 12 or len(matched['comparisons']) != 10:
+    matched_root = evidence / 'liquid-matched-performance'
+    comparison_bytes = (matched_root / 'comparison.json').read_bytes()
+    matched = json.loads(comparison_bytes)
+    if (matched['candidateCommit'] != archive_receipt['candidateCommit'] or matched['baselineCommit'] != BASELINE
+            or matched['harnessSHA256'] != HARNESS_SHA256 or matched['manifestSHA256'] != MANIFEST_SHA256
+            or matched['order'] != ['baseline', 'candidate', 'candidate', 'baseline'] * 3
+            or [r['version'] for r in matched['runs']] != matched['order']
+            or len(matched['comparisons']) != 14):
         raise RuntimeError('Matched comparison is incomplete or belongs to another candidate')
+    common_records = {r['name']: index_records(json.loads((matched_root / r['result']).read_text())) for r in matched['runs']}
+    if comparisons(matched['runs'], common_records, ['baseline', 'candidate']) != matched['comparisons']:
+        raise RuntimeError('Matched summary differs from retained measurements')
+    metrics = matched['metrics']
+    if (metrics['candidateCommit'] != matched['candidateCommit'] or metrics['librarySHA256'] != matched['candidateLibrarySHA256']
+            or metrics['harnessSHA256'] != matched['metricsHarnessSHA256']
+            or metrics['order'] != ['ordinary', 'metrics', 'metrics', 'ordinary'] * 3
+            or [r['version'] for r in metrics['runs']] != metrics['order'] or len(metrics['comparisons']) != 24
+            or metrics['harnessSHA256'] != hashlib.sha256((ROOT / 'Tools/Benchmarks/Sources/LiquidBenchmarks/main.swift').read_bytes()).hexdigest()):
+        raise RuntimeError('Metrics comparison is incomplete or uses another library')
+    metric_records = {r['name']: index_records(json.loads((matched_root / r['result']).read_text()), r['version']) for r in metrics['runs']}
+    if comparisons(metrics['runs'], metric_records, ['ordinary', 'metrics']) != metrics['comparisons']:
+        raise RuntimeError('Metrics summary differs from retained measurements')
+    for result in [matched, metrics]:
+        flags = [r['name'] + '/' + r['mode'] for r in result['comparisons'] if r['requiresReview']]
+        if result['reviewRequired'] != flags:
+            raise RuntimeError('Benchmark flag list differs from retained comparisons')
+    review = json.loads((evidence / 'benchmark-review.json').read_text())
+    if (review['status'] != 'reviewed' or review['releaseQualification'] != 'passed'
+            or review['comparisonSHA256'] != hashlib.sha256(comparison_bytes).hexdigest()
+            or review['baselineCommit'] != BASELINE or review['candidateLibrarySHA256'] != matched['candidateLibrarySHA256']
+            or sorted(review['reviewedCompatibilityFlags']) != sorted(matched['reviewRequired'])
+            or sorted(review['reviewedMetricsFlags']) != sorted(metrics['reviewRequired'])):
+        raise RuntimeError('Benchmark review is missing, incomplete or belongs to different measurements')
     output = ROOT / 'Artifacts/release' / args.version
     output.mkdir(parents=True, exist_ok=True)
     assets = {}
@@ -92,7 +123,8 @@ def main():
     (output / 'release-notes.md').write_text(notes)
     manifest = {'version': args.version, 'status': 'prepared-unpublished', 'candidateCommit': commit,
                 'qualifiedCommit': archive_receipt['candidateCommit'], 'sourceTree': tree, 'runURL': args.run_url,
-                'passedLanes': lanes, 'benchmarkReviewRequired': matched['reviewRequired'], 'assets': assets}
+                'passedLanes': lanes, 'benchmarkReviewStatus': 'reviewed',
+                'benchmarkReviewRequired': matched['reviewRequired'], 'metricsReviewRequired': metrics['reviewRequired'], 'assets': assets}
     (output / 'release.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print(json.dumps(manifest, indent=2))
 

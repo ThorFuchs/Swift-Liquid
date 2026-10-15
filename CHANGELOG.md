@@ -2,12 +2,21 @@
 
 ## Unreleased
 
+## 1.2.0 — Release candidate
+
 - Add opt-in source/parsed render metrics with monotonic durations and existing
   invocation budget consumption, including explicit diagnostic rendering.
 - Add `liquid render --metrics PATH` with separate schema-versioned JSON, protected
   input/output destinations and atomic metrics writing after output delivery.
 - Preserve 1.0/1.1 APIs, default rendering, fixture pins and the dependency-free
   core; add public metrics regressions, a fourth consumer and measured workloads.
+- Qualify 54 test functions, four public consumers, 60 CLI cases, AddressSanitizer,
+  four ThreadSanitizer concurrency cases and four simulator-SDK library builds.
+- Compare all 14 common workload/mode records with immutable 1.1.0 using its
+  unchanged harness; measure 24 candidate metrics-enabled/disabled pairs across both error policies in
+  separate ABBA blocks with retained samples, checksums and review flags.
+- Prepare source, DocC and qualification archives with checksums and
+  [release notes](Documentation/Releases/1.2.0.md). Publication is a separate step.
 
 ## 1.1.0 — 2026-10-14
 
