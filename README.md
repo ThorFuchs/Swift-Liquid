@@ -218,7 +218,7 @@ with pinned sources and explicit evidence grades.
 The language authority is [Shopify's Liquid reference implementation](https://github.com/Shopify/liquid)
 and its [core language documentation](https://shopify.github.io/liquid/).
 Swift-Liquid targets that open-source core. The new [LQ1 independent liquid-spec
-track](Documentation/LQ1/README.md) records substantial open compatibility differences;
+track](Documentation/LQ1/README.md) and [R2 triage](Documentation/LQ1-R2/README.md) record substantial open compatibility differences;
 its failed gate does not expand the released qualification claim. Storefront objects, theme-only tags,
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
