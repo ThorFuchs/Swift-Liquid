@@ -50,7 +50,8 @@ def main():
     metadata['hardware'] = {key: run(['sysctl', '-n', key], 'host-' + key.replace('.', '-'))
         for key in ['hw.model', 'hw.physicalcpu', 'hw.memsize', 'machdep.cpu.brand_string']}
     with tempfile.TemporaryDirectory(prefix='liquid-interpolation-study-') as tmp:
-        qualification = Path(tmp) / 'qualification'
+        qualification = Path(tmp) / 'qualification' / 'Swift-Liquid'
+        qualification.parent.mkdir()
         run(['git', 'worktree', 'add', '--detach', str(qualification), CANDIDATE], 'candidate-qualification-checkout')
         assert library_hash(qualification) == CANDIDATE_EXPECTED
         try:

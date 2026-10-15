@@ -59,3 +59,10 @@ checksums, raw data, controls, distributions and flags. An improvement must be
 assessed against control magnitude and block consistency, with special attention
 to both reused-interpolation modes and all other workloads. Do not select retries
 for preferred numbers. Full final-source qualification remains required.
+
+The initial follow-up preflight (run 38822187059) passed 78functions/2166cases,
+then failed the first consumer because its temporary checkout basename was
+qualification. SwiftPM derives local dependency identity from that basename.
+Correct only the temporary directory to qualification/Swift-Liquid; candidate
+bytes, protocols, thresholds and planned sampling remain unchanged. No benchmark
+sample existed before this setup correction. Retain the failed receipt and logs.
