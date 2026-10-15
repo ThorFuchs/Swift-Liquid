@@ -54,6 +54,12 @@ private struct FilterValueBridge {
 
     mutating func read(_ value: Any, depth: Int = 1) throws -> LiquidValue {
         try budget.filterValue(depth: depth)
+        // Native strings need no failed Foundation bridge probes. Keep the
+        // original conversion precedence for every other runtime value.
+        if type(of: value) == String.self, let text = value as? String {
+            try key(text)
+            return .string(text)
+        }
         switch value {
         case is NSNull: return .null
         case let value as Bool: return .bool(value)

@@ -116,6 +116,19 @@ struct CustomFilterTests {
         #expect(try await names.render(template: "{{ '' | named: \(composed): 1, \(decomposed): 2 }}").utf8.elementsEqual("\(composed)1|\(decomposed)2".utf8))
         let loop = try LiquidTemplate("{% for item in (1..3) %}{{ '' | named: \(composed): item, \(decomposed): 2 }};{% endfor %}")
         #expect(try await names.render(loop).utf8.elementsEqual("\(composed)1|\(decomposed)2;\(composed)2|\(decomposed)2;\(composed)3|\(decomposed)2;".utf8))
+
+        let payload: LiquidValue = ["001", "true", true, 1, 1.5, nil, .object(["text": .string("\0" + decomposed)])]
+        let typed = try LiquidEngine(filters: [LiquidFilter("typed") { value, arguments, named in
+            #expect(value == payload)
+            #expect(arguments == [.string("false")])
+            guard case .string(let text) = named["text"] else { Issue.record("Expected a string argument"); return nil }
+            #expect(text.utf8.elementsEqual(decomposed.utf8))
+            return "checked"
+        }])
+        let typedSource = "{{ data | typed: 'false', text: text }}"
+        let typedContext: LiquidObject = ["data": payload, "text": .string(decomposed)]
+        #expect(try await typed.render(template: typedSource, context: typedContext) == "checked")
+        #expect(try await typed.render(LiquidTemplate(typedSource), context: typedContext) == "checked")
     }
 
     @Test func unregisteredFiltersKeepOnePointZeroBehavior() async throws {
@@ -185,6 +198,11 @@ struct CustomFilterTests {
             try await engine.render(template: "{{ x | host_echo | host_echo | host_echo }}", context: ["x": 1])
         }
         guard case .limitExceeded("contextValues")? = error else { Issue.record("Expected cumulative values limit"); return }
+        #expect(try await engine.render(template: "{{ x | host_echo | host_echo }}", context: ["x": "é"]) == "é")
+        let stringError = await #expect(throws: LiquidError.self) {
+            try await engine.render(template: "{{ x | host_echo | host_echo | host_echo }}", context: ["x": "é"])
+        }
+        guard case .limitExceeded("contextValues")? = stringError else { Issue.record("Strings bypassed cumulative values"); return }
         let partial = await #expect(throws: LiquidError.self) {
             try await engine.render(template: "{{ x | host_echo }}{% render 'part', x: x %}", context: ["x": 1], templates: ["part": "{{ x | host_echo | host_echo }}"])
         }
@@ -205,8 +223,10 @@ struct CustomFilterTests {
             let error = await #expect(throws: LiquidError.self) { try await engine.renderWithDiagnostics(template: source) }
             guard case .invalidValue? = error else { Issue.record("Expected comparison literal rejection"); continue }
         }
-        let error = await #expect(throws: LiquidError.self) { try await engine.renderWithDiagnostics(template: "{{ x | untouched }}", context: ["x": "12345"]) }
-        guard case .limitExceeded("outputBytes")? = error else { Issue.record("Expected input admission error"); return }
+        for text in ["12345", "ééé"] {
+            let error = await #expect(throws: LiquidError.self) { try await engine.renderWithDiagnostics(template: "{{ x | untouched }}", context: ["x": .string(text)]) }
+            guard case .limitExceeded("outputBytes")? = error else { Issue.record("Expected input admission error"); continue }
+        }
     }
 
     @Test(arguments: [false, true])

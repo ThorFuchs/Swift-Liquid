@@ -2,6 +2,9 @@
 
 ## 1.3.0 — 2026-10-15
 
+- Avoid repeated failed bridge casts for native strings at custom-filter boundaries,
+  preserving typed values, exact text and cumulative admission budgets.
+
 - Adopt the [1.3 roadmap](Documentation/Roadmap-1.3.md) and add bounded source/parsed
   partial-dependency inspection, retaining exact names, missing/dynamic references
   and deterministic strongly connected cycle groups without evaluation or I/O.
