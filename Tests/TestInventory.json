@@ -62,7 +62,7 @@
     "LiquidTests.QualityPropertyTests/renderingEntryPointsAgree(seed:)": 4,
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()": null,
     "LiquidTests.RangePropertyTests/cancellationBeforeRangeCommandsPreservesSiblingReuse(recovering:)": 2,
-    "LiquidTests.RangePropertyTests/concurrentRangeCommandsKeepParsedTemplatesImmutable(mode:)": 3,
+    "LiquidTests.RangePropertyTests/concurrentRendersKeepRangeCommandsImmutable(mode:)": 3,
     "LiquidTests.RangePropertyTests/rangeCommandsPreserveRaisingAndRecoveredErrors(mode:)": 3,
     "LiquidTests.RangePropertyTests/rangePropertiesMatchPinnedRubyAcrossPolicies(mode:)": 3,
     "LiquidTests.RangePropertyTests/rangePropertiesRetainFiniteAdmissionAndWork(mode:)": 3,
@@ -106,7 +106,7 @@
     "LiquidTests.InspectionTests/concurrentRendersAndInspectionShareOnlyImmutableTemplates()",
     "LiquidTests.LiquidSpecRegressionTests/concurrentRendersKeepCycleSitesImmutable()",
     "LiquidTests.MetricsTests/concurrentRendersKeepMetricsInvocationOwned()",
-    "LiquidTests.RangePropertyTests/concurrentRangeCommandsKeepParsedTemplatesImmutable(mode:)",
+    "LiquidTests.RangePropertyTests/concurrentRendersKeepRangeCommandsImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"

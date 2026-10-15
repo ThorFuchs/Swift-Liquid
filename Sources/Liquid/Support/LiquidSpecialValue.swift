@@ -7,7 +7,7 @@ internal struct RuntimeRange: Sendable {
     let start: Int
     let end: Int
     // Checked at range admission; property access never materializes the range.
-    let count: Int
+    var count: Int { start > end ? 0 : end - start + 1 }
     var description: String { "\(start)..\(end)" }
     var values: [Any] { start > end ? [] : Array(start...end) }
 

@@ -15,7 +15,7 @@ The original independent findings are liquid-spec `84bf25e` cases
 
 Swift's lazy range already stored endpoints but property lookup omitted its
 runtime type. A descending range was replaced by an empty array, losing endpoint
-identity. The repair preserves a typed range with an admitted cardinality: an
+identity. The repair preserves a typed range with an admitted cardinality, computed from the already checked endpoints: an
 ascending range's count is checked before construction, while a descending range
 has count zero. Dot commands and argument-free standard filters share the typed
 command lookup. They do not materialize or enumerate values. Iteration still
@@ -26,7 +26,9 @@ For `(1..5)`, properties and filters return `1`, `5`, `5`. For `(5..1)`, both
 return `5`, `1`, `0`; its string form is `5..1`, and it does not equal the `empty`
 comparison literal in pinned Ruby. Bracket `r["first"]`, `r["last"]`, `r["size"]`
 and dynamic string-key access return nil for a range. Static path optimization
-must preserve command versus bracket identity for all three names. No general
+must preserve command versus bracket identity for all three names. A separate six-variant pinned Ruby negative control preserves nil for `r.count`,
+literal bracket count and dynamic bracket count. Cardinality remains a computed
+implementation detail rather than a newly reflected field. No general
 range indexing, `length` command or host-object reflection is introduced.
 
 Real object keys, loop records, strings, arrays and scalar size behavior retain

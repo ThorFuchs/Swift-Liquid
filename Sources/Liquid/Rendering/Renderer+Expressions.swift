@@ -352,11 +352,11 @@ extension Renderer {
               let endInt = Int(exactly: endNum.rounded(.towardZero)) else { throw RenderError.custom("Range bound exceeds integer range") }
 
         if startInt > endInt {
-            return RuntimeRange(start: startInt, end: endInt, count: 0)
+            return RuntimeRange(start: startInt, end: endInt)
         }
         let (distance, overflow) = endInt.subtractingReportingOverflow(startInt)
         guard !overflow, distance < budget.limits.loopIterations else { throw RenderError.custom("Range exceeds iteration limit") }
-        return RuntimeRange(start: startInt, end: endInt, count: distance + 1)
+        return RuntimeRange(start: startInt, end: endInt)
     }
     
     internal func evaluateTest(expr: LiquidExpression, test: TestOp) async throws -> Any {

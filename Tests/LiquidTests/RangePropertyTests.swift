@@ -106,6 +106,8 @@ struct RangePropertyTests {
         #expect(try await LiquidEngine(limits: .init(loopIterations: 1)).render(descending) == "5|1|0;E")
         let result = try await LiquidEngine().renderWithMetrics(parsed, context: ["lower": 1, "upper": 3])
         #expect(result.metrics.loopIterations == 0)
+        let noExtraCommand = try LiquidTemplate("{% assign r = (1..3) %}{{ r.count | default: 'N' }}|{{ r['count'] | default: 'N' }}|{{ r[key] | default: 'N' }}", syntaxMode: mode)
+        #expect(try await LiquidEngine().render(noExtraCommand, context: ["key": "count"]) == "N|N|N")
         #expect(try await LiquidEngine(limits: .init(renderSteps: result.metrics.renderSteps)).render(parsed, context: ["lower": 1, "upper": 3]) == result.output)
         await #expect(throws: LiquidError.self) {
             try await LiquidEngine(limits: .init(renderSteps: result.metrics.renderSteps - 1)).renderWithDiagnostics(parsed, context: ["lower": 1, "upper": 3])
@@ -117,7 +119,7 @@ struct RangePropertyTests {
     }
 
     @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
-    func concurrentRangeCommandsKeepParsedTemplatesImmutable(mode: LiquidSyntaxMode) async throws {
+    func concurrentRendersKeepRangeCommandsImmutable(mode: LiquidSyntaxMode) async throws {
         let engine = LiquidEngine()
         let parsed = try LiquidTemplate(rangePropertySource, syntaxMode: mode)
         let inspection = try engine.inspect(parsed)
