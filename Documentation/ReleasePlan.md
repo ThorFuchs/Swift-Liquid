@@ -51,10 +51,27 @@ inventories and assets and packages the evidence without creating a tag or relea
 Publication still requires the maintainer's explicit request, exact-commit main
 qualification and version-resolution verification.
 
-## 1.2 development
+## 1.2.0 release gates
 
 The maintainer adopted the [1.2 roadmap](Roadmap-1.2.md) on 2026-10-15: opt-in
 render metrics and a CLI JSON metrics file. The [metrics contract](Metrics.md)
 defines the API and schema. The roadmap retains compatibility and failure contracts,
 public acceptance cases, measurement against immutable 1.1.0 and all eight final
 qualification lanes. Publication remains a later explicit maintainer decision.
+
+Retain all 1.0/1.1 compatibility gates, 54 test functions, four public consumers,
+60 CLI cases, full AddressSanitizer coverage and four ThreadSanitizer concurrency
+cases. Qualify all simulator SDKs, compile DocC and rebuild a clean source archive.
+
+The matched lane pins immutable 1.1.0 and its unchanged 14-record harness. It also
+runs twelve candidate enabled/disabled metrics comparisons using the same binary,
+with separate three-block ABBA sequences. All binaries build before timing.
+Retain common per-run summaries, individual metrics samples, output checksums,
+environment receipts and both flag lists. Review every flagged result before
+preparing assets; passing measurements alone are not a regression verdict.
+
+`Scripts/prepare_release.py` requires matching source inventories from all eight
+lanes, reproducible archives and an explicit benchmark review bound to the exact
+comparison checksum. It prepares the three archives, notes and checksums under
+`Artifacts/release/1.2.0` without creating a tag or release. Qualify the merged
+main commit again before any separately requested publication.

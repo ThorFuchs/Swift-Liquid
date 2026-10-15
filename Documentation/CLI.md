@@ -8,7 +8,7 @@ Use `swift run liquid --help` while developing, or the built release executable.
 | `render TEMPLATE` | Render a UTF-8 file or `-` for stdin |
 | `validate TEMPLATE` | Parse a UTF-8 template and fail on invalid syntax |
 | `analyze TEMPLATE` | Inspect parsed references without rendering (1.1) |
-| `--version` | Show the package version (`Swift-Liquid 1.1.0`) |
+| `--version` | Show the candidate version (`Swift-Liquid 1.2.0`) |
 | `--help` | Show commands and options |
 
 Render options:
@@ -18,7 +18,7 @@ Render options:
 | `--data PATH` | Read a JSON object as the context |
 | `--partials DIRECTORY` | Load `.liquid` files recursively under one explicit directory |
 | `--output PATH` | Atomically write completed output to a file |
-| `--metrics PATH` | Write opt-in render metrics to a separate JSON file (1.2 development) |
+| `--metrics PATH` | Write opt-in render metrics to a separate JSON file (1.2) |
 | `--syntax-mode lax\|strict\|strict2` | Select parsing behavior; default lax |
 | `--strict-filters` | Fail on unknown filters |
 
@@ -59,7 +59,7 @@ liquid analyze page.liquid --syntax-mode strict2 --format json
 printf '{{ name | upcase }}' | liquid analyze -
 ```
 
-## Render metrics (1.2 development)
+## Render metrics (1.2)
 
 ```sh
 liquid render page.liquid --data context.json --output page.html --metrics metrics.json

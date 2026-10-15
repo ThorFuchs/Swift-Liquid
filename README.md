@@ -10,9 +10,10 @@ SwiftPM dependency graph is empty; platform support comes from Foundation.
 [![CI](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml/badge.svg)](https://github.com/ThorFuchs/Swift-Liquid/actions/workflows/ci.yml)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-**Swift-Liquid 1.1.0** adds typed application filters and read-only template
-inspection while preserving the 1.0 API and dependency-free core. See the
-[release notes](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.1.0)
+**Swift-Liquid 1.2.0 release candidate** adds opt-in render metrics and separate
+CLI JSON metrics while preserving the 1.0/1.1 APIs and dependency-free core.
+The latest published version is 1.1.0. See the
+[1.2.0 release notes](Documentation/Releases/1.2.0.md)
 and [compatibility evidence](Documentation/Conformance.md). Maintained by
 [Thorsten Fuchs](https://github.com/ThorFuchs).
 
@@ -44,6 +45,9 @@ Add Swift-Liquid to your package dependencies:
 ```swift
 .package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.1.0")
 ```
+
+This selects the published release line. The 1.2 metrics APIs below require the
+candidate source until 1.2.0 is published.
 
 Add the library to your target:
 
@@ -133,7 +137,7 @@ See the [inspection contract and JSON schema](Documentation/Inspection.md).
 The filter and inspection APIs are available from 1.1.0; existing 1.0 render
 call sites need no migration.
 
-## Measure a render (1.2 development)
+## Measure a render (1.2)
 
 ```swift
 let measured = try await engine.renderWithMetrics(
@@ -147,8 +151,7 @@ Source and parsed-template entry points return immutable timing and budget
 observations. Use `renderWithDiagnosticsAndMetrics` for explicit recovered errors.
 Ordinary render APIs collect no timing. The CLI's `--metrics PATH` writes separate
 JSON while keeping rendered stdout intact. See the [metrics contract](Documentation/Metrics.md)
-for timing boundaries, counter meanings and failure behavior. These additions are
-in development for 1.2; the published release remains 1.1.0.
+for timing boundaries, counter meanings and failure behavior.
 
 ## Command-line rendering
 

@@ -22,6 +22,16 @@ struct Benchmarks {
         #if DEBUG
         throw BenchmarkFailure("Benchmarks require a release build")
         #else
+        let arguments = Array(CommandLine.arguments.dropFirst())
+        guard arguments.isEmpty || arguments.count == 1 ||
+                (arguments.count == 3 && arguments[1] == "--render-mode") else {
+            throw BenchmarkFailure("Expected [OUTPUT [--render-mode all|ordinary|metrics]]")
+        }
+        let destination = arguments.first
+        let renderMode = arguments.count == 3 ? arguments[2] : "all"
+        guard ["all", "ordinary", "metrics"].contains(renderMode),
+              destination?.hasPrefix("--") != true else { throw BenchmarkFailure("Invalid benchmark mode or destination") }
+        let measuredModes = renderMode == "all" ? [false, true] : [renderMode == "metrics"]
         let workloads = [
             Workload(name: "interpolation", source: "Hello, {{ name }}!", context: ["name": "Swift"], partials: [:], expected: "Hello, Swift!"),
             Workload(name: "filter-chain", source: "{{ title | strip | upcase | escape }}", context: ["title": " <Swift> "], partials: [:], expected: "&lt;SWIFT&gt;"),
@@ -47,7 +57,7 @@ struct Benchmarks {
             else { activeEngine = try LiquidEngine(filters: workload.filters) }
             let parsed = try LiquidTemplate(workload.source)
             let partials = try workload.partials.mapValues { try LiquidTemplate($0) }
-            for measured in [false, true] {
+            for measured in measuredModes {
                 for reuse in [false, true] {
                     var timings: [Double] = []
                     var checksum: UInt64 = 14_695_981_039_346_656_037
@@ -77,38 +87,40 @@ struct Benchmarks {
                 }
             }
         }
-        // Inspection is measured separately from rendering. Its stable payload includes
-        // every summary field; no callbacks or partial sources are supplied.
-        let inspectionSource = "{% for item in items limit: maximum %}{{ item[key] | host: prefix, suffix: ending | escape }}{% render 'card', title: item.title %}{% endfor %}{% include selected %}"
-        let inspectionTemplate = try LiquidTemplate(inspectionSource)
-        let expectedInspection = "ending,item,items,key,maximum,prefix,selected|escape,host|card|true"
-        for reuse in [false, true] {
-            var timings: [Double] = []
-            var checksum: UInt64 = 14_695_981_039_346_656_037
-            for sample in -10..<samples {
-                let start = clock.now
-                for _ in 0..<repetitions {
-                    let summary = try reuse ? engine.inspect(inspectionTemplate) : engine.inspect(template: inspectionSource)
-                    let payload = summary.variableRoots.joined(separator: ",") + "|"
-                        + summary.filterNames.joined(separator: ",") + "|"
-                        + summary.literalPartialNames.joined(separator: ",") + "|" + String(summary.hasDynamicPartials)
-                    guard payload == expectedInspection else { throw BenchmarkFailure("Inspection summary mismatch") }
-                    for byte in payload.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+        if renderMode == "all" {
+            // Inspection is measured separately from rendering. Its stable payload includes
+            // every summary field; no callbacks or partial sources are supplied.
+            let inspectionSource = "{% for item in items limit: maximum %}{{ item[key] | host: prefix, suffix: ending | escape }}{% render 'card', title: item.title %}{% endfor %}{% include selected %}"
+            let inspectionTemplate = try LiquidTemplate(inspectionSource)
+            let expectedInspection = "ending,item,items,key,maximum,prefix,selected|escape,host|card|true"
+            for reuse in [false, true] {
+                var timings: [Double] = []
+                var checksum: UInt64 = 14_695_981_039_346_656_037
+                for sample in -10..<samples {
+                    let start = clock.now
+                    for _ in 0..<repetitions {
+                        let summary = try reuse ? engine.inspect(inspectionTemplate) : engine.inspect(template: inspectionSource)
+                        let payload = summary.variableRoots.joined(separator: ",") + "|"
+                            + summary.filterNames.joined(separator: ",") + "|"
+                            + summary.literalPartialNames.joined(separator: ",") + "|" + String(summary.hasDynamicPartials)
+                        guard payload == expectedInspection else { throw BenchmarkFailure("Inspection summary mismatch") }
+                        for byte in payload.utf8 { checksum = (checksum ^ UInt64(byte)) &* 1_099_511_628_211 }
+                    }
+                    let duration = start.duration(to: clock.now).components
+                    if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
                 }
-                let duration = start.duration(to: clock.now).components
-                if sample >= 0 { timings.append((Double(duration.seconds) * 1_000_000_000 + Double(duration.attoseconds) / 1_000_000_000) / Double(repetitions)) }
+                let rawTimings = timings
+                timings.sort()
+                records.append(["name": "inspection", "mode": reuse ? "inspect-reused-template" : "parse-and-inspect",
+                    "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
+                    "sampleNanoseconds": rawTimings,
+                    "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
+                    "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
+                    "outputBytes": expectedInspection.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
             }
-            let rawTimings = timings
-            timings.sort()
-            records.append(["name": "inspection", "mode": reuse ? "inspect-reused-template" : "parse-and-inspect",
-                "samples": samples, "warmupSamples": 10, "repetitionsPerSample": repetitions,
-                "sampleNanoseconds": rawTimings,
-                "medianNanoseconds": timings[samples / 2], "p95Nanoseconds": timings[Int(ceil(Double(samples) * 0.95)) - 1],
-                "minimumNanoseconds": timings[0], "maximumNanoseconds": timings[samples - 1],
-                "outputBytes": expectedInspection.utf8.count, "fnv1aChecksum": String(checksum, radix: 16)])
         }
         var overhead: [[String: Any]] = []
-        for record in records where (record["mode"] as? String)?.hasSuffix("-metrics") == true {
+        for record in records where renderMode == "all" && (record["mode"] as? String)?.hasSuffix("-metrics") == true {
             guard let mode = record["mode"] as? String, let name = record["name"] as? String,
                   let ordinary = records.first(where: { $0["name"] as? String == name && $0["mode"] as? String == String(mode.dropLast(8)) }),
                   let enabled = record["medianNanoseconds"] as? Double,
@@ -121,11 +133,11 @@ struct Benchmarks {
                              "disabledMedianNanoseconds": disabled, "enabledMedianNanoseconds": enabled,
                              "medianChangePercent": (enabled / disabled - 1) * 100])
         }
-        guard records.count == 26, overhead.count == 12 else { throw BenchmarkFailure("Incomplete benchmark run") }
+        guard records.count == (renderMode == "all" ? 26 : 12), overhead.count == (renderMode == "all" ? 12 : 0) else { throw BenchmarkFailure("Incomplete benchmark run") }
         let result: [String: Any] = ["schemaVersion": 1, "platform": ProcessInfo.processInfo.operatingSystemVersionString,
-                                     "configuration": "release", "workloads": records, "metricsOverhead": overhead]
+                                     "configuration": "release", "renderMode": renderMode, "workloads": records, "metricsOverhead": overhead]
         let data = try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys])
-        if CommandLine.arguments.count > 1 { try data.write(to: URL(fileURLWithPath: CommandLine.arguments[1]), options: .atomic) }
+        if let destination { try data.write(to: URL(fileURLWithPath: destination), options: .atomic) }
         print(String(decoding: data, as: UTF8.self))
         #endif
     }

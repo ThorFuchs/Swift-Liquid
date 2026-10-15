@@ -4,7 +4,7 @@ Measure one invocation without changing its rendering or failure policy.
 
 ## Overview
 
-The 1.2 development API ``LiquidEngine`` provides `renderWithMetrics` and
+The 1.2 API ``LiquidEngine`` provides `renderWithMetrics` and
 `renderWithDiagnosticsAndMetrics`, each accepting source or parsed templates.
 Both return ``LiquidMeasuredRenderResult`` with output, diagnostics and immutable
 ``LiquidRenderMetrics``. The diagnostic method alone recovers eligible failures;

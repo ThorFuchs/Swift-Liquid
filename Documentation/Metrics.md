@@ -1,6 +1,6 @@
 # Opt-in render metrics
 
-Swift-Liquid 1.2 development API. `renderWithMetrics` has the same throwing
+Swift-Liquid 1.2 API. `renderWithMetrics` has the same throwing
 behavior as `render`. `renderWithDiagnosticsAndMetrics` has the same explicit
 recovery behavior as `renderWithDiagnostics`. Both accept source or a parsed
 template and return a checked Sendable `LiquidMeasuredRenderResult`, containing
