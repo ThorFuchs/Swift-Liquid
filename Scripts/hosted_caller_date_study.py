@@ -86,7 +86,7 @@ def main():
                 includes={Path(loc),Path(loc)/'Modules',*(p.parent for p in modules)}
                 frameworks={a.parent for p in modules for a in p.parents if a.name.endswith('.framework')}
                 search=[v for d in sorted(includes) for v in ['-I',str(d)]]+[v for d in sorted(frameworks) for v in ['-F',str(d)]]
-                run(['xcrun','swiftc','-O','-swift-version','6','-parse-as-library','-emit-sil',*search,str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
+                run(['xcrun','swiftc','-O','-swift-version','6','-target',platform.machine()+'-apple-macosx14.0','-parse-as-library','-emit-sil',*search,str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
             if label in ['mergedA','candidate']:
                 run(['xcrun','nm','-n',binaries[label,'common']],label+'-symbols')
                 run(['xcrun','otool','-tvV',binaries[label,'common']],label+'-assembly')

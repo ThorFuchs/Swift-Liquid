@@ -59,3 +59,7 @@ uses an out/Products layout. Discover and retain the actual Liquid.swiftmodule
 locations; include their parent directories and any enclosing framework search
 paths alongside the product and conventional Modules directories. No timed sample existed. Keep the failed attempt
 and qualify the same product bytes again before the corrected study.
+
+The standalone compiler diagnostic also specifies the package's macOS 14 target
+explicitly, matching the imported module's minimum deployment version. This is
+setup configuration only; neither timed harness nor product source changes.
