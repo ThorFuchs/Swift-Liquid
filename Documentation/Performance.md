@@ -149,3 +149,25 @@ The [recurring date investigation](PerformanceReview-RecurringDate.md) directly
 compares 1.3.0 with merged main using wall and process CPU observations, explicit
 callers and identical-source controls. It retains the unresolved historical date
 flags and the adverse filter control without changing the production engine.
+
+The [CPU and executor trace follow-up](PerformanceReview-DateTracing.md) retains
+sampled stacks, actual executor events, image-identity symbolication and every
+untraced review flag. Recorder failures and incomplete cohorts remain explicit.
+Trace elapsed values are separate from ordinary benchmarks; no production change
+or historical date-regression clearance follows.
+
+The [controlled recognition study](PerformanceReview-DateRecognition.md) separates
+lowercasing, full date recognition, loose-parser construction/parsing and known-date
+formatting under explicit callers, with typed audit controls and independently
+built identical-source comparisons. Its [complete aggregate appendix](PerformanceReview-DateRecognition-Data.md)
+retains all 404 comparisons and both flag lists. Grammar work is the next observed
+CPU target for these inputs; the production engine and cancellation checkpoints
+remain unchanged, and historical date flags remain unresolved.
+
+The [parser operation study](PerformanceReview-ParserOperations.md) further isolates
+normalization, construction, matching, capture materialization and original
+find/take helpers, with checked Sendable range snapshots and typed audit controls.
+Its [complete aggregate appendix](PerformanceReview-ParserOperations-Data.md)
+retains all 852 comparisons, including substantial identical-source spread.
+Matching and normalization are next investigation targets for the selected inputs;
+no runtime optimization or historical regression clearance is adopted.

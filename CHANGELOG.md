@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Retain controlled date-parser normalization, matching and capture observations,
+  typed audit controls, immutable range snapshots and all comparison flags.
+  Preserve production code, cancellation checkpoints and historical uncertainty.
+
+- Isolate observed date-recognition, grammar, formatting and lowercasing CPU costs
+  with controlled benchmarks and typed audit controls. Retain all comparisons,
+  failures and historical flags; keep the production engine and cancellation
+  checkpoints unchanged.
+
+- Retain date CPU/executor traces, image-identity symbolication and complete
+  benchmark reviews, with recorder failures and unresolved historical flags;
+  preserve the production engine and all cancellation checkpoints.
+
 - Qualify Git-free source exports against explicit inspected archive provenance,
   retaining the full native lane and exact source bindings without fabricating Git metadata.
 
@@ -36,8 +49,9 @@
   cancellation, maintenance/release and hosted-workflow protections.
 - Distinguish real null-valued case branches from else, and qualify typed size
   property lookup with exact-key precedence, bracket semantics and scalar counts.
-- Defer render-global visibility after a historical assertion conflict; retain
-  the failed experiment and decision record without changing its expected bytes.
+- Record the historical R3 deferral of render-global visibility after an assertion
+  conflict; retain the failed experiment and unchanged expectation from that
+  checkpoint. The later, narrowly approved C adoption is recorded above.
 
 - Reconcile LQ1 with quality sprint 3, preserve raw upstream comparison verdicts,
   add a supplemental diagnostic ledger and bind gates to their exact source revision.

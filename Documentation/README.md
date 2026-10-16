@@ -21,7 +21,7 @@ guides that are compiled from the public Swift symbol graph.
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
 | [Peer API crosswalk](Comparisons/README.md) | Pinned task-oriented API comparisons and evidence grades |
-| [LQ1-R3 runtime review](LQ1-R3/README.md) | Current-main integration, case/size repairs and deferred host-input contract |
+| [LQ1-R3 runtime review](LQ1-R3/README.md) | Local runtime integration, case/size and adopted host-input semantics; historical deferral retained |
 | [LQ1-R2 triage](LQ1-R2/README.md) | Three bounded semantic repairs, diagnostic ledger and source-aware RFC |
 | [LQ1 independent conformance](LQ1/README.md) | Isolated liquid-spec tooling, exact failures and next review gate |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
@@ -30,6 +30,9 @@ guides that are compiled from the public Swift symbol graph.
 | [Interpolation investigation](PerformanceReview-Interpolation.md) | Controls, rejected hypotheses and bounded synchronous execution |
 | [Caller and date investigation](PerformanceReview-CallerDate.md) | Executor diagnostics, retained variability and rejected formatter hypothesis |
 | [Recurring date investigation](PerformanceReview-RecurringDate.md) | Direct release comparisons, process CPU observations and unresolved historical flags |
+| [CPU and executor tracing](PerformanceReview-DateTracing.md) | Recorded execution paths, repaired symbol coverage, retained failures and unresolved date flags |
+| [Date-recognition CPU costs](PerformanceReview-DateRecognition.md) | Controlled component boundaries, typed audit controls, complete comparisons and unresolved flags |
+| [Parser operation costs](PerformanceReview-ParserOperations.md) | Normalization, matching, captures, original helpers and complete variability review |
 | [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |

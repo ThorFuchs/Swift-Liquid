@@ -658,6 +658,65 @@
         "Documentation/Testing.md"
       ],
       "qualification": "Native provenance rejection controls, full native qualification from a clean Git-free export, and fresh source-bound hosted workflow; independent liquid-spec remains a separate failed functional gate."
-    }
+    },
+    {
+      "area": "Date CPU and executor trace investigation",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #18, followed by CPU/executor tracing of the recurring date regression.",
+      "changes": [
+        "Preserve the dependency-free library, public execution semantics, invocation-owned state, cancellation checkpoints, budgets, API baseline and fixture bytes without runtime changes.",
+        "Retain all 72 untraced runs and 172 comparisons, every median/spread flag, complete individual traces and failed recording attempts as separate cohorts.",
+        "Resolve incomplete CPU frame names with recorded image UUID/load addresses and matching retained dSYMs; preserve original exports and independently recompute resolved sample weights.",
+        "Record actual executor identities under explicit actor/concurrent public consumers without treating instrumented elapsed values, event occupancies or transition counts as a per-check cost or historical causal verdict."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-DateTracing.md"
+      ],
+      "qualification": "Merged main passed all nine Scripts/ci.py lanes and Pages. Independently admit source identities, outputs, raw trace hashes, executable UUIDs, signpost bounds, CPU samples and executor-state aggregations; keep incomplete capture matrices explicit and qualify the final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+      "area": "Controlled date-recognition CPU cost study",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #20, followed by controlled date-recognition CPU benchmarks.",
+      "changes": [
+        "Preserve the dependency-free production core, public execution semantics, checked Sendable inputs, invocation-owned state, cancellation checkpoints, budgets, API baseline and pinned fixtures without runtime changes.",
+        "Freeze separate unmodified public consumers and private archived component libraries with one diagnostic bridge addition; distinguish lowercasing, full recognition, grammar and formatting from result-audit controls under explicit actor and concurrent callers.",
+        "Retain the failed symbol-admission setup and incomplete wrong-argument attempt separately; correct only harness admission/invocation and refreeze before a fresh experiment without selecting individual timings.",
+        "Preserve every complete-run raw record, CPU resolution observation, block effect, identical-source control and median/spread flag without exact audit subtraction, additive render decomposition, speedup or historical causal claims."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-DateRecognition.md",
+        "Documentation/PerformanceReview-DateRecognition-Data.md"
+      ],
+      "qualification": "PR #20 and merged main passed all nine Scripts/ci.py qualification lanes. The frozen study qualifies original and augmented current sources separately (81 functions and 2,178 cases each), validates all component outputs before timing, and builds all nine binaries first. Independently admit all 120 complete runs, 2,736 raw records and 404 comparisons, exact probe/input/source hashes, executable/dSYM UUIDs, typed checksums, command order, sample summaries and both flag lists; qualify the final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+      "area": "Controlled parser normalization, matching and capture study",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #21, followed by isolated date-parser operation costs.",
+      "changes": [
+        "Preserve the dependency-free production engine, public execution semantics, checked Sendable inputs, invocation-owned state, cancellation checkpoints, budgets, API baseline and pinned fixture/license bytes.",
+        "Append diagnostic accessors only to archived parser copies, preserving every original parser byte as a prefix and every other library file unchanged; keep original-source public consumers separate from augmented operation consumers.",
+        "Use checked Sendable immutable range snapshots for capture materialization after the compiler rejects sharing Foundation match-result objects; retain actual original find/take helpers and explicit normalization/construction/matching scopes with typed audit controls.",
+        "Retain all complete observations, matched and missed cases, the synthetic UTF-16 boundary, identical-source controls and median/spread flags without exact audit subtraction, additive latency decomposition, speedup, equivalence or historical causal claims."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-ParserOperations.md",
+        "Documentation/PerformanceReview-ParserOperations-Data.md"
+      ],
+      "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+  "area": "PF1-002 source and documentation reconciliation",
+  "scopeDecision": "PF1-001 proposes PR19 first against pinned main; source construction requires a separate maintainer commission. No source, conformance, performance, release or whole-PR acceptance is inferred.",
+  "changes": [
+    "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
+    "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
+    "Hold PR23 separately and retain all independent conformance and latency flags."
+  ],
+  "files": [
+    "CHANGELOG.md",
+    "Documentation/Architecture/ExtractionManifest.json",
+    "Documentation/README.md"
+  ],
+  "qualification": "Pending exact future candidate/source-bound checks and distinct review. PF1-001 ran no product checks and approves no gate."
+}
   ]
 }
