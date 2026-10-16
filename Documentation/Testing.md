@@ -116,3 +116,18 @@ healthy budget retains exact byte boundaries and unchanged step/value/iteration
 counters. This reproduces the missing final-delivery checkpoint without relying
 on when another thread interrupts a filter. Together with the public measurements
 and existing consumer cases, it qualifies the checkpoint without a timing assertion.
+
+## Qualify a source export
+
+The archive lane rebuilds the full native lane from the deterministic tracked-source
+archive, without adding Git metadata to that export. It supplies an explicit
+`--archive-provenance` descriptor outside the extracted directory. The native
+runner verifies the archive checksum, Git archive commit header, full file inventory,
+exported bytes and modes, and the producer's source snapshot before and after testing.
+Its receipt identifies this origin as `source-archive`; ordinary checkout lanes
+continue to require actual Git identity and never substitute `GITHUB_SHA`.
+
+The archive receipt binds the successful child receipt and descriptor by SHA-256.
+Changed, missing, duplicated or unsafe files, altered provenance, and attempts to
+override checkout identity fail qualification. These tooling regression cases run
+in the native lane; no Liquid fixture or Swift test expectation is changed.

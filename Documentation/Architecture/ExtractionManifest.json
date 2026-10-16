@@ -641,6 +641,23 @@
         "Documentation/PerformanceReview-RecurringDate.md"
       ],
       "qualification": "Frozen hosted study passed the unchanged main development lane (81 functions and 2,178 parameter cases). Independently recompute every retained sample summary, literal expected-output checksum, source fingerprint, block effect and flag; qualify the final documentation source through Scripts/ci.py without treating mechanical benchmark success as release performance clearance."
+    },
+    {
+      "area": "Clean source archive qualification provenance",
+      "scopeDecision": "Maintainer requested addressing PR19 hosted CI failures while preserving reviewed semantics and pinned fixtures.",
+      "changes": [
+        "Retain the actual failed882b1a7 hosted archive attempt and its missing-Git diagnosis as immutable evidence.",
+        "Bind Git-free native exports to the actual producer archive checksum, Git archive commit header, file inventory, bytes/modes and source snapshot; identify archive origin explicitly.",
+        "Keep default checkout Git identity, all native assertions, fixture pins, runtime/public API/package contracts and workflow policy unchanged."
+      ],
+      "files": [
+        "Scripts/archive_provenance.py",
+        "Scripts/check_archive_provenance.py",
+        "Scripts/ci.py",
+        "Scripts/check_archive.py",
+        "Documentation/Testing.md"
+      ],
+      "qualification": "Native provenance rejection controls, full native qualification from a clean Git-free export, and fresh source-bound hosted workflow; independent liquid-spec remains a separate failed functional gate."
     }
   ]
 }
