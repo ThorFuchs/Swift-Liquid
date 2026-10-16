@@ -3,7 +3,7 @@
 Tests protect the released 1.0–1.3 contracts while keeping the root dependency graph
 empty. Run affected qualification through `Scripts/ci.py`; the native lane includes
 debug/release tests, repeated boundary tests, public consumers and CLI checks. The
-safety lane runs the full suite with AddressSanitizer and the seven shared-engine
+safety lane runs the full suite with AddressSanitizer and the thirteen shared-engine
 concurrency tests with ThreadSanitizer.
 
 ## Reproduce a boundary
@@ -80,9 +80,9 @@ including when the process exits unsuccessfully. Counts describe runner executio
 not successful Liquid renders: recovered reference errors and the 35 date-year
 policy boundaries retain their separate [conformance accounting](Conformance.md).
 
-The native lane repeats the 18 selected adversarial/cancellation/barrier functions
+The native lane repeats the 22 selected adversarial/cancellation/barrier functions
 twice under normal parallel execution, each with its own exact inventory. The
-full current baseline is 81 functions and 2,178 parameter cases; nonparameterized
+full current baseline is 114 functions and 2,250 parameter cases; nonparameterized
 functions do not emit case events. Published 1.0–1.3.1 receipts remain unchanged.
 The thread selector is `concurrentRenders`; the repeat selector is
 `AdversarialTests|cancellation|suspension`. New members of those profiles must
@@ -116,3 +116,24 @@ healthy budget retains exact byte boundaries and unchanged step/value/iteration
 counters. This reproduces the missing final-delivery checkpoint without relying
 on when another thread interrupts a filter. Together with the public measurements
 and existing consumer cases, it qualifies the checkpoint without a timing assertion.
+
+## Qualify a source export
+
+The archive lane rebuilds the full native lane from the deterministic tracked-source
+archive, without adding Git metadata to that export. Source archives use an
+explicit permission mask (`0022`) so regular files and executables retain their
+declared modes under modern tar extraction filters. The lane supplies an explicit
+`--archive-provenance` descriptor outside the extracted directory. The native
+runner verifies the archive checksum, Git archive commit header, full file inventory,
+exported bytes and modes, and the producer's source snapshot before and after testing.
+Undeclared files, hidden entries and links are rejected. Generated outputs are
+limited to `Artifacts`, `.build`/`.swiftpm` at declared package roots and Python
+cache directories beside declared Python sources; declared files remain checked
+even within an output prefix.
+Its receipt identifies this origin as `source-archive`; ordinary checkout lanes
+continue to require actual Git identity and never substitute `GITHUB_SHA`.
+
+The archive receipt binds the successful child receipt and descriptor by SHA-256.
+Changed, missing, duplicated or unsafe files, altered provenance, and attempts to
+override checkout identity fail qualification. These tooling regression cases run
+in the native lane; no Liquid fixture or Swift test expectation is changed.

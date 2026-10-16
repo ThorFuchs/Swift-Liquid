@@ -120,7 +120,8 @@ let output = try await LiquidEngine().render(
 print(output) // <h2>Swift &amp; Liquid</h2>
 ```
 
-`render` isolates local variables; `include` follows Liquid's shared-scope behavior.
+`render` sees the original host inputs and explicit bindings while isolating caller
+assignments, loop locals and counters. `include` follows Liquid's shared-scope behavior.
 Supply partials as sources or parsed templates. HTML escaping is explicit: use
 `escape` or `escape_once` when inserting text into HTML. Read the
 [rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).
@@ -206,11 +207,20 @@ The CLI writes rendered bytes to stdout or the requested file, diagnostics to
 stderr, and a nonzero exit status on operational failure. `--metrics PATH` writes
 an independent JSON metrics file. See [CLI usage and schemas](Documentation/CLI.md).
 
+## Coming from another Liquid engine?
+
+The [peer API crosswalk](Documentation/Comparisons/README.md) maps common tasks
+from Ruby Liquid, LiquidJS, Python Liquid, Rust Liquid and Fluid. It explains
+partial maps, typed inputs, async rendering, recovery and extension boundaries,
+with pinned sources and explicit evidence grades.
+
 ## Compatibility and independent evidence
 
 The language authority is [Shopify's Liquid reference implementation](https://github.com/Shopify/liquid)
 and its [core language documentation](https://shopify.github.io/liquid/).
-Swift-Liquid targets that open-source core. Storefront objects, theme-only tags,
+Swift-Liquid targets that open-source core. The new [LQ1 independent liquid-spec
+track](Documentation/LQ1/README.md) and [R2 triage](Documentation/LQ1-R2/README.md) and [R3 runtime review](Documentation/LQ1-R3/README.md) record substantial open compatibility differences;
+its failed gate does not expand the released qualification claim. Storefront objects, theme-only tags,
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
 

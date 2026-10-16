@@ -466,17 +466,10 @@ extension Renderer {
     }
     
     internal func getSize(_ value: Any) -> Int {
-        if value is Int { return MemoryLayout<Int>.size }
-        if let str = value as? String {
-            return str.unicodeScalars.count
-        }
-        if let array = value as? [Any] {
-            return array.count
-        }
-        if let count = dictCount(value) { return count }
-        return 0
+        runtimeValueSize(value) ?? dictCount(value) ?? 0
     }
     
+
     internal func getFirst(_ value: Any) -> Any {
         if let string = value as? String { return string.unicodeScalars.first.map(String.init) ?? "" }
         if let array = value as? [Any], !array.isEmpty {

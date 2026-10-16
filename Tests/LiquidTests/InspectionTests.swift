@@ -111,7 +111,7 @@ struct InspectionTests {
                 group.addTask {
                     #expect(try engine.inspect(parsed) == expected)
                     let output = try await engine.render(parsed, context: ["name": .string("n\(index)")], templates: ["card": partial])
-                    #expect(output == "N\(index)")
+                    #expect(output == "N\(index)n\(index)")
                     #expect(try engine.inspect(parsed) == expected)
                 }
             }

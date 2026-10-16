@@ -3,9 +3,20 @@ internal enum LiquidSpecialValue: String, Sendable, Hashable {
     case empty, blank
 }
 
-internal struct RuntimeRange {
+internal struct RuntimeRange: Sendable {
     let start: Int
     let end: Int
+    // Checked at range admission; property access never materializes the range.
+    var count: Int { start > end ? 0 : end - start + 1 }
     var description: String { "\(start)..\(end)" }
     var values: [Any] { start > end ? [] : Array(start...end) }
+
+    func commandValue(for key: String) -> Int? {
+        switch key {
+        case "first": return start
+        case "last": return end
+        case "size": return count
+        default: return nil
+        }
+    }
 }

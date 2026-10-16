@@ -54,7 +54,7 @@ extension Renderer {
         case .variable(let name):
             return context.getVariable(name.string) ?? NSNull()
 
-        case .access(let expr, let key):
+        case .access(let expr, let key, let command):
             if let path = expression.staticVariablePath {
                 return context.getVariable(path) ?? NSNull()
             }
@@ -68,7 +68,7 @@ extension Renderer {
             let baseValue = try await evaluateExpressionFast(expr)
             switch key {
             case .literal(.string(let keyName)):
-                return evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string)
+                return evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string, command: command)
             case .literal(.number(let number, _)):
                 return evaluateAccessValueWithIndex(baseValue: baseValue, index: integerValue(number) ?? Int.max)
             default:
@@ -190,13 +190,18 @@ extension Renderer {
     }
 
     @inline(__always)
-    internal func evaluateAccessValueWithStringKey(baseValue: Any, key: String) -> Any {
+    internal func evaluateAccessValueWithStringKey(baseValue: Any, key: String, command: Bool = false) -> Any {
+        if let range = baseValue as? RuntimeRange {
+            guard command, let value = range.commandValue(for: key) else { return NSNull() }
+            return value
+        }
         // Dictionary lookup takes priority — enables forloop.first, forloop.last, forloop.length
         if let val = dictValue(baseValue, forKey: key) { return val }
         if isDictLike(baseValue) { /* key not found, fall through */ }
-        if key == "size" || key == "length" {
-            return getSize(baseValue)
+        if key == "size" {
+            return command ? runtimeSizeProperty(baseValue) ?? NSNull() : NSNull()
         }
+        if key == "length" { return NSNull() }
         if key == "first" {
             if let array = baseValue as? [Any], !array.isEmpty {
                 return array[0]
@@ -347,7 +352,7 @@ extension Renderer {
               let endInt = Int(exactly: endNum.rounded(.towardZero)) else { throw RenderError.custom("Range bound exceeds integer range") }
 
         if startInt > endInt {
-            return [Any]()
+            return RuntimeRange(start: startInt, end: endInt)
         }
         let (distance, overflow) = endInt.subtractingReportingOverflow(startInt)
         guard !overflow, distance < budget.limits.loopIterations else { throw RenderError.custom("Range exceeds iteration limit") }

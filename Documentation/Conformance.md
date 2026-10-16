@@ -132,3 +132,13 @@ Swift-Liquid 1.3 retains all 116 public 1.2 declarations and every prior fixture
 pin. Final gate receipts, source/DocC archives and matched 1.2.0 measurements
 accompany the [1.3.0 release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0);
 see the [release notes](Releases/1.3.0.md).
+
+## LQ1 independent track
+
+The separate [LQ1 qualification](LQ1/README.md) uses Shopify/liquid-spec at
+`84bf25e0edbca5f7e530574788b0f875ab331f50`, alongside the same pinned Ruby source.
+Its broader corpus exposes unresolved rendering and parser-diagnostic differences.
+The independent lane currently fails; original release inputs and receipts remain
+immutable. Eligibility, recovered errors, operational limits and transport
+exclusions have separate records. See the [adapter contract](LQ1/ADAPTER_LIMITS.md)
+and [mismatch review](LQ1/MISMATCHES.md) before making compatibility claims.

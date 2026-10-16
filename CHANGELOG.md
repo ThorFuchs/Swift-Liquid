@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Qualify Git-free source exports against explicit inspected archive provenance,
+  retaining the full native lane and exact source bindings without fabricating Git metadata.
+
 - Retain direct 1.3.0-to-main date wall/CPU measurements and identical-source
   controls, including adverse filter observations and unresolved historical flags;
   keep the production engine and cancellation checks unchanged.
@@ -10,6 +13,47 @@
   compiled concurrent-batch consumer. Retain controlled caller/date findings
   and the rejected formatter hypothesis without changing engine execution.
 
+- Present validated `when` unexpected-character errors with Ruby's bare reason,
+  retaining original source coordinates and all existing parser behavior.
+
+- Retain verified source context and positions for unexpected-character syntax
+  errors, using an internal original-byte authority. Preserve the existing reason,
+  parser acceptance and public APIs; ambiguous and unmapped contexts remain explicit.
+
+- Support range `first`, `last` and `size` dot commands with pinned Ruby
+  semantics, including descending endpoints and bracket-key separation.
+  Keep finite admission and pinned fixtures unchanged.
+
+- Reevaluate the case operand for every when comparison, following pinned Ruby
+  through branch mutations, repeated alternatives and else-only cases. Charge
+  performed work normally; preserve fixture bytes and existing expectations.
+
+- Adopt Ruby's isolated-render host-input semantics: retain original admitted roots
+  beneath local assignments and explicit partial bindings. Correct the single
+  maintainer-reviewed authored assertion; keep pinned fixtures unchanged.
+
+- Integrate the independent conformance work with quality sprint 4; preserve its
+  cancellation, maintenance/release and hosted-workflow protections.
+- Distinguish real null-valued case branches from else, and qualify typed size
+  property lookup with exact-key precedence, bracket semantics and scalar counts.
+- Defer render-global visibility after a historical assertion conflict; retain
+  the failed experiment and decision record without changing its expected bytes.
+
+- Reconcile LQ1 with quality sprint 3, preserve raw upstream comparison verdicts,
+  add a supplemental diagnostic ledger and bind gates to their exact source revision.
+- Correct strict2 bare-bracket rejection, for-modifier ordering and unnamed
+  variable-cycle site identity with public, concurrency and parser-mode regressions.
+- Document remaining acceptance/output differences and the design-only E3 RFC;
+  independent conformance remains a failed, separately reported gate.
+
+- Add an opt-in, isolated Shopify liquid-spec correctness lane with pinned sources,
+  explicit transport/domain eligibility, raw protocol evidence and honest failures.
+  This independent track does not revise any released fixture or receipt.
+- Fix nonpositive `truncate` lengths to retain the ending, including overflow-safe
+  `Int.min` handling; add public regressions in all three parser modes.
+- Make the six public consumer packages independent of checkout directory name.
+- Add a source-backed peer API crosswalk and five deferred design studies; keep
+  the root dependency graph, default policies and released public API unchanged.
 - Add a bounded synchronous execution path for small text/variable templates,
   retaining cancellation checkpoints, logical budgets and public APIs.
 - Add public interpolation compatibility and differential budget regressions,

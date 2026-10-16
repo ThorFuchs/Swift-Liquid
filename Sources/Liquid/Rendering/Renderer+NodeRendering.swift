@@ -66,8 +66,8 @@ extension Renderer {
         case .unless(let condition, let thenNodes, let elseNodes):
             return try await renderUnless(condition: condition, then: thenNodes, else: elseNodes)
 
-        case .case(let value, let whens, let elseBranch):
-            return try await renderCase(value: value, whens: whens, else: elseBranch)
+        case .case(let value, let branches):
+            return try await renderCase(value: value, branches: branches)
 
         case .for(let variable, let collection, let body, let empty, let params):
             return try await renderFor(variable: variable, collection: collection, body: body, empty: empty, params: params)
@@ -90,8 +90,8 @@ extension Renderer {
         case .continue:
             throw LoopControlSignal.continueLoop
 
-        case .cycle(let group, let items):
-            return try await renderCycle(group: group, items: items)
+        case .cycle(let group, let items, let site):
+            return try await renderCycle(group: group, items: items, site: site)
 
         case .raw(let content):
             return content.string
@@ -448,7 +448,7 @@ extension Renderer {
         case .test(let expr, _):
             return expressionReferencesVariable(expr, named: variableName)
 
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return expressionReferencesVariable(expr, named: variableName)
                 || expressionReferencesVariable(key, named: variableName)
 
@@ -464,7 +464,7 @@ extension Renderer {
         switch expression {
         case .variable(let name):
             return name.string
-        case .access(let base, let key):
+        case .access(let base, let key, _):
             let basePath = expressionToPath(base)
             switch key {
             case .literal(.string(let keyName)):

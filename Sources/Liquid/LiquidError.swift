@@ -26,6 +26,9 @@ public enum LiquidError: Error, Sendable, CustomStringConvertible {
 
 internal func publicError(_ error: Error) -> Error {
     if let error = error as? LexerError {
+        if case .unexpectedCharacter(_, _, .resolved(let origin)?) = error {
+            return LiquidError.syntax(message: error.message, line: origin.position.line, column: origin.position.column)
+        }
         return LiquidError.syntax(message: error.message, line: nil, column: nil)
     }
     if let error = error as? ParserError {
