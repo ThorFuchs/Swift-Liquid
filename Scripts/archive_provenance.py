@@ -4,10 +4,42 @@
 import hashlib
 import io
 import json
+import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
 import tarfile
+
+
+def check_export_inventory(root, inventory):
+    # Native qualification creates outputs only in known package/cache locations.
+    # Every declared file is validated against the tar above, even in these paths.
+    generated = {PurePosixPath('Artifacts')}
+    parents = set()
+    for name in inventory:
+        path = PurePosixPath(name)
+        parents.update(path.parents)
+        if path.name == 'Package.swift':
+            generated.update(path.parent / p for p in ['.build', '.swiftpm'])
+        if path.suffix == '.py':
+            generated.add(path.parent / '__pycache__')
+    for directory, directories, files in os.walk(root, followlinks=False):
+        base = Path(directory)
+        retained = []
+        for name in directories:
+            target = base / name; relative = PurePosixPath(target.relative_to(root).as_posix())
+            if target.is_symlink():
+                raise RuntimeError('Unexpected export directory link: ' + str(relative))
+            if relative in generated:
+                continue
+            if relative not in parents:
+                raise RuntimeError('Unexpected export directory: ' + str(relative))
+            retained.append(name)
+        directories[:] = retained
+        for name in files:
+            target = base / name; relative = target.relative_to(root).as_posix()
+            if target.is_symlink() or relative not in inventory:
+                raise RuntimeError('Unexpected exported file: ' + relative)
 
 
 def manifest(root, archive, revision, sources, paths):
@@ -79,6 +111,7 @@ def revision(root, provenance, sources):
             seen.add(member.name)
     if seen != set(inventory):
         raise RuntimeError('Missing source archive files')
+    check_export_inventory(root, inventory)
     return {'commit': value['commit'], 'tree': value['tree'], 'clean': True,
             'origin': 'source-archive', 'archiveSHA256': value['archiveSHA256'],
             'provenanceSHA256': hashlib.sha256(encoded).hexdigest()}

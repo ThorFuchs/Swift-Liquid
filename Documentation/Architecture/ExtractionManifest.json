@@ -644,9 +644,9 @@
     },
     {
       "area": "Clean source archive qualification provenance",
-      "scopeDecision": "Maintainer requested addressing PR19 hosted CI failures while preserving reviewed semantics and pinned fixtures.",
+      "scopeDecision": "Maintainer requested addressing PR #19 hosted CI failures while preserving reviewed semantics and pinned fixtures.",
       "changes": [
-        "Retain the actual failed882b1a7 hosted archive attempt and its missing-Git diagnosis as immutable evidence.",
+        "Retain the actual failed 882b1a7 hosted archive attempt and its missing-Git diagnosis as immutable evidence.",
         "Bind Git-free native exports to the actual producer archive checksum, Git archive commit header, file inventory, bytes/modes and source snapshot; identify archive origin explicitly.",
         "Keep default checkout Git identity, all native assertions, fixture pins, runtime/public API/package contracts and workflow policy unchanged."
       ],

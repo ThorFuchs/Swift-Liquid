@@ -30,7 +30,7 @@ for path in paths:
 
 
 def archive_bytes():
-    tar = subprocess.check_output(['git', 'archive', '--format=tar', 'HEAD'], cwd=ROOT)
+    tar = subprocess.check_output(['git', '-c', 'tar.umask=0022', 'archive', '--format=tar', 'HEAD'], cwd=ROOT)
     result = io.BytesIO()
     with gzip.GzipFile(fileobj=result, filename='', mode='wb', mtime=0, compresslevel=9) as package:
         package.write(tar)

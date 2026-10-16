@@ -120,10 +120,16 @@ and existing consumer cases, it qualifies the checkpoint without a timing assert
 ## Qualify a source export
 
 The archive lane rebuilds the full native lane from the deterministic tracked-source
-archive, without adding Git metadata to that export. It supplies an explicit
+archive, without adding Git metadata to that export. Source archives use an
+explicit permission mask (`0022`) so regular files and executables retain their
+declared modes under modern tar extraction filters. The lane supplies an explicit
 `--archive-provenance` descriptor outside the extracted directory. The native
 runner verifies the archive checksum, Git archive commit header, full file inventory,
 exported bytes and modes, and the producer's source snapshot before and after testing.
+Undeclared files, hidden entries and links are rejected. Generated outputs are
+limited to `Artifacts`, `.build`/`.swiftpm` at declared package roots and Python
+cache directories beside declared Python sources; declared files remain checked
+even within an output prefix.
 Its receipt identifies this origin as `source-archive`; ordinary checkout lanes
 continue to require actual Git identity and never substitute `GITHUB_SHA`.
 
