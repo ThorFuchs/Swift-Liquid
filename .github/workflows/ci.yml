@@ -1,4 +1,4 @@
-name: Swift-Liquid date trace recovery
+name: Swift-Liquid attached date tracing
 on:
   workflow_dispatch:
 permissions:
@@ -28,19 +28,23 @@ jobs:
           run-id: 38889400923
           github-token: ${{ github.token }}
           path: Artifacts/matched-performance/
-      - name: Verify binaries and capture capability
-        run: python3 -B Scripts/recover_date_traces.py setup
+      - name: Fetch immutable source versions
+        run: |
+          git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
+          git fetch --no-tags --depth 1 origin 1313f82ac03b6f51224d6c4219fc26ad0a598ddf
+      - name: Verify attached capture and build coordinated consumers
+        run: python3 -B Scripts/attached_date_traces.py setup
       - name: Record bounded executor events without repeating benchmarks
-        run: python3 -B Scripts/recover_date_traces.py executor
-      - name: Record CPU stacks with per-command watchdogs
-        run: python3 -B Scripts/recover_date_traces.py cpu
+        run: python3 -B Scripts/attached_date_traces.py executor
+      - name: Record attached CPU stacks with watchdogs
+        run: python3 -B Scripts/attached_date_traces.py cpu
       - name: Qualify complete recovery cohort
-        run: python3 -B Scripts/recover_date_traces.py finish
+        run: python3 -B Scripts/attached_date_traces.py finish
       - name: Retain all observations and failures
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: liquid-date-trace-recovery
+          name: liquid-date-trace-attached
           path: Artifacts/matched-performance/
           if-no-files-found: error
           retention-days: 30
