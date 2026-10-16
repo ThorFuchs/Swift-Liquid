@@ -14,7 +14,6 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
-      LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
     steps:
       - name: Require GitHub-hosted isolation
         env:
@@ -22,6 +21,7 @@ jobs:
         run: |
           test "$RUNNER_ENVIRONMENT" = "github-hosted"
           echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
+          echo "LIQUID_REFERENCE_PATH=$RUNNER_TEMP/shopify-liquid" >> "$GITHUB_ENV"
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           fetch-depth: 0
