@@ -26,7 +26,7 @@ jobs:
           git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
           git fetch --no-tags --depth 1 origin fb81cf4ff01f1bf098ceb5fff65638b1271294e0
           git fetch --no-tags --depth 1 origin e29ec2a639b8d73a1c885b541f1bcef408c9c2a7
-          git fetch --no-tags --depth 1 origin 5d1223608cd1b31e185acce76d3d659a316bb038
+          git fetch --no-tags --depth 1 origin 61d0353ad6fc17566800a4c5c8abbbd611fea9ff
       - name: Run the frozen study
         run: python3 -B Scripts/hosted_caller_date_study.py
       - name: Retain every observation, qualification and patch

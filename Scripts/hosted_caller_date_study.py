@@ -5,7 +5,7 @@ import hashlib,json,os,platform,shlex,shutil,statistics,sys,tempfile
 from pathlib import Path
 from compare_benchmarks import (ROOT,OUTPUT,ENV,COMMANDS,HARNESS,HARNESS_SHA256,MANIFEST_SHA256,run,git,extract,library_hash,index_records,comparisons,distribution)
 MERGED='e29ec2a639b8d73a1c885b541f1bcef408c9c2a7'
-CANDIDATE='5d1223608cd1b31e185acce76d3d659a316bb038'
+CANDIDATE='61d0353ad6fc17566800a4c5c8abbbd611fea9ff'
 MERGED_HASH='6ea971af19d213c84e2f20701eb514262a0bd04e2fcf981286e7ec46abf8027a'
 CANDIDATE_HASH='77b6ec497a99005c01a34a370ac727089b62a685c1a62f722e0337f8e0db7d55'
 VERSIONS={'v130':'9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e','v131':'fb81cf4ff01f1bf098ceb5fff65638b1271294e0','mergedA':MERGED,'candidate':CANDIDATE,'mergedB':MERGED}

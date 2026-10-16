@@ -1,7 +1,7 @@
 # Remaining caller/date investigation — frozen plan
 
 This diagnostic branch must never be merged. Product candidate is frozen at
-`5d1223608cd1b31e185acce76d3d659a316bb038`, Liquid SHA-256
+`61d0353ad6fc17566800a4c5c8abbbd611fea9ff`, Liquid SHA-256
 `77b6ec497a99005c01a34a370ac727089b62a685c1a62f722e0337f8e0db7d55`.
 Merged PR #16 is `e29ec2a639b8d73a1c885b541f1bcef408c9c2a7`, Liquid SHA-256
 `6ea971af19d213c84e2f20701eb514262a0bd04e2fcf981286e7ec46abf8027a`.
@@ -47,3 +47,8 @@ material adverse workload. Otherwise retain the investigation and reject the
 candidate. Do not rerun until a preferred result appears. The final product source
 must pass its affected/full gates before a reviewable PR is marked ready; this
 study alone is not release qualification or authorization to publish.
+
+Static review corrected a new test assertion before qualification: LiquidError does
+not conform to Equatable, so match its quota case after expecting the error type.
+The first queued dispatch was cancelled before timing; no library byte changed.
+Retain that dispatch and this setup correction alongside the completed study.
