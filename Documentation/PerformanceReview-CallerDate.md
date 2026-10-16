@@ -215,3 +215,12 @@ Published 1.0–1.3.1 releases, API baselines, fixture pins, licenses, cancellat
 checks, capacities and the empty dependency graph remain unchanged. The full CI
 run attached to the follow-up PR qualifies that final source inventory separately
 from the experimental study; publication still requires a maintainer request.
+
+The first full follow-up PR safety lane passed all 81 functions/2,178 cases under
+AddressSanitizer, then evidence admission rejected the thread run because the new
+date method did not match its existing `concurrentRenders` selector. Review found
+the new repeat-profile method also needed the lowercase `cancellation` selector.
+Both methods were renamed to match the existing filters, retaining their bodies
+and exact inventory requirements. The failed receipt is retained; a process exit
+of zero was not counted as complete qualification. Final CI requalifies the
+corrected profiles without changing library bytes or relaxing admission.

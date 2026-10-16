@@ -25,7 +25,7 @@ struct DateFormattingTests {
         ScalarFormatCase(format: "%%|%q|%:::Q", output: "%|%q|%:::Q", steps: 5),
         ScalarFormatCase(format: "\0|%Y\r\n", output: "\0|1970\r\n", steps: 5),
     ])
-    private func scalarDirectivesRetainBytesBudgetsAndCancellation(_ fixture: ScalarFormatCase) async throws {
+    private func cancellationAndScalarDateDirectivesRetainBytesAndBudgets(_ fixture: ScalarFormatCase) async throws {
         let date = try LiquidDate(seconds: 0, fraction: "123456789")
         let capacity = fixture.output.utf8.count
         let limits = LiquidLimits(outputBytes: capacity, renderSteps: fixture.steps)
@@ -60,7 +60,7 @@ struct DateFormattingTests {
         #expect(measured.metrics.outputBytes == capacity)
     }
 
-    @Test func concurrentDateFormatsKeepInvocationStateIsolated() async throws {
+    @Test func concurrentRendersKeepDateFormatsInvocationOwned() async throws {
         let source = "{{ stamp | date: format }}"
         let parsed = try LiquidTemplate(source)
         let engine = LiquidEngine()

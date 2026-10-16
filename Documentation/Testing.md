@@ -84,6 +84,10 @@ The native lane repeats the 18 selected adversarial/cancellation/barrier functio
 twice under normal parallel execution, each with its own exact inventory. The
 full current baseline is 81 functions and 2,178 parameter cases; nonparameterized
 functions do not emit case events. Published 1.0–1.3.1 receipts remain unchanged.
+The thread selector is `concurrentRenders`; the repeat selector is
+`AdversarialTests|cancellation|suspension`. New members of those profiles must
+match their selector as well as the exact inventory. Admission rejects missing
+members even when the test process exits successfully.
 
 `Scripts/check_test_evidence.py` rejects truncated, malformed, duplicated,
 reordered, incomplete and filtered evidence. Its separate dependency-free
