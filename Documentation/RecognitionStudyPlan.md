@@ -100,3 +100,16 @@ methods. Correct only that admission check to use swift-demangle and exact metho
 names, freeze again, and build/qualify all nine binaries on a fresh runner.
 Inputs, bridge, consumer, clocks, ordering, sampling and interpretation stay fixed.
 This correction selects no observed timing result.
+
+## Invocation correction after incomplete measurement
+
+Attempt 38933540759 passed both source qualifications, built all nine binaries
+and passed all twelve untimed component validations. It recorded eight common
+harness runs, then the unchanged public probe rejected the driver's arguments:
+it requires caller followed by destination; the driver supplied the reverse.
+Retain that incomplete attempt and its eight observations. It has no complete
+three-block comparison and is not admitted as a completed experiment. Correct
+only public command construction, inspect every probe's argument contract, and
+freeze before a fresh full run. Probe/bridge/input bytes, flags, clocks, ordering,
+sampling and interpretation remain unchanged. No timing-based selection or
+replacement of an individual observation is permitted.

@@ -70,7 +70,7 @@ def measure(m):
     key=kind+'-'+driver+'-'+caller;p=m['phases'].setdefault(key,{'driver':driver,'caller':caller,'labels':labels,'runs':[]})
     for pos,label in enumerate([labels[0],labels[1],labels[1],labels[0]],1):
      order=('forward' if (pos%2==1)==(block!=2) else 'reverse') if driver=='component' else 'original';name=f'{key}-{block}-{pos}-{label}';dst=OUT/(name+'.json');cmd=[m['binaries'][label][driver],str(dst)]
-     if driver=='public':cmd.append(caller)
+     if driver=='public':cmd=[m['binaries'][label][driver],caller,str(dst)]
      if driver=='component':cmd += [caller,str(ROOT/'Tools/DateRecognitionStudy/inputs.json'),order]
      load=os.getloadavg();run(cmd,name);index(json.loads(dst.read_text()),driver,caller,order,config);p['runs'].append({'name':name,'version':label,'block':block,'position':pos,'recordOrder':order,'result':dst.name,'loadAverageBefore':load,'loadAverageAfter':os.getloadavg()});save(m)
 def summarize(m):
