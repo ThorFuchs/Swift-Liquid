@@ -431,6 +431,21 @@
         "Documentation/PerformanceReview-DateTracing.md"
       ],
       "qualification": "Merged main passed all nine Scripts/ci.py lanes and Pages. Independently admit source identities, outputs, raw trace hashes, executable UUIDs, signpost bounds, CPU samples and executor-state aggregations; keep incomplete capture matrices explicit and qualify the final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+      "area": "Controlled date-recognition CPU cost study",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #20, followed by controlled date-recognition CPU benchmarks.",
+      "changes": [
+        "Preserve the dependency-free production core, public execution semantics, checked Sendable inputs, invocation-owned state, cancellation checkpoints, budgets, API baseline and pinned fixtures without runtime changes.",
+        "Freeze separate unmodified public consumers and private archived component libraries with one diagnostic bridge addition; distinguish lowercasing, full recognition, grammar and formatting from result-audit controls under explicit actor and concurrent callers.",
+        "Retain the failed symbol-admission setup and incomplete wrong-argument attempt separately; correct only harness admission/invocation and refreeze before a fresh experiment without selecting individual timings.",
+        "Preserve every complete-run raw record, CPU resolution observation, block effect, identical-source control and median/spread flag without exact audit subtraction, additive render decomposition, speedup or historical causal claims."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-DateRecognition.md",
+        "Documentation/PerformanceReview-DateRecognition-Data.md"
+      ],
+      "qualification": "PR #20 and merged main passed all nine Scripts/ci.py qualification lanes. The frozen study qualifies original and augmented current sources separately (81 functions and 2,178 cases each), validates all component outputs before timing, and builds all nine binaries first. Independently admit all 120 complete runs, 2,736 raw records and 404 comparisons, exact probe/input/source hashes, executable/dSYM UUIDs, typed checksums, command order, sample summaries and both flag lists; qualify the final documentation through Scripts/ci.py. No release performance clearance."
     }
   ]
 }

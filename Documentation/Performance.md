@@ -155,3 +155,11 @@ sampled stacks, actual executor events, image-identity symbolication and every
 untraced review flag. Recorder failures and incomplete cohorts remain explicit.
 Trace elapsed values are separate from ordinary benchmarks; no production change
 or historical date-regression clearance follows.
+
+The [controlled recognition study](PerformanceReview-DateRecognition.md) separates
+lowercasing, full date recognition, loose-parser construction/parsing and known-date
+formatting under explicit callers, with typed audit controls and independently
+built identical-source comparisons. Its [complete aggregate appendix](PerformanceReview-DateRecognition-Data.md)
+retains all 404 comparisons and both flag lists. Grammar work is the next observed
+CPU target for these inputs; the production engine and cancellation checkpoints
+remain unchanged, and historical date flags remain unresolved.
