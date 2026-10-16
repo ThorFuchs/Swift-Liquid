@@ -446,6 +446,21 @@
         "Documentation/PerformanceReview-DateRecognition-Data.md"
       ],
       "qualification": "PR #20 and merged main passed all nine Scripts/ci.py qualification lanes. The frozen study qualifies original and augmented current sources separately (81 functions and 2,178 cases each), validates all component outputs before timing, and builds all nine binaries first. Independently admit all 120 complete runs, 2,736 raw records and 404 comparisons, exact probe/input/source hashes, executable/dSYM UUIDs, typed checksums, command order, sample summaries and both flag lists; qualify the final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+      "area": "Controlled parser normalization, matching and capture study",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #21, followed by isolated date-parser operation costs.",
+      "changes": [
+        "Preserve the dependency-free production engine, public execution semantics, checked Sendable inputs, invocation-owned state, cancellation checkpoints, budgets, API baseline and pinned fixture/license bytes.",
+        "Append diagnostic accessors only to archived parser copies, preserving every original parser byte as a prefix and every other library file unchanged; keep original-source public consumers separate from augmented operation consumers.",
+        "Use checked Sendable immutable range snapshots for capture materialization after the compiler rejects sharing Foundation match-result objects; retain actual original find/take helpers and explicit normalization/construction/matching scopes with typed audit controls.",
+        "Retain all complete observations, matched and missed cases, the synthetic UTF-16 boundary, identical-source controls and median/spread flags without exact audit subtraction, additive latency decomposition, speedup, equivalence or historical causal claims."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-ParserOperations.md",
+        "Documentation/PerformanceReview-ParserOperations-Data.md"
+      ],
+      "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
     }
   ]
 }

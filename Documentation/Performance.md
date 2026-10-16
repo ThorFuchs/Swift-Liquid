@@ -163,3 +163,11 @@ built identical-source comparisons. Its [complete aggregate appendix](Performanc
 retains all 404 comparisons and both flag lists. Grammar work is the next observed
 CPU target for these inputs; the production engine and cancellation checkpoints
 remain unchanged, and historical date flags remain unresolved.
+
+The [parser operation study](PerformanceReview-ParserOperations.md) further isolates
+normalization, construction, matching, capture materialization and original
+find/take helpers, with checked Sendable range snapshots and typed audit controls.
+Its [complete aggregate appendix](PerformanceReview-ParserOperations-Data.md)
+retains all 852 comparisons, including substantial identical-source spread.
+Matching and normalization are next investigation targets for the selected inputs;
+no runtime optimization or historical regression clearance is adopted.

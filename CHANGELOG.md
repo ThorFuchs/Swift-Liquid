@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retain controlled date-parser normalization, matching and capture observations,
+  typed audit controls, immutable range snapshots and all comparison flags.
+  Preserve production code, cancellation checkpoints and historical uncertainty.
+
 - Isolate observed date-recognition, grammar, formatting and lowercasing CPU costs
   with controlled benchmarks and typed audit controls. Retain all comparisons,
   failures and historical flags; keep the production engine and cancellation
