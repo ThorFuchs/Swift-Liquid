@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add a bounded synchronous execution path for small text/variable templates,
+  retaining cancellation checkpoints, logical budgets and public APIs.
+- Add public interpolation compatibility and differential budget regressions,
+  including cancellation during stringification before output quota checks.
+
 ## 1.3.1 — 2026-10-15
 
 - Add measured maintenance: immutable 1.3.0 comparisons, run-median spread and

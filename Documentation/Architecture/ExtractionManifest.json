@@ -371,6 +371,23 @@
         "The runnable escaping evidence exposed normal delivery after an active cancellation request. Add a step-free cancellation check at output admission, with deterministic boundary/error-precedence/counter regressions; preserve successful output and public contracts."
       ],
       "qualification": "Affected Scripts/ci.py native, safety, performance, matched-performance, documentation and archive gates. Only output-admission cancellation changes at runtime. Root products/dependencies, public declaration baseline, fixture metadata/licenses/checksums and CLI schemas remain unchanged."
+    },
+    {
+      "area": "Bounded synchronous interpolation execution",
+      "scopeDecision": "Maintainer requested interpolation latency investigation while preserving cancellation and released contracts on 2026-10-16.",
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ImmediateTemplates.swift",
+        "Tests/LiquidTests/ImmediateTemplateTests.swift",
+        "Tests/LiquidTests/InterpolationTests.swift"
+      ],
+      "changes": [
+        "Author an invocation-local fixed-arity plan for root templates with at most three text/raw/plain-variable leaves; reject the whole shape before evaluating or charging anything.",
+        "Retain original stringification, root/leaf enter and output checks, nesting cleanup, multi-node cancellation checks, final output admission and logical counters. Public async execution behavior remains unchanged.",
+        "Keep filters, dynamic expressions, control flow and larger roots on the existing renderer; preserve eligible diagnostic behavior because these leaves cannot throw recoverable RenderError failures.",
+        "Reject the earlier native-string probing and forced-inlining hypotheses after recorded controls fail to corroborate a reliable improvement."
+      ],
+      "qualification": "Public typed-value/UTF-8/metrics/quota matrix, differential snapshots against the unchanged general renderer, deterministic cancellation during stringification, existing host cancellation regressions, source-bound Scripts/ci.py gates and controlled comparisons with immutable 1.3.1 are required before adoption."
     }
   ]
 }
