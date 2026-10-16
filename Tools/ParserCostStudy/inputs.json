@@ -1,0 +1,218 @@
+{
+  "dates": [
+    {
+      "name": "iso-fraction-offset",
+      "source": "2024-02-03t04:05:06.123456789+05:30",
+      "normalized": "2024-02-03t04:05:06.123456789+05:30",
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": "123456789",
+        "zone": "+05:30",
+        "completeYear": false,
+        "beforeCommonEra": false
+      }
+    },
+    {
+      "name": "iso-utc",
+      "source": "2024-02-03t04:05:06z",
+      "normalized": "2024-02-03t04:05:06z",
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": null,
+        "zone": "z",
+        "completeYear": false,
+        "beforeCommonEra": false
+      }
+    },
+    {
+      "name": "rfc",
+      "source": "sat, 03 feb 2024 04:05:06 +0530",
+      "normalized": "sat, 03 feb 2024 04:05:06 +0530",
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": null,
+        "zone": "+0530",
+        "completeYear": false,
+        "beforeCommonEra": false
+      }
+    },
+    {
+      "name": "invalid",
+      "source": "not a date",
+      "normalized": "not a date",
+      "fields": {
+        "year": null,
+        "month": null,
+        "day": null,
+        "ordinal": null,
+        "hour": null,
+        "minute": null,
+        "second": null,
+        "fraction": null,
+        "zone": null,
+        "completeYear": true,
+        "beforeCommonEra": false
+      }
+    },
+    {
+      "name": "normalization-stress",
+      "source": "préfix😀\t 2024-02-03",
+      "normalized": "préfix 2024-02-03",
+      "fields": null
+    }
+  ],
+  "matches": [
+    {
+      "name": "iso-time",
+      "pattern": "time",
+      "input": "2024-02-03t04:05:06.123456789+05:30",
+      "span": [
+        11,
+        24,
+        3
+      ],
+      "groups": [
+        "04:05:06.123456789+05:30",
+        "04:05:06.123456789",
+        "+05:30"
+      ],
+      "remaining": "2024-02-03t "
+    },
+    {
+      "name": "iso-time-fields",
+      "pattern": "timeFields",
+      "input": "04:05:06.123456789",
+      "span": [
+        0,
+        18,
+        6
+      ],
+      "groups": [
+        "04:05:06.123456789",
+        "04",
+        "05",
+        "06",
+        "123456789",
+        null
+      ],
+      "remaining": " "
+    },
+    {
+      "name": "iso-calendar",
+      "pattern": "iso",
+      "input": "2024-02-03t ",
+      "span": [
+        0,
+        10,
+        4
+      ],
+      "groups": [
+        "2024-02-03",
+        "2024",
+        "02",
+        "03"
+      ],
+      "remaining": " t "
+    },
+    {
+      "name": "iso-weekday-miss",
+      "pattern": "day",
+      "input": "2024-02-03t04:05:06.123456789+05:30",
+      "span": null,
+      "groups": null,
+      "remaining": "2024-02-03t04:05:06.123456789+05:30"
+    },
+    {
+      "name": "rfc-weekday",
+      "pattern": "day",
+      "input": "sat, 03 feb 2024 04:05:06 +0530",
+      "span": [
+        0,
+        4,
+        2
+      ],
+      "groups": [
+        "sat,",
+        "sat"
+      ],
+      "remaining": "  03 feb 2024 04:05:06 +0530"
+    },
+    {
+      "name": "rfc-time",
+      "pattern": "time",
+      "input": "  03 feb 2024 04:05:06 +0530",
+      "span": [
+        14,
+        14,
+        3
+      ],
+      "groups": [
+        "04:05:06 +0530",
+        "04:05:06",
+        "+0530"
+      ],
+      "remaining": "  03 feb 2024  "
+    },
+    {
+      "name": "rfc-calendar",
+      "pattern": "eu",
+      "input": "  03 feb 2024  ",
+      "span": [
+        2,
+        11,
+        5
+      ],
+      "groups": [
+        "03 feb 2024",
+        "03",
+        "feb",
+        null,
+        "2024"
+      ],
+      "remaining": "     "
+    },
+    {
+      "name": "invalid-time",
+      "pattern": "time",
+      "input": "not a date",
+      "span": null,
+      "groups": null,
+      "remaining": "not a date"
+    },
+    {
+      "name": "utf16-calendar",
+      "pattern": "iso",
+      "input": "😀 2024-02-03",
+      "span": [
+        3,
+        10,
+        4
+      ],
+      "groups": [
+        "2024-02-03",
+        "2024",
+        "02",
+        "03"
+      ],
+      "remaining": "😀  "
+    }
+  ]
+}
