@@ -404,6 +404,19 @@
         "Documentation/PerformanceReview-CallerDate.md"
       ],
       "qualification": "Both unchanged formatter and experimental candidate passed 81-function/2,178-case development qualification. Independently recompute all 96 runs/208 comparisons and twelve caller-probe runs, preserve every flag and failed setup attempt, then qualify the final tests/documentation/consumer source through Scripts/ci.py."
+    },
+    {
+      "area": "Recurring date latency measurement follow-up",
+      "scopeDecision": "Maintainer requested investigation of the recurring date-rendering regression after merging PR #17.",
+      "changes": [
+        "Retain the dependency-free production engine, public execution semantics, cancellation checkpoints, quotas, fixture bytes and API baseline without runtime changes.",
+        "Author a diagnostic-only direct 1.3.0-to-main study with wall and whole-process CPU observations, explicit actor/concurrent callers and separately built identical-source controls.",
+        "Preserve all 72 runs and 172 aggregate comparisons, both clock filter-control regressions and historical date flags whose cause remains unresolved."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-RecurringDate.md"
+      ],
+      "qualification": "Frozen hosted study passed the unchanged main development lane (81 functions and 2,178 parameter cases). Independently recompute every retained sample summary, literal expected-output checksum, source fingerprint, block effect and flag; qualify the final documentation source through Scripts/ci.py without treating mechanical benchmark success as release performance clearance."
     }
   ]
 }

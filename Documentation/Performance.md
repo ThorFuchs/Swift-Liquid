@@ -144,3 +144,8 @@ The [caller/date follow-up](PerformanceReview-CallerDate.md) separates actor rou
 trips from render work, retains all cross-version and identical-source observations,
 and rejects a formatter candidate whose benefit was not corroborated under both
 callers. The production engine remains unchanged after that investigation.
+
+The [recurring date investigation](PerformanceReview-RecurringDate.md) directly
+compares 1.3.0 with merged main using wall and process CPU observations, explicit
+callers and identical-source controls. It retains the unresolved historical date
+flags and the adverse filter control without changing the production engine.
