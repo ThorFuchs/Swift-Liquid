@@ -29,6 +29,7 @@ guides that are compiled from the public Swift symbol graph.
 | [CPU and executor tracing](PerformanceReview-DateTracing.md) | Recorded execution paths, repaired symbol coverage, retained failures and unresolved date flags |
 | [Date-recognition CPU costs](PerformanceReview-DateRecognition.md) | Controlled component boundaries, typed audit controls, complete comparisons and unresolved flags |
 | [Parser operation costs](PerformanceReview-ParserOperations.md) | Normalization, matching, captures, original helpers and complete variability review |
+| [Targeted date optimizations](PerformanceReview-DateOptimizations.md) | Measured ASCII normalization, rejected matching candidate and [all 222 comparisons](PerformanceReview-DateOptimizations-Data.md) |
 | [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |

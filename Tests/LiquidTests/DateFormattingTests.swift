@@ -65,11 +65,17 @@ struct DateFormattingTests {
         let parsed = try LiquidTemplate(source)
         let engine = LiquidEngine()
         try await withThrowingTaskGroup(of: Void.self) { group in
+            let dates = [
+                ("1970-01-01T00:00:00.123456789Z", "1970-01-01 00:00:00 123456789"),
+                ("Sat, 03 Feb 2024 04:05:06 +0530", "2024-02-03 04:05:06 000000000"),
+                ("😀\t2000-02-29T12:00:00.987654321Z", "2000-02-29 12:00:00 987654321"),
+            ]
             for index in 0..<64 {
+                let date = dates[index % dates.count]
                 group.addTask {
-                    let context: LiquidObject = ["stamp": "1970-01-01T00:00:00.123456789Z",
+                    let context: LiquidObject = ["stamp": .string(date.0),
                         "format": .string("\(index):%F %T %N")]
-                    let expected = Array("\(index):1970-01-01 00:00:00 123456789".utf8)
+                    let expected = Array("\(index):\(date.1)".utf8)
                     let ordinary = try await engine.render(parsed, context: context)
                     let diagnostic = try await engine.renderWithDiagnostics(template: source, context: context)
                     let measured = try await engine.renderWithMetrics(parsed, context: context)
