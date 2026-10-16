@@ -1,0 +1,115 @@
+{
+  "referenceTime": 1007044400,
+  "pattern": "%F %T %:z %N",
+  "inputs": [
+    {
+      "name": "iso-fraction-offset",
+      "source": "2024-02-03T04:05:06.123456789+05:30",
+      "date": {
+        "seconds": 1706913306,
+        "fraction": "123456789",
+        "offset": 19800
+      },
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": "123456789",
+        "zone": "+05:30",
+        "completeYear": false,
+        "beforeCommonEra": false
+      },
+      "format": {
+        "output": "2024-02-03 04:05:06 +05:30 123456789",
+        "steps": 7
+      },
+      "lowered": "2024-02-03t04:05:06.123456789+05:30"
+    },
+    {
+      "name": "iso-utc",
+      "source": "2024-02-03T04:05:06Z",
+      "date": {
+        "seconds": 1706933106,
+        "fraction": "",
+        "offset": 0
+      },
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": null,
+        "zone": "z",
+        "completeYear": false,
+        "beforeCommonEra": false
+      },
+      "format": {
+        "output": "2024-02-03 04:05:06 +00:00 000000000",
+        "steps": 7
+      },
+      "lowered": "2024-02-03t04:05:06z"
+    },
+    {
+      "name": "rfc",
+      "source": "Sat, 03 Feb 2024 04:05:06 +0530",
+      "date": {
+        "seconds": 1706913306,
+        "fraction": "",
+        "offset": 19800
+      },
+      "fields": {
+        "year": 2024,
+        "month": 2,
+        "day": 3,
+        "ordinal": null,
+        "hour": 4,
+        "minute": 5,
+        "second": 6,
+        "fraction": null,
+        "zone": "+0530",
+        "completeYear": false,
+        "beforeCommonEra": false
+      },
+      "format": {
+        "output": "2024-02-03 04:05:06 +05:30 000000000",
+        "steps": 7
+      },
+      "lowered": "sat, 03 feb 2024 04:05:06 +0530"
+    },
+    {
+      "name": "invalid",
+      "source": "not a date",
+      "date": null,
+      "fields": {
+        "year": null,
+        "month": null,
+        "day": null,
+        "ordinal": null,
+        "hour": null,
+        "minute": null,
+        "second": null,
+        "fraction": null,
+        "zone": null,
+        "completeYear": true,
+        "beforeCommonEra": false
+      },
+      "format": null,
+      "lowered": "not a date"
+    },
+    {
+      "name": "length-guard",
+      "source": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "date": null,
+      "fields": null,
+      "format": null,
+      "lowered": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  ]
+}
