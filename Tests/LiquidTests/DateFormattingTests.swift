@@ -34,9 +34,12 @@ struct DateFormattingTests {
         #expect(Array(output.utf8) == Array(fixture.output.utf8))
         #expect(budget.remainingSteps == 0 && budget.activeDepth == 0)
         #expect(budget.remainingValues == limits.contextValues && budget.remainingIterations == limits.loopIterations)
-        #expect(throws: LiquidError.limitExceeded("outputBytes")) {
+        let failure = #expect(throws: LiquidError.self) {
             try renderStrftime(fixture.format, date: date,
                 budget: RuntimeBudget(.init(outputBytes: capacity - 1)))
+        }
+        guard case .limitExceeded("outputBytes")? = failure else {
+            Issue.record("Date formatting exceeded its exact UTF-8 capacity"); return
         }
         let worker = Task {
             withUnsafeCurrentTask { $0?.cancel() }
