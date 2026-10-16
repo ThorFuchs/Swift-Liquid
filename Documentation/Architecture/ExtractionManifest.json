@@ -461,6 +461,26 @@
         "Documentation/PerformanceReview-ParserOperations-Data.md"
       ],
       "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
+    },
+    {
+      "area": "Measured ASCII date normalization",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #22 followed by targeted normalization and matching optimizations.",
+      "files": [
+        "Sources/Liquid/Support/RubyDateParser.swift",
+        "Tests/LiquidTests/DateNormalizationTests.swift",
+        "Tests/LiquidTests/DateFormattingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/PerformanceReview-DateOptimizations.md",
+        "Documentation/PerformanceReview-DateOptimizations-Data.md"
+      ],
+      "changes": [
+        "Replace the pinned regex normalization only for ASCII inputs with an invocation-owned UTF-8 scan preserving the exact allowed-byte set and maximal excluded-run replacement; non-ASCII input uses the original whole-string regex.",
+        "Preserve grammar expressions/order, compiled-pattern initialization, capture/mutation code, 128-byte public bound, cancellation checkpoints, budgets, checked Sendable public contracts, products, empty root dependencies and pinned fixture/license bytes.",
+        "Reject the independently measured matching-range-only candidate because it does not meet the frozen both-caller successful-date criterion; retain original matching code.",
+        "Add public source/parsed regressions across all four policies for ASCII controls/runs, Unicode/decomposed/non-BMP prefixes, invalid byte preservation and 128/129-byte bounds; mix ISO/RFC/Unicode timestamps in existing concurrent reuse coverage.",
+        "Retain the pre-run workflow-context validation failure, all complete runs and every median/spread flag without subtraction, trimming, universal speedup or historical-regression clearance."
+      ],
+      "qualification": "PR #22 and fresh main independently passed all nine Scripts/ci.py lanes. Frozen hosted study 38947177449 qualifies baseline and both candidates separately through native and pinned reference lanes before timing, validates 17,844 normalization/range inputs and 463,944 expression/capture pairs, builds all eight unaugmented release binaries and admits 192 untimed public output records. Independently verify ZIP/files/source fingerprints, binary hashes/UUIDs, all 108 runs/1,800 records/222 comparisons, samples, command order, block effects and all 20 median/146 spread flags. Normalization alone meets the frozen RFC source/reused rule in both callers/clocks. Final source-bound CI qualifies the exact public patch separately; no release is prepared."
     }
   ]
 }
