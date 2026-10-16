@@ -80,7 +80,7 @@ def main():
                 run(['xcrun','swift','build','-c','release','--package-path',str(pkg),*flags],'probe-build')
                 loc=run(['xcrun','swift','build','-c','release','--package-path',str(pkg),'--show-bin-path',*flags],'probe-binary').splitlines()[-1]
                 binaries['probe']=str(Path(loc)/'LiquidCallerProbe')
-                run(['xcrun','swiftc','-O','-swift-version','6','-parse-as-library','-emit-sil','-I',str(Path(loc)/'Modules'),str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
+                run(['xcrun','swiftc','-O','-swift-version','6','-parse-as-library','-emit-sil','-I',loc,'-I',str(Path(loc)/'Modules'),str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
             if label in ['mergedA','candidate']:
                 run(['xcrun','nm','-n',binaries[label,'common']],label+'-symbols')
                 run(['xcrun','otool','-tvV',binaries[label,'common']],label+'-assembly')

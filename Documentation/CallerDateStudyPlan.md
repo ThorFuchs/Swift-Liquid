@@ -52,3 +52,9 @@ Static review corrected a new test assertion before qualification: LiquidError d
 not conform to Equatable, so match its quota case after expecting the error type.
 The first queued dispatch was cancelled before timing; no library byte changed.
 Retain that dispatch and this setup correction alongside the completed study.
+
+The first running attempt passed both 81-function/2,178-case preflights and built
+the probe, then its standalone SIL command failed to locate Liquid. This toolchain
+places modules beside the product; include that product directory as well as the
+conventional Modules directory. No timed sample existed. Keep the failed attempt
+and qualify the same product bytes again before the corrected study.
