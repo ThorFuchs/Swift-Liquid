@@ -149,3 +149,9 @@ The [recurring date investigation](PerformanceReview-RecurringDate.md) directly
 compares 1.3.0 with merged main using wall and process CPU observations, explicit
 callers and identical-source controls. It retains the unresolved historical date
 flags and the adverse filter control without changing the production engine.
+
+The [CPU and executor trace follow-up](PerformanceReview-DateTracing.md) retains
+sampled stacks, actual executor events, image-identity symbolication and every
+untraced review flag. Recorder failures and incomplete cohorts remain explicit.
+Trace elapsed values are separate from ordinary benchmarks; no production change
+or historical date-regression clearance follows.
