@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retain date CPU/executor traces, image-identity symbolication and complete
+  benchmark reviews, with recorder failures and unresolved historical flags;
+  preserve the production engine and all cancellation checkpoints.
+
 - Retain direct 1.3.0-to-main date wall/CPU measurements and identical-source
   controls, including adverse filter observations and unresolved historical flags;
   keep the production engine and cancellation checks unchanged.

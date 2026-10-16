@@ -26,6 +26,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Interpolation investigation](PerformanceReview-Interpolation.md) | Controls, rejected hypotheses and bounded synchronous execution |
 | [Caller and date investigation](PerformanceReview-CallerDate.md) | Executor diagnostics, retained variability and rejected formatter hypothesis |
 | [Recurring date investigation](PerformanceReview-RecurringDate.md) | Direct release comparisons, process CPU observations and unresolved historical flags |
+| [CPU and executor tracing](PerformanceReview-DateTracing.md) | Recorded execution paths, repaired symbol coverage, retained failures and unresolved date flags |
 | [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |

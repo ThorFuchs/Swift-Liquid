@@ -417,6 +417,20 @@
         "Documentation/PerformanceReview-RecurringDate.md"
       ],
       "qualification": "Frozen hosted study passed the unchanged main development lane (81 functions and 2,178 parameter cases). Independently recompute every retained sample summary, literal expected-output checksum, source fingerprint, block effect and flag; qualify the final documentation source through Scripts/ci.py without treating mechanical benchmark success as release performance clearance."
+    },
+    {
+      "area": "Date CPU and executor trace investigation",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #18, followed by CPU/executor tracing of the recurring date regression.",
+      "changes": [
+        "Preserve the dependency-free library, public execution semantics, invocation-owned state, cancellation checkpoints, budgets, API baseline and fixture bytes without runtime changes.",
+        "Retain all 72 untraced runs and 172 comparisons, every median/spread flag, complete individual traces and failed recording attempts as separate cohorts.",
+        "Resolve incomplete CPU frame names with recorded image UUID/load addresses and matching retained dSYMs; preserve original exports and independently recompute resolved sample weights.",
+        "Record actual executor identities under explicit actor/concurrent public consumers without treating instrumented elapsed values, event occupancies or transition counts as a per-check cost or historical causal verdict."
+      ],
+      "files": [
+        "Documentation/PerformanceReview-DateTracing.md"
+      ],
+      "qualification": "Merged main passed all nine Scripts/ci.py lanes and Pages. Independently admit source identities, outputs, raw trace hashes, executable UUIDs, signpost bounds, CPU samples and executor-state aggregations; keep incomplete capture matrices explicit and qualify the final documentation through Scripts/ci.py. No release performance clearance."
     }
   ]
 }
