@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retain direct 1.3.0-to-main date wall/CPU measurements and identical-source
+  controls, including adverse filter observations and unresolved historical flags;
+  keep the production engine and cancellation checks unchanged.
+
 - Add date directive byte, budget, quota and cancellation regressions, and a
   compiled concurrent-batch consumer. Retain controlled caller/date findings
   and the rejected formatter hypothesis without changing engine execution.
