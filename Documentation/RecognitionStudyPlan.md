@@ -89,3 +89,14 @@ audit controls limit small-cost claims.
 The study can isolate observed recognition work without identifying the cause of
 historical +12% version flags. No release, speedup, equivalence, memory guarantee
 or runtime adoption follows from mechanical success.
+
+## Setup correction before timing
+
+Attempt 38932664709 built the three baseline executables, then an assertion
+incorrectly looked for the enum's source spelling in a Swift-mangled symbol table.
+It stopped before any benchmark run or clock sample. Preserve its failed setup
+and artifacts. Demangling the retained baseline table verifies all seven bridge
+methods. Correct only that admission check to use swift-demangle and exact method
+names, freeze again, and build/qualify all nine binaries on a fresh runner.
+Inputs, bridge, consumer, clocks, ordering, sampling and interpretation stay fixed.
+This correction selects no observed timing result.

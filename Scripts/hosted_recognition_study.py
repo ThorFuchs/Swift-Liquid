@@ -49,7 +49,8 @@ def setup(m):
    run(['xcrun','swift','build','-c','release','--package-path',str(pkg),*flags],label+'-'+kind+'-build');loc=run(['xcrun','swift','build','-c','release','--package-path',str(pkg),'--show-bin-path',*flags],label+'-'+kind+'-location').splitlines()[-1];binary=Path(loc)/product;m['binaries'][label][kind]=str(binary)
    dst=OUT/'binaries';dst.mkdir(exist_ok=True);shutil.copy2(binary,dst/(label+'-'+kind));m['binaryIdentities'][label+'/'+kind]={'sha256':sha(binary),'UUID':run(['xcrun','dwarfdump','--uuid',str(binary)],label+'-'+kind+'-uuid')}
    if kind=='component':
-    symbols=OUT/'symbols'/label;symbols.mkdir(parents=True);run(['xcrun','dsymutil',str(binary),'-o',str(symbols/(product+'.dSYM'))],label+'-component-dsym');nm=run(['xcrun','nm','-nm',str(binary)],label+'-component-symbols');assert 'LiquidDateCostProbe' in nm
+    symbols=OUT/'symbols'/label;symbols.mkdir(parents=True);run(['xcrun','dsymutil',str(binary),'-o',str(symbols/(product+'.dSYM'))],label+'-component-dsym');nm=run(['xcrun','nm','-nm',str(binary)],label+'-component-symbols');demangled=subprocess.run(['xcrun','swift-demangle'],input=nm,env=ENV,capture_output=True,text=True);(OUT/(label+'-demangled-symbols.log')).write_text(demangled.stdout+demangled.stderr);assert demangled.returncode==0
+    assert all('LiquidDateCostProbe.'+name+'(' in demangled.stdout for name in ['recognize','fields','format','lowercase','dateControl','fieldControl','formatControl'])
   for caller in ['actor','concurrent']:
    for order in ['forward','reverse']:
     name=label+'-validate-'+caller+'-'+order;dst=OUT/(name+'.json');run([m['binaries'][label]['component'],str(dst),caller,str(tools/'inputs.json'),order,'--validate-only'],name);index_components(json.loads(dst.read_text()),config,caller,order,validation=True)
