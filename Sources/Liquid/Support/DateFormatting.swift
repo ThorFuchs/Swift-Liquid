@@ -2,6 +2,7 @@
 import Foundation
 
 // Directives are rendered separately so literal text cannot become an ICU pattern.
+// Scan scalars directly; directive recognition needs no temporary grapheme strings.
 internal func renderStrftime(_ format: String, date: LiquidDate, budget: RuntimeBudget) throws -> String {
     let parts = LiquidDateParts(date)
     let symbols = format.unicodeScalars
@@ -33,9 +34,9 @@ internal func renderStrftime(_ format: String, date: LiquidDate, budget: Runtime
         let start = index
         index = symbols.index(after: index)
         var uppercase = false, changeCase = false, noPadding = false
-        var padding: Padding?, width: Int?, modifier: Character?, colons = 0
+        var padding: Padding?, width: Int?, modifier: Unicode.Scalar?, colons = 0
         while index < symbols.endIndex {
-            let character = Character(String(symbols[index]))
+            let character = symbols[index]
             if character == "^" { uppercase = true }
             else if character == "#" { changeCase = true }
             else if character == "-" { noPadding = true }
@@ -52,16 +53,16 @@ internal func renderStrftime(_ format: String, date: LiquidDate, budget: Runtime
         }
         if noPadding { padding = Padding.none }
         if index < symbols.endIndex, symbols[index] == "E" || symbols[index] == "O" {
-            modifier = Character(String(symbols[index])); index = symbols.index(after: index)
+            modifier = symbols[index]; index = symbols.index(after: index)
         }
         while index < symbols.endIndex && symbols[index] == ":" {
             colons += 1; index = symbols.index(after: index)
         }
         guard index < symbols.endIndex else { try append(String(symbols[start...])); break }
-        let directive = Character(String(symbols[index]))
+        let directive = symbols[index]
         index = symbols.index(after: index)
-        if (modifier == "E" && !"cCxXyY".contains(directive)) ||
-            (modifier == "O" && !"deHImMSuUVwWy".contains(directive)) ||
+        if (modifier == "E" && !"cCxXyY".unicodeScalars.contains(directive)) ||
+            (modifier == "O" && !"deHImMSuUVwWy".unicodeScalars.contains(directive)) ||
             (colons > 0 && (directive != "z" || colons > 3)) {
             try append(String(symbols[start..<index])); continue
         }
@@ -89,7 +90,7 @@ internal func renderStrftime(_ format: String, date: LiquidDate, budget: Runtime
         default: break
         }
         if let numeric {
-            defaultPadding = "ekl".contains(directive) ? .space : .zero
+            defaultPadding = "ekl".unicodeScalars.contains(directive) ? .space : .zero
             value = String(numeric)
         } else {
             switch directive {
@@ -131,7 +132,7 @@ internal func renderStrftime(_ format: String, date: LiquidDate, budget: Runtime
         if uppercase { value = value.uppercased() }
         if changeCase {
             if directive == "p" || directive == "Z" { value = value.lowercased() }
-            else if "aAbBhBP".contains(directive) { value = value.uppercased() }
+            else if "aAbBhBP".unicodeScalars.contains(directive) { value = value.uppercased() }
         }
         value = padded(value, width: width ?? defaultWidth, padding: padding ?? defaultPadding)
         try append(value)
