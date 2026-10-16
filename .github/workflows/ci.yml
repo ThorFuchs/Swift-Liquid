@@ -1,10 +1,11 @@
-name: Swift-Liquid date CPU and executor diagnostic
+name: Swift-Liquid date trace recovery
 on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
-  study:
+  capture:
     runs-on: xcode-27
     timeout-minutes: 60
     env:
@@ -20,25 +21,26 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
-      - name: Fetch immutable library versions
-        run: |
-          git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
-          git fetch --no-tags --depth 1 origin 1313f82ac03b6f51224d6c4219fc26ad0a598ddf
-      - name: Qualify main and build all nine binaries with symbols
-        run: python3 -B Scripts/hosted_date_trace_study.py build
-      - name: Retain all untraced wall and CPU measurements
-        run: python3 -B Scripts/hosted_date_trace_study.py measure
-      - name: Record signposted CPU stacks
-        run: python3 -B Scripts/hosted_date_trace_study.py cpu
-      - name: Record bounded executor events
-        run: python3 -B Scripts/hosted_date_trace_study.py executor
-      - name: Summarize every comparison and trace
-        run: python3 -B Scripts/hosted_date_trace_study.py summary
+      - name: Recover exact binaries and all original observations
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
+        with:
+          name: liquid-date-trace-study
+          run-id: 38889400923
+          github-token: ${{ github.token }}
+          path: Artifacts/matched-performance/
+      - name: Verify binaries and capture capability
+        run: python3 -B Scripts/recover_date_traces.py setup
+      - name: Record bounded executor events without repeating benchmarks
+        run: python3 -B Scripts/recover_date_traces.py executor
+      - name: Record CPU stacks with per-command watchdogs
+        run: python3 -B Scripts/recover_date_traces.py cpu
+      - name: Qualify complete recovery cohort
+        run: python3 -B Scripts/recover_date_traces.py finish
       - name: Retain all observations and failures
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: liquid-date-trace-study
+          name: liquid-date-trace-recovery
           path: Artifacts/matched-performance/
           if-no-files-found: error
           retention-days: 30
