@@ -30,6 +30,9 @@ scalar columns; Ruby column parity is not claimed. Ambiguous, rewritten and inne
 established. Syntax errors still throw through every rendering policy. See the
 [internal source-origin contract](LQ1-R5/INTERNAL_SOURCE_ORIGIN.md) for coverage and
 the distinction between source, construct and offending-character positions.
+`when` lexical errors present the bare reason, matching pinned Ruby's direct
+branch parser, while retaining their verified origin and position. Other
+constructs keep their existing context wrappers.
 
 In lax and strict modes an error inside `assign` is recorded while its rendered
 text is suppressed. Strict2 emits its error text. Output variables and `echo`

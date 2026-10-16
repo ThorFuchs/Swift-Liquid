@@ -31,6 +31,7 @@ extension LexerError {
     internal var message: String {
         switch self {
         case .unexpectedCharacter(let char, _, .resolved(let origin)?):
+            if origin.presentation == .reasonOnly { return "Unexpected character \(char)" }
             let context = origin.presentation == .outputMarkup ? "{{" + origin.contextText + "}}" : origin.contextText
             return "Unexpected character \(char) in \"\(context)\""
         case .unexpectedCharacter(let char, _, _):

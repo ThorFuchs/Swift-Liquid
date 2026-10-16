@@ -46,6 +46,14 @@ adds the verified source excerpt and construct/header anchor through the existin
 `LiquidError.syntax(message:line:column:)`. No adapter normalizes its output.
 All other error families, parser modes/defaults and recovery policies are untouched.
 
+For a validated `when` header, the producer selects a bare-reason presentation
+while retaining that same origin, source context and position internally. Pinned
+Ruby `Case#parse_strict2_when` creates its parser directly, outside
+`ParserSwitching`'s markup wrapper. The `case` operand, ordinary tags, variables
+and echo keep their existing wrappers. This formatting choice adds no case-scope
+tracking or parser admission; Ruby lax/strict acceptance differences remain
+explicit, and a `when` outside a case is not claimed as Ruby reason parity.
+
 Original bytes are necessary but do not establish every Ruby context. A quoted
 delimiter can make the two tokenizer frames disagree; such a candidate remains
 unmapped. An outer `liquid` lexical error does not prove the inner command's

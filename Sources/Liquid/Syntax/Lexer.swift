@@ -150,7 +150,10 @@ internal final class Lexer {
             }
             anchor = lower
             if name.type != .echo {
-                presentation = .markup
+                // Pinned Case#parse_strict2_when creates its parser directly,
+                // outside ParserSwitching's markup-context wrapper. Keep the
+                // validated origin while presenting only the lexical reason.
+                presentation = name.type == .when ? .reasonOnly : .markup
                 while lower < upper, bytes[lower] == 0 || bytes[lower] == 32 || (9...13).contains(bytes[lower]) {
                     if lower & 255 == 0 { try Task.checkCancellation() }
                     lower += 1

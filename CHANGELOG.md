@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Present validated `when` unexpected-character errors with Ruby's bare reason,
+  retaining original source coordinates and all existing parser behavior.
+
 - Retain verified source context and positions for unexpected-character syntax
   errors, using an internal original-byte authority. Preserve the existing reason,
   parser acceptance and public APIs; ambiguous and unmapped contexts remain explicit.

@@ -52,6 +52,7 @@ internal struct DiagnosticSourceOrigin: Sendable, Equatable {
 internal enum DiagnosticContextPresentation: Sendable, Equatable {
     case markup
     case outputMarkup
+    case reasonOnly
 }
 
 // The producer supplies candidate presentation ranges after native rejection.

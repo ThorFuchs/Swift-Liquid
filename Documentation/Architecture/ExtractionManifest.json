@@ -571,6 +571,26 @@
         "Add separately sourced all-mode/control, source/partial, exact-scalar, capacity, cancellation and concurrency evidence; preserve all historical fixtures/assertions and independent eligibility."
       ],
       "qualification": "All seven unchanged ci.py lanes on the clean final SHA, 594 prior controls, native Ruby/Swift minimal evidence and fixed full independent population; actual independent failures retained. No benchmarks, merge, push, release, tag or package-floor changes."
+    },
+    {
+      "area": "When unexpected-character bare-reason presentation",
+      "scopeDecision": "Maintainer explicitly requested resolving the18 retained when-message differences on2026-10-16 through the existing producer boundary, preserving syntax/public APIs/pinned fixtures; no remote integration or release.",
+      "files": [
+        "Sources/Liquid/Syntax/DiagnosticSourceOrigin.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Tests/LiquidTests/WhenDiagnosticTests.swift",
+        "Tests/LiquidTests/Fixtures/WhenDiagnosticControls.json",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R5/INTERNAL_SOURCE_ORIGIN.md",
+        "Documentation/Errors.md"
+      ],
+      "changes": [
+        "Select internal reasonOnly presentation for validated when header tokens after the existing unexpectedCharacter rejection; retain exact source frame, original character, byte offset and LF/scalar location.",
+        "Follow pinned Case#parse_strict2_when direct parser behavior without new grammar, scope tracking, adapter rewriting or mode defaults; preserve case operand and other construct wrappers.",
+        "Add supplementary native Ruby-derived general-rule controls across modes/policies, negative constructs, multiline/Unicode/quotes/partials and finite admission, without editing previous tests or fixtures."
+      ],
+      "qualification": "Freeze one clean final SHA; all seven unchanged ci.py lanes, all594 prior controls, original18/all463 D1 exact-message proof, fixed5112/4624/488 source population and explicit failed independent gate. No benchmarks or remote writes."
     }
   ]
 }
