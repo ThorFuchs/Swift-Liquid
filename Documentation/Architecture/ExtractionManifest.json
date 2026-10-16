@@ -532,6 +532,22 @@
         "Reject the earlier native-string probing and forced-inlining hypotheses after recorded controls fail to corroborate a reliable improvement."
       ],
       "qualification": "Public typed-value/UTF-8/metrics/quota matrix, differential snapshots against the unchanged general renderer, deterministic cancellation during stringification, existing host cancellation regressions, source-bound Scripts/ci.py gates and controlled comparisons with immutable 1.3.1 are required before adoption."
+    },
+    {
+      "area": "LQ1 R5 diagnostic evidence and local integration",
+      "scopeDecision": "Maintainer requested a gated local R5 diagnostic-fidelity audit on 2026-10-16; no remote mutation or public API change. G2 returns a source-origin prerequisite for LQ3, with zero diagnostic code changes.",
+      "files": [
+        "Documentation/LQ1-R5/DIAGNOSTIC_CONTRACT.md",
+        "Documentation/LQ1-R5/SOURCE_ORIGIN_HANDOFF.md",
+        "Documentation/Testing.md",
+        "Tests/TestInventory.json"
+      ],
+      "changes": [
+        "Document fixed diagnostic populations, producer/context provenance and partial admission differences without altering parser acceptance or adapter messages.",
+        "Preserve both RANGE and already merged PR16 implementations/tests; resolve documentation and inventory conflicts as an additive union.",
+        "Keep all historical authored assertions, fixtures, root products, dependencies, parser defaults and Apple minimums unchanged."
+      ],
+      "qualification": "Seven unchanged ci.py lanes on the clean local candidate; exact failures and source bindings belong to the R5 return. No performance lane or claim."
     }
   ]
 }
