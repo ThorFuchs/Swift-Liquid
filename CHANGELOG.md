@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Scan date formatting directives as Unicode scalars, preserving byte output,
-  evaluator charges, padding limits and cancellation boundaries.
+- Add date directive byte, budget, quota and cancellation regressions, and a
+  compiled concurrent-batch consumer. Retain controlled caller/date findings
+  and the rejected formatter hypothesis without changing engine execution.
 
 - Add a bounded synchronous execution path for small text/variable templates,
   retaining cancellation checkpoints, logical budgets and public APIs.

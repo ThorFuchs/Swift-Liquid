@@ -139,3 +139,8 @@ decision; earlier measurements are not substituted for the final candidate.
 The [interpolation investigation](PerformanceReview-Interpolation.md) retains
 controlled 1.3.1 comparisons and rejected hypotheses separately from the pinned
 release comparison. Caller context and identical-source controls are explicit.
+
+The [caller/date follow-up](PerformanceReview-CallerDate.md) separates actor round
+trips from render work, retains all cross-version and identical-source observations,
+and rejects a formatter candidate whose benefit was not corroborated under both
+callers. The production engine remains unchanged after that investigation.
