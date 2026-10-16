@@ -25,6 +25,21 @@ struct Consumer {
             template: "A{% assign b = items | reject: missing %}B", context: ["items": ["x"]])
         precondition(recovered.output == "AB" && recovered.diagnostics.count == 1)
         precondition(recovered.diagnostics.first?.line == 1)
+        let batch = try await renderBatch([LiquidTemplate("Hello, {{ name }}!"), LiquidTemplate("{{ name | upcase }}")],
+                                          engine: engine, context: ["name": "Swift"])
+        precondition(batch == ["Hello, Swift!", "SWIFT"])
         print("Public consumer examples passed.")
+    }
+
+    // The application chooses one concurrent entry for its whole batch loop.
+    @concurrent
+    private static func renderBatch(_ templates: [LiquidTemplate], engine: LiquidEngine,
+                                    context: LiquidObject) async throws -> [String] {
+        try Task.checkCancellation()
+        var output: [String] = []
+        output.reserveCapacity(templates.count)
+        for template in templates { output.append(try await engine.render(template, context: context)) }
+        try Task.checkCancellation()
+        return output
     }
 }
