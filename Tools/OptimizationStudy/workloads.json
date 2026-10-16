@@ -1,0 +1,52 @@
+{
+  "workloads": [
+    {
+      "name": "iso",
+      "template": "{{ stamp | date: '%F %T %:z %N' }}",
+      "context": {
+        "stamp": "2024-02-03T04:05:06.123456789+05:30"
+      },
+      "expected": "2024-02-03 04:05:06 +05:30 123456789"
+    },
+    {
+      "name": "rfc",
+      "template": "{{ stamp | date: '%F %T %:z %N' }}",
+      "context": {
+        "stamp": "Sat, 03 Feb 2024 04:05:06 +0530"
+      },
+      "expected": "2024-02-03 04:05:06 +05:30 000000000"
+    },
+    {
+      "name": "unicode",
+      "template": "{{ stamp | date: '%F %T %:z %N' }}",
+      "context": {
+        "stamp": "\ud83d\ude00\t2024-02-03T04:05:06Z"
+      },
+      "expected": "2024-02-03 04:05:06 +00:00 000000000"
+    },
+    {
+      "name": "invalid",
+      "template": "{{ stamp | date: '%F %T %:z %N' }}",
+      "context": {
+        "stamp": "not a date"
+      },
+      "expected": "not a date"
+    },
+    {
+      "name": "interpolation",
+      "template": "Hello, {{ name }}!",
+      "context": {
+        "name": "Swift"
+      },
+      "expected": "Hello, Swift!"
+    },
+    {
+      "name": "filter",
+      "template": "{{ title | strip | upcase | escape }}",
+      "context": {
+        "title": " <Swift> "
+      },
+      "expected": "&lt;SWIFT&gt;"
+    }
+  ]
+}
