@@ -548,6 +548,29 @@
         "Keep all historical authored assertions, fixtures, root products, dependencies, parser defaults and Apple minimums unchanged."
       ],
       "qualification": "Seven unchanged ci.py lanes on the clean local candidate; exact failures and source bindings belong to the R5 return. No performance lane or claim."
+    },
+    {
+      "area": "Original-source unexpected-character diagnostics",
+      "scopeDecision": "Maintainer authorized agreeing the source-origin interface and preparing the correction on 2026-10-16, then explicitly assigned ownership when no separate LQ3 owner was found. Independent reviewer agreed v2 and reviewed the producer/provider split; no remote publication/integration authorized.",
+      "files": [
+        "Sources/Liquid/Syntax/DiagnosticSourceOrigin.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/LiquidError.swift",
+        "Tests/LiquidTests/DiagnosticOriginTests.swift",
+        "Tests/LiquidTests/Fixtures/DiagnosticOriginControls.json",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R5/INTERNAL_SOURCE_ORIGIN.md",
+        "Documentation/Errors.md"
+      ],
+      "changes": [
+        "Add one internal checked-Sendable original-byte authority for validated ranges, exact identity and error-only LF/scalar positions; no source index, LSP dependency or public API.",
+        "Enrich only already-thrown unexpectedCharacter reasons after native rejection, using a pinned Ruby presentation selector owned by the lexer producer; preserve all token admission/cursor behavior and other error families.",
+        "Retain explicitly unmapped outer-liquid, rewritten, ambiguous or reason/scalar-disagreeing frames without fabricated source context; never mutate a parsed partial binding.",
+        "Add separately sourced all-mode/control, source/partial, exact-scalar, capacity, cancellation and concurrency evidence; preserve all historical fixtures/assertions and independent eligibility."
+      ],
+      "qualification": "All seven unchanged ci.py lanes on the clean final SHA, 594 prior controls, native Ruby/Swift minimal evidence and fixed full independent population; actual independent failures retained. No benchmarks, merge, push, release, tag or package-floor changes."
     }
   ]
 }

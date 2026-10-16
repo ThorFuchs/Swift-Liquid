@@ -23,6 +23,14 @@ Diagnostics retain encounter order, line numbers where available, and partial
 names. Each invocation owns its diagnostic array. Reusing an engine or parsed
 template does not carry errors into later renders.
 
+Unexpected-character syntax errors can retain a verified original source excerpt
+and construct/header position. These positions use one-based LF lines and Unicode
+scalar columns; Ruby column parity is not claimed. Ambiguous, rewritten and inner
+`liquid` contexts keep their existing failure when an original context cannot be
+established. Syntax errors still throw through every rendering policy. See the
+[internal source-origin contract](LQ1-R5/INTERNAL_SOURCE_ORIGIN.md) for coverage and
+the distinction between source, construct and offending-character positions.
+
 In lax and strict modes an error inside `assign` is recorded while its rendered
 text is suppressed. Strict2 emits its error text. Output variables and `echo`
 emit error text; captures and explicit partials retain the same boundaries.

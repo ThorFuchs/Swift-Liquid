@@ -1,0 +1,161 @@
+{
+  "cases": [
+    {
+      "name": "output",
+      "source": "{{ x & }}",
+      "sourceSHA256": "79b94fa548a86d118f974894d414b0a1b39f6cdb6910fe12a6a3fbe7e62d768b",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "assign",
+      "source": "prefix\n{% assign x = x & %}",
+      "sourceSHA256": "b4b7da4c75d9e43ad958165589b7c24843ae5a2468b3820bffdf89b8d87315d6",
+      "expectedLine": 2,
+      "expectedSwiftColumn": 11,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 2): Unexpected character & in \"x = x &\"",
+      "referenceLine": 2,
+      "expectedMessage": "Unexpected character & in \"x = x &\""
+    },
+    {
+      "name": "echo",
+      "source": "\n{% echo x & %}",
+      "sourceSHA256": "90d85f61fed1c8e19362b2b71f0bf2402f81e0612b0af64ca6b7168cc1bf8be5",
+      "expectedLine": 2,
+      "expectedSwiftColumn": 9,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 2): Unexpected character & in \"{{x & }}\"",
+      "referenceLine": 2,
+      "expectedMessage": "Unexpected character & in \"{{x & }}\""
+    },
+    {
+      "name": "multiline-markup",
+      "source": "{% assign x =\n x & %}",
+      "sourceSHA256": "18896e52fb29bf6fa59dd6a66bf1111afb5e33613a8a1cff42ab51453a1ae68c",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 11,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"x =\n x &\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"x =\n x &\""
+    },
+    {
+      "name": "multiline-header",
+      "source": "{%\n assign\n x = x & %}",
+      "sourceSHA256": "92b8ee81bbbfd192640ea40289196f13fbe8c6f85681f7047245d7f3c58a5289",
+      "expectedLine": 3,
+      "expectedSwiftColumn": 2,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 3): Unexpected character & in \"x = x &\"",
+      "referenceLine": 3,
+      "expectedMessage": "Unexpected character & in \"x = x &\""
+    },
+    {
+      "name": "unicode-prefix",
+      "source": "😀é\t{{ x & }}",
+      "sourceSHA256": "6e4a691982a35e9d09d7f533883442a799c9d3ab7824ceb77c4683d626101e77",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 5,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "crlf",
+      "source": "prefix\r\n{{ x & }}",
+      "sourceSHA256": "fc5574a086ac3ed23969c81a2eb03979faa44d7cc625c81834a85f7fc717a7e4",
+      "expectedLine": 2,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 2): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 2,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "lone-cr",
+      "source": "prefix\r{{ x & }}",
+      "sourceSHA256": "db3859261f98706bddc0753d83ed43e60b354b920f7a6df4e6c96bd513be0ee0",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 8,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "quote",
+      "source": "{{ '\"' & }}",
+      "sourceSHA256": "653e0d48ac5e06d1796416f16c388ee0a1a1d4db258d49439f7d681ad4de9a75",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"{{ '\"' & }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"{{ '\"' & }}\""
+    },
+    {
+      "name": "backslash",
+      "source": "{{ x \\ }}",
+      "sourceSHA256": "771387324bf7406209c82fb01719c615c5146651cdba78554dcf75606a2371f5",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character \\ in \"{{ x \\ }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character \\ in \"{{ x \\ }}\""
+    },
+    {
+      "name": "output-trim",
+      "source": "{{- x & -}}",
+      "sourceSHA256": "2666b3e843c5c93c2e689d3778499aaa8e26c5a1f84b4df700a6c1a809feea37",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "tag-trim",
+      "source": "{%- assign x = x & -%}",
+      "sourceSHA256": "64dc2d2675d2a6bd00291871fce1079e79c0815011a6f8eeec970e0434e06de5",
+      "expectedLine": 1,
+      "expectedSwiftColumn": 12,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 1): Unexpected character & in \"x = x &\"",
+      "referenceLine": 1,
+      "expectedMessage": "Unexpected character & in \"x = x &\""
+    },
+    {
+      "name": "inline-comment-prefix",
+      "source": "{% # comment\n # continued\n%}\n{{ x & }}",
+      "sourceSHA256": "12d7474336e75d5834d32a6949151c7965151c4ed827dc8ff3fc6a562882e1f0",
+      "expectedLine": 4,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 4): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 4,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    },
+    {
+      "name": "raw-prefix",
+      "source": "{% raw %}😀\n{% endraw %}\n{{ x & }}",
+      "sourceSHA256": "ac73a36fb77825e4d276f95ed3a7c90a33116f6bde4dc47be2c3ddf50adb9503",
+      "expectedLine": 3,
+      "expectedSwiftColumn": 1,
+      "filesystem": {},
+      "referenceMessage": "Liquid syntax error (line 3): Unexpected character & in \"{{ x & }}\"",
+      "referenceLine": 3,
+      "expectedMessage": "Unexpected character & in \"{{ x & }}\""
+    }
+  ],
+  "provenance": "Supplementary original-source diagnostic controls; D1 liquid-spec strict2 lexical family at 84bf25e; no historical fixture changes or Ruby column parity claim.",
+  "rubyPin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "ruby": "ruby 4.0.1 (2026-01-13 revision e04267a14b) +PRISM [arm64-darwin25]"
+}

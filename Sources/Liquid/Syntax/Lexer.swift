@@ -42,6 +42,7 @@ internal final class Lexer {
     // MARK: - Properties
 
     private let bytes: [UInt8]
+    private let sourceProvenance: DiagnosticSourceProvenance
 
     private var byteIndex: Int = 0
     
@@ -55,13 +56,14 @@ internal final class Lexer {
     
     // MARK: - Initialization
     
-    internal init(_ input: String) {
+    internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped) {
         self.bytes = Array(input.utf8)
+        self.sourceProvenance = sourceProvenance
     }
     
     // MARK: - Public Interface
     
-    internal func tokenize() throws(LexerError) -> [Token] {
+    internal func tokenize() throws -> [Token] {
         var tokens: [Token] = []
         tokens.reserveCapacity(max(8, bytes.count / 6))
         byteIndex = 0
@@ -72,13 +74,98 @@ internal final class Lexer {
 
         while !isAtEnd {
             let start = currentPosition
-            try tokenizeNext(&tokens, startPosition: start)
+            let firstToken = tokens.count
+            do {
+                try tokenizeNext(&tokens, startPosition: start)
+            } catch {
+                guard case .unexpectedCharacter(let character, let offset, _) = error else { throw error }
+                let origin: DiagnosticOriginResolution
+                switch sourceProvenance {
+                case .original(let identity):
+                    origin = try diagnosticOrigin(character, at: offset, start: start.position,
+                        tokens: tokens[firstToken...], identity: identity)
+                case .unmapped:
+                    origin = .unmapped(.unspecifiedOrRewrittenSource)
+                }
+                throw LexerError.unexpectedCharacter(character, position: offset, origin: origin)
+            }
         }
 
         // Post-process: apply whitespace trimming from {%- -%} {{- -}} markers
         applyWhitespaceTrimming(&tokens)
 
         return tokens
+    }
+
+    private func diagnosticOrigin(_ character: Character, at offset: Int, start: Int,
+                                  tokens: ArraySlice<Token>, identity: DiagnosticSourceIdentity) throws -> DiagnosticOriginResolution {
+        try Task.checkCancellation()
+        guard let opening = tokens.first else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        let variable = opening.type == .variableStart
+        guard variable || (opening.type == .tagStart && tokens.count >= 2),
+              start >= 0, bytes.count - start >= 2 else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        // Error presentation only: pinned Ruby tokenizer.rb next_tag_token and
+        // next_variable_token use first terminators/brace transitions. This never
+        // admits source, advances the native cursor, or creates rendering nodes.
+        let closing: (UInt8, UInt8) = variable ? (125, 125) : (37, 125)
+        var end = start + 2
+        while end < bytes.count - 1 {
+            if end & 255 == 0 { try Task.checkCancellation() }
+            if bytes[end] == closing.0, bytes[end + 1] == closing.1 { break }
+            if variable, bytes[end] == 125 || (bytes[end] == 123 && bytes[end + 1] == 37) {
+                return .unmapped(.incompleteOrAmbiguousConstruct)
+            }
+            end += 1
+        }
+        guard end < bytes.count - 1, offset < end else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        var lower = start + 2
+        var upper = end
+        if opening.trimLeft { lower += 1 }
+        if upper > lower, bytes[upper - 1] == 45 { upper -= 1 }
+        var anchor = start
+        var presentation = DiagnosticContextPresentation.outputMarkup
+        var header: Range<Int>?
+        var headerSpelling: String?
+        if !variable {
+            let name = tokens[tokens.startIndex + 1]
+            guard name.type != .liquid else { return .unmapped(.liquidInnerContext) }
+            let spelling: String
+            switch name.type {
+            case .identifier(let value): spelling = value.string
+            case .assign, .render, .echo, .increment, .decrement: spelling = name.type.sourceLexeme
+            default:
+                guard let keyword = name.type.keywordString else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+                spelling = keyword
+            }
+            guard name.position >= lower, name.position <= upper,
+                  spelling.utf8.count <= upper - name.position else { return .unmapped(.invalidBoundary) }
+            header = name.position..<(name.position + spelling.utf8.count)
+            headerSpelling = spelling
+            lower = name.position + spelling.utf8.count
+            // Pinned block_body.rb FullToken header whitespace and
+            // ParserSwitching markup.strip. The byte owner validates spelling.
+            while lower < upper, bytes[lower] == 32 || (9...13).contains(bytes[lower]) {
+                if lower & 255 == 0 { try Task.checkCancellation() }
+                lower += 1
+            }
+            anchor = lower
+            if name.type != .echo {
+                presentation = .markup
+                while lower < upper, bytes[lower] == 0 || bytes[lower] == 32 || (9...13).contains(bytes[lower]) {
+                    if lower & 255 == 0 { try Task.checkCancellation() }
+                    lower += 1
+                }
+                while upper > lower, bytes[upper - 1] == 0 || bytes[upper - 1] == 32 || (9...13).contains(bytes[upper - 1]) {
+                    if upper & 255 == 0 { try Task.checkCancellation() }
+                    upper -= 1
+                }
+            }
+        }
+        guard lower <= upper else { return .unmapped(.invalidBoundary) }
+        let frame = DiagnosticSourceFrame(construct: start..<(end + 2), markup: lower..<upper,
+            anchor: anchor, presentation: presentation, header: header, headerSpelling: headerSpelling)
+        return try DiagnosticSourceSnapshot(admittedUTF8: bytes, identity: identity)
+            .unexpectedCharacter(character, at: offset, frame: frame)
     }
 
     private func applyWhitespaceTrimming(_ tokens: inout [Token]) {

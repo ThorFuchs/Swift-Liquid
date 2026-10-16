@@ -10,7 +10,7 @@
 import Foundation
 
 internal enum LexerError: Error, Sendable, Equatable {
-    case unexpectedCharacter(Character, position: Int)
+    case unexpectedCharacter(Character, position: Int, origin: DiagnosticOriginResolution? = nil)
     
     case unterminatedString(position: Int)
     
@@ -30,7 +30,10 @@ internal enum LexerError: Error, Sendable, Equatable {
 extension LexerError {
     internal var message: String {
         switch self {
-        case .unexpectedCharacter(let char, _):
+        case .unexpectedCharacter(let char, _, .resolved(let origin)?):
+            let context = origin.presentation == .outputMarkup ? "{{" + origin.contextText + "}}" : origin.contextText
+            return "Unexpected character \(char) in \"\(context)\""
+        case .unexpectedCharacter(let char, _, _):
             return "Unexpected character '\(char)'"
         case .unterminatedString:
             return "Unterminated string literal"
@@ -49,7 +52,7 @@ extension LexerError {
     
     internal var position: Int {
         switch self {
-        case .unexpectedCharacter(_, let pos),
+        case .unexpectedCharacter(_, let pos, _),
              .unterminatedString(let pos),
              .invalidNumber(_, let pos),
              .invalidEscapeSequence(_, let pos),
@@ -79,7 +82,7 @@ extension LexerError {
 extension LexerError {
     internal var suggestion: String? {
         switch self {
-        case .unexpectedCharacter(let char, _):
+        case .unexpectedCharacter(let char, _, _):
             if char.isWhitespace {
                 return "Check for missing delimiters or incorrect tag structure"
             } else {

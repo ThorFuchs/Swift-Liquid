@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retain verified source context and positions for unexpected-character syntax
+  errors, using an internal original-byte authority. Preserve the existing reason,
+  parser acceptance and public APIs; ambiguous and unmapped contexts remain explicit.
+
 - Support range `first`, `last` and `size` dot commands with pinned Ruby
   semantics, including descending endpoints and bracket-key separation.
   Keep finite admission and pinned fixtures unchanged.
