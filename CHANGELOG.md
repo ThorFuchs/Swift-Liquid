@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add date directive byte, budget, quota and cancellation regressions, and a
+  compiled concurrent-batch consumer. Retain controlled caller/date findings
+  and the rejected formatter hypothesis without changing engine execution.
+
 - Present validated `when` unexpected-character errors with Ruby's bare reason,
   retaining original source coordinates and all existing parser behavior.
 

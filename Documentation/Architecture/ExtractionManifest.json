@@ -591,6 +591,43 @@
         "Add supplementary native Ruby-derived general-rule controls across modes/policies, negative constructs, multiline/Unicode/quotes/partials and finite admission, without editing previous tests or fixtures."
       ],
       "qualification": "Freeze one clean final SHA; all seven unchanged ci.py lanes, all594 prior controls, original18/all463 D1 exact-message proof, fixed5112/4624/488 source population and explicit failed independent gate. No benchmarks or remote writes."
+    },
+    {
+      "area": "Caller/date investigation and formatting regression coverage",
+      "scopeDecision": "Maintainer requested remaining ordinary-caller interpolation and date-rendering investigation after merging PR #16.",
+      "changes": [
+        "Keep the merged renderer, formatter, parser, budget methods and public execution semantics unchanged after controlled investigation.",
+        "Reject direct Unicode-scalar directive recognition: concurrent date observations improve modestly but common-caller results and identical-source variation do not corroborate the frozen adoption criterion.",
+        "Retain independent Unicode/directive expectations, exact steps and UTF-8 capacity boundaries, deterministic cancellation precedence and shared-engine date rendering across all policies.",
+        "Compile an application-owned concurrent batch example with structured cancellation; add no library API, cache or package dependency."
+      ],
+      "files": [
+        "Tests/LiquidTests/DateFormattingTests.swift",
+        "Examples/Consumer/Sources/LiquidConsumer/main.swift",
+        "Documentation/PerformanceReview-CallerDate.md"
+      ],
+      "qualification": "Both unchanged formatter and experimental candidate passed 81-function/2,178-case development qualification. Independently recompute all 96 runs/208 comparisons and twelve caller-probe runs, preserve every flag and failed setup attempt, then qualify the final tests/documentation/consumer source through Scripts/ci.py."
+    },
+    {
+      "area": "Local reconciliation of diagnostic and caller/date source histories",
+      "scopeDecision": "Maintainer requested reconciling reviewed f83a2d5 with latest main e5291b for independent review on 2026-10-16; no remote main/PR merge or release.",
+      "files": [
+        "CHANGELOG.md",
+        "Documentation/Architecture/ExtractionManifest.json",
+        "Documentation/Performance.md",
+        "Documentation/PerformanceReview-CallerDate.md",
+        "Documentation/README.md",
+        "Documentation/Testing.md",
+        "Examples/Consumer/Sources/LiquidConsumer/main.swift",
+        "Tests/LiquidTests/DateFormattingTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "changes": [
+        "Retain production engine/parser/diagnostic source byte-for-byte from the reviewed f83 candidate; import the exact main date tests and Consumer additions.",
+        "Preserve both parent test inventories and newly added assertions/fixtures; retain the existing maintainer-approved C assertion correction already present in f83. Explicitly union full, thread and adversarial profiles and document exact derived counts.",
+        "Preserve both adaptation histories, changelog entries and documentation links; separate reconciliation-only edits from semantic changes."
+      ],
+      "qualification": "Freeze a clean local candidate after preliminary review; all seven unchanged ci.py lanes, prior 594 controls, appropriate current-main date/Consumer coverage and fixed independent populations with 463 exact D1 messages. Retain independent failures; perform no benchmark or publication."
     }
   ]
 }
