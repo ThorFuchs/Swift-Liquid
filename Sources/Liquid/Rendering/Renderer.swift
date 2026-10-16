@@ -124,7 +124,10 @@ internal final class Renderer {
     internal func render(_ node: borrowing ASTNode, with variables: RuntimeVariables = [:]) async throws -> String {
         context.setVariables(variables)
         resetTemplatePathStack()
-        do { return try await renderNode(node) }
+        do {
+            if let output = try renderImmediateTemplate(node) { return output }
+            return try await renderNode(node)
+        }
         catch let signal as LoopControlSignal {
             return signal.partialOutput
         }
