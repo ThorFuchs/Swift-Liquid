@@ -55,6 +55,7 @@ Retain that dispatch and this setup correction alongside the completed study.
 
 The first running attempt passed both 81-function/2,178-case preflights and built
 the probe, then its standalone SIL command failed to locate Liquid. This toolchain
-places modules beside the product; include that product directory as well as the
-conventional Modules directory. No timed sample existed. Keep the failed attempt
+uses an out/Products layout. Discover and retain the actual Liquid.swiftmodule
+locations; include their parent directories and any enclosing framework search
+paths alongside the product and conventional Modules directories. No timed sample existed. Keep the failed attempt
 and qualify the same product bytes again before the corrected study.

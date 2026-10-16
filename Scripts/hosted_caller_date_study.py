@@ -80,7 +80,13 @@ def main():
                 run(['xcrun','swift','build','-c','release','--package-path',str(pkg),*flags],'probe-build')
                 loc=run(['xcrun','swift','build','-c','release','--package-path',str(pkg),'--show-bin-path',*flags],'probe-binary').splitlines()[-1]
                 binaries['probe']=str(Path(loc)/'LiquidCallerProbe')
-                run(['xcrun','swiftc','-O','-swift-version','6','-parse-as-library','-emit-sil','-I',loc,'-I',str(Path(loc)/'Modules'),str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
+                modules=sorted((pkg/'.build').rglob('Liquid.swiftmodule'))
+                assert modules, 'The built Liquid module must exist before SIL emission'
+                (OUTPUT/'probe-module-locations.json').write_text(json.dumps([str(p.relative_to(pkg)) for p in modules],indent=2)+'\n')
+                includes={Path(loc),Path(loc)/'Modules',*(p.parent for p in modules)}
+                frameworks={a.parent for p in modules for a in p.parents if a.name.endswith('.framework')}
+                search=[v for d in sorted(includes) for v in ['-I',str(d)]]+[v for d in sorted(frameworks) for v in ['-F',str(d)]]
+                run(['xcrun','swiftc','-O','-swift-version','6','-parse-as-library','-emit-sil',*search,str(pkg/'Sources/LiquidCallerProbe/main.swift')],'probe-optimized-sil')
             if label in ['mergedA','candidate']:
                 run(['xcrun','nm','-n',binaries[label,'common']],label+'-symbols')
                 run(['xcrun','otool','-tvV',binaries[label,'common']],label+'-assembly')
