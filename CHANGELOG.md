@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Isolate observed date-recognition, grammar, formatting and lowercasing CPU costs
+  with controlled benchmarks and typed audit controls. Retain all comparisons,
+  failures and historical flags; keep the production engine and cancellation
+  checkpoints unchanged.
+
 - Retain date CPU/executor traces, image-identity symbolication and complete
   benchmark reviews, with recorder failures and unresolved historical flags;
   preserve the production engine and all cancellation checkpoints.
