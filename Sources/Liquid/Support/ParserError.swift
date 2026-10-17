@@ -12,7 +12,7 @@ import Foundation
 internal enum ParserError: Error, Sendable, Equatable {
     case unexpectedToken(Token)
     
-    case expectedToken(TokenType, got: TokenType)
+    case expectedToken(TokenType, got: TokenType, origin: DiagnosticOriginResolution? = nil)
     
     case expectedIdentifier
     
@@ -56,7 +56,15 @@ extension ParserError {
         switch self {
         case .unexpectedToken(let token):
             return "Unexpected token: \(token.type)"
-        case .expectedToken(let expected, let got):
+        case .expectedToken(let expected, let got, .resolved(let origin)?):
+            guard let wanted = expectedTokenName(expected), let found = expectedTokenName(got) else {
+                return "Expected \(expected) but found \(got)"
+            }
+            let reason = "Expected \(wanted) but found \(found)"
+            if origin.presentation == .reasonOnly { return reason }
+            let context = origin.presentation == .outputMarkup ? "{{" + origin.contextText + "}}" : origin.contextText
+            return reason + " in \"" + context + "\""
+        case .expectedToken(let expected, let got, _):
             return "Expected \(expected) but found \(got)"
         case .expectedIdentifier:
             return "Expected identifier"
@@ -120,6 +128,8 @@ extension ParserError {
         switch self {
         case .unexpectedToken(let token):
             return token.sourceLocation
+        case .expectedToken(_, _, .resolved(let origin)?):
+            return .init(position: origin.anchor, line: origin.position.line, column: origin.position.column)
         default:
             return nil
         }
@@ -140,7 +150,7 @@ extension ParserError {
             default:
                 return "Check the syntax around this token"
             }
-        case .expectedToken(let expected, let got):
+        case .expectedToken(let expected, let got, _):
             switch expected {
             case .tagEnd:
                 return "Add '%}' to close the tag"
@@ -268,5 +278,22 @@ extension ParserError: LocalizedError {
     
     internal var recoverySuggestion: String? {
         return suggestion
+    }
+}
+
+private func expectedTokenName(_ token: TokenType) -> String? {
+    switch token {
+    case .leftParen: return "open_round"
+    case .rightParen: return "close_round"
+    case .leftBracket: return "open_square"
+    case .rightBracket: return "close_square"
+    case .variableEnd, .tagEnd: return "end_of_string"
+    case .identifier: return "id"
+    case .colon: return "colon"
+    case .comma: return "comma"
+    case .dot: return "dot"
+    case .range: return "dotdot"
+    case .filter: return "pipe"
+    default: return nil
     }
 }

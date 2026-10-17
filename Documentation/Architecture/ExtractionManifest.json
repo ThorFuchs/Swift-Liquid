@@ -717,6 +717,27 @@
     "Documentation/README.md"
   ],
   "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
-}
+},
+    {
+      "area": "R6 typed expected-token diagnostic presentation",
+      "scopeDecision": "Direct LIQUID-PF1-012 maintainer instruction designates exact35ab as limited local R6 baseline and commissions an independent local successor only; no whole-PR/conformance/performance/merge/release acceptance.",
+      "changes": [
+        "Preserve the existing typed rejection, first failure, parser modes/recovery, original byte authority, quotas/cancellation and when direct presentation; enrich only a verified error frame.",
+        "Recover exact19 pinned liquid-spec YAML inputs with original expectation/provenance and MIT notice; keep all supplementary controls and historical failed independent results separate.",
+        "Pass explicit original/anonymous provenance through the existing LiquidTemplate-to-Parser call; rewritten/unknown/ambiguous frames remain unmapped.",
+        "Preserve all29 raw adaptations, prior fixture/API/dependency/platform-floor bytes and every old assertion; add only scoped new regressions and actual selector inventory."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/DiagnosticSourceOrigin.swift",
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Tests/LiquidTests/R6ExpectedTokenTests.swift",
+        "Tests/LiquidTests/Fixtures/R6ExpectedTokenCases.json",
+        "Tests/TestInventory.json",
+        "Documentation/LQ1-R6/EXPECTED_TOKEN_DIAGNOSTICS.md"
+      ],
+      "qualification": "Focused before/after development observations are logged externally. One final clean successor requires native/safety/reference/platforms/installation/docs/strict archive through unchanged ci.py, with actual new counts and full Git-free native child; stop on first failure. Exact-source receipts/review remain external without a post-check stamp. Independent conformance remains failed/unrerun and timing held; new source acceptance is pending."
+    }
   ]
 }

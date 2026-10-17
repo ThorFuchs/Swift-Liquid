@@ -16,6 +16,7 @@ internal enum DiagnosticSourceProvenance: Sendable, Equatable {
 internal enum DiagnosticOriginGap: Sendable, Equatable {
     case unspecifiedOrRewrittenSource
     case invalidBoundary
+    case reasonDoesNotMatchOriginalToken
     case reasonDoesNotMatchOriginalScalar
     case incompleteOrAmbiguousConstruct
     case liquidInnerContext
@@ -131,6 +132,40 @@ internal struct DiagnosticSourceSnapshot: Sendable {
             construct: frame.construct, markup: frame.markup,
             offending: offset..<(offset + spelling.count), anchor: frame.anchor,
             position: position, contextText: context, presentation: frame.presentation))
+    }
+
+    // The parser supplies a token spelling and frame only after its original
+    // rejection. This validates bytes/ranges, without recognizing tag grammar.
+    func expectedToken(_ spelling: String, at offset: Int, frame: DiagnosticSourceFrame,
+                       atMarkupEnd: Bool) throws -> DiagnosticOriginResolution {
+        try Task.checkCancellation()
+        guard valid(frame.construct), valid(frame.markup), isBoundary(frame.anchor), isBoundary(offset),
+              frame.construct.lowerBound <= frame.markup.lowerBound,
+              frame.markup.upperBound <= frame.construct.upperBound,
+              frame.construct.lowerBound <= frame.anchor, frame.anchor <= offset,
+              frame.markup.lowerBound <= offset,
+              (frame.header == nil) == (frame.headerSpelling == nil) else { return .unmapped(.invalidBoundary) }
+        if let header = frame.header {
+            guard valid(header), header.lowerBound >= frame.construct.lowerBound,
+                  header.upperBound <= frame.markup.lowerBound, let name = frame.headerSpelling,
+                  bytes[header].elementsEqual(name.utf8) else { return .unmapped(.invalidBoundary) }
+        }
+        let reason = Array(spelling.utf8)
+        guard !reason.isEmpty, reason.count <= bytes.count - offset, isBoundary(offset + reason.count),
+              bytes[offset..<(offset + reason.count)].elementsEqual(reason) else {
+            return .unmapped(.reasonDoesNotMatchOriginalToken)
+        }
+        if atMarkupEnd {
+            guard offset >= frame.markup.upperBound, offset + reason.count == frame.construct.upperBound else {
+                return .unmapped(.invalidBoundary)
+            }
+        } else if offset + reason.count > frame.markup.upperBound { return .unmapped(.invalidBoundary) }
+        guard let position = try position(at: frame.anchor) else { return .unmapped(.invalidBoundary) }
+        let context = String(decoding: bytes[frame.markup], as: UTF8.self)
+        try Task.checkCancellation()
+        return .resolved(.init(sourceIdentity: identity, construct: frame.construct, markup: frame.markup,
+            offending: offset..<(offset + reason.count), anchor: frame.anchor, position: position,
+            contextText: context, presentation: frame.presentation))
     }
 
     private func valid(_ range: Range<Int>) -> Bool {

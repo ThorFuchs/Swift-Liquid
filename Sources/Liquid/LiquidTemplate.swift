@@ -19,7 +19,7 @@ public struct LiquidTemplate: Sendable {
         self.source = source
         do {
             let tokens = try Lexer(source, sourceProvenance: .original(.anonymous)).tokenize()
-            self.ast = try Parser(consuming: tokens, source: source, syntaxMode: syntaxMode, maxNestingDepth: limits.nestingDepth).parse()
+            self.ast = try Parser(consuming: tokens, source: source, sourceProvenance: .original(.anonymous), syntaxMode: syntaxMode, maxNestingDepth: limits.nestingDepth).parse()
             try validateTemplate(ast, limits: limits)
         } catch { throw publicError(error) }
     }

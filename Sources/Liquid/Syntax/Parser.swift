@@ -22,6 +22,7 @@ internal final class Parser {
     private let tokens: [Token]
 
     private let source: String?
+    private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
     private let lineOffset: Int
     private let maxNestingDepth: Int
@@ -43,12 +44,14 @@ internal final class Parser {
     internal init(
         consuming tokens: [Token],
         source: String? = nil,
+        sourceProvenance: DiagnosticSourceProvenance = .unmapped,
         syntaxMode: LiquidSyntaxMode = .lax,
         maxNestingDepth: Int = 64,
         lineOffset: Int = 0
     ) {
         self.tokens = tokens
         self.source = source
+        self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
         self.lineOffset = lineOffset
         self.maxNestingDepth = maxNestingDepth
@@ -64,14 +67,133 @@ internal final class Parser {
         var nodes: [ASTNode] = []
         nodes.reserveCapacity(max(4, tokens.count / 3))
         
-        while !isAtEnd {
-            let node = try parseNode()
-            nodes.append(node)
+        do {
+            while !isAtEnd {
+                let node = try parseNode()
+                nodes.append(node)
+            }
+            return .template(nodes)
+        } catch let error as ParserError {
+            // Presentation follows the existing first rejection, without another
+            // parse or cursor advance. A nested rewritten parser marks its gap;
+            // the outer parser must not attach an unrelated original frame.
+            guard case .expectedToken(let expected, let got, nil) = error else { throw error }
+            let origin = try expectedTokenOrigin(got)
+            throw ParserError.expectedToken(expected, got: got, origin: origin)
         }
-        
-        return .template(nodes)
     }
     
+    // Error-only producer selection. Token boundaries come from the existing
+    // lexer; the byte owner validates candidate spans and typed reason spelling.
+    // Successful parses neither copy nor scan original diagnostic bytes.
+    private func expectedTokenOrigin(_ got: TokenType) throws -> DiagnosticOriginResolution {
+        try Task.checkCancellation()
+        guard case .original(let identity) = sourceProvenance, let source else {
+            return .unmapped(.unspecifiedOrRewrittenSource)
+        }
+        guard current < tokens.count, currentToken.type == got else {
+            return .unmapped(.incompleteOrAmbiguousConstruct)
+        }
+        var openingIndex = current
+        while !tokens[openingIndex].isOpeningDelimiter {
+            if openingIndex & 255 == 0 { try Task.checkCancellation() }
+            if openingIndex == 0 || (openingIndex != current && tokens[openingIndex].isClosingDelimiter) {
+                return .unmapped(.incompleteOrAmbiguousConstruct)
+            }
+            openingIndex -= 1
+        }
+        let opening = tokens[openingIndex]
+        let variable = opening.type == .variableStart
+        let closingType: TokenType = variable ? .variableEnd : .tagEnd
+        var closingIndex = current
+        while closingIndex < tokens.count && tokens[closingIndex].type != closingType {
+            if closingIndex & 255 == 0 { try Task.checkCancellation() }
+            if tokens[closingIndex].isOpeningDelimiter { return .unmapped(.incompleteOrAmbiguousConstruct) }
+            closingIndex += 1
+        }
+        guard closingIndex < tokens.count else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        let closing = tokens[closingIndex]
+        let bytes = Array(source.utf8)
+        let start = opening.position
+        guard bytes.count >= 2, start >= 0, start <= bytes.count - 2,
+              bytes[start] == 123, bytes[start + 1] == (variable ? 123 : 37),
+              closing.position >= start + 2, closing.position <= bytes.count - 2 else {
+            return .unmapped(.invalidBoundary)
+        }
+        // Pinned Ruby's first terminator/brace transitions may disagree with
+        // native quoted-token boundaries. Such frames stay explicitly unmapped.
+        var end = start + 2
+        while end < bytes.count - 1 {
+            if end & 255 == 0 { try Task.checkCancellation() }
+            if bytes[end] == (variable ? 125 : 37) && bytes[end + 1] == 125 { break }
+            if variable && (bytes[end] == 125 || (bytes[end] == 123 && bytes[end + 1] == 37)) {
+                return .unmapped(.incompleteOrAmbiguousConstruct)
+            }
+            end += 1
+        }
+        guard end == closing.position else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        var lower = start + 2
+        var upper = end
+        if opening.trimLeft {
+            guard lower < upper && bytes[lower] == 45 else { return .unmapped(.invalidBoundary) }
+            lower += 1
+        }
+        if closing.trimRight {
+            guard upper > lower && bytes[upper - 1] == 45 else { return .unmapped(.invalidBoundary) }
+            upper -= 1
+        }
+        var anchor = start
+        var presentation = DiagnosticContextPresentation.outputMarkup
+        var header: Range<Int>?
+        var headerSpelling: String?
+        if !variable {
+            guard openingIndex + 1 < closingIndex else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+            let name = tokens[openingIndex + 1]
+            guard name.type != .liquid else { return .unmapped(.liquidInnerContext) }
+            let spelling: String
+            switch name.type {
+            case .identifier(let value): spelling = value.string
+            case .assign, .render, .echo, .increment, .decrement: spelling = name.type.sourceLexeme
+            default:
+                guard let keyword = name.type.keywordString else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+                spelling = keyword
+            }
+            guard name.position >= lower, name.position <= upper,
+                  spelling.utf8.count <= upper - name.position else { return .unmapped(.invalidBoundary) }
+            header = name.position..<(name.position + spelling.utf8.count)
+            headerSpelling = spelling
+            lower = name.position + spelling.utf8.count
+            while lower < upper && (bytes[lower] == 32 || (9...13).contains(bytes[lower])) {
+                if lower & 255 == 0 { try Task.checkCancellation() }
+                lower += 1
+            }
+            anchor = lower
+            if name.type != .echo {
+                presentation = name.type == .when ? .reasonOnly : .markup
+                while lower < upper && (bytes[lower] == 0 || bytes[lower] == 32 || (9...13).contains(bytes[lower])) {
+                    if lower & 255 == 0 { try Task.checkCancellation() }
+                    lower += 1
+                }
+                while upper > lower && (bytes[upper - 1] == 0 || bytes[upper - 1] == 32 || (9...13).contains(bytes[upper - 1])) {
+                    if upper & 255 == 0 { try Task.checkCancellation() }
+                    upper -= 1
+                }
+            }
+        }
+        let spelling: String
+        switch got {
+        case .identifier(let value): spelling = value.string
+        case .variableEnd, .tagEnd, .leftParen, .rightParen, .leftBracket, .rightBracket,
+             .colon, .comma, .dot, .range, .filter:
+            spelling = got.sourceLexeme
+        default: return .unmapped(.reasonDoesNotMatchOriginalToken)
+        }
+        let frame = DiagnosticSourceFrame(construct: start..<(end + 2), markup: lower..<upper,
+            anchor: anchor, presentation: presentation, header: header, headerSpelling: headerSpelling)
+        return try DiagnosticSourceSnapshot(admittedUTF8: bytes, identity: identity)
+            .expectedToken(spelling, at: currentToken.position, frame: frame, atMarkupEnd: current == closingIndex)
+    }
+
     // MARK: - Node Parsing
     
     @inline(__always)

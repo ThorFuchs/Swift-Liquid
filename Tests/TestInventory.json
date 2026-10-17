@@ -114,7 +114,16 @@
     "LiquidTests.rubyDateGrammar(_:)": 337,
     "LiquidTests.sourceAndOutputLimitsUseUTF8Bytes()": null,
     "LiquidTests.standardEscapingAndUnknownFilters()": null,
-    "LiquidTests.truthinessAndComparisonLiteralsRemainDistinct()": null
+    "LiquidTests.truthinessAndComparisonLiteralsRemainDistinct()": null,
+    "LiquidTests.R6ExpectedTokenTests/originalNineteenMatchPinnedTypedPresentation(index:)": 19,
+    "LiquidTests.R6ExpectedTokenTests/presentationAcrossModesAndEntryPoints(mode:)": 3,
+    "LiquidTests.R6ExpectedTokenTests/positionsAndMarkupRetainExactAdmittedBytes()": null,
+    "LiquidTests.R6ExpectedTokenTests/fallbacksKeepTypedRejectionWithoutGuessedOrigins()": null,
+    "LiquidTests.R6ExpectedTokenTests/typedVocabularyPreservesFirstRejection()": null,
+    "LiquidTests.R6ExpectedTokenTests/sourceDepthAndPartialAdmissionStayOperational(mode:)": 3,
+    "LiquidTests.R6ExpectedTokenTests/cancellationAtExpectedTokenProviderEntryKeepsReuseHealthy()": null,
+    "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()": null,
+    "LiquidTests.R6ExpectedTokenTests/validInputsAndWhenDistinctionStayStable(mode:)": 3
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -129,7 +138,8 @@
     "LiquidTests.RangePropertyTests/concurrentRendersKeepRangeCommandsImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)",
-    "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()"
+    "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()",
+    "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()"
   ],
   "adversarialFunctions": [
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",
@@ -153,6 +163,7 @@
     "LiquidTests.QualityPropertyTests/suspensionBarriersDoNotStrandCancelledObserversOrHosts()",
     "LiquidTests.RangePropertyTests/cancellationBeforeRangeCommandsPreservesSiblingReuse(recovering:)",
     "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)",
-    "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)"
+    "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)",
+    "LiquidTests.R6ExpectedTokenTests/cancellationAtExpectedTokenProviderEntryKeepsReuseHealthy()"
   ]
 }
