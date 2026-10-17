@@ -705,7 +705,7 @@
     },
     {
   "area": "PF1-002 source and documentation reconciliation",
-  "scopeDecision": "PF1-001 proposes PR19 first against pinned main; source construction requires a separate maintainer commission. No source, conformance, performance, release or whole-PR acceptance is inferred.",
+  "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
   "changes": [
     "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
     "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
@@ -716,7 +716,7 @@
     "Documentation/Architecture/ExtractionManifest.json",
     "Documentation/README.md"
   ],
-  "qualification": "Pending exact future candidate/source-bound checks and distinct review. PF1-001 ran no product checks and approves no gate."
+  "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
 }
   ]
 }
