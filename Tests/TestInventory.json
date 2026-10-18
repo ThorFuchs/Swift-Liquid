@@ -123,7 +123,21 @@
     "LiquidTests.R6ExpectedTokenTests/sourceDepthAndPartialAdmissionStayOperational(mode:)": 3,
     "LiquidTests.R6ExpectedTokenTests/cancellationAtExpectedTokenProviderEntryKeepsReuseHealthy()": null,
     "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()": null,
-    "LiquidTests.R6ExpectedTokenTests/validInputsAndWhenDistinctionStayStable(mode:)": 3
+    "LiquidTests.R6ExpectedTokenTests/validInputsAndWhenDistinctionStayStable(mode:)": 3,
+    "LiquidTests.TemplateRegistryTests/emptyAndZeroProfiles()": null,
+    "LiquidTests.TemplateRegistryTests/negativeLimitsPrecedeEntryChecks(component:)": 3,
+    "LiquidTests.TemplateRegistryTests/duplicateBytesAndPrecedence(name:)": 4,
+    "LiquidTests.TemplateRegistryTests/canonicalSiblingsStayDistinct(kelvin:)": 2,
+    "LiquidTests.TemplateRegistryTests/exactBaseSuffixAndStoredSpelling()": null,
+    "LiquidTests.TemplateRegistryTests/orderedSnapshotsAndMixedContentDoNotParseRaw()": null,
+    "LiquidTests.TemplateRegistryTests/exactNameCountAndAggregateBoundaries()": null,
+    "LiquidTests.TemplateRegistryTests/lookupBoundsAndIntMaxDoNotOverflow()": null,
+    "LiquidTests.TemplateRegistryTests/boundedScanStopsAtFirstExcessByte()": null,
+    "LiquidTests.TemplateRegistryTests/cancellationPrecedesAllAdmissionFailures()": null,
+    "LiquidTests.TemplateRegistryTests/cancellationDuringAdmissionAndByteScanIsTerminal()": null,
+    "LiquidTests.TemplateRegistryTests/concurrentRendersAndRegistryResolutionShareOnlyImmutableInputs()": null,
+    "LiquidTests.TemplateRegistryTests/legacyDictionaryAndEngineLookupAreUnchanged()": null,
+    "LiquidTests.TemplateRegistryTests/namesAreOpaqueIdentityNotPathsOrAuthorization()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -139,7 +153,8 @@
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepCaseAndSizeImmutable(mode:)",
     "LiquidTests.RuntimeSemanticsTests/concurrentRendersKeepRuntimeRulesInvocationOwned(mode:)",
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()",
-    "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()"
+    "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()",
+    "LiquidTests.TemplateRegistryTests/concurrentRendersAndRegistryResolutionShareOnlyImmutableInputs()"
   ],
   "adversarialFunctions": [
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",

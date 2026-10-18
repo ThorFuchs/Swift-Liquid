@@ -47,3 +47,9 @@ Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files 
 under Artifacts and remain outside source control.
 
 - [Maintained development and CI operations](Maintenance.md)
+
+## Development exact-name primitive
+
+[Exact template registry](ExactTemplateRegistry.md) documents the additive U1
+registry and resolver. It is not yet connected to rendering, graph inspection,
+the CLI or Vapor; existing dictionary APIs remain unchanged.

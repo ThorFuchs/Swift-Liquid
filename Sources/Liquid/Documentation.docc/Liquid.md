@@ -49,6 +49,11 @@ or `escape_once` when inserting text into HTML.
 - <doc:TemplateInspection>
 - ``LiquidTemplateInspection``
 
+### Development exact-name primitive
+
+- <doc:ExactTemplateRegistry>
+- ``LiquidTemplateRegistry``
+
 ### Partial dependencies
 
 - <doc:PartialDependencies>

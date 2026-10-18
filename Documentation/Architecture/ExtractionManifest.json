@@ -738,6 +738,27 @@
         "Documentation/LQ1-R6/EXPECTED_TOKEN_DIAGNOSTICS.md"
       ],
       "qualification": "Focused before/after development observations are logged externally. One final clean successor requires native/safety/reference/platforms/installation/docs/strict archive through unchanged ci.py, with actual new counts and full Git-free native child; stop on first failure. Exact-source receipts/review remain external without a post-check stamp. Independent conformance remains failed/unrerun and timing held; new source acceptance is pending."
+    },
+    {
+      "area": "U1 immutable exact template registry",
+      "scopeDecision": "Direct U1 dispatch authorizes an isolated local registry/resolver only; no engine/graph/Vapor wiring or remote actions.",
+      "changes": [
+        "Original Apache-2.0 implementation reuses unchanged internal ScalarKey with ordered raw/parsed entries, checked Sendable and typed finite name admission.",
+        "Preserve every existing API, interpreter/parser/AST/diagnostic source, package dependency/platform and pinned fixture; no content parsing or source-memory certificate.",
+        "Add public consumer and tests for byte-exact identity, quotas, suffix, cooperative cancellation and concurrent readers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplateRegistry.swift",
+        "Tests/LiquidTests/TemplateRegistryTests.swift",
+        "Tests/TestInventory.json",
+        "Examples/RegistryConsumer/Package.swift",
+        "Examples/RegistryConsumer/Sources/LiquidRegistryConsumer/main.swift",
+        "Documentation/ExactTemplateRegistry.md",
+        "Sources/Liquid/Documentation.docc/ExactTemplateRegistry.md",
+        "Documentation/README.md",
+        "Sources/Liquid/Documentation.docc/Liquid.md"
+      ],
+      "qualification": "Native source-bound U1 receipts are external to tracked source. This records scope and authorship, not an unexecuted pass, full conformance, rendering integration or release approval."
     }
   ]
 }
