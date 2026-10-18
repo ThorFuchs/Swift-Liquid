@@ -51,5 +51,6 @@ under Artifacts and remain outside source control.
 ## Development exact-name primitive
 
 [Exact template registry](ExactTemplateRegistry.md) documents the additive U1
-registry and resolver. It is not yet connected to rendering, graph inspection,
-the CLI or Vapor; existing dictionary APIs remain unchanged.
+registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
+describes the additive U2 runtime bridge. Graph inspection, the CLI and Vapor
+retain their existing APIs; dictionary behavior remains unchanged.

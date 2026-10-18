@@ -1,0 +1,750 @@
+{
+  "schemaVersion": "LiquidExactRegistry.U2QualificationPlan/1",
+  "created": "2026-10-18",
+  "baseline_commit": "f6245aab4b6b7ee40584066e6f0cace2db1636b9",
+  "count": 50,
+  "status": "proposed; no U2 native tests have run",
+  "cases": [
+    {
+      "id": "U2-001",
+      "gate": "G0",
+      "category": "baseline",
+      "scenario": "U1 feature branch and source tree restored from complete Git bundle",
+      "expected": "U1 HEAD and tree exactly match reviewed return; owner worktrees and PR23 unchanged",
+      "verification_mode": "git",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-002",
+      "gate": "G0",
+      "category": "baseline",
+      "scenario": "Current main and concurrent PR23 rechecked at kickoff",
+      "expected": "No unreviewed merge/overwrite; explicit isolated U2 branch from U1 HEAD",
+      "verification_mode": "git",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-003",
+      "gate": "G0",
+      "category": "legacy",
+      "scenario": "Protected parser/date/Golden/Ruby/test fixtures and package dependencies",
+      "expected": "All unchanged except narrow reviewed U2 renderer/loader/source/tests and docs",
+      "verification_mode": "sha256",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-004",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Empty registry and raw root",
+      "expected": "Source admission equals exact root UTF-8 byte length and render succeeds",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()"
+      ]
+    },
+    {
+      "id": "U2-005",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Raw root and registry source exactly engine sourceBytes",
+      "expected": "Whole invocation accepted at exact boundary",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()"
+      ]
+    },
+    {
+      "id": "U2-006",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "One byte over root+all partials sourceBytes",
+      "expected": "Terminal source limit before any callback or output",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()",
+        "LiquidTests.ExactRegistryRenderingTests/sourceAndSyntaxPreflightPrecedeCallbacksAndContext()"
+      ]
+    },
+    {
+      "id": "U2-007",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Root also supplied under a registry entry",
+      "expected": "Root and supplied entry deliberately charged twice",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()"
+      ]
+    },
+    {
+      "id": "U2-008",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Unused oversize raw partial",
+      "expected": "Terminal limit prior to parsing or calling custom filters",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/hugeUnusedSourceIsRejectedBeforeParsingOrCallback()",
+        "LiquidTests.ExactRegistryRenderingTests/sourceAndSyntaxPreflightPrecedeCallbacksAndContext()"
+      ]
+    },
+    {
+      "id": "U2-009",
+      "gate": "G1",
+      "category": "parse",
+      "scenario": "Unused invalid raw partial after valid partial",
+      "expected": "First invalid in declaration order throws before execution",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceAndSyntaxPreflightPrecedeCallbacksAndContext()"
+      ]
+    },
+    {
+      "id": "U2-010",
+      "gate": "G1",
+      "category": "parse",
+      "scenario": "Raw root and raw registry entries with strict2",
+      "expected": "Same syntax mode applied to all raw source, valid cases render",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allEightFamiliesResolveNestedCanonicalSiblings(mode:)"
+      ]
+    },
+    {
+      "id": "U2-011",
+      "gate": "G1",
+      "category": "parse",
+      "scenario": "Parsed root and previously parsed lax registry entry with strict2 new API",
+      "expected": "Parsed root and entry preserve original parser modes; no reparse",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/parsedModesAreRetainedAndCurrentDepthIsRevalidated()"
+      ]
+    },
+    {
+      "id": "U2-012",
+      "gate": "G1",
+      "category": "parse",
+      "scenario": "Parsed nested AST created under looser depth profile",
+      "expected": "Revalidated against executing engine nestingDepth; terminal on excess",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/parsedModesAreRetainedAndCurrentDepthIsRevalidated()"
+      ]
+    },
+    {
+      "id": "U2-013",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Unicode UTF-8 emoji and combining names with large raw body",
+      "expected": "Quota counts source bytes, not graphemes or scalar keys",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()"
+      ]
+    },
+    {
+      "id": "U2-014",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Raw 50MiB content admitted by U1 registry under small runtime source limit",
+      "expected": "U2 rejects before parser/filter and does not claim registry source admission",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/hugeUnusedSourceIsRejectedBeforeParsingOrCallback()"
+      ]
+    },
+    {
+      "id": "U2-015",
+      "gate": "G1",
+      "category": "cancellation",
+      "scenario": "Task canceled before U2 source admission",
+      "expected": "CancellationError terminal, no partial prepared output",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/cancellationBeforeAdmissionAndAtLookupIsTerminal()"
+      ]
+    },
+    {
+      "id": "U2-016",
+      "gate": "G1",
+      "category": "cancellation",
+      "scenario": "Task canceled during preparation of many raw entries",
+      "expected": "Terminal; no partial AST table escapes or callback",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/cancellationDuringRawEntryPreparationPublishesNoTable()"
+      ]
+    },
+    {
+      "id": "U2-017",
+      "gate": "G1",
+      "category": "source",
+      "scenario": "Int.max-like logical budget with many small sources",
+      "expected": "Overflow-safe subtraction, bounded caller work, no unchecked addition",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()"
+      ]
+    },
+    {
+      "id": "U2-018",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Both composed acute and decomposed acute partial names present",
+      "expected": "Nested literal include selects correct byte-distinct source",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allEightFamiliesResolveNestedCanonicalSiblings(mode:)",
+        "LiquidTests.ExactRegistryRenderingTests/preparedSlotsRetainOriginalIndexSpellingAndAST()"
+      ]
+    },
+    {
+      "id": "U2-019",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Only composed acute name present, include decomposed variant",
+      "expected": "Actual missing, no canonical alias to existing source",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/exactMissingSiblingDoesNotAlias(pair:)"
+      ]
+    },
+    {
+      "id": "U2-020",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "ASCII K and Kelvin sign entries present",
+      "expected": "Each literal/available include selects its exact source",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allEightFamiliesResolveNestedCanonicalSiblings(mode:)"
+      ]
+    },
+    {
+      "id": "U2-021",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Literal name and .liquid suffix both present",
+      "expected": "Exact candidate wins, actual stored name recorded",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/literalSuffixAndVariableFallbackPreserveOrder()"
+      ]
+    },
+    {
+      "id": "U2-022",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Exact candidate absent but suffix present",
+      "expected": "Suffix fallback selects .liquid source and records stored spelling",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/literalSuffixAndVariableFallbackPreserveOrder()",
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()"
+      ]
+    },
+    {
+      "id": "U2-023",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "x.liquid absent and x.liquid.liquid present",
+      "expected": "Literal-append fallback preserves double-suffix behavior",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/literalSuffixAndVariableFallbackPreserveOrder()"
+      ]
+    },
+    {
+      "id": "U2-024",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Actual missing literal plus context-variable name matching a registered template",
+      "expected": "Context fallback only on miss, selects via same exact resolver",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/literalSuffixAndVariableFallbackPreserveOrder()"
+      ]
+    },
+    {
+      "id": "U2-025",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Literal present and context-variable mapping also present",
+      "expected": "Literal-first behavior, variable mapping not selected",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/literalSuffixAndVariableFallbackPreserveOrder()"
+      ]
+    },
+    {
+      "id": "U2-026",
+      "gate": "G2",
+      "category": "terminal",
+      "scenario": "Overlong requested literal and available context-variable fallback",
+      "expected": "Name-capacity error propagates; context fallback not attempted",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/exactNameCapacityNeverTriggersVariableRetry()"
+      ]
+    },
+    {
+      "id": "U2-027",
+      "gate": "G2",
+      "category": "terminal",
+      "scenario": "Cancelled lookup while valid variable fallback exists",
+      "expected": "CancellationError propagates without fallback",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/cancellationBeforeAdmissionAndAtLookupIsTerminal()"
+      ]
+    },
+    {
+      "id": "U2-028",
+      "gate": "G2",
+      "category": "terminal",
+      "scenario": "Unexpected filter/binding callback throws",
+      "expected": "Original host failure preserved; no variable fallback or partial output",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/hostErrorsRemainOriginalAcrossAllFamilies()"
+      ]
+    },
+    {
+      "id": "U2-029",
+      "gate": "G2",
+      "category": "scope",
+      "scenario": "Nested include shared variables and assignments",
+      "expected": "Same legacy shared-scope semantics with byte-exact name identity",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)"
+      ]
+    },
+    {
+      "id": "U2-030",
+      "gate": "G2",
+      "category": "scope",
+      "scenario": "Nested render isolated local vars and counters",
+      "expected": "Same legacy isolated-scope semantics, exact stored name on stack",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)",
+        "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()"
+      ]
+    },
+    {
+      "id": "U2-031",
+      "gate": "G2",
+      "category": "scope",
+      "scenario": "include/render for collection, break/continue/cycle site",
+      "expected": "One runtime evaluator; loops/counters/interrupts unchanged",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)"
+      ]
+    },
+    {
+      "id": "U2-032",
+      "gate": "G2",
+      "category": "identity",
+      "scenario": "Two distinct names with byte-identical sources",
+      "expected": "Identity/provenance based on names, not source text dedup",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()",
+        "LiquidTests.ExactRegistryRenderingTests/preparedSlotsRetainOriginalIndexSpellingAndAST()"
+      ]
+    },
+    {
+      "id": "U2-033",
+      "gate": "G2",
+      "category": "nonio",
+      "scenario": "Opaque root/partial names containing slash, percent, NUL",
+      "expected": "No filesystem or network I/O or canonical/path normalization",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/opaqueNamesStayNonIOAndUnsupportedGrammarStaysRejected()"
+      ]
+    },
+    {
+      "id": "U2-034",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Raw root render(registry:) public call",
+      "expected": "Compiles via import Liquid and renders with exact lookup",
+      "verification_mode": "consumer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-035",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Parsed root render(registry:syntaxMode:) public call",
+      "expected": "Root is not reparsed; raw entries respect selected mode",
+      "verification_mode": "consumer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/parsedModesAreRetainedAndCurrentDepthIsRevalidated()"
+      ]
+    },
+    {
+      "id": "U2-036",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Raw root renderWithDiagnostics(registry:)",
+      "expected": "Output plus only approved recovered runtime diagnostics",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()"
+      ]
+    },
+    {
+      "id": "U2-037",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Parsed root renderWithDiagnostics(registry:)",
+      "expected": "Recovery behavior matches existing parsed legacy API",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()"
+      ]
+    },
+    {
+      "id": "U2-038",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Raw root renderWithMetrics(registry:)",
+      "expected": "sourceBytes=all admitted bytes and actual parseDuration; no diagnostics on throw",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/allSourceBytesIncludeUnusedMixedContentAndNamedRoot()",
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)"
+      ]
+    },
+    {
+      "id": "U2-039",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Parsed root renderWithMetrics(registry:), all entries parsed",
+      "expected": "parseDuration nil if no raw parse; runtime work metrics accurately match",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)"
+      ]
+    },
+    {
+      "id": "U2-040",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Parsed root renderWithMetrics(registry:) with raw entry",
+      "expected": "ParseDuration nonnil only for actual partial parse work",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)",
+        "LiquidTests.ExactRegistryRenderingTests/immediateTemplatesStillAdmitAllUnusedSource()"
+      ]
+    },
+    {
+      "id": "U2-041",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Raw root renderWithDiagnosticsAndMetrics(registry:)",
+      "expected": "One budget, recovered diagnostics plus measured successful output",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()",
+        "LiquidTests.ExactRegistryRenderingTests/sourceParsedMetricsAndScopeMatchLegacy(mode:)"
+      ]
+    },
+    {
+      "id": "U2-042",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Parsed root renderWithDiagnosticsAndMetrics(registry:)",
+      "expected": "Same evaluator, no partial metrics or output on operational failures",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/operationalFailuresReturnNoPartialMetrics()",
+        "LiquidTests.ExactRegistryRenderingTests/recoveryRetainsActualStoredNameForIdenticalSources()"
+      ]
+    },
+    {
+      "id": "U2-043",
+      "gate": "G3",
+      "category": "api",
+      "scenario": "Required registry parameter vs legacy templates defaults",
+      "expected": "Old calls compile unambiguously; all 8 signatures proven in public consumer",
+      "verification_mode": "consumer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-044",
+      "gate": "G4",
+      "category": "legacy",
+      "scenario": "Historical composed/decomposed and Kelvin dictionary cases",
+      "expected": "Legacy runtime/graph canonical String behavior unchanged",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/legacyCanonicalLookupAndGraphRemainUnchanged()"
+      ]
+    },
+    {
+      "id": "U2-045",
+      "gate": "G4",
+      "category": "regression",
+      "scenario": "Current corpus full Debug and Release",
+      "expected": "All historical results and new U2 tests pass on matched Swift 6.4 source",
+      "verification_mode": "native",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-046",
+      "gate": "G4",
+      "category": "sanitizer",
+      "scenario": "Full Swift-Liquid core AddressSanitizer",
+      "expected": "ASan full tests pass under accepted source snapshot",
+      "verification_mode": "sanitizer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-047",
+      "gate": "G4",
+      "category": "sanitizer",
+      "scenario": "ThreadSanitizer concurrency subset with 16 overlapping filter renders",
+      "expected": "Supported TSan lane passes; no claims for whole Vapor suite",
+      "verification_mode": "sanitizer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": [
+        "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()"
+      ]
+    },
+    {
+      "id": "U2-048",
+      "gate": "G4",
+      "category": "doc",
+      "scenario": "DocC, public symbol graph, CLI and independent old/new consumers",
+      "expected": "Existing 156 authored U1 declarations retained; only additive U2 signatures",
+      "verification_mode": "compiler",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-049",
+      "gate": "G4",
+      "category": "evidence",
+      "scenario": "Two repeated adversarial passes with strict source snapshot hashes",
+      "expected": "No source drift, skips, issues or hidden test inventory exclusions",
+      "verification_mode": "sha256",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    },
+    {
+      "id": "U2-050",
+      "gate": "G4",
+      "category": "scope",
+      "scenario": "Registry exact dependency graph API and Vapor D0/D1 still absent",
+      "expected": "U3/D gates reported NOT_EXECUTED; no remote PR/merge/tag/publication",
+      "verification_mode": "negative consumer",
+      "implementation_status": "PROPOSED",
+      "execution_status": "NOT_EXECUTED_FINAL_SOURCE",
+      "result": null,
+      "evidence": [],
+      "test_functions": []
+    }
+  ],
+  "purpose": "Source acceptance map only; actual execution and source-bound gate outcomes belong to the external U2 return."
+}

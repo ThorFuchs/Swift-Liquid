@@ -161,6 +161,142 @@ public struct LiquidEngine: Sendable {
                           measurement: .init(start: ContinuousClock().now, parseDuration: nil))
     }
 
+    /// Renders an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Failures throw without partial output.
+    /// Parsed content retains its original parser mode and is depth-validated.
+    /// - Parameters:
+    ///   - template: Root source parsed under syntaxMode.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func render(template: String, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> String {
+        let execution = try await performExact(.raw(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: false, measuring: false)
+        return execution.result.output
+    }
+
+    /// Renders an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Failures throw without partial output.
+    /// Parsed content retains its original parser mode and is depth-validated.
+    /// - Parameters:
+    ///   - template: An immutable parsed root, retained without reparsing.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func render(_ template: LiquidTemplate, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> String {
+        let execution = try await performExact(.parsed(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: false, measuring: false)
+        return execution.result.output
+    }
+
+    /// Renders an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Explicitly recoverable runtime failures become diagnostics.
+    /// Parsed content retains its original parser mode and is depth-validated.
+    /// - Parameters:
+    ///   - template: Root source parsed under syntaxMode.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithDiagnostics(template: String, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
+        let execution = try await performExact(.raw(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: true, measuring: false)
+        return execution.result
+    }
+
+    /// Renders an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Explicitly recoverable runtime failures become diagnostics.
+    /// Parsed content retains its original parser mode and is depth-validated.
+    /// - Parameters:
+    ///   - template: An immutable parsed root, retained without reparsing.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
+        let execution = try await performExact(.parsed(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: true, measuring: false)
+        return execution.result
+    }
+
+    /// Measures an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Failures throw without partial output.
+    /// Parse duration sums actual raw root/entry construction; nil if all are parsed.
+    /// - Parameters:
+    ///   - template: Root source parsed under syntaxMode.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output and successful metrics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithMetrics(template: String, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        let execution = try await performExact(.raw(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: false, measuring: true)
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
+    }
+
+    /// Measures an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Failures throw without partial output.
+    /// Parse duration sums actual raw root/entry construction; nil if all are parsed.
+    /// - Parameters:
+    ///   - template: An immutable parsed root, retained without reparsing.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output and successful metrics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithMetrics(_ template: LiquidTemplate, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        let execution = try await performExact(.parsed(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: false, measuring: true)
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
+    }
+
+    /// Measures an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Explicitly recoverable runtime failures become diagnostics.
+    /// Parse duration sums actual raw root/entry construction; nil if all are parsed.
+    /// - Parameters:
+    ///   - template: Root source parsed under syntaxMode.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output, diagnostics and successful metrics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithDiagnosticsAndMetrics(template: String, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        let execution = try await performExact(.raw(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: true, measuring: true)
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
+    }
+
+    /// Measures an exact-name registry using the existing invocation-owned evaluator.
+    /// All root/entry sources are admitted and prepared before callbacks. Explicitly recoverable runtime failures become diagnostics.
+    /// Parse duration sums actual raw root/entry construction; nil if all are parsed.
+    /// - Parameters:
+    ///   - template: An immutable parsed root, retained without reparsing.
+    ///   - context: Typed values admitted under the single invocation budget.
+    ///   - registry: Ordered exact UTF-8 partial names and raw or parsed content.
+    ///   - syntaxMode: Parser mode for raw content only, including raw registry entries.
+    /// - Returns: Complete output, diagnostics and successful metrics.
+    /// - Throws: Syntax, admission, runtime, quota, cancellation or original host errors.
+    public func renderWithDiagnosticsAndMetrics(_ template: LiquidTemplate, context: LiquidObject = [:],
+                       registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidMeasuredRenderResult {
+        let execution = try await performExact(.parsed(template), context: context, registry: registry,
+            syntaxMode: syntaxMode, recovering: true, measuring: true)
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
+    }
+
     private struct Measurement {
         let start: ContinuousClock.Instant
         let parseDuration: Duration?
@@ -192,13 +328,22 @@ public struct LiquidEngine: Sendable {
         try Task.checkCancellation()
         try limits.validate()
         let sourceBytes = try checkSources(template.source, partials: templates.values.map(\.source))
+        return try await perform(template.ast, context: context,
+            loader: TemplateLoader(templates: templates.mapValues(\.ast)), sourceBytes: sourceBytes,
+            recovering: recovering, measurement: measurement)
+    }
+
+    // Both legacy and exact preparation converge here: one context, budget,
+    // evaluator, recovery collection, output admission and metrics snapshot.
+    private func perform(_ ast: ASTNode, context: LiquidObject, loader: TemplateLoader,
+                         sourceBytes: Int, recovering: Bool, measurement: Measurement?) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
             recoveryEnabled: recovering, referenceTime: referenceTime ?? Date(), filters: filters)
         try admit(context, budget: renderer.budget)
-        renderer.setTemplateLoader(TemplateLoader(templates: templates.mapValues(\.ast)))
+        renderer.setTemplateLoader(loader)
         let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
         do {
-            let output = try await renderer.render(template.ast, with: values)
+            let output = try await renderer.render(ast, with: values)
             try renderer.budget.output(output)
             let metrics = measurement.map {
                 LiquidRenderMetrics(totalDuration: $0.start.duration(to: ContinuousClock().now),
@@ -209,6 +354,55 @@ public struct LiquidEngine: Sendable {
             }
             return (LiquidRenderResult(output: output, diagnostics: renderer.diagnostics), metrics)
         } catch { throw publicError(error) }
+    }
+
+    private func performExact(_ root: LiquidTemplateRegistry.Content, context: LiquidObject,
+                              registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode,
+                              recovering: Bool, measuring: Bool) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+        let start = measuring ? ContinuousClock().now : nil
+        try Task.checkCancellation()
+        try limits.validate()
+        var remaining = limits.sourceBytes
+        try admitExactSource(root, remaining: &remaining)
+        for entry in registry.entries {
+            try Task.checkCancellation()
+            try admitExactSource(entry.content, remaining: &remaining)
+        }
+        let sourceBytes = limits.sourceBytes - remaining
+        var preparation = ExactTemplatePreparation(limits: limits, syntaxMode: syntaxMode, measuring: measuring)
+        let template = try preparation.prepare(root)
+        let asts = try preparation.prepareEntries(registry.entries)
+        // Raw constructors already validate their ASTs. Retained parsed inputs
+        // must be checked under this invocation's current depth profile too.
+        if case .parsed = root { try validateTemplate(template, limits: limits) }
+        for entry in registry.entries {
+            try Task.checkCancellation()
+            if case .parsed(let value) = entry.content { try validateTemplate(value.ast, limits: limits) }
+        }
+        try Task.checkCancellation()
+        let measurement = start.map { Measurement(start: $0, parseDuration: preparation.parseDuration) }
+        return try await perform(template, context: context,
+            loader: .exact(.init(registry: registry, asts: asts)), sourceBytes: sourceBytes,
+            recovering: recovering, measurement: measurement)
+    }
+
+    private func admitExactSource(_ content: LiquidTemplateRegistry.Content, remaining: inout Int) throws {
+        let source: String
+        switch content {
+        case .raw(let value): source = value
+        case .parsed(let value): source = value.source
+        }
+        var untilPoll = 0
+        for _ in source.utf8 {
+            if untilPoll == 0 { try Task.checkCancellation(); untilPoll = 64 }
+            guard remaining > 0 else {
+                try Task.checkCancellation()
+                throw LiquidError.limitExceeded("sourceBytes")
+            }
+            remaining -= 1
+            untilPoll -= 1
+        }
+        try Task.checkCancellation()
     }
 
     @discardableResult
@@ -238,5 +432,41 @@ public struct LiquidEngine: Sendable {
             default: break
             }
         }
+    }
+}
+
+// Invocation-local raw parsing only. Retained parsed ASTs are validated by the
+// engine after all raw parses, before any renderer/context/filter is created.
+internal struct ExactTemplatePreparation {
+    let limits: LiquidLimits
+    let syntaxMode: LiquidSyntaxMode
+    let measuring: Bool
+    private(set) var parseDuration: Duration?
+
+    mutating func prepare(_ content: LiquidTemplateRegistry.Content) throws -> ASTNode {
+        try Task.checkCancellation()
+        switch content {
+        case .parsed(let value): return value.ast
+        case .raw(let source):
+            let start = measuring ? ContinuousClock().now : nil
+            let value = try LiquidTemplate(source, syntaxMode: syntaxMode, limits: limits)
+            if let start {
+                let elapsed = start.duration(to: ContinuousClock().now)
+                parseDuration = parseDuration.map { $0 + elapsed } ?? elapsed
+            }
+            return value.ast
+        }
+    }
+
+    mutating func prepareEntries<Entries: Collection>(_ entries: Entries) throws -> [ASTNode]
+    where Entries.Element == LiquidTemplateRegistry.Entry {
+        var asts: [ASTNode] = []
+        asts.reserveCapacity(entries.count)
+        for entry in entries {
+            try Task.checkCancellation()
+            asts.append(try prepare(entry.content))
+        }
+        try Task.checkCancellation()
+        return asts
     }
 }

@@ -52,6 +52,7 @@ or `escape_once` when inserting text into HTML.
 ### Development exact-name primitive
 
 - <doc:ExactTemplateRegistry>
+- <doc:ExactRegistryRendering>
 - ``LiquidTemplateRegistry``
 
 ### Partial dependencies

@@ -17,9 +17,10 @@ let selected = try names.resolve("card")
 // selected?.name is the stored spelling "card.liquid".
 ```
 
-This development U1 primitive is not connected to rendering or dependency
-inspection. Existing `templates:` APIs keep their legacy identity behavior.
-No Vapor migration or exact partial-rendering claim follows from constructing it.
+The development U2 runtime APIs connect this primitive to the existing renderer;
+see <doc:ExactRegistryRendering>. Existing `templates:` APIs retain legacy identity.
+Exact dependency inspection and Vapor migration remain separate gates. Registry
+construction alone still does not qualify content for rendering.
 
 ## Limits and ownership
 

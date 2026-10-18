@@ -759,6 +759,27 @@
         "Sources/Liquid/Documentation.docc/Liquid.md"
       ],
       "qualification": "Native source-bound U1 receipts are external to tracked source. This records scope and authorship, not an unexecuted pass, full conformance, rendering integration or release approval."
+    },
+    {
+      "area": "U2 exact registry runtime bridge",
+      "scopeDecision": "Direct owner U2 dispatch authorizes isolated local runtime integration only; U3 graph/Vapor/publication remain held.",
+      "changes": [
+        "Original Apache-2.0 bridge prepares root plus every raw/parsed source atomically and preserves one ordered AST table and U1 resolver.",
+        "Tagged exact loader and missing-only context retry share the existing evaluator, budgets, metrics/recovery and fast paths; legacy canonical dictionary path retained.",
+        "Add eight required registry: runtime overloads, source/cancellation/identity/scope/concurrent regressions, independent public consumer and precise metric/docs contracts."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Support/TemplateLoader.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U2CaseMap.json",
+        "Examples/ExactRegistryConsumer",
+        "Documentation/ExactRegistryRendering.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryRendering.md"
+      ],
+      "qualification": "Exact-source native/debug/release/safety/reference/docs/public-consumer receipts belong to the external U2 return; this scope record does not assert an unexecuted pass, conformance/performance clearance or release approval."
     }
   ]
 }
