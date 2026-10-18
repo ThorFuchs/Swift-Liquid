@@ -2,9 +2,10 @@
 
 `LiquidTemplateRegistry` is an additive development API for immutable named raw
 or parsed content. U2 connects it to the existing renderer through required `registry:` APIs; see
-[exact registry rendering](ExactRegistryRendering.md). Dependency inspection, the
-CLI and Vapor retain their existing APIs. Existing `templates:` dictionaries retain Swift's
-canonical String identity. No exact graph overload or new release/dependency pin is implied.
+[exact registry rendering](ExactRegistryRendering.md) and
+[exact registry graphs](ExactRegistryDependencies.md). Existing `templates:`
+dictionaries retain Swift's canonical String identity. The CLI and Vapor retain
+their existing APIs; no new release or dependency pin is implied.
 
 Entries preserve caller order. Names compare exact UTF-8 bytes using the existing
 internal ScalarKey: composed `é` and decomposed `e` plus U+0301 coexist, as do K
@@ -39,7 +40,7 @@ its existing immutable AST/mode. Even enormous or syntactically invalid raw text
 can be stored if the **names** fit. This is intentional, not a rendering readiness
 certificate. U2 admits root plus all content, including unused entries, against engine source
 limits before parsing/evaluation and shares this resolver throughout runtime. U3
-exact graph integration remains deferred. No cache, loader, I/O, context
+exact graphs reuse this resolver and the same prepared AST slots. No cache, loader, I/O, context
 projection, escaping change or new language syntax is introduced.
 
 The standalone [public consumer](../Examples/RegistryConsumer) imports only Liquid

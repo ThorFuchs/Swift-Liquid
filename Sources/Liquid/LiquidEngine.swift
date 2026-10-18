@@ -360,12 +360,45 @@ public struct LiquidEngine: Sendable {
                               registry: LiquidTemplateRegistry, syntaxMode: LiquidSyntaxMode,
                               recovering: Bool, measuring: Bool) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         let start = measuring ? ContinuousClock().now : nil
+        let prepared = try prepareExact(root, registry: registry, syntaxMode: syntaxMode, measuring: measuring)
+        let measurement = start.map { Measurement(start: $0, parseDuration: prepared.parseDuration) }
+        return try await perform(prepared.root, context: context,
+            loader: .exact(prepared.templates), sourceBytes: prepared.sourceBytes,
+            recovering: recovering, measurement: measurement)
+    }
+
+    // One invocation-owned bundle for rendering and dependency inspection. Graph
+    // admission is optional so the established U2 order/timing stays unchanged.
+    internal func prepareExact(_ root: LiquidTemplateRegistry.Content, registry: LiquidTemplateRegistry,
+                               syntaxMode: LiquidSyntaxMode, measuring: Bool,
+                               analysisLimits: LiquidDependencyLimits? = nil) throws -> ExactTemplateBundle {
         try Task.checkCancellation()
         try limits.validate()
+        if let analysisLimits {
+            try analysisLimits.validate()
+            // Root is separate. Comparing before adding one also admits Int.max safely.
+            guard registry.count < analysisLimits.templates else {
+                throw LiquidError.limitExceeded("dependencyTemplates")
+            }
+        }
+        var nameRemaining = analysisLimits?.nameBytes
         var remaining = limits.sourceBytes
         try admitExactSource(root, remaining: &remaining)
         for entry in registry.entries {
             try Task.checkCancellation()
+            if var budget = nameRemaining {
+                var untilPoll = 0
+                for _ in entry.name.utf8 {
+                    if untilPoll == 0 { try Task.checkCancellation(); untilPoll = 64 }
+                    guard budget > 0 else {
+                        try Task.checkCancellation()
+                        throw LiquidError.limitExceeded("dependencyNameBytes")
+                    }
+                    budget -= 1
+                    untilPoll -= 1
+                }
+                nameRemaining = budget
+            }
             try admitExactSource(entry.content, remaining: &remaining)
         }
         let sourceBytes = limits.sourceBytes - remaining
@@ -380,10 +413,8 @@ public struct LiquidEngine: Sendable {
             if case .parsed(let value) = entry.content { try validateTemplate(value.ast, limits: limits) }
         }
         try Task.checkCancellation()
-        let measurement = start.map { Measurement(start: $0, parseDuration: preparation.parseDuration) }
-        return try await perform(template, context: context,
-            loader: .exact(.init(registry: registry, asts: asts)), sourceBytes: sourceBytes,
-            recovering: recovering, measurement: measurement)
+        return ExactTemplateBundle(root: template, templates: .init(registry: registry, asts: asts),
+            sourceBytes: sourceBytes, parseDuration: preparation.parseDuration)
     }
 
     private func admitExactSource(_ content: LiquidTemplateRegistry.Content, remaining: inout Int) throws {
@@ -469,4 +500,12 @@ internal struct ExactTemplatePreparation {
         try Task.checkCancellation()
         return asts
     }
+}
+
+// Retains declaration indexes; graph ranks are a separate invocation-local view.
+internal struct ExactTemplateBundle: Sendable {
+    let root: ASTNode
+    let templates: PreparedExactTemplates
+    let sourceBytes: Int
+    let parseDuration: Duration?
 }

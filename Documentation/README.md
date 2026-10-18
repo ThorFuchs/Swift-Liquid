@@ -39,6 +39,7 @@ guides that are compiled from the public Swift symbol graph.
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
 | [1.3.1 release notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
 | [1.3.0 release notes](Releases/1.3.0.md) | Additive dependency tooling, compatibility, measurements and release assets |
+| [Exact registry graphs](ExactRegistryDependencies.md) | Two exact-name overloads, atomic admission and runtime parity |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
 | [1.3 roadmap](Roadmap-1.3.md) | Adopted bounded partial-dependency inspection, explicit CLI mode and acceptance gates |
 | [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |

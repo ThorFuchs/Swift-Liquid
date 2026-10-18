@@ -704,20 +704,20 @@
       "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
     },
     {
-  "area": "PF1-002 source and documentation reconciliation",
-  "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
-  "changes": [
-    "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
-    "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
-    "Hold PR23 separately and retain all independent conformance and latency flags."
-  ],
-  "files": [
-    "CHANGELOG.md",
-    "Documentation/Architecture/ExtractionManifest.json",
-    "Documentation/README.md"
-  ],
-  "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
-},
+      "area": "PF1-002 source and documentation reconciliation",
+      "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
+      "changes": [
+        "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
+        "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
+        "Hold PR23 separately and retain all independent conformance and latency flags."
+      ],
+      "files": [
+        "CHANGELOG.md",
+        "Documentation/Architecture/ExtractionManifest.json",
+        "Documentation/README.md"
+      ],
+      "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
+    },
     {
       "area": "R6 typed expected-token diagnostic presentation",
       "scopeDecision": "Direct LIQUID-PF1-012 maintainer instruction designates exact35ab as limited local R6 baseline and commissions an independent local successor only; no whole-PR/conformance/performance/merge/release acceptance.",
@@ -780,6 +780,26 @@
         "Sources/Liquid/Documentation.docc/ExactRegistryRendering.md"
       ],
       "qualification": "Exact-source native/debug/release/safety/reference/docs/public-consumer receipts belong to the external U2 return; this scope record does not assert an unexecuted pass, conformance/performance clearance or release approval."
+    },
+    {
+      "area": "U3 exact registry dependency inspection",
+      "scopeDecision": "Direct owner U3 dispatch authorizes isolated local graph implementation only; U4/U5, Vapor and publication remain held.",
+      "changes": [
+        "Two required registry: graph overloads reuse U2 whole-bundle preparation and U1 selection with declaration-index to UTF-8-rank mapping.",
+        "Preserve legacy graph/render APIs, result types and iterative SCC algorithm; injectable internal task checks qualify deterministic cancellation without public callbacks.",
+        "Original Apache-2.0 tests/docs and byte fixtures qualify atomic limits, exact graphs, runtime parity, concurrency and independent public consumers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Tests/LiquidTests/ExactRegistryDependencyInspectionTests.swift",
+        "Tests/LiquidTests/Fixtures/U3ExactGraphOracles.json",
+        "Tests/TestInventory.json",
+        "Tests/U3CaseMap.json",
+        "Documentation/ExactRegistryDependencies.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryDependencies.md"
+      ],
+      "qualification": "Exact-source native and consumer results belong to the external U3 return. This record does not assert unexecuted qualification, complete conformance, performance or release clearance."
     }
   ]
 }

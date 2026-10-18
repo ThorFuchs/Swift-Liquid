@@ -157,7 +157,25 @@
     "LiquidTests.ExactRegistryRenderingTests/cancellationDuringSuspendedFilterAndSiblingReuse(recovering:)": 2,
     "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()": null,
     "LiquidTests.ExactRegistryRenderingTests/opaqueNamesStayNonIOAndUnsupportedGrammarStaysRejected()": null,
-    "LiquidTests.ExactRegistryRenderingTests/legacyCanonicalLookupAndGraphRemainUnchanged()": null
+    "LiquidTests.ExactRegistryRenderingTests/legacyCanonicalLookupAndGraphRemainUnchanged()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/admissionAndParsePrecedenceIsExplicit()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationAtEntryPrecedesInvalidLimitsAndKeepsSiblingHealthy()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)": 6,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/canonicalMissStaysMissingWhileLegacyAndContextRetryRemain(pair:)": 4,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/concurrentRendersAndExactGraphInspectionStayInvocationOwned()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/countInvalidProfilesAndMaxIntRemainSubtractive()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cumulativeNameAndSourceBoundariesIncludeUnused(parsed:)": 2,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/deepAndWideGraphsUseIterativeSCCAndIndependentRuntimeBudgets()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/firstLiteralParityAcrossEightRuntimeFamilies(mode:)": 3,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/lookupCapacityIsTerminalAndEdgeCapacityPrecedesLookup()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/parsedModesRetainedAndRawEntryModeExplicit()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/reachableUniqueMissingEdgesChargeExactly()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/sharedPreparationPreservesU2TimingSourcesAndErrors()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)": 2,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/syntacticFindingsNeverEvaluateConditionsOrHostFilters()": null,
+    "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -175,7 +193,8 @@
     "LiquidTests.concurrentRendersOwnTheirScopesAndCounters()",
     "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()",
     "LiquidTests.TemplateRegistryTests/concurrentRendersAndRegistryResolutionShareOnlyImmutableInputs()",
-    "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()"
+    "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()",
+    "LiquidTests.ExactRegistryDependencyInspectionTests/concurrentRendersAndExactGraphInspectionStayInvocationOwned()"
   ],
   "adversarialFunctions": [
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",
@@ -205,6 +224,8 @@
     "LiquidTests.TemplateRegistryTests/cancellationPrecedesAllAdmissionFailures()",
     "LiquidTests.ExactRegistryRenderingTests/cancellationBeforeAdmissionAndAtLookupIsTerminal()",
     "LiquidTests.ExactRegistryRenderingTests/cancellationDuringRawEntryPreparationPublishesNoTable()",
-    "LiquidTests.ExactRegistryRenderingTests/cancellationDuringSuspendedFilterAndSiblingReuse(recovering:)"
+    "LiquidTests.ExactRegistryRenderingTests/cancellationDuringSuspendedFilterAndSiblingReuse(recovering:)",
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationAtEntryPrecedesInvalidLimitsAndKeepsSiblingHealthy()",
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)"
   ]
 }

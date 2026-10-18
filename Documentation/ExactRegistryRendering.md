@@ -54,7 +54,7 @@ Shared include scope, isolated render scope, iteration/cycle/interrupt state and
 immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
 not filter pipelines, and include-for has its existing default alias; render-for
-supports its existing explicit alias. No syntax is added to broaden these forms. Dependency inspection has no registry overload yet;
+supports its existing explicit alias. No syntax is added to broaden these forms. Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 
 ## Successful-only metrics, errors and bounds

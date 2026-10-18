@@ -19,7 +19,7 @@ let selected = try names.resolve("card")
 
 The development U2 runtime APIs connect this primitive to the existing renderer;
 see <doc:ExactRegistryRendering>. Existing `templates:` APIs retain legacy identity.
-Exact dependency inspection and Vapor migration remain separate gates. Registry
+Exact dependency inspection is available in the local U3 checkpoint. Vapor migration remains a separate gate. Registry
 construction alone still does not qualify content for rendering.
 
 ## Limits and ownership

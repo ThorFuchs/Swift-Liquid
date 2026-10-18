@@ -53,6 +53,7 @@ or `escape_once` when inserting text into HTML.
 
 - <doc:ExactTemplateRegistry>
 - <doc:ExactRegistryRendering>
+- <doc:ExactRegistryDependencies>
 - ``LiquidTemplateRegistry``
 
 ### Partial dependencies
