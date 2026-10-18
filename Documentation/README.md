@@ -45,3 +45,5 @@ guides that are compiled from the public Swift symbol graph.
 
 Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go
 under Artifacts and remain outside source control.
+
+- [Maintained development and CI operations](Maintenance.md)

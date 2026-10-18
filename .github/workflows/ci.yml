@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lane: [native, safety, docs, performance, reference, platforms, installation]
+        lane: [native, safety, docs, reference, platforms, installation]
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
@@ -48,12 +48,16 @@ jobs:
           git -C "$LIQUID_REFERENCE_PATH" fetch --depth 1 origin 4e39ae4cc3da73921923c0669e0fc84a66b2f696
           git -C "$LIQUID_REFERENCE_PATH" checkout --detach FETCH_HEAD
       - name: Qualify
-        if: matrix.lane != 'reference'
-        run: python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
+        if: matrix.lane != 'reference' && matrix.lane != 'docs'
+        run: env LIQUID_SWIFTPM_FLAGS='--jobs 2' python3 -B Scripts/ci.py --lane '${{ matrix.lane }}'
+      - name: Qualify documentation
+        if: matrix.lane == 'docs'
+        run: env -u LIQUID_SWIFTPM_FLAGS python3 -B Scripts/ci.py --lane docs
       - name: Qualify reference behavior
         if: matrix.lane == 'reference'
         env:
           LIQUID_REFERENCE_PATH: ${{ runner.temp }}/shopify-liquid
+          LIQUID_SWIFTPM_FLAGS: --jobs 2
         run: python3 -B Scripts/ci.py --lane reference --reference-path "$LIQUID_REFERENCE_PATH"
       - name: Retain qualification evidence
         if: always()
@@ -63,52 +67,18 @@ jobs:
           path: |
             Artifacts/${{ matrix.lane }}/
             !Artifacts/docs/Liquid.doccarchive/**
-            !Artifacts/docs/site/**
           if-no-files-found: error
           retention-days: 30
-      - name: Package documentation site
-        if: matrix.lane == 'docs'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: Artifacts/docs/site/
-          include-hidden-files: true
-  matched-performance:
-    name: Matched benchmarks against 1.3.0
+          include-hidden-files: ${{ matrix.lane == 'docs' }}
+  archive:
+    name: Qualify clean source archive
     needs: qualify
     runs-on: xcode-27
     timeout-minutes: 45
     env:
       DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       PYTHONDONTWRITEBYTECODE: '1'
-    steps:
-      - name: Require GitHub-hosted isolation
-        env:
-          RUNNER_ENVIRONMENT: ${{ runner.environment }}
-        run: |
-          test "$RUNNER_ENVIRONMENT" = "github-hosted"
-          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - name: Fetch immutable 1.3.0 baseline
-        run: git fetch --no-tags --depth 1 origin 9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e
-      - run: python3 -B Scripts/ci.py --lane matched-performance
-      - name: Retain matched measurements
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-        with:
-          name: liquid-matched-performance
-          path: Artifacts/matched-performance/
-          if-no-files-found: error
-          retention-days: 30
-  archive:
-    name: Qualify clean source archive
-    needs: [qualify, matched-performance]
-    runs-on: xcode-27
-    timeout-minutes: 45
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
-      PYTHONDONTWRITEBYTECODE: '1'
+      LIQUID_SWIFTPM_FLAGS: --jobs 2
     steps:
       - name: Require GitHub-hosted isolation
         env:
@@ -124,7 +94,7 @@ jobs:
           name: liquid-docs
           path: Artifacts/docs
       - run: python3 -B Scripts/ci.py --lane archive
-      - name: Retain release candidate assets
+      - name: Retain correctness archive assets
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
@@ -132,22 +102,12 @@ jobs:
           path: Artifacts/archive/
           if-no-files-found: error
           retention-days: 30
-  publish-docs:
-    name: Publish qualified documentation
+  correctness:
+    name: Repository correctness
     needs: [qualify, archive]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: github-pages
-      cancel-in-progress: false
+    timeout-minutes: 5
     steps:
       - name: Require GitHub-hosted isolation
         env:
@@ -155,6 +115,16 @@ jobs:
         run: |
           test "$RUNNER_ENVIRONMENT" = "github-hosted"
           echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
-      - id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+      - name: Admit every required result
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          needs = json.loads(os.environ['NEEDS_JSON'])
+          if set(needs) != {'qualify', 'archive'} or any(
+              needs[name].get('result') != 'success' for name in needs
+          ):
+              raise SystemExit('Every required lane and clean archive must succeed')
+          print('Repository correctness passed')
+          PY

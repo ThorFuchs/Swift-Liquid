@@ -252,6 +252,11 @@ and source identity. Review [methodology](Documentation/Performance.md),
 [released qualification archives](https://github.com/ThorFuchs/Swift-Liquid/releases).
 No inherited speedup, zero-overhead or process-memory claim is made.
 
+Current independent development evidence retains known mismatches and operational
+limits. See the [source-bound conformance record](Documentation/Conformance.md)
+and [development operating policy](Documentation/Maintenance.md). A passing
+correctness workflow does not establish complete conformance or release readiness.
+
 ## Documentation and community
 
 - [Documentation site](https://thorfuchs.github.io/Swift-Liquid/), [API reference](https://thorfuchs.github.io/Swift-Liquid/documentation/liquid/) and [guide index](Documentation/README.md)

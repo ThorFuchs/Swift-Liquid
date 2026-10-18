@@ -50,3 +50,12 @@ It performs no publication or tag mutation. A PR qualification may test a GitHub
 merge commit with the same tree; after merging, qualify the actual release commit
 again before creating the immutable version tag. Review the candidate's matched
 benchmark distributions/flags separately; packaging is not a performance verdict.
+
+
+Routine `Repository correctness` and its clean archive establish engineering
+correctness evidence only. They do not replace either timing lane, the explicit
+benchmark review, a current compatibility decision, exact-release-commit checks
+or the maintainer's publication request. The nine-receipt packaging validator and
+all released obligations remain unchanged. Manual benchmark and documentation
+workflows grant no release authority. Retain each actual workflow/run identity;
+a routine correctness run alone does not certify nine release lanes.

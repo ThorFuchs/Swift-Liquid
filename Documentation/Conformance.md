@@ -181,3 +181,37 @@ are terminal; this status creates no new timing window. Exact-source internal
 development acceptance, whole-PR acceptance, merge and release remain pending.
 Original release fixtures, pins, versions, budgets and provenance limits remain
 in force; no complete-core compatibility claim follows from this status.
+
+
+## Current independent development snapshot (PF1-013)
+
+One unchanged full functional observation on R6 commit
+`37feae748de8f3acd4f30f63b1b47e523c4dfabe`, tree
+`514557d7aee3835df39a95864d984fbd8ec32add`, completed with a **failed** independent
+gate. Its matrix SHA-256 is
+`c583ad7892d7f532ad49bb2a93ac73a76d86a249eb6fca0b2239a5a0f673609f`.
+Both upstream pins and all fixture/comparator/adapter policies are unchanged.
+New normal private checkouts were recovered from the retained pinned objects;
+the broken original spec metadata was preserved.
+
+The population remains 5,112 expanded variants, 4,624 selected and 488 excluded.
+Qualified outcomes are 2,756 matched, 1,858 mismatched and ten operational errors.
+Raw upstream comparison reports 2,783 matches; the 27 raw matches disqualified by
+phase/admission policy remain failures. Ten reference concerns are retained.
+These counts combine distinct outcomes, not successful render counts.
+
+Against the source-bound historical matrix (`c9b170036ff2cf1eceb0b4c4a36f02d1b5329f8d167aa856bad9340c4ce4a1df`),
+20 qualified verdicts improve, including all nineteen R6 identities and one
+separate strict lookup case. No qualified match becomes a failure; 5,092 qualified
+verdicts stay unchanged, including exclusions. This does not mean identical
+observations: 26 diagnostic observations change, including six still-failed lax
+lookup cases. Their syntax rejection persists with typed reason/context/location;
+this is no lax acceptance-parity claim. Full case joins and original/new rows are
+retained externally. Historical 1,888 failures/49 groups are never rewritten or
+reduced by arithmetic subtraction.
+
+This records the exact R6 observation, not a new compatibility run on later
+policy-only commits. Such a commit needs an explicit unchanged runtime, adapter,
+fixture and pin bridge. Maintainer acceptance of the current limitations and
+whole integration line remains a separate decision. Performance stays held; no
+complete-conformance, release or speedup claim follows.
