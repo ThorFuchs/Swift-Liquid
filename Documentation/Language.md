@@ -18,6 +18,17 @@ Standard surface:
 | Utility tags | raw, comment, inline comment, doc, echo, liquid, ifchanged |
 | Filters | Standard string, HTML, URL, Base64, numeric, date, and array filters, including squish and remove_last |
 
+An isolated `render` retains the original host inputs, with explicit bindings
+shadowing those inputs locally. Caller assignments, captures, generated loop
+locals and counters do not cross into it. Nested render sees the original inputs,
+not the outer partial's local bindings. `include` continues to share caller state.
+See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
+
+A case evaluates its current operand before each when value, in source order.
+Earlier branch bodies can change that operand. Comma/or alternatives each compare
+again, and an else tests only preceding matches without evaluating the operand.
+See [case evaluation](LQ1-R3/CASE-REEVALUATION.md) for the pinned Ruby rule and evidence.
+
 Only nil and false are falsy. Output is not automatically HTML-escaped. Logical
 operators associate right to left. `blank` and `empty` are distinct comparison
 literals; they do not resolve an identically named input property unless followed
@@ -59,3 +70,8 @@ The golden suite is evidence of tested behavior, not a formal proof that every
 possible Liquid program agrees with Shopify. Known or newly discovered
 differences must be documented in [conformance evidence](Conformance.md) and
 resolved or explicitly scoped before a stable compatibility claim is released.
+
+Range dot commands `first`, `last` and `size` read admitted endpoints and count.
+For `(5..1)` they return `5`, `1`, `0`; iteration remains empty. Bracket strings
+are key lookups and do not invoke range commands. See the
+[reference-backed range decision](LQ1-R3/RANGE-PROPERTIES.md) for scope and limits.

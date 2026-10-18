@@ -1,0 +1,1020 @@
+{
+  "schemaVersion": 1,
+  "license": "MIT, derived selected Shopify/liquid-spec inputs; full upstream notice below",
+  "rubyPin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "cases": [
+    {
+      "caseID": "parser_errors/specs/parser_errors/assign.yml:512/assign-mut-filter_first_arg-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% assign x = x | x : x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "7b0ae62115e859ff8d4bbcfd00b71645140e8c703af2a3def1dea6083c84da99",
+      "inputUTF8SHA256": "1faece41a1f9b15213e0f8706cd2f956f3360d178d5767f56067f114ff0d83c5",
+      "inputUTF8Bytes": 28,
+      "rawYAMLSpec": {
+        "name": "assign-mut-filter_first_arg-lookup-unclosed_bracket",
+        "template": "{% assign x = x | x : x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/assign.yml",
+        "line": 512,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x = x | x : x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x = x | x : x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 11
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/assign.yml:1352/assign-mut-value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% assign x = x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "7b0ae62115e859ff8d4bbcfd00b71645140e8c703af2a3def1dea6083c84da99",
+      "inputUTF8SHA256": "9857b9efd78b1dd486adf73e5753792918d1b5dce6bcaa5ab1a23159e18565d1",
+      "inputUTF8Bytes": 20,
+      "rawYAMLSpec": {
+        "name": "assign-mut-value-lookup-unclosed_bracket",
+        "template": "{% assign x = x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/assign.yml",
+        "line": 1352,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x = x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x = x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 11
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/case.yml:206/case-mut-case_expression-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% case x[0 %}{% endcase %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "14b627a973cb4bd4994ace146ae770d6430d27924a212740c5fabc3ba9455557",
+      "inputUTF8SHA256": "6b9abab1189d5169fef0adbbc2ec54dc41c50122564029a80006a6077abd8f38",
+      "inputUTF8Bytes": 27,
+      "rawYAMLSpec": {
+        "name": "case-mut-case_expression-lookup-unclosed_bracket",
+        "template": "{% case x[0 %}{% endcase %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/case.yml",
+        "line": 206,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 9
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/case.yml:830/case-mut-when_value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% case x %}{% when x[0 %}{% endcase %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "14b627a973cb4bd4994ace146ae770d6430d27924a212740c5fabc3ba9455557",
+      "inputUTF8SHA256": "ece6534093546569365e358c822b3a081fb3e98c5f66e626a17383a2ffcfc274",
+      "inputUTF8Bytes": 39,
+      "rawYAMLSpec": {
+        "name": "case-mut-when_value-lookup-unclosed_bracket",
+        "template": "{% case x %}{% when x[0 %}{% endcase %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/case.yml",
+        "line": 830,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 21
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/cycle.yml:740/cycle-mut-first_cycle_value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% cycle x : x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "16a2ddd81380823797c92559d6072b897f98e8b859d694e713fce40cf16f24f5",
+      "inputUTF8SHA256": "ef31c7c14ffb4e18201883d444fba34424c04ab199ec2eaedea771db2e66d6f4",
+      "inputUTF8Bytes": 19,
+      "rawYAMLSpec": {
+        "name": "cycle-mut-first_cycle_value-lookup-unclosed_bracket",
+        "template": "{% cycle x : x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/cycle.yml",
+        "line": 740,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x : x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x : x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 10
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/cycle.yml:968/cycle-mut-first_value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% cycle x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "16a2ddd81380823797c92559d6072b897f98e8b859d694e713fce40cf16f24f5",
+      "inputUTF8SHA256": "30651a91422a6aeafd6d2c1955b4d2273601d61ee65d8cd0be1a2012a83c8deb",
+      "inputUTF8Bytes": 15,
+      "rawYAMLSpec": {
+        "name": "cycle-mut-first_value-lookup-unclosed_bracket",
+        "template": "{% cycle x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/cycle.yml",
+        "line": 968,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 10
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/echo.yml:512/echo-mut-filter_first_arg-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% echo x | x : x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "ef7c7c0262a8b978d6dc657fa714b28584057ff7639e4ad22f7927f64111586d",
+      "inputUTF8SHA256": "1804e43c5216410789abe056566996161f18613353c2da82a9597da36cd7ea97",
+      "inputUTF8Bytes": 22,
+      "rawYAMLSpec": {
+        "name": "echo-mut-filter_first_arg-lookup-unclosed_bracket",
+        "template": "{% echo x | x : x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/echo.yml",
+        "line": 512,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"{{x | x : x[0 }}\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"{{x | x : x[0 }}\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 9
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/echo.yml:1058/echo-mut-value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% echo x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "ef7c7c0262a8b978d6dc657fa714b28584057ff7639e4ad22f7927f64111586d",
+      "inputUTF8SHA256": "a965c8b5f9bde4bc3a29c1000161b47dadeb78c561c12b6539ea69eb16721ca6",
+      "inputUTF8Bytes": 14,
+      "rawYAMLSpec": {
+        "name": "echo-mut-value-lookup-unclosed_bracket",
+        "template": "{% echo x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/echo.yml",
+        "line": 1058,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"{{x[0 }}\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"{{x[0 }}\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 9
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/for.yml:446/for-mut-collection-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% for x in x[0 %}{% endfor %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "2b81da7e656a0aea26f112b6df0d1d2ab9b7770392482e21bf99a748702ad27a",
+      "inputUTF8SHA256": "78be63cfb7c6dc20888448270f4f91a4fc786fe503d7f47f87d8c5d28c8dc55a",
+      "inputUTF8Bytes": 30,
+      "rawYAMLSpec": {
+        "name": "for-mut-collection-lookup-unclosed_bracket",
+        "template": "{% for x in x[0 %}{% endfor %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/for.yml",
+        "line": 446,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x in x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x in x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 8
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/if.yml:728/if-mut-comparison_rhs-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% if x == x[0 %}{% endif %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "6320d4e352e314b53bae95a9242e0f401304aedbb6236a43efb976025aa1181f",
+      "inputUTF8SHA256": "f773cfd538f71459c57f4f8747eeac6699a54bd5afc6eed53f4892455aef5c28",
+      "inputUTF8Bytes": 28,
+      "rawYAMLSpec": {
+        "name": "if-mut-comparison_rhs-lookup-unclosed_bracket",
+        "template": "{% if x == x[0 %}{% endif %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/if.yml",
+        "line": 728,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x == x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x == x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 7
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/if.yml:956/if-mut-condition-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% if x[0 %}{% endif %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "6320d4e352e314b53bae95a9242e0f401304aedbb6236a43efb976025aa1181f",
+      "inputUTF8SHA256": "3a1c629f144ed77c6f7034ccd2472747bf4f12f07b23fc2a088db0cf3d01f2df",
+      "inputUTF8Bytes": 23,
+      "rawYAMLSpec": {
+        "name": "if-mut-condition-lookup-unclosed_bracket",
+        "template": "{% if x[0 %}{% endif %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/if.yml",
+        "line": 956,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 7
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/include.yml:296/include-mut-binding_value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% include x for x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "7a0e1dc737574b19c2c60fd0f818a732d7375585ebee6ac1bd15d05adabbac7d",
+      "inputUTF8SHA256": "68ad4dc0f0fe20e05acd6c37e0b6b30debd2e72255c4250031605269cb414ced",
+      "inputUTF8Bytes": 23,
+      "rawYAMLSpec": {
+        "name": "include-mut-binding_value-lookup-unclosed_bracket",
+        "template": "{% include x for x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/include.yml",
+        "line": 296,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x for x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x for x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 12
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/include.yml:926/include-mut-template_expr-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% include x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "7a0e1dc737574b19c2c60fd0f818a732d7375585ebee6ac1bd15d05adabbac7d",
+      "inputUTF8SHA256": "ad275b4974a1d4cbb41be3a754c649e584610e636b3a49e991cdd9b083c6300d",
+      "inputUTF8Bytes": 17,
+      "rawYAMLSpec": {
+        "name": "include-mut-template_expr-lookup-unclosed_bracket",
+        "template": "{% include x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/include.yml",
+        "line": 926,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 12
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/render.yml:296/render-mut-binding_value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% render 'snippet' for x[0 %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "dadfea3cc592dfafec6752a0af4b9361a6564fda7481d8e293a5f72785d5a811",
+      "inputUTF8SHA256": "36d813031250dfb2028b6787c159e64d35546bc5a73c19fa8d1d4c171cd7cbd4",
+      "inputUTF8Bytes": 30,
+      "rawYAMLSpec": {
+        "name": "render-mut-binding_value-lookup-unclosed_bracket",
+        "template": "{% render 'snippet' for x[0 %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/render.yml",
+        "line": 296,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"'snippet' for x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"'snippet' for x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 11
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/table_row.yml:474/table_row-mut-collection-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% tablerow x in x[0 %}{% endtablerow %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "b71c34974fe086139ece6c758dec4d484a4a3c0fdae4fdabb629a91df1d3e4dd",
+      "inputUTF8SHA256": "4f5ed30359e94132ff0f012a2828740de63d525ec29082933bbaa459268a6e90",
+      "inputUTF8Bytes": 40,
+      "rawYAMLSpec": {
+        "name": "table_row-mut-collection-lookup-unclosed_bracket",
+        "template": "{% tablerow x in x[0 %}{% endtablerow %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/table_row.yml",
+        "line": 474,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x in x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x in x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 13
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/unless.yml:728/unless-mut-comparison_rhs-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% unless x == x[0 %}{% endunless %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "d340e5358499cfb8df267442111c19bbb999420cad2bdc854b0a790aa9a55e99",
+      "inputUTF8SHA256": "8b4c79f78d8fc9bb12607477d63896a0675fb8475b4491c09836e243ffeb3ba2",
+      "inputUTF8Bytes": 36,
+      "rawYAMLSpec": {
+        "name": "unless-mut-comparison_rhs-lookup-unclosed_bracket",
+        "template": "{% unless x == x[0 %}{% endunless %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/unless.yml",
+        "line": 728,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x == x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x == x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 11
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/unless.yml:956/unless-mut-condition-lookup-unclosed_bracket/strict2/raise",
+      "source": "{% unless x[0 %}{% endunless %}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "d340e5358499cfb8df267442111c19bbb999420cad2bdc854b0a790aa9a55e99",
+      "inputUTF8SHA256": "ddea7ca7ccff3ae114d1f37f0aec2d19a66db73ab77b7989575e298bfe793567",
+      "inputUTF8Bytes": 31,
+      "rawYAMLSpec": {
+        "name": "unless-mut-condition-lookup-unclosed_bracket",
+        "template": "{% unless x[0 %}{% endunless %}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/unless.yml",
+        "line": 956,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"x[0\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"x[0\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 11
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/variable.yml:512/variable-mut-filter_first_arg-lookup-unclosed_bracket/strict2/raise",
+      "source": "{{ x | x : x[0 }}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "e2c0da3505b079b5caafe67ea6dfb68d8a9115b543548924e295a26f1c636318",
+      "inputUTF8SHA256": "216e613781f2f415ef9489c5ece08cfdb684ad8654c3d95e1e1ed0beefe5c152",
+      "inputUTF8Bytes": 17,
+      "rawYAMLSpec": {
+        "name": "variable-mut-filter_first_arg-lookup-unclosed_bracket",
+        "template": "{{ x | x : x[0 }}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/variable.yml",
+        "line": 512,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"{{ x | x : x[0 }}\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"{{ x | x : x[0 }}\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 1
+    },
+    {
+      "caseID": "parser_errors/specs/parser_errors/variable.yml:1058/variable-mut-value-lookup-unclosed_bracket/strict2/raise",
+      "source": "{{ x[0 }}",
+      "variables": {},
+      "partials": {},
+      "options": {
+        "line_numbers": true,
+        "error_mode": "strict2",
+        "strict_errors": true
+      },
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        }
+      },
+      "sourceDigest": "e2c0da3505b079b5caafe67ea6dfb68d8a9115b543548924e295a26f1c636318",
+      "inputUTF8SHA256": "bd0cb1b30614f7da91d0fc2bffb347fd90b72ae269590302bef2296c4b2764f3",
+      "inputUTF8Bytes": 9,
+      "rawYAMLSpec": {
+        "name": "variable-mut-value-lookup-unclosed_bracket",
+        "template": "{{ x[0 }}",
+        "errors": {
+          "parse_error": [
+            "Expected close_square but found end_of_string"
+          ]
+        },
+        "complexity": 500
+      },
+      "provenance": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "file": "specs/parser_errors/variable.yml",
+        "line": 1058,
+        "sourceDigestMeaning": "SHA-256 of whole source YAML file per original run.rb, not template body",
+        "license": "MIT",
+        "exporter": "Tools/LiquidSpecAdapter/run.rb; exact named YAML AST node; only strict2/raise original variant"
+      },
+      "reference": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Expected close_square but found end_of_string in \"{{ x[0 }}\"",
+        "line": 1,
+        "column": null
+      },
+      "expectedNativeMessage": "Expected close_square but found end_of_string in \"{{ x[0 }}\"",
+      "expectedSwiftLine": 1,
+      "expectedSwiftColumn": 1
+    }
+  ],
+  "upstreamLicense": {
+    "file": "LICENSE.txt",
+    "sha256": "b0324f010f1af4dba4b385abd3e93803b1ded83e1c0035bfb826b2179884bcf0",
+    "text": "The MIT License (MIT)\n\nCopyright 2022-present, Shopify Inc.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n"
+  }
+}

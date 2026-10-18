@@ -160,23 +160,29 @@ internal final class RenderingContext {
         let components: [PathComponent]
     }
 
+    // Admitted once at render entry, then shared read-only by every partial.
+    // Liquid assignments remain in separate invocation-owned scope overlays.
+    private var hostInputs: RuntimeVariables = [:]
     private var variables: RuntimeVariables = [:]
     private var scopes: [RuntimeVariables] = []
     private var currentScope: RuntimeVariables?
     private var variablePathCache: [ScalarKey: CachedVariablePath] = [:]
     private var loopDepth: Int = 0
     private var counters: [String: Int] = [:]
+    private var cycleCounters: [ObjectIdentifier: Int] = [:]
     
     
     func setVariables(
         _ vars: RuntimeVariables
     ) {
-        variables = vars
+        hostInputs = vars
+        variables = [:]
         if !scopes.isEmpty {
             scopes.removeAll(keepingCapacity: true)
         }
         currentScope = nil
         loopDepth = 0
+        cycleCounters.removeAll(keepingCapacity: true)
         if !counters.isEmpty {
             counters.removeAll(keepingCapacity: true)
         }
@@ -196,19 +202,11 @@ internal final class RenderingContext {
                 if let baseValue = lookupValue(named: path.baseName) {
                     switch path.components[0] {
                     case .size:
-                        if let dict = baseValue as? [String: Any], let v = dict["size"] ?? dict["length"] {
-                            value = v
-                        } else if let ordered = baseValue as? RuntimeObject, let v = ordered["size"] ?? ordered["length"] {
-                            value = v
-                        } else if let array = baseValue as? [Any] {
-                            value = array.count
-                        } else if let string = baseValue as? String {
-                            value = string.unicodeScalars.count
-                        } else {
-                            value = 0
-                        }
+                        value = runtimeSizeProperty(baseValue)
                     case .first:
-                        if let dict = baseValue as? [String: Any], let v = dict["first"] {
+                        if let range = baseValue as? RuntimeRange {
+                            value = range.commandValue(for: "first")
+                        } else if let dict = baseValue as? [String: Any], let v = dict["first"] {
                             value = v
                         } else if let ordered = baseValue as? RuntimeObject {
                             if let v = ordered["first"] {
@@ -227,7 +225,9 @@ internal final class RenderingContext {
                             value = nil
                         }
                     case .last:
-                        if let dict = baseValue as? [String: Any], let v = dict["last"] {
+                        if let range = baseValue as? RuntimeRange {
+                            value = range.commandValue(for: "last")
+                        } else if let dict = baseValue as? [String: Any], let v = dict["last"] {
                             value = v
                         } else if let ordered = baseValue as? RuntimeObject, let v = ordered["last"] {
                             value = v
@@ -257,8 +257,6 @@ internal final class RenderingContext {
                             } else if key == "last", !ordered.isEmpty {
                                 let lastPair = ordered.elements[ordered.count - 1]
                                 value = [lastPair.key, lastPair.value] as [Any]
-                            } else if key == "size" || key == "length" {
-                                value = ordered.count
                             } else {
                                 value = nil
                             }
@@ -307,6 +305,14 @@ internal final class RenderingContext {
 
     func setCounter(_ name: String, value: Int) {
         counters[name] = value
+    }
+
+    func getCycleCounter(_ site: CycleSiteIdentity) -> Int? {
+        cycleCounters[ObjectIdentifier(site)]
+    }
+
+    func setCycleCounter(_ site: CycleSiteIdentity, value: Int) {
+        cycleCounters[ObjectIdentifier(site)] = value
     }
 
     
@@ -393,9 +399,8 @@ internal final class RenderingContext {
             case .unless(_, let thenNodes, let elseNodes):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
-            case .case(_, let whens, let elseBranch):
-                for (_, whenNodes) in whens { if !isStaticallyBlankBlock(whenNodes) { return false } }
-                if let elseBranch, !isStaticallyBlankBlock(elseBranch) { return false }
+            case .case(_, let branches):
+                for branch in branches { if !isStaticallyBlankBlock(branch.body) { return false } }
             case .for(_, _, let body, let empty, _):
                 if !isStaticallyBlankBlock(body) { return false }
                 if let empty, !isStaticallyBlankBlock(empty) { return false }
@@ -419,6 +424,7 @@ internal final class RenderingContext {
         let scopes: [RuntimeVariables]
         let currentScope: RuntimeVariables?
         let counters: [String: Int]
+        let cycleCounters: [ObjectIdentifier: Int]
         let loopDepth: Int
     }
 
@@ -428,6 +434,7 @@ internal final class RenderingContext {
             scopes: scopes,
             currentScope: currentScope,
             counters: counters,
+            cycleCounters: cycleCounters,
             loopDepth: loopDepth
         )
     }
@@ -437,15 +444,19 @@ internal final class RenderingContext {
         scopes = state.scopes
         currentScope = state.currentScope
         counters = state.counters
+        cycleCounters = state.cycleCounters
         loopDepth = state.loopDepth
     }
 
     func isolateScope(with bindings: RuntimeVariables) {
+        // A fresh local overlay keeps original host roots visible without
+        // copying them into each nested render or admitting them again.
         loopDepth = 0
         variables = [:]
         scopes.removeAll(keepingCapacity: true)
         currentScope = nil
         counters.removeAll(keepingCapacity: true)
+        cycleCounters.removeAll(keepingCapacity: true)
         for (key, value) in bindings {
             variables[key] = value
         }
@@ -477,6 +488,9 @@ internal final class RenderingContext {
         }
         // Check normal variables first, then fall back to counter namespace
         if let value = variables[name] {
+            return value
+        }
+        if let value = hostInputs[name] {
             return value
         }
         // Fall back to increment/decrement counter namespace
@@ -532,7 +546,7 @@ internal final class RenderingContext {
 
         for rawComponent in rawComponents {
             switch rawComponent {
-            case "size", "length":
+            case "size":
                 parsedComponents.append(.size)
             case "first":
                 parsedComponents.append(.first)
@@ -556,23 +570,10 @@ internal final class RenderingContext {
     private func resolve(_ component: PathComponent, from value: Any) -> Any? {
         switch component {
         case .size:
-            // Dictionary key "size" or "length" takes priority (e.g., forloop.length)
-            if let dict = value as? [String: Any] {
-                if let val = dict["size"] { return val }
-                if let val = dict["length"] { return val }
-            }
-            if let ordered = value as? RuntimeObject {
-                if let val = ordered["size"] { return val }
-                if let val = ordered["length"] { return val }
-            }
-            if let array = value as? [Any] {
-                return array.count
-            } else if let string = value as? String {
-                return string.count
-            }
-            return 0
+            return runtimeSizeProperty(value)
 
         case .first:
+            if let range = value as? RuntimeRange { return range.commandValue(for: "first") }
             // Dictionary key "first" takes priority (e.g., forloop.first)
             if let dict = value as? [String: Any], let val = dict["first"] {
                 return val
@@ -586,6 +587,7 @@ internal final class RenderingContext {
             return nil
 
         case .last:
+            if let range = value as? RuntimeRange { return range.commandValue(for: "last") }
             // Dictionary key "last" takes priority (e.g., forloop.last)
             if let dict = value as? [String: Any], let val = dict["last"] {
                 return val

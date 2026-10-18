@@ -132,3 +132,86 @@ Swift-Liquid 1.3 retains all 116 public 1.2 declarations and every prior fixture
 pin. Final gate receipts, source/DocC archives and matched 1.2.0 measurements
 accompany the [1.3.0 release](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.0);
 see the [release notes](Releases/1.3.0.md).
+
+## LQ1 independent track
+
+The separate [LQ1 qualification](LQ1/README.md) uses Shopify/liquid-spec at
+`84bf25e0edbca5f7e530574788b0f875ab331f50`, alongside the same pinned Ruby source.
+Its broader corpus exposes unresolved rendering and parser-diagnostic differences.
+The independent lane currently fails; original release inputs and receipts remain
+immutable. Eligibility, recovered errors, operational limits and transport
+exclusions have separate records. See the [adapter contract](LQ1/ADAPTER_LIMITS.md)
+and [mismatch review](LQ1/MISMATCHES.md) before making compatibility claims.
+
+## Reconciled candidate status on 17 October 2026
+
+This historical status is bound to the PF1-002 candidate
+`b14d91bde71270fdded001775ed99d0e4d99f65a`, tree
+`dd8196c1d57cd364f19707f0cdf2d6a9d79e862a`. Its ordered parents preserve PR19
+`8bceeb8f6568a32d49d4290d752eb76ec7e5894d` and main
+`1c37b11f1487453772aaae9e6be0cfd75ab2af01`. PR23 remains separate.
+
+The retained independent matrix has SHA-256
+`c9b170036ff2cf1eceb0b4c4a36f02d1b5329f8d167aa856bad9340c4ce4a1df`.
+Of 5,112 variants, 4,624 are selected and 488 excluded. Qualified outcomes are
+2,736 matched, 1,878 mismatched and ten operational errors; raw comparison reports
+2,763 matched and 1,861 mismatched. The 27 raw matches rejected by qualification
+comprise 25 expected parse errors observed as successful renders and two expected
+disabled-include render errors observed as successful renders. Ten reference
+qualification concerns remain recorded separately. All ten operational outcomes
+report `Limit exceeded: nestingDepth`; these observations do not prove their
+precise execution boundary or authorize removing resource limits.
+
+PF1-007 assigns all 1,888 selected failures to 49 groups with original case rows
+preserved. Grouping establishes neither root cause nor accepted compatibility
+deviations. The nineteen expected-token diagnostic cases remain outstanding;
+related source-origin and lexer work does not close that parser presentation
+scope. The independent lane remains failed and was not rerun by PF1-007.
+
+Historical non-timing qualification on clean b14 comprises native, safety,
+reference, platforms and installation in PF1-002, followed by docs and strict
+archive in PF1-003. The original PF1-002 docs failure and archive block remain
+part of the record. Installation checks published 1.3.0 at
+`9963591f18ef8aa1d1a8d9cd9bcc5508c82b5d4e`; it does not install this candidate.
+Platform compile checks do not certify device, minimum-OS runtime or Linux
+execution. A changed successor requires its own exact-source receipts.
+
+Performance remains `HOLD_PERFORMANCE_PENDING_QUIET_WINDOW`. PF1-005 and PF1-006
+are terminal; this status creates no new timing window. Exact-source internal
+development acceptance, whole-PR acceptance, merge and release remain pending.
+Original release fixtures, pins, versions, budgets and provenance limits remain
+in force; no complete-core compatibility claim follows from this status.
+
+
+## Current independent development snapshot (PF1-013)
+
+One unchanged full functional observation on R6 commit
+`37feae748de8f3acd4f30f63b1b47e523c4dfabe`, tree
+`514557d7aee3835df39a95864d984fbd8ec32add`, completed with a **failed** independent
+gate. Its matrix SHA-256 is
+`c583ad7892d7f532ad49bb2a93ac73a76d86a249eb6fca0b2239a5a0f673609f`.
+Both upstream pins and all fixture/comparator/adapter policies are unchanged.
+New normal private checkouts were recovered from the retained pinned objects;
+the broken original spec metadata was preserved.
+
+The population remains 5,112 expanded variants, 4,624 selected and 488 excluded.
+Qualified outcomes are 2,756 matched, 1,858 mismatched and ten operational errors.
+Raw upstream comparison reports 2,783 matches; the 27 raw matches disqualified by
+phase/admission policy remain failures. Ten reference concerns are retained.
+These counts combine distinct outcomes, not successful render counts.
+
+Against the source-bound historical matrix (`c9b170036ff2cf1eceb0b4c4a36f02d1b5329f8d167aa856bad9340c4ce4a1df`),
+20 qualified verdicts improve, including all nineteen R6 identities and one
+separate strict lookup case. No qualified match becomes a failure; 5,092 qualified
+verdicts stay unchanged, including exclusions. This does not mean identical
+observations: 26 diagnostic observations change, including six still-failed lax
+lookup cases. Their syntax rejection persists with typed reason/context/location;
+this is no lax acceptance-parity claim. Full case joins and original/new rows are
+retained externally. Historical 1,888 failures/49 groups are never rewritten or
+reduced by arithmetic subtraction.
+
+This records the exact R6 observation, not a new compatibility run on later
+policy-only commits. Such a commit needs an explicit unchanged runtime, adapter,
+fixture and pin bridge. Maintainer acceptance of the current limitations and
+whole integration line remains a separate decision. Performance stays held; no
+complete-conformance, release or speedup claim follows.

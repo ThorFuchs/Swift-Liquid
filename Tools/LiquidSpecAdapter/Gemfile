@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+source "https://rubygems.org"
+ruby "4.0.1"
+# These are development tools only. The runner loads both engines from verified
+# external source checkouts, never a downloaded engine as a substitute.
+gem "activesupport", "8.1.4"
+gem "base64", "0.3.0"
+gem "super_diff", "0.19.0"
+gem "date", "3.5.1"
+gem "time", "0.4.2"

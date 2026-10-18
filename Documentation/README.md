@@ -20,6 +20,10 @@ guides that are compiled from the public Swift symbol graph.
 | [Dates](Dates.md) | Input coercion, Gregorian arithmetic, fractions, offsets, and formatting |
 | [CLI](CLI.md) | Rendering files and JSON input, validation, analysis, options, and exit behavior |
 | [Architecture](Architecture/README.md) | Extraction, values, parser, renderer, and concurrency |
+| [Peer API crosswalk](Comparisons/README.md) | Pinned task-oriented API comparisons and evidence grades |
+| [LQ1-R3 runtime review](LQ1-R3/README.md) | Local runtime integration, case/size and adopted host-input semantics; historical deferral retained |
+| [LQ1-R2 triage](LQ1-R2/README.md) | Three bounded semantic repairs, diagnostic ledger and source-aware RFC |
+| [LQ1 independent conformance](LQ1/README.md) | Isolated liquid-spec tooling, exact failures and next review gate |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
 | [1.3.1 benchmark review](PerformanceReview-1.3.1.md) | Prior flags, independent study and release review policy |
@@ -41,3 +45,5 @@ guides that are compiled from the public Swift symbol graph.
 
 Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go
 under Artifacts and remain outside source control.
+
+- [Maintained development and CI operations](Maintenance.md)

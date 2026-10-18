@@ -32,7 +32,7 @@ internal indirect enum LiquidExpression: Sendable, Equatable {
     
     // MARK: - Collection Access
     
-    case access(expr: LiquidExpression, key: LiquidExpression)
+    case access(expr: LiquidExpression, key: LiquidExpression, command: Bool = false)
     
     case call(name: InlineString, arguments: [CallArgument])
 }
@@ -296,7 +296,11 @@ extension LiquidExpression {
         case .variable(let name):
             return name.isEmpty ? nil : [name.string]
 
-        case .access(let expr, let key):
+        case .access(let expr, let key, let command):
+            // Bracket lookup does not invoke range commands. Preserve it
+            // for evaluation instead of collapsing it into a dotted fast path.
+            if !command, case .literal(.string(let name)) = key,
+               name.equals("size") || name.equals("first") || name.equals("last") { return nil }
             guard var components = expr.staticVariablePathComponents else {
                 return nil
             }
@@ -355,7 +359,7 @@ extension LiquidExpression {
             }
         case .test(let expr, _):
             return expr.containsVariables
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return expr.containsVariables || key.containsVariables
         case .call(_, let arguments):
             return arguments.contains { $0.containsVariables }
@@ -387,7 +391,7 @@ extension LiquidExpression {
             return variables
         case .test(let expr, _):
             return expr.referencedVariables
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return expr.referencedVariables.union(key.referencedVariables)
         case .call(_, let arguments):
             return arguments.reduce(into: Set<String>()) { result, arg in
@@ -417,7 +421,7 @@ extension LiquidExpression {
             return expr.complexityScore + filterComplexity
         case .test(let expr, _):
             return expr.complexityScore + 1
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return expr.complexityScore + key.complexityScore + 1
         case .call(_, let arguments):
             return arguments.reduce(1) { $0 + $1.complexityScore }
@@ -582,7 +586,7 @@ extension LiquidExpression: CustomStringConvertible {
             return "\(expr) \(filterString)"
         case .test(let expr, let test):
             return "\(expr) is \(test.rawValue)"
-        case .access(let expr, let key):
+        case .access(let expr, let key, _):
             return "\(expr)[\(key)]"
         case .call(let name, let arguments):
             let argString = arguments.map { $0.description }.joined(separator: ", ")

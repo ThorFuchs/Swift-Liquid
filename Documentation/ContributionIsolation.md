@@ -41,19 +41,45 @@ stay within their own run; there is no privileged workflow triggered by PR artif
 The artifact downloader uses an audited Node 24 revision. Changing runner labels,
 action pins, triggers, caches or privileges requires explicit maintainer review.
 
-## Publish documentation
+## Correctness, measurements and documentation
 
-The separate Pages job runs only on `main` after the complete qualification matrix
-and clean archive pass. It has the Pages/OIDC permissions, uses the `github-pages`
-environment, and only configures/deploys the current run's qualified site. It does
-not check out or execute repository code. The live environment's deployment branch
-policy admits `main` only. PRs package their site for review and do not deploy it.
+Routine PR, main and manual correctness runs execute native, safety, docs,
+reference, platforms and installation, then the full clean archive lane. The
+always-run `Repository correctness` job accepts only successful qualification and
+archive dependencies. Failed, missing, skipped, cancelled and neutral work cannot
+be accepted by its program. The exact emitted check context must be observed on
+an actual hosted run before branch protection requires it. Local semantic tests
+are evidence about the policy; they do not install repository protection.
+
+Timing runs only through a separately commissioned manual benchmark request.
+Its exact clean dispatch commit must match the explicit full SHA; both canonical
+lanes execute serially on one hosted job against immutable 1.3.0. Dispatch and
+its request record grant no timing authority, host admission or performance
+acceptance. All retained performance holds remain until separately decided.
+
+Documentation generation stays in correctness. Deployment is a separate manual,
+main-only workflow. Its read-only admission job verifies the repository, current
+main, exact push run/attempt/workflow, all eight successful jobs, artifact origin,
+API digest, complete site bytes and source/build provenance. Artifact creation
+and finalization must fall within the latest-attempt documentation job timestamps;
+an older attempt with the same run/source cannot supply its artifact. It does not execute
+artifact contents. The separate privileged Pages job only configures and deploys
+the admitted site; it checks out no source. Signed storage downloads receive no
+GitHub authorization header. A moved main, expired/missing artifact, absent digest
+or failed/neutral/skipped prerequisite blocks deployment. A retained explicit
+maintainer deployment approval is required independently of these checks.
+
+The site artifact includes its declared hidden `.nojekyll` file. Build artifacts
+stay scoped to the generated lane directory. No PR artifact triggers a privileged
+workflow. Sequential main checks cannot establish an atomic branch lock; a changed
+source must be reconsidered. Live environment protection remains a separately
+managed boundary and must be verified before any actual deployment.
 
 `Scripts/workflow_policy.py` audits these structural invariants with Ruby's standard
 YAML parser, rejecting duplicate keys, aliases and object construction. Negative
 regressions cover shared/dynamic runners, privileged triggers/tokens, secrets,
 persistent credentials, overridden PR refs, caches, reduced qualification and
-publishing without complete main gates. These checks aid review: a contribution
+routine timing, incomplete aggregate success and source-unbound deployment. These checks aid review: a contribution
 can modify its own copy of a checker. They do not create a sandbox. The provider's
 hosted isolation and separately managed repository/environment settings are the
 actual boundary.

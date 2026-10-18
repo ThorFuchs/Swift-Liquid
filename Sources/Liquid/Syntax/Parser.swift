@@ -22,6 +22,7 @@ internal final class Parser {
     private let tokens: [Token]
 
     private let source: String?
+    private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
     private let lineOffset: Int
     private let maxNestingDepth: Int
@@ -43,12 +44,14 @@ internal final class Parser {
     internal init(
         consuming tokens: [Token],
         source: String? = nil,
+        sourceProvenance: DiagnosticSourceProvenance = .unmapped,
         syntaxMode: LiquidSyntaxMode = .lax,
         maxNestingDepth: Int = 64,
         lineOffset: Int = 0
     ) {
         self.tokens = tokens
         self.source = source
+        self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
         self.lineOffset = lineOffset
         self.maxNestingDepth = maxNestingDepth
@@ -64,14 +67,133 @@ internal final class Parser {
         var nodes: [ASTNode] = []
         nodes.reserveCapacity(max(4, tokens.count / 3))
         
-        while !isAtEnd {
-            let node = try parseNode()
-            nodes.append(node)
+        do {
+            while !isAtEnd {
+                let node = try parseNode()
+                nodes.append(node)
+            }
+            return .template(nodes)
+        } catch let error as ParserError {
+            // Presentation follows the existing first rejection, without another
+            // parse or cursor advance. A nested rewritten parser marks its gap;
+            // the outer parser must not attach an unrelated original frame.
+            guard case .expectedToken(let expected, let got, nil) = error else { throw error }
+            let origin = try expectedTokenOrigin(got)
+            throw ParserError.expectedToken(expected, got: got, origin: origin)
         }
-        
-        return .template(nodes)
     }
     
+    // Error-only producer selection. Token boundaries come from the existing
+    // lexer; the byte owner validates candidate spans and typed reason spelling.
+    // Successful parses neither copy nor scan original diagnostic bytes.
+    private func expectedTokenOrigin(_ got: TokenType) throws -> DiagnosticOriginResolution {
+        try Task.checkCancellation()
+        guard case .original(let identity) = sourceProvenance, let source else {
+            return .unmapped(.unspecifiedOrRewrittenSource)
+        }
+        guard current < tokens.count, currentToken.type == got else {
+            return .unmapped(.incompleteOrAmbiguousConstruct)
+        }
+        var openingIndex = current
+        while !tokens[openingIndex].isOpeningDelimiter {
+            if openingIndex & 255 == 0 { try Task.checkCancellation() }
+            if openingIndex == 0 || (openingIndex != current && tokens[openingIndex].isClosingDelimiter) {
+                return .unmapped(.incompleteOrAmbiguousConstruct)
+            }
+            openingIndex -= 1
+        }
+        let opening = tokens[openingIndex]
+        let variable = opening.type == .variableStart
+        let closingType: TokenType = variable ? .variableEnd : .tagEnd
+        var closingIndex = current
+        while closingIndex < tokens.count && tokens[closingIndex].type != closingType {
+            if closingIndex & 255 == 0 { try Task.checkCancellation() }
+            if tokens[closingIndex].isOpeningDelimiter { return .unmapped(.incompleteOrAmbiguousConstruct) }
+            closingIndex += 1
+        }
+        guard closingIndex < tokens.count else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        let closing = tokens[closingIndex]
+        let bytes = Array(source.utf8)
+        let start = opening.position
+        guard bytes.count >= 2, start >= 0, start <= bytes.count - 2,
+              bytes[start] == 123, bytes[start + 1] == (variable ? 123 : 37),
+              closing.position >= start + 2, closing.position <= bytes.count - 2 else {
+            return .unmapped(.invalidBoundary)
+        }
+        // Pinned Ruby's first terminator/brace transitions may disagree with
+        // native quoted-token boundaries. Such frames stay explicitly unmapped.
+        var end = start + 2
+        while end < bytes.count - 1 {
+            if end & 255 == 0 { try Task.checkCancellation() }
+            if bytes[end] == (variable ? 125 : 37) && bytes[end + 1] == 125 { break }
+            if variable && (bytes[end] == 125 || (bytes[end] == 123 && bytes[end + 1] == 37)) {
+                return .unmapped(.incompleteOrAmbiguousConstruct)
+            }
+            end += 1
+        }
+        guard end == closing.position else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+        var lower = start + 2
+        var upper = end
+        if opening.trimLeft {
+            guard lower < upper && bytes[lower] == 45 else { return .unmapped(.invalidBoundary) }
+            lower += 1
+        }
+        if closing.trimRight {
+            guard upper > lower && bytes[upper - 1] == 45 else { return .unmapped(.invalidBoundary) }
+            upper -= 1
+        }
+        var anchor = start
+        var presentation = DiagnosticContextPresentation.outputMarkup
+        var header: Range<Int>?
+        var headerSpelling: String?
+        if !variable {
+            guard openingIndex + 1 < closingIndex else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+            let name = tokens[openingIndex + 1]
+            guard name.type != .liquid else { return .unmapped(.liquidInnerContext) }
+            let spelling: String
+            switch name.type {
+            case .identifier(let value): spelling = value.string
+            case .assign, .render, .echo, .increment, .decrement: spelling = name.type.sourceLexeme
+            default:
+                guard let keyword = name.type.keywordString else { return .unmapped(.incompleteOrAmbiguousConstruct) }
+                spelling = keyword
+            }
+            guard name.position >= lower, name.position <= upper,
+                  spelling.utf8.count <= upper - name.position else { return .unmapped(.invalidBoundary) }
+            header = name.position..<(name.position + spelling.utf8.count)
+            headerSpelling = spelling
+            lower = name.position + spelling.utf8.count
+            while lower < upper && (bytes[lower] == 32 || (9...13).contains(bytes[lower])) {
+                if lower & 255 == 0 { try Task.checkCancellation() }
+                lower += 1
+            }
+            anchor = lower
+            if name.type != .echo {
+                presentation = name.type == .when ? .reasonOnly : .markup
+                while lower < upper && (bytes[lower] == 0 || bytes[lower] == 32 || (9...13).contains(bytes[lower])) {
+                    if lower & 255 == 0 { try Task.checkCancellation() }
+                    lower += 1
+                }
+                while upper > lower && (bytes[upper - 1] == 0 || bytes[upper - 1] == 32 || (9...13).contains(bytes[upper - 1])) {
+                    if upper & 255 == 0 { try Task.checkCancellation() }
+                    upper -= 1
+                }
+            }
+        }
+        let spelling: String
+        switch got {
+        case .identifier(let value): spelling = value.string
+        case .variableEnd, .tagEnd, .leftParen, .rightParen, .leftBracket, .rightBracket,
+             .colon, .comma, .dot, .range, .filter:
+            spelling = got.sourceLexeme
+        default: return .unmapped(.reasonDoesNotMatchOriginalToken)
+        }
+        let frame = DiagnosticSourceFrame(construct: start..<(end + 2), markup: lower..<upper,
+            anchor: anchor, presentation: presentation, header: header, headerSpelling: headerSpelling)
+        return try DiagnosticSourceSnapshot(admittedUTF8: bytes, identity: identity)
+            .expectedToken(spelling, at: currentToken.position, frame: frame, atMarkupEnd: current == closingIndex)
+    }
+
     // MARK: - Node Parsing
     
     @inline(__always)
@@ -711,7 +833,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                 }
                 startExpr = expr
             } else {
@@ -736,7 +858,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                 }
                 endExpr = expr
             } else {
@@ -751,6 +873,15 @@ internal final class Parser {
             return .range(start: startExpr, end: endExpr)
             
         case .leftBracket:
+            // Shopify strict2 requires an explicit receiver for bracket access.
+            // Older parser modes retain their indirect root lookup semantics.
+            if syntaxMode == .strict2 {
+                throw LiquidError.syntax(
+                    message: "Bare bracket access is not allowed. Use self['...'] instead",
+                    line: currentToken.line + lineOffset,
+                    column: currentToken.column
+                )
+            }
             // Top-level bracket access: {{ [something] }} or {{ ["key"] }}
             // This is an indirect variable lookup: look up the bracket contents,
             // then use the result to look up in the root context
@@ -782,7 +913,7 @@ internal final class Parser {
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
-                expr = .access(expr: expr, key: .literal(.string(prop)))
+                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
             }
             return expr
 
@@ -812,7 +943,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                     hasMoreAccess = true
                 }
             }
@@ -916,7 +1047,7 @@ internal final class Parser {
 
             var expr: LiquidExpression = .variable(name)
             for property in components.dropFirst() {
-                expr = .access(expr: expr, key: .literal(.string(property)))
+                expr = .access(expr: expr, key: .literal(.string(property)), command: true)
             }
 
             // Handle bracket and dot access chains: items[0], items["key"].prop, items[0][1]
@@ -938,7 +1069,7 @@ internal final class Parser {
                     guard case .identifier(let prop) = nextTokenStorage.type else { break }
                     advance() // consume .
                     advance() // consume identifier
-                    expr = .access(expr: expr, key: .literal(.string(prop)))
+                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                     hasMoreAccess = true
                 }
             }
@@ -1297,9 +1428,8 @@ internal final class Parser {
         let expression = try parseExpression()
         try consumeTagEnd()
         
-        var branches: [(LiquidExpression?, [ASTNode])] = []
+        var branches: [CaseBranch] = []
         branches.reserveCapacity(4)
-        var defaultBranch: [ASTNode]? = nil
         
         // Parse all branches: when, else, and mixed when/else blocks
         // Skip whitespace before first branch
@@ -1319,11 +1449,7 @@ internal final class Parser {
                 while !isAtEnd && !isWhenOrElseOrEndcase() {
                     elseNodes.append(try parseNode())
                 }
-                // Store else as nil-expression branch
-                branches.append((nil, elseNodes))
-                if defaultBranch == nil {
-                    defaultBranch = elseNodes
-                }
+                branches.append(.otherwise(elseNodes))
             } else {
                 // Skip whitespace/text between branches
                 advance()
@@ -1337,20 +1463,10 @@ internal final class Parser {
         try consumeTagKeyword(.endcase, identifier: "endcase")
         try consumeTagEnd()
 
-        // Convert branches to AST format
-        // Else branches use .literal(.null) as sentinel expression
-        let allBranches: [(LiquidExpression, [ASTNode])] = branches.map { (value, nodes) in
-            if let value { return (value, nodes) }
-            return (.literal(.null), nodes) // sentinel for else
-        }
-
-        // If we have sentinel else branches in allBranches, don't also pass defaultBranch
-        // to avoid double-rendering
-        let hasSentinelElse = branches.contains { $0.0 == nil }
-        return .case(value: expression, whens: allBranches, else: hasSentinelElse ? nil : defaultBranch)
+        return .case(value: expression, branches: branches)
     }
     
-    private func parseCaseWhenBranch(into branches: inout [(LiquidExpression?, [ASTNode])]) throws {
+    private func parseCaseWhenBranch(into branches: inout [CaseBranch]) throws {
         advance() // consume {%
         try consumeTagKeyword(.when, identifier: "when")
 
@@ -1377,7 +1493,7 @@ internal final class Parser {
             whenNodes.append(try parseNode())
         }
         for value in whenValues {
-            branches.append((value, whenNodes))
+            branches.append(.when(value, whenNodes))
         }
     }
 
@@ -1416,8 +1532,18 @@ internal final class Parser {
         var limitExpression: LiquidExpression? = nil
         var offsetExpression: LiquidExpression? = nil
         
-        // Skip optional comma before first parameter (Shopify allows commas between params)
-        if currentToken.type == .comma { advance() }
+        // `reversed` is a modifier immediately after the collection. Once
+        // attribute parsing starts, strict modes accept only limit/offset.
+        var reversedMayAppear = true
+        func invalidAttribute() -> LiquidError {
+            .syntax(message: "Invalid attribute in for loop. Valid attributes are limit and offset",
+                    line: currentToken.line + lineOffset, column: currentToken.column)
+        }
+        if currentToken.type == .comma {
+            reversedMayAppear = false
+            advance()
+            if syntaxMode != .lax && currentToken.type == .tagEnd { throw invalidAttribute() }
+        }
         while let paramName = peekIdentifierName() {
             guard paramName.equals("limit")
                     || paramName.equals("offset")
@@ -1425,12 +1551,20 @@ internal final class Parser {
                 break
             }
 
+            if paramName.equals("reversed") && !reversedMayAppear && syntaxMode != .lax {
+                throw invalidAttribute()
+            }
             advance() // consume parameter name
             
             if paramName.equals("reversed") {
-                reversed = true
+                if reversedMayAppear {
+                    reversed = true
+                }
+                // Ruby's lax parser ignores modifiers after the initial one.
+                reversedMayAppear = false
                 continue
             }
+            reversedMayAppear = false
 
             guard currentToken.type == .colon else {
                 throw ParserError.unexpectedToken(currentToken)
@@ -1470,8 +1604,12 @@ internal final class Parser {
                     throw ParserError.unexpectedToken(currentToken)
                 }
             }
-            // Skip optional trailing comma after parameter value
-            if currentToken.type == .comma { advance() }
+            // Commas separate attributes; they do not terminate the list in
+            // strict modes. Lax retains its existing acceptance of a suffix.
+            if currentToken.type == .comma {
+                advance()
+                if syntaxMode != .lax && currentToken.type == .tagEnd { throw invalidAttribute() }
+            }
         }
 
         let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression)
@@ -1856,14 +1994,15 @@ internal final class Parser {
                 then: normalizeLiquidBodyNodes(thenNodes),
                 else: elseNodes.map(normalizeLiquidBodyNodes)
             )
-        case .case(let value, let whens, let elseBranch):
-            return .case(
-                value: value,
-                whens: whens.map { value, branch in
-                    (value, normalizeLiquidBodyNodes(branch))
-                },
-                else: elseBranch.map(normalizeLiquidBodyNodes)
-            )
+        case .case(let value, let branches):
+            return .case(value: value, branches: branches.map { branch in
+                switch branch {
+                case .when(let expression, let body):
+                    return .when(expression, normalizeLiquidBodyNodes(body))
+                case .otherwise(let body):
+                    return .otherwise(normalizeLiquidBodyNodes(body))
+                }
+            })
         case .for(let variable, let collection, let body, let empty, let params):
             return .for(
                 variable: variable,
@@ -1912,7 +2051,7 @@ internal final class Parser {
         }
 
         try consumeTagEnd()
-        return .cycle(group: group, items: values)
+        return .cycle(group: group, items: values, site: CycleSiteIdentity())
     }
     
     private func parseIncludeTag() throws ->ASTNode {

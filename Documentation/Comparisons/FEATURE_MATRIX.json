@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-15",
+  "scope": "API ergonomics and hosting contracts; no peer runtime execution or performance comparison",
+  "grades": [
+    "source-confirmed",
+    "upstream-documentation",
+    "native-test-confirmed",
+    "not-established",
+    "explicitly-deferred"
+  ],
+  "sources": {
+    "ruby": {
+      "repository": "https://github.com/Shopify/liquid",
+      "commit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+      "source": "https://github.com/Shopify/liquid/blob/4e39ae4cc3da73921923c0669e0fc84a66b2f696/lib/liquid/environment.rb"
+    },
+    "liquidjs": {
+      "repository": "https://github.com/harttle/liquidjs",
+      "commit": "920166e3f5bf14412fad2dc4c6be687ecb5f7f60",
+      "source": "https://github.com/harttle/liquidjs/blob/920166e3f5bf14412fad2dc4c6be687ecb5f7f60/src/liquid.ts"
+    },
+    "python": {
+      "repository": "https://github.com/jg-rp/liquid",
+      "commit": "0e1b4e24312364085c72875179a98a80ce35853a",
+      "source": "https://github.com/jg-rp/liquid/blob/0e1b4e24312364085c72875179a98a80ce35853a/liquid/environment.py"
+    },
+    "rust": {
+      "repository": "https://github.com/cobalt-org/liquid-rust",
+      "commit": "55768356999c35e50fbc88885e407ddd1f941fbe",
+      "source": "https://github.com/cobalt-org/liquid-rust/blob/55768356999c35e50fbc88885e407ddd1f941fbe/src/parser.rs"
+    },
+    "fluid": {
+      "repository": "https://github.com/sebastienros/fluid",
+      "commit": "cc036bfc7d9dcd2418fefa4bb07d7913ce3eb072",
+      "source": "https://github.com/sebastienros/fluid/blob/cc036bfc7d9dcd2418fefa4bb07d7913ce3eb072/Fluid/FluidParser.cs"
+    }
+  },
+  "swiftCapabilities": [
+    {
+      "capability": "parse-reuse",
+      "claim": "Parsed LiquidTemplate with async per-invocation rendering",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Sources/Liquid/LiquidTemplate.swift"
+      ]
+    },
+    {
+      "capability": "custom-filters",
+      "claim": "Immutable engine-scoped typed async callbacks; standard names protected",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Documentation/CustomFilters.md",
+        "Tests/LiquidTests/CustomFilterTests.swift"
+      ]
+    },
+    {
+      "capability": "custom-tags",
+      "claim": "No custom tag/block API; study E2 only",
+      "grade": "explicitly-deferred",
+      "evidence": [
+        "Documentation/PublicAPI-1.3.0.json"
+      ]
+    },
+    {
+      "capability": "partials",
+      "claim": "Explicit source/parsed dictionaries; no ambient loader",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Documentation/Dependencies.md",
+        "Examples/DependencyConsumer"
+      ]
+    },
+    {
+      "capability": "host-objects",
+      "claim": "Typed LiquidValue domain; no arbitrary native-member reflection or Drop API",
+      "grade": "source-confirmed",
+      "evidence": [
+        "Sources/Liquid/LiquidValue.swift"
+      ]
+    },
+    {
+      "capability": "errors",
+      "claim": "Raising and explicit diagnostic-recovery APIs; modes separate",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Documentation/Errors.md",
+        "Scripts/check_liquid_spec_protocol.py"
+      ]
+    },
+    {
+      "capability": "analysis",
+      "claim": "AST roots/filters/tags and explicit dependency graph; never evaluate expressions",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Documentation/Inspection.md",
+        "Documentation/Dependencies.md"
+      ]
+    },
+    {
+      "capability": "metrics",
+      "claim": "Opt-in measured renders; logical budgets not RSS guarantees",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "Documentation/Metrics.md",
+        "Examples/MetricsConsumer"
+      ]
+    },
+    {
+      "capability": "sync-stream",
+      "claim": "No synchronous or streaming rendering public API",
+      "grade": "source-confirmed",
+      "evidence": [
+        "Documentation/PublicAPI-1.3.0.json"
+      ]
+    },
+    {
+      "capability": "escaping",
+      "claim": "Explicit escape/escape_once; no default HTML autoescape",
+      "grade": "native-test-confirmed",
+      "evidence": [
+        "README.md",
+        "Examples/READMEConsumer"
+      ]
+    },
+    {
+      "capability": "swift-platforms",
+      "claim": "6.4 tools / mode 6; existing Apple minimums",
+      "grade": "source-confirmed",
+      "evidence": [
+        "Package.swift"
+      ]
+    },
+    {
+      "capability": "linux-wasi-runtime",
+      "claim": "No qualification claim in LQ1",
+      "grade": "not-established",
+      "evidence": [
+        "Documentation/PublicAPI-1.3.0.json"
+      ]
+    },
+    {
+      "capability": "strict-variables",
+      "claim": "Missing-value policy unchanged; study E1 only",
+      "grade": "explicitly-deferred",
+      "evidence": [
+        "Documentation/PublicAPI-1.3.0.json"
+      ]
+    },
+    {
+      "capability": "json-fidelity",
+      "claim": "Int plus finite Double; optional Swift-JSON bridge design only",
+      "grade": "explicitly-deferred",
+      "evidence": [
+        "Documentation/Language.md"
+      ]
+    }
+  ],
+  "peerCapabilities": [
+    {
+      "engine": "ruby",
+      "claims": [
+        "Environment.build/Template.parse reuse",
+        "Environment register_filter/register_tag",
+        "file_system and Drop/native Ruby values",
+        "Template render/render! and errors"
+      ],
+      "grade": "source-confirmed",
+      "evidence": {
+        "repository": "https://github.com/Shopify/liquid",
+        "commit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+        "source": "https://github.com/Shopify/liquid/blob/4e39ae4cc3da73921923c0669e0fc84a66b2f696/lib/liquid/environment.rb"
+      },
+      "versionBoundary": "Only the pinned source revision"
+    },
+    {
+      "engine": "liquidjs",
+      "claims": [
+        "Liquid.parse/render reuse",
+        "registerFilter/registerTag",
+        "renderSync/renderToNodeStream",
+        "filesystem options and strictVariables"
+      ],
+      "grade": "source-confirmed",
+      "evidence": {
+        "repository": "https://github.com/harttle/liquidjs",
+        "commit": "920166e3f5bf14412fad2dc4c6be687ecb5f7f60",
+        "source": "https://github.com/harttle/liquidjs/blob/920166e3f5bf14412fad2dc4c6be687ecb5f7f60/src/liquid.ts"
+      },
+      "versionBoundary": "Only the pinned source revision"
+    },
+    {
+      "engine": "python",
+      "claims": [
+        "Environment.from_string/BoundTemplate reuse",
+        "add_filter/add_tag",
+        "loader and Undefined policies",
+        "BoundTemplate render/render_async/analyze"
+      ],
+      "grade": "source-confirmed",
+      "evidence": {
+        "repository": "https://github.com/jg-rp/liquid",
+        "commit": "0e1b4e24312364085c72875179a98a80ce35853a",
+        "source": "https://github.com/jg-rp/liquid/blob/0e1b4e24312364085c72875179a98a80ce35853a/liquid/environment.py"
+      },
+      "versionBoundary": "Only the pinned source revision"
+    },
+    {
+      "engine": "rust",
+      "claims": [
+        "ParserBuilder with_stdlib/build/parse",
+        "builder filter/tag/block/partials",
+        "Template render/render_to",
+        "ObjectView/ValueView trait values"
+      ],
+      "grade": "source-confirmed",
+      "evidence": {
+        "repository": "https://github.com/cobalt-org/liquid-rust",
+        "commit": "55768356999c35e50fbc88885e407ddd1f941fbe",
+        "source": "https://github.com/cobalt-org/liquid-rust/blob/55768356999c35e50fbc88885e407ddd1f941fbe/src/parser.rs"
+      },
+      "versionBoundary": "Only the pinned source revision"
+    },
+    {
+      "engine": "fluid",
+      "claims": [
+        "FluidParser/TryParse and tag parser registration",
+        "TemplateOptionsBuilder-built options",
+        "RenderAsync and sync wrapper",
+        "typed member-access strategy and explicit provider"
+      ],
+      "grade": "source-confirmed",
+      "evidence": {
+        "repository": "https://github.com/sebastienros/fluid",
+        "commit": "cc036bfc7d9dcd2418fefa4bb07d7913ce3eb072",
+        "source": "https://github.com/sebastienros/fluid/blob/cc036bfc7d9dcd2418fefa4bb07d7913ce3eb072/Fluid/FluidParser.cs"
+      },
+      "versionBoundary": "Fluid development snapshot only; stable 2.41.0 not established"
+    }
+  ],
+  "documentationOnly": [
+    {
+      "claim": "Fluid pin describes 3.0 under development",
+      "grade": "upstream-documentation",
+      "evidence": "https://github.com/sebastienros/fluid/blob/cc036bfc7d9dcd2418fefa4bb07d7913ce3eb072/README.md"
+    }
+  ],
+  "peerRuntimeParity": {
+    "grade": "not-established",
+    "reason": "No peer engines beyond pinned Ruby executed; API presence is not semantic equivalence"
+  }
+}

@@ -18,8 +18,8 @@ public struct LiquidTemplate: Sendable {
         guard source.utf8.count <= limits.sourceBytes else { throw LiquidError.limitExceeded("sourceBytes") }
         self.source = source
         do {
-            let tokens = try Lexer(source).tokenize()
-            self.ast = try Parser(consuming: tokens, source: source, syntaxMode: syntaxMode, maxNestingDepth: limits.nestingDepth).parse()
+            let tokens = try Lexer(source, sourceProvenance: .original(.anonymous)).tokenize()
+            self.ast = try Parser(consuming: tokens, source: source, sourceProvenance: .original(.anonymous), syntaxMode: syntaxMode, maxNestingDepth: limits.nestingDepth).parse()
             try validateTemplate(ast, limits: limits)
         } catch { throw publicError(error) }
     }

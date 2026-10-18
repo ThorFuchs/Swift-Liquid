@@ -33,3 +33,17 @@ line, original expectation, and year-completion metadata. The grammar tests
 check the fields consumed by Time.parse; the public date-filter corpus checks
 rendering and supported-year failures separately. These inputs carry the
 upstream BSD-2-Clause terms. They are never evaluated as Ruby test code.
+
+## Independent liquid-spec development tooling
+
+The optional `Tools/LiquidSpecAdapter` driver uses externally checked out
+[Shopify/liquid-spec](https://github.com/Shopify/liquid-spec/tree/84bf25e0edbca5f7e530574788b0f875ab331f50)
+and [Shopify/liquid](https://github.com/Shopify/liquid/tree/4e39ae4cc3da73921923c0669e0fc84a66b2f696),
+both under MIT. The full reference implementations and complete liquid-spec corpus
+remain external. The derived nineteen-case fixture
+`Tests/LiquidTests/Fixtures/R6ExpectedTokenCases.json` includes selected original
+liquid-spec inputs, provenance and the full upstream MIT notice; it is test data,
+not a Ruby runtime dependency.
+The local adapter and driver are original Apache-2.0 tooling; their bridge
+adaptations and limits are recorded in Documentation/LQ1. Development Ruby gems
+are isolated and locked separately. They add no Liquid runtime dependency.

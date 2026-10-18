@@ -584,10 +584,18 @@ extension Renderer {
 
 
     
-    internal func renderCycle(group: LiquidExpression?, items: [LiquidExpression]) async throws -> String {
+    internal func renderCycle(group: LiquidExpression?, items: [LiquidExpression], site: CycleSiteIdentity) async throws -> String {
         guard !items.isEmpty else { return "" }
 
-        // Build cycle key from group expression (evaluated to get dynamic group names)
+        // Pinned Ruby duplicates top-level VariableLookup values before deriving
+        // an unnamed key. Each parsed variable-cycle site therefore owns a counter.
+        // Literal and named cycles keep their existing grouping semantics.
+        let usesSiteCounter = group == nil && items.contains { item in
+            switch item {
+            case .variable, .access: return true
+            default: return false
+            }
+        }
         let cycleKey: String
         if let group {
             let groupValue = try await evaluateExpression(group)
@@ -598,7 +606,9 @@ extension Renderer {
         }
 
         let counterKey = "__cycle_\(cycleKey)"
-        let currentIndex = context.getCounter(counterKey) ?? 0
+        let currentIndex = usesSiteCounter
+            ? context.getCycleCounter(site) ?? 0
+            : context.getCounter(counterKey) ?? 0
 
         // Ruby Liquid behavior: use counter as direct index into CURRENT items array
         // If out of bounds → output nothing. Reset to 0 when counter >= items.count.
@@ -615,7 +625,11 @@ extension Renderer {
         if nextIndex >= items.count {
             nextIndex = 0
         }
-        context.setCounter(counterKey, value: nextIndex)
+        if usesSiteCounter {
+            context.setCycleCounter(site, value: nextIndex)
+        } else {
+            context.setCounter(counterKey, value: nextIndex)
+        }
 
         return result
     }
@@ -840,43 +854,31 @@ extension Renderer {
 
 
     
-    internal func renderCase(value: LiquidExpression, whens: [(LiquidExpression, [ASTNode])], else elseBranch: [ASTNode]?) async throws -> String {
-        let caseValue = try await evaluateExpression(value)
-
-        // Process sequentially. Else branches (sentinel .literal(.null)) render when
-        // no PRECEDING when matched. Regular when branches match against case value.
+    internal func renderCase(value: LiquidExpression, branches: [CaseBranch]) async throws -> String {
         var output = ""
         var anyPrecedingWhenMatched = false
 
-        for (whenExpr, whenNodes) in whens {
-            // Sentinel .literal(.null) means else branch
-            if case .literal(.null) = whenExpr {
-                // Else renders when no preceding when matched
-                if !anyPrecedingWhenMatched {
-                    output += try await renderNodeListFast(whenNodes)
+        // Ruby evaluates every when, including duplicate matches. An else tests
+        // only preceding matches; it does not prevent a later when from rendering.
+        for branch in branches {
+            switch branch {
+            case .otherwise(let nodes):
+                if !anyPrecedingWhenMatched { output += try await renderNodeListFast(nodes) }
+            case .when(let expression, let nodes):
+                // Ruby Condition evaluates left then right for each comparison;
+                // earlier branch bodies may have changed either expression.
+                let caseValue = try await evaluateExpression(value)
+                let whenValue = try await evaluateExpression(expression)
+                if isEqual(caseValue, whenValue) {
+                    anyPrecedingWhenMatched = true
+                    output += try await renderNodeListFast(nodes)
                 }
-                continue
-            }
-
-            let whenValue = try await evaluateExpression(whenExpr)
-            if isEqual(caseValue, whenValue) {
-                anyPrecedingWhenMatched = true
-                output += try await renderNodeListFast(whenNodes)
             }
         }
-
-        // If no when matched at all, render the legacy else branch
-        if !anyPrecedingWhenMatched, let elseBranch = elseBranch {
-            output += try await renderNodeListFast(elseBranch)
-        }
-
-        // Blank suppression: if output is whitespace-only and all branches are statically blank, suppress
         if output.allSatisfy(\.isWhitespace),
-           whens.allSatisfy({ RenderingContext.isStaticallyBlankBlock($0.1) }),
-           (elseBranch == nil || RenderingContext.isStaticallyBlankBlock(elseBranch!)) {
+           branches.allSatisfy({ RenderingContext.isStaticallyBlankBlock($0.body) }) {
             return ""
         }
-
         return output
     }
 

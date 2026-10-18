@@ -1,0 +1,83 @@
+name: Deploy admitted main documentation
+on:
+  workflow_dispatch:
+    inputs:
+      correctness_run_id:
+        description: Successful push-to-main correctness run
+        required: true
+        type: string
+      main_commit:
+        description: Exact current main commit qualified by that run
+        required: true
+        type: string
+      approval_record:
+        description: Retained explicit documentation deployment approval
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  admit:
+    name: Admit qualified main site
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Verify run, source and artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CORRECTNESS_RUN_ID: ${{ inputs.correctness_run_id }}
+          MAIN_COMMIT: ${{ inputs.main_commit }}
+          APPROVAL_RECORD: ${{ inputs.approval_record }}
+        run: python3 -B Scripts/documentation_admission.py --run-id "$CORRECTNESS_RUN_ID" --commit "$MAIN_COMMIT" --approval-record "$APPROVAL_RECORD" --output "$RUNNER_TEMP/liquid-docs-admission"
+      - name: Retain admission evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: liquid-documentation-admission
+          path: ${{ runner.temp }}/liquid-docs-admission/admission.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Package admitted site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with:
+          path: ${{ runner.temp }}/liquid-docs-admission/site
+          include-hidden-files: true
+  deploy:
+    name: Deploy admitted site
+    needs: admit
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Require GitHub-hosted isolation
+        env:
+          RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: |
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          echo "LIQUID_RUNNER_ENVIRONMENT=$RUNNER_ENVIRONMENT" >> "$GITHUB_ENV"
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
