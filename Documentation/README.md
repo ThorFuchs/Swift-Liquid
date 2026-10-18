@@ -55,3 +55,5 @@ under Artifacts and remain outside source control.
 registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
 describes the additive U2 runtime bridge. Graph inspection, the CLI and Vapor
 retain their existing APIs; dictionary behavior remains unchanged.
+
+The local [U4-Q independent audit](U4-Q/README.md) separates measured conformance failures from registry API regression qualification.

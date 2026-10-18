@@ -175,7 +175,16 @@
     "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()": null,
     "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)": 2,
     "LiquidTests.ExactRegistryDependencyInspectionTests/syntacticFindingsNeverEvaluateConditionsOrHostFilters()": null,
-    "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()": null
+    "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()": null,
+    "LiquidTests.RegistryConformanceAuditTests/ordinaryNamesAllTenAPIsPreserveScopeClockAndLogicalCounters(mode:)": 3,
+    "LiquidTests.RegistryConformanceAuditTests/canonicalDifferenceAndSuffixIdentityAreIntentional(mode:)": 3,
+    "LiquidTests.RegistryConformanceAuditTests/recoveredAndRaisingPoliciesMatchForOrdinaryNames()": null,
+    "LiquidTests.RegistryConformanceAuditTests/dynamicMissingAndCyclicStaticFindingsDoNotPredictExecution()": null,
+    "LiquidTests.RegistryConformanceAuditTests/parsedModeAndDeclarationOrderRemainIndependentOfGraphRank()": null,
+    "LiquidTests.RegistryConformanceAuditTests/atomicCapacityAndHostErrorsNeverBecomeFallbackSuccess()": null,
+    "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()": null,
+    "LiquidTests.RegistryConformanceAuditTests/htmlRemainsRawUnlessTheTemplateExplicitlyEscapes()": null,
+    "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -194,7 +203,8 @@
     "LiquidTests.R6ExpectedTokenTests/concurrentRendersKeepExpectedTokenOriginsInvocationOwned()",
     "LiquidTests.TemplateRegistryTests/concurrentRendersAndRegistryResolutionShareOnlyImmutableInputs()",
     "LiquidTests.ExactRegistryRenderingTests/concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned()",
-    "LiquidTests.ExactRegistryDependencyInspectionTests/concurrentRendersAndExactGraphInspectionStayInvocationOwned()"
+    "LiquidTests.ExactRegistryDependencyInspectionTests/concurrentRendersAndExactGraphInspectionStayInvocationOwned()",
+    "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",
@@ -226,6 +236,7 @@
     "LiquidTests.ExactRegistryRenderingTests/cancellationDuringRawEntryPreparationPublishesNoTable()",
     "LiquidTests.ExactRegistryRenderingTests/cancellationDuringSuspendedFilterAndSiblingReuse(recovering:)",
     "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationAtEntryPrecedesInvalidLimitsAndKeepsSiblingHealthy()",
-    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)"
+    "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)",
+    "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()"
   ]
 }

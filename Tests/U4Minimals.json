@@ -1,0 +1,82 @@
+{
+  "schema": "SwiftLiquidU4MinimizedInputs/1",
+  "purpose": "Candidate and host-control inputs for fresh paired measurements, not accepted language expectations or a second adapter. No engine fixes.",
+  "cases": [
+    {
+      "name": "partial-render-global",
+      "source": "{% assign local = \"L\" %}{% render \"p\" %}",
+      "environment": {
+        "title": "T"
+      },
+      "filesystem": {
+        "p": "{{ title }}|{{ local }}"
+      },
+      "provenance": "partials/partials.yml:129"
+    },
+    {
+      "name": "partial-render-explicit",
+      "source": "{% render \"p\", title: title %}",
+      "environment": {
+        "title": "T"
+      },
+      "filesystem": {
+        "p": "{{ title }}"
+      },
+      "provenance": "partials/partials.yml:129"
+    },
+    {
+      "name": "unused-invalid-partial",
+      "source": "ok",
+      "environment": {},
+      "filesystem": {
+        "unused": "{% if %}"
+      },
+      "provenance": "explicit-map eager parsing control"
+    },
+    {
+      "name": "object-property-size",
+      "source": "{{ obj.size }}|{{ obj | size }}|{% if obj.size > 0 %}Y{% endif %}",
+      "environment": {
+        "obj": {
+          "a": 1,
+          "b": 2
+        }
+      },
+      "filesystem": {},
+      "provenance": "partials/partials.yml:1022"
+    },
+    {
+      "name": "dynamic-property",
+      "source": "{% include item.template %}",
+      "environment": {
+        "item": {
+          "template": "p"
+        }
+      },
+      "filesystem": {
+        "p": "P"
+      },
+      "provenance": "basics/dynamic-partials.yml:56"
+    },
+    {
+      "name": "mixed-sort",
+      "source": "{{ items | sort | join: ',' }}",
+      "environment": {
+        "items": [
+          1,
+          "a",
+          true
+        ]
+      },
+      "filesystem": {},
+      "provenance": "basics/filter-edge-cases.yml:185; complexity 100"
+    },
+    {
+      "name": "strict-assignment-target",
+      "source": "{% assign foo.bar = 'v' %}{{ foo.bar }}",
+      "environment": {},
+      "filesystem": {},
+      "provenance": "parser_errors/assign.yml; fresh source-case association required"
+    }
+  ]
+}

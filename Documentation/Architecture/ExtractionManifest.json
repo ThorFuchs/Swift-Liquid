@@ -800,6 +800,23 @@
         "Sources/Liquid/Documentation.docc/ExactRegistryDependencies.md"
       ],
       "qualification": "Exact-source native and consumer results belong to the external U3 return. This record does not assert unexecuted qualification, complete conformance, performance or release clearance."
+    },
+    {
+      "area": "U4-Q independent conformance and exact registry audit",
+      "scopeDecision": "Direct owner dispatch authorizes qualification and bounded test/docs additions only. All production/adapter sources and pins remain accepted U3 bytes; U4-F/U5/Vapor are held.",
+      "changes": [
+        "Add original Apache-2.0 public-API metamorphic regressions, source-plan case map and candidate/control minimal inputs.",
+        "Reuse the existing pinned Ruby/Golden and liquid-spec JSON-RPC programmes, preserving raw upstream and strict qualification verdicts.",
+        "Keep complete execution results and proposed repairs in an external evidence packet; no engine or comparator change."
+      ],
+      "files": [
+        "Tests/LiquidTests/RegistryConformanceAuditTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U4CaseMap.json",
+        "Tests/U4Minimals.json",
+        "Documentation/U4-Q/README.md"
+      ],
+      "qualification": "This records authorized audit scope, not an unexecuted pass or Shopify conformance/release clearance. Final exact-source receipts belong to the dated U4-Q return."
     }
   ]
 }
