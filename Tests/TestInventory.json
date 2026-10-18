@@ -179,6 +179,8 @@
     "LiquidTests.RangePropertyTests/cancellationBeforeRangeCommandsPreservesSiblingReuse(recovering:)",
     "LiquidTests.RuntimeSemanticsTests/cancellationInsideIsolatedRenderKeepsSiblingHealthy(recovering:)",
     "LiquidTests.cancellationStopsAnEnteredLoopAndPreservesSiblingRender(parsedInput:)",
-    "LiquidTests.R6ExpectedTokenTests/cancellationAtExpectedTokenProviderEntryKeepsReuseHealthy()"
+    "LiquidTests.R6ExpectedTokenTests/cancellationAtExpectedTokenProviderEntryKeepsReuseHealthy()",
+    "LiquidTests.TemplateRegistryTests/cancellationDuringAdmissionAndByteScanIsTerminal()",
+    "LiquidTests.TemplateRegistryTests/cancellationPrecedesAllAdmissionFailures()"
   ]
 }
