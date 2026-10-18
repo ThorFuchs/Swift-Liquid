@@ -8,17 +8,18 @@ pure; tests use offline metadata and ZIP bodies, never the API or a deployment.
 """
 import argparse
 import datetime
-import hashlib
 import io
 import json
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import re
 import stat
 import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
+from documentation_transport import (ARCHIVE, DESCRIPTOR, admit_site, write_site,
+                                     require, digest, strict_json, safe_path)
 
 REPOSITORY = 'ThorFuchs/Swift-Liquid'
 REPOSITORY_ID = 1419107517
@@ -26,36 +27,6 @@ LANES = ['native', 'safety', 'docs', 'reference', 'platforms', 'installation']
 CHECKS = {'Swift 6.4 / ' + lane for lane in LANES} | {'Qualify clean source archive', 'Repository correctness'}
 MAX_ZIP = 64 * 1024 * 1024
 MAX_EXPANDED = 256 * 1024 * 1024
-
-
-def require(value, message):
-    if not value:
-        raise ValueError(message)
-
-
-def digest(body):
-    return hashlib.sha256(body).hexdigest()
-
-
-def strict_json(body):
-    def pairs(items):
-        out = {}
-        for key, value in items:
-            require(key not in out, 'Duplicate JSON key')
-            out[key] = value
-        return out
-    def constant(_):
-        raise ValueError('Nonfinite JSON value')
-    return json.loads(body, object_pairs_hook=pairs, parse_constant=constant)
-
-
-def safe_path(value):
-    require(isinstance(value, str) and value and '\\' not in value and '\x00' not in value,
-            'Invalid artifact path')
-    path = PurePosixPath(value)
-    require(not path.is_absolute() and '..' not in path.parts and str(path) == value and value != '.',
-            'Unsafe or noncanonical artifact path')
-    return value
 
 
 def validate_run(repository, run, workflow, jobs, commit, context, main):
@@ -140,7 +111,9 @@ def admit_zip(body, metadata, run, tree, docs_job):
                     'Links or special files in artifact')
             if not item.is_dir():
                 files[name] = archive.read(item)
-    require({'receipt.json', 'site.json'} <= set(files), 'Documentation metadata missing')
+    require({'receipt.json', 'site.json', ARCHIVE, DESCRIPTOR} <= set(files), 'Documentation transport metadata missing')
+    require(not any(name == 'site' or name.startswith('site/') or name.startswith('Liquid.doccarchive/')
+                    for name in files), 'Raw DocC/site trees must not enter the ZIP transport')
     receipt, site = strict_json(files['receipt.json']), strict_json(files['site.json'])
     revision = {'commit': run['head_sha'], 'tree': tree, 'clean': True}
     require(receipt.get('lane') == 'docs' and receipt.get('status') == 'passed'
@@ -159,16 +132,11 @@ def admit_zip(body, metadata, run, tree, docs_job):
             and info.get('runURL') == 'https://github.com/' + REPOSITORY + '/actions/runs/' + str(run['id'])
             and info.get('sourceInventorySHA256') == digest(json.dumps(sources, sort_keys=True).encode()),
             'Site build provenance differs from qualified run/source inventory')
-    expected = {}
-    for row in site.get('files', []):
-        name = safe_path(row['path'])
-        require(name not in expected and re.fullmatch('[0-9a-f]{64}', row['sha256']), 'Invalid site inventory')
-        expected[name] = row['sha256']
-    actual = {name.removeprefix('site/'): data for name, data in files.items() if name.startswith('site/')}
-    require(expected and set(actual) == set(expected) and {'index.html', 'build-info.json', '.nojekyll'} <= set(actual),
-            'Site body membership differs from admitted inventory')
-    require(all(digest(actual[name]) == value for name, value in expected.items()), 'Site body digest mismatch')
-    require(strict_json(actual['build-info.json']) == info, 'Embedded site provenance mismatch')
+    actual = admit_site(files[ARCHIVE], strict_json(files[DESCRIPTOR]), files['site.json'])
+    require(sum(len(data) for name, data in files.items() if name != ARCHIVE)
+            + sum(len(data) for data in actual.files.values()) <= MAX_EXPANDED, 'Combined expanded artifact exceeds bound')
+    require({'index.html', 'build-info.json', '.nojekyll'} <= set(actual.files), 'Required site bodies missing')
+    require(strict_json(actual.files['build-info.json']) == info, 'Embedded site provenance mismatch')
     return actual
 
 
@@ -263,14 +231,11 @@ def main():
         validate_run_stable(run, ending_run)
         require(api.json(base + '/branches/main')['commit']['sha'] == args.commit, 'Main moved during admission')
         target = args.output / 'site'
-        target.mkdir()
-        for name, body in site.items():
-            path = target / name
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(body)
+        write_site(site, target)
         record.update(status='passed', repository=repository['full_name'], run=run, endingRun=ending_run,
                       requiredJobs=jobs, artifact=metadata, sourceTree=tree,
-                      siteFiles=[{'path': name, 'sha256': digest(body)} for name, body in sorted(site.items())],
+                      siteFiles=[{'path': name, 'sha256': digest(body), 'mode': site.modes[name]}
+                                 for name, body in sorted(site.files.items())],
                       limitation='Fresh sequential main observations are not a branch lock; no source or artifact code executed')
     except (ValueError, KeyError, TypeError, OSError, zipfile.BadZipFile) as error:
         record['error'] = str(error)

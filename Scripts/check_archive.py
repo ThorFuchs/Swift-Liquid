@@ -13,6 +13,7 @@ import tarfile
 import tempfile
 from ci import ROOT, environment, source_revision, source_snapshot
 from archive_provenance import manifest, revision as archive_revision
+from documentation_transport import ARCHIVE, DESCRIPTOR, admit_site, strict_json
 
 env = environment()
 output = ROOT / 'Artifacts/archive'
@@ -76,10 +77,35 @@ assets = {name: hashlib.sha256(first).hexdigest()}
 docs = ROOT / 'Artifacts/docs/Liquid.doccarchive.tar.gz'
 if not docs.exists():
     raise RuntimeError('Compile documentation before preparing release assets')
+docs_root = docs.parent
+docs_receipt = strict_json((docs_root / 'receipt.json').read_bytes())
+if (docs_receipt.get('lane') != 'docs' or docs_receipt.get('status') != 'passed'
+        or docs_receipt.get('sourceQualified') is not True or docs_receipt.get('sourceUnchanged') is not True
+        or docs_receipt.get('sourceRevision') != source_revision()
+        or docs_receipt.get('endingSourceRevision') != source_revision()
+        or docs_receipt.get('sources') != source_snapshot()):
+    raise RuntimeError('Documentation input differs from clean archive producer source')
+site_body = (docs_root / 'site.json').read_bytes()
+transport_body = (docs_root / DESCRIPTOR).read_bytes()
+site = admit_site((docs_root / ARCHIVE).read_bytes(), strict_json(transport_body), site_body)
+site_manifest = strict_json(site_body)
+site_info = site_manifest.get('buildInformation', {})
+run_id = env.get('GITHUB_RUN_ID', '')
+expected_run_url = 'https://github.com/ThorFuchs/Swift-Liquid/actions/runs/' + run_id if run_id.isdigit() else None
+if (site_manifest.get('status') != 'passed' or site_manifest.get('basePath') != '/Swift-Liquid'
+        or site_info.get('sourceCommit') != commit or site_info.get('sourceState') != 'clean'
+        or site_info.get('documentationTracks') != 'main' or site_info.get('runURL') != expected_run_url
+        or site_info.get('sourceInventorySHA256') != hashlib.sha256(
+            json.dumps(docs_receipt['sources'], sort_keys=True).encode()).hexdigest()
+        or strict_json(site.files['build-info.json']) != site_info):
+    raise RuntimeError('Documentation site provenance differs from clean archive producer')
 shutil.copyfile(docs, output / docs.name)
 assets[docs.name] = hashlib.sha256(docs.read_bytes()).hexdigest()
 (output / 'SHA256SUMS').write_text(''.join(f'{digest}  {name}\n' for name, digest in sorted(assets.items())))
 receipt = {'candidateCommit': commit, 'trackedFileCount': len(paths), 'inventory': paths,
+           'documentationTransportSHA256': hashlib.sha256(transport_body).hexdigest(),
+           'documentationSiteArchiveSHA256': hashlib.sha256((docs_root / ARCHIVE).read_bytes()).hexdigest(),
+           'documentationSiteFiles': len(site.files),
            'byteIdenticalRepeatedSourceArchives': True, 'cleanNativeQualification': 'passed',
            'cleanNativeSourceRevision': expected_revision, 'cleanNativeReceiptSHA256': native_receipt_sha,
            'cleanSourceProvenanceSHA256': expected_revision['provenanceSHA256'], 'assets': assets}

@@ -193,7 +193,7 @@ git -C "$LIQUID_REFERENCE_PATH" checkout --detach FETCH_HEAD
         artifact = q['steps'][-1]
         demand(artifact.get('if') == 'always()' and artifact.get('with') == {
             'name': 'liquid-${{ matrix.lane }}',
-            'path': 'Artifacts/${{ matrix.lane }}/\n!Artifacts/docs/Liquid.doccarchive/**\n',
+            'path': 'Artifacts/${{ matrix.lane }}/\n!Artifacts/docs/Liquid.doccarchive/**\n!Artifacts/docs/site/**\n',
             'if-no-files-found': 'error', 'retention-days': 30,
             'include-hidden-files': "${{ matrix.lane == 'docs' }}"}, 'Complete bounded lane/site evidence required')
         checkout = {'uses': 'actions/checkout@' + PINS['actions/checkout'], 'with': {'persist-credentials': False}}

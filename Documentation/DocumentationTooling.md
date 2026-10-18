@@ -21,6 +21,7 @@ python3 -B Scripts/ci.py --lane docs
 | `Liquid.doccarchive` and `Liquid.doccarchive.tar.gz` | Native API reference and guides for offline use |
 | `site` | Landing page, existing DocC routes and generated public build information |
 | `site.json` | Route/asset checks, file hashes and source identity |
+| `site.tar.gz` and `site-transport.json` | Complete site transport, exact names/bytes/modes and archive/manifest digests |
 | `receipt.json` | Lane source inventory, toolchain, commands and results |
 
 The graph must belong to the current checkout and contain authored Liquid
@@ -75,16 +76,32 @@ path and checks byte equality, preserving article URLs and generated JavaScript.
 
 ## Publication and provenance
 
-GitHub Pages receives only `Artifacts/docs/site`. Compiler graphs, command logs
-and maintainer records are not website content. The deployment job runs on `main`
-after all nine qualification lanes pass, with Pages/OIDC permissions confined
-to that job. PRs compile and verify the site without deploying it. Actions are
-pinned by commit.
+GitHub Pages receives only the admitted site. Compiler graphs, command logs and
+maintainer records are not website content. Deployment requires a separate
+explicit main-only dispatch and a successful exact-main correctness run: six
+matrix lanes, strict archive and the fail-closed summary. Pages/OIDC permissions
+remain confined to the deployment job, which executes no checked-out source.
+PRs compile and verify documentation without deploying it. Actions are pinned by
+commit; release qualification remains a separate nine-lane obligation.
 
 Raw DocC and site trees contain Swift declaration filenames with colons. They are
 excluded from the general ZIP evidence artifact, whose uploader rejects those
-characters. Evidence retains the compiled DocC tar archive and site file manifest;
-the separate Pages tar artifact carries the complete qualified site.
+characters. The docs producer packages the complete site in `site.tar.gz` without
+renaming or rewriting generated files. `site-transport.json` binds its compressed
+size/digest, exact `site.json` bytes and every file/directory mode; file rows retain
+byte counts and hashes. Hidden files, empty directories and Unicode names survive.
+Archive timestamps/owners are normalized for deterministic transport; original
+filenames, bodies, permissions and embedded build provenance are preserved.
+
+Both the clean archive lane and the read-only deployment admission validate the
+envelope before using it. Validation rejects escaping, ambiguous, duplicate,
+missing or extra paths, links/special files, changed modes/bodies, mismatched
+manifests, oversized expansion and trailing payload. The strict archive also joins
+the docs receipt/site to its exact clean source. Deployment additionally retains
+the repository/run/latest-attempt/job/artifact digest and current-main checks;
+packing a site never grants publication authority. Extraction creates one new
+owned directory only after complete admission. The privileged Pages job still
+receives only the admitted site, through its separate Pages tar artifact.
 
 `build-info.json` identifies clean source, compiler and CI run. Dirty local builds
 are marked as local previews and do not claim their HEAD commit represents the

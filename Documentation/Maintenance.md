@@ -54,6 +54,12 @@ all required jobs, current main, artifact origin/digest and every declared site
 body plus its source/build receipt. Artifact creation/finalization must lie within
 the latest-attempt documentation job; stale same-run/source artifacts fail. The privileged Pages job executes no source.
 
+Routine evidence excludes both raw DocC and site trees. The complete site travels
+inside `site.tar.gz` with a digest-bound `site-transport.json` inventory, preserving
+Swift declaration filenames containing colons, bytes, modes and provenance. Both
+archive correctness and deployment admission validate the envelope; neither
+renames generated paths or treats transport success as a release/deployment gate.
+
 An absent/expired artifact, skipped/neutral prerequisite, PR run or moved main
 fails admission. Reconsider the source rather than overriding the check. The
 environment's main-only policy and effective permissions still need live readback

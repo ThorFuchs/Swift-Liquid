@@ -5,10 +5,14 @@ import copy
 import io
 import json
 import os
+from pathlib import Path
 import stat
 import subprocess
 import sys
+import tarfile
+import tempfile
 import unittest
+from unittest.mock import patch
 import urllib.error
 import zipfile
 from ci import ROOT
@@ -16,6 +20,8 @@ from workflow_policy import load_yaml, validate, audit
 from benchmark_request import admit as admit_benchmark
 from documentation_admission import (REPOSITORY, REPOSITORY_ID, CHECKS, GitHub,
                                      validate_run, validate_run_stable, validate_artifact, admit_zip, digest, strict_json)
+import documentation_transport as transport
+from documentation_transport import ARCHIVE, DESCRIPTOR, pack_site, admit_site, write_site
 
 
 class WorkflowPolicyTests(unittest.TestCase):
@@ -121,6 +127,13 @@ class WorkflowPolicyTests(unittest.TestCase):
         changed = copy.deepcopy(self.document); changed['jobs']['qualify']['strategy']['matrix']['lane'].remove('safety')
         with self.assertRaises(RuntimeError): validate(changed)
 
+    def test_raw_docc_and_site_trees_cannot_reenter_zip_upload(self):
+        for exclusion in ['!Artifacts/docs/site/**\n', '!Artifacts/docs/Liquid.doccarchive/**\n']:
+            changed = copy.deepcopy(self.document)
+            upload = changed['jobs']['qualify']['steps'][-1]['with']
+            upload['path'] = upload['path'].replace(exclusion, '')
+            with self.subTest(exclusion=exclusion), self.assertRaises(RuntimeError): validate(changed)
+
     def test_ambiguous_yaml_and_object_construction_are_rejected(self):
         for source in ['jobs: {}\njobs: {}\n', 'a: &shared {}\nb: *shared\n', '---\na: 1\n---\nb: 2\n', 'x: !ruby/object:Object {}\n']:
             with self.subTest(source=source), self.assertRaises(RuntimeError): load_yaml(source)
@@ -178,7 +191,9 @@ class DocumentationAdmissionTests(unittest.TestCase):
                 'sourceInventorySHA256': digest(json.dumps(sources, sort_keys=True).encode()),
                 'runURL': 'https://github.com/' + REPOSITORY + '/actions/runs/123'}
         self.site_files = {'index.html': b'<html>qualified main</html>', '.nojekyll': b'',
-                           'build-info.json': json.dumps(info).encode()}
+                           'build-info.json': json.dumps(info).encode(),
+                           'data/documentation/liquid/liquiddependencyedge/!=(_:_:).json': b'{"qualified":true}',
+                           'data/über/Δ(_:).json': b'{"unicode":true}'}
         revision = {'commit': self.commit, 'tree': self.tree, 'clean': True}
         self.receipt = {'lane': 'docs', 'status': 'passed', 'sourceQualified': True, 'sourceUnchanged': True,
                         'sourceRevision': revision, 'endingSourceRevision': revision, 'sources': sources}
@@ -190,11 +205,24 @@ class DocumentationAdmissionTests(unittest.TestCase):
             'head_branch': 'main', 'head_sha': self.commit}}
 
     def archive(self, extras=()):
+        site_body = json.dumps(self.site).encode()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'site'; root.mkdir()
+            for name, body in self.site_files.items():
+                path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(body)
+            # Malicious body tests deliberately keep the separately recorded site
+            # manifest unchanged. Build the archive independently, then bind its
+            # descriptor to that claimed manifest so admission must reject it.
+            actual_manifest = json.dumps({**self.site, 'files': [
+                {'path': name, 'sha256': digest(body)} for name, body in self.site_files.items()]}).encode()
+            envelope, descriptor = pack_site(root, actual_manifest)
+            descriptor['siteManifestSHA256'] = digest(site_body)
         out = io.BytesIO()
         with zipfile.ZipFile(out, 'w') as z:
             z.writestr('receipt.json', json.dumps(self.receipt))
-            z.writestr('site.json', json.dumps(self.site))
-            for name, body in self.site_files.items(): z.writestr('site/' + name, body)
+            z.writestr('site.json', site_body)
+            z.writestr(ARCHIVE, envelope)
+            z.writestr(DESCRIPTOR, json.dumps(descriptor))
             for name, body, mode in extras:
                 entry = zipfile.ZipInfo(name); entry.external_attr = mode << 16; z.writestr(entry, body)
         body = out.getvalue()
@@ -203,7 +231,10 @@ class DocumentationAdmissionTests(unittest.TestCase):
     def test_success_requires_actual_main_run_jobs_and_all_site_bytes(self):
         validate_run(self.repository, self.run, self.workflow, self.jobs, self.commit, self.context, self.main)
         body, metadata = self.archive()
-        self.assertEqual(admit_zip(body, metadata, self.run, self.tree, self.docs_job), self.site_files)
+        self.assertEqual(admit_zip(body, metadata, self.run, self.tree, self.docs_job).files, self.site_files)
+        with zipfile.ZipFile(io.BytesIO(body)) as archive:
+            self.assertTrue(all(':' not in name for name in archive.namelist()))
+            self.assertFalse(any(name.startswith('site/') for name in archive.namelist()))
 
     def test_wrong_event_source_repository_run_workflow_and_moved_main_fail(self):
         for key, value in [('event', 'pull_request'), ('head_branch', 'feature'), ('head_sha', 'd' * 40),
@@ -286,6 +317,103 @@ class DocumentationAdmissionTests(unittest.TestCase):
         self.assertEqual(api.download(9), b'zip body')
         self.assertIn('Authorization', calls[0].headers)
         self.assertNotIn('Authorization', calls[1].headers)
+
+
+class DocumentationTransportTests(unittest.TestCase):
+    def specimen(self, root):
+        root.mkdir(mode=0o750)
+        files = {'index.html': b'<p>site</p>', '.nojekyll': b'',
+                 'data/Δ/!=(_:_:).json': b'{"unchanged":true}'}
+        for name, body in files.items():
+            path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(body)
+            path.chmod(0o640)
+        (root / 'empty').mkdir(mode=0o700)
+        manifest = json.dumps({'files': [{'path': name, 'sha256': digest(body)} for name, body in files.items()]}).encode()
+        return files, manifest
+
+    def rewrite(self, body, descriptor, edit, trailing=b''):
+        out = io.BytesIO()
+        with tarfile.open(fileobj=io.BytesIO(body), mode='r:gz') as source:
+            entries = [(copy.copy(member), source.extractfile(member).read() if member.isfile() else None)
+                       for member in source]
+        entries = edit(entries)
+        with tarfile.open(fileobj=out, mode='w', format=tarfile.PAX_FORMAT) as archive:
+            for member, data in entries:
+                archive.addfile(member, io.BytesIO(data) if data is not None else None)
+        raw = out.getvalue() + trailing
+        import gzip
+        body = gzip.compress(raw, mtime=0)
+        descriptor = {**descriptor, 'archiveBytes': len(body), 'archiveSHA256': digest(body)}
+        return body, descriptor
+
+    def test_real_declaration_names_hidden_files_empty_directories_and_modes_round_trip(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'site'; files, manifest = self.specimen(root)
+            body, descriptor = pack_site(root, manifest)
+            self.assertEqual((body, descriptor), pack_site(root, manifest))
+            admitted = admit_site(body, descriptor, manifest)
+            self.assertEqual(admitted.files, files); self.assertEqual(admitted.modes['.'], 0o750)
+            self.assertEqual(admitted.modes['empty'], 0o700)
+            target = Path(temporary) / 'restored'; write_site(admitted, target)
+            for name, mode in admitted.modes.items():
+                self.assertEqual(stat.S_IMODE((target / name).stat().st_mode), mode)
+                if name in files: self.assertEqual((target / name).read_bytes(), files[name])
+            with self.assertRaises(ValueError): write_site(admitted, target)
+            self.assertEqual((root / 'data/Δ/!=(_:_:).json').read_bytes(), files['data/Δ/!=(_:_:).json'])
+
+    def test_wrong_archive_manifest_descriptor_and_corrupt_compression_fail(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'site'; _, manifest = self.specimen(root); body, descriptor = pack_site(root, manifest)
+            for changes in [{'archiveSHA256': '0' * 64}, {'siteManifestSHA256': '0' * 64},
+                            {'archiveBytes': len(body) + 1}, {'schemaVersion': True}, {'archive': '../site.tar.gz'},
+                            {'members': descriptor['members'][:-1]}]:
+                with self.subTest(changes=changes), self.assertRaises(ValueError):
+                    admit_site(body, {**descriptor, **changes}, manifest)
+            broken = body[:-8]
+            with self.assertRaises(ValueError):
+                admit_site(broken, {**descriptor, 'archiveBytes': len(broken), 'archiveSHA256': digest(broken)}, manifest)
+            with patch.object(transport, 'MAX_TAR_BYTES', 1024), self.assertRaises(ValueError):
+                admit_site(body, descriptor, manifest)
+
+    def test_traversal_links_special_files_duplicate_missing_mode_and_trailing_payload_fail(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'site'; _, manifest = self.specimen(root); body, descriptor = pack_site(root, manifest)
+            def mutate(entries, variant):
+                member, data = next((m, d) for m, d in entries if m.isfile())
+                if variant == 'bytes':
+                    member, data = next((m, d) for m, d in entries if d)
+                    return [(m, (b'X' + d[1:]) if m is member else d) for m, d in entries]
+                if variant == 'duplicate': return entries + [(copy.copy(member), data)]
+                if variant == 'missing': return [(m, d) for m, d in entries if m.name != member.name]
+                if variant == 'path': member.name = 'site/../escape'
+                elif variant == 'absolute': member.name = '/site/escape'
+                elif variant == 'mode': member.mode |= 0o4000
+                elif variant == 'metadata': member.pax_headers = {'mtime': '1'}
+                else:
+                    member.type = {'symlink': tarfile.SYMTYPE, 'hardlink': tarfile.LNKTYPE, 'fifo': tarfile.FIFOTYPE}[variant]
+                    member.linkname = '../../outside'; member.size = 0
+                    return [(m, None if m is member else d) for m, d in entries]
+                return entries
+            for variant in ['bytes', 'duplicate', 'missing', 'path', 'absolute', 'mode', 'metadata', 'symlink', 'hardlink', 'fifo']:
+                changed, meta = self.rewrite(body, descriptor, lambda entries: mutate(entries, variant))
+                with self.subTest(variant=variant), self.assertRaises(ValueError): admit_site(changed, meta, manifest)
+            changed, meta = self.rewrite(body, descriptor, lambda entries: entries, trailing=b'concealed payload')
+            with self.assertRaises(ValueError): admit_site(changed, meta, manifest)
+
+    def test_ambiguous_inventory_oversized_members_and_linked_producer_cannot_pass(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'site'; _, manifest = self.specimen(root); body, descriptor = pack_site(root, manifest)
+            for change in ['duplicate', 'case', 'size', 'parent', 'bool-mode']:
+                rows = copy.deepcopy(descriptor['members']); file = next(r for r in rows if r['kind'] == 'file')
+                if change == 'duplicate': rows.append(copy.copy(file))
+                elif change == 'case': rows.append({**file, 'path': file['path'].upper()})
+                elif change == 'size': file['bytes'] = transport.MAX_SITE_BYTES + 1
+                elif change == 'parent': file['path'] = 'absent/file'
+                else: file['mode'] = True
+                with self.subTest(change=change), self.assertRaises(ValueError):
+                    admit_site(body, {**descriptor, 'members': rows}, manifest)
+            (root / 'linked').symlink_to(root / 'index.html')
+            with self.assertRaises(ValueError): pack_site(root, manifest)
 
 
 if __name__ == '__main__':

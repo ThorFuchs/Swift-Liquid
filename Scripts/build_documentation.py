@@ -12,6 +12,7 @@ import sys
 from ci import ROOT, environment, swift
 from documentation_catalog import public_symbols, verify_comments, published_baseline, verify_public_baseline
 from build_documentation_site import build_site, prepare_navigation_index
+from documentation_transport import ARCHIVE, DESCRIPTOR, pack_site
 
 env = environment()
 output = ROOT / 'Artifacts/docs'
@@ -71,4 +72,8 @@ run(swift() + ['run', '--package-path', 'Examples/FiltersConsumer', 'LiquidFilte
 run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
 run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
 run(swift() + ['run', '--package-path', 'Examples/DependencyConsumer', 'LiquidDependencyConsumer'], 'dependency-consumer')
+site_body = (output / 'site.json').read_bytes()
+site_archive, transport = pack_site(output / 'site', site_body)
+(output / ARCHIVE).write_bytes(site_archive)
+(output / DESCRIPTOR).write_text(json.dumps(transport, indent=2) + '\n')
 print(f'DocC compiled with {len(symbols)} public symbols: {archive}')
