@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Normalize ASCII date strings with an invocation-owned byte scan and preserve the
+  original regex for Unicode inputs. Retain public byte-boundary, policy and mixed
+  concurrent-input regressions, all 222 controlled comparisons, the rejected
+  matching-range candidate and unresolved historical performance flags.
+
 - Retain controlled date-parser normalization, matching and capture observations,
   typed audit controls, immutable range snapshots and all comparison flags.
   Preserve production code, cancellation checkpoints and historical uncertainty.

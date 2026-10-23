@@ -704,20 +704,20 @@
       "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
     },
     {
-  "area": "PF1-002 source and documentation reconciliation",
-  "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
-  "changes": [
-    "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
-    "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
-    "Hold PR23 separately and retain all independent conformance and latency flags."
-  ],
-  "files": [
-    "CHANGELOG.md",
-    "Documentation/Architecture/ExtractionManifest.json",
-    "Documentation/README.md"
-  ],
-  "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
-},
+      "area": "PF1-002 source and documentation reconciliation",
+      "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
+      "changes": [
+        "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
+        "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
+        "Hold PR23 separately and retain all independent conformance and latency flags."
+      ],
+      "files": [
+        "CHANGELOG.md",
+        "Documentation/Architecture/ExtractionManifest.json",
+        "Documentation/README.md"
+      ],
+      "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
+    },
     {
       "area": "R6 typed expected-token diagnostic presentation",
       "scopeDecision": "Direct LIQUID-PF1-012 maintainer instruction designates exact35ab as limited local R6 baseline and commissions an independent local successor only; no whole-PR/conformance/performance/merge/release acceptance.",
@@ -738,6 +738,26 @@
         "Documentation/LQ1-R6/EXPECTED_TOKEN_DIAGNOSTICS.md"
       ],
       "qualification": "Focused before/after development observations are logged externally. One final clean successor requires native/safety/reference/platforms/installation/docs/strict archive through unchanged ci.py, with actual new counts and full Git-free native child; stop on first failure. Exact-source receipts/review remain external without a post-check stamp. Independent conformance remains failed/unrerun and timing held; new source acceptance is pending."
+    },
+    {
+      "area": "Measured ASCII date normalization",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #22 followed by targeted normalization and matching optimizations.",
+      "files": [
+        "Sources/Liquid/Support/RubyDateParser.swift",
+        "Tests/LiquidTests/DateNormalizationTests.swift",
+        "Tests/LiquidTests/DateFormattingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/PerformanceReview-DateOptimizations.md",
+        "Documentation/PerformanceReview-DateOptimizations-Data.md"
+      ],
+      "changes": [
+        "Replace the pinned regex normalization only for ASCII inputs with an invocation-owned UTF-8 scan preserving the exact allowed-byte set and maximal excluded-run replacement; non-ASCII input uses the original whole-string regex.",
+        "Preserve grammar expressions/order, compiled-pattern initialization, capture/mutation code, 128-byte public bound, cancellation checkpoints, budgets, checked Sendable public contracts, products, empty root dependencies and pinned fixture/license bytes.",
+        "Reject the independently measured matching-range-only candidate because it does not meet the frozen both-caller successful-date criterion; retain original matching code.",
+        "Add public source/parsed regressions across all four policies for ASCII controls/runs, Unicode/decomposed/non-BMP prefixes, invalid byte preservation and 128/129-byte bounds; mix ISO/RFC/Unicode timestamps in existing concurrent reuse coverage.",
+        "Retain the pre-run workflow-context validation failure, all complete runs and every median/spread flag without subtraction, trimming, universal speedup or historical-regression clearance."
+      ],
+      "qualification": "PR #22 and fresh main independently passed all nine Scripts/ci.py lanes. Frozen hosted study 38947177449 qualifies baseline and both candidates separately through native and pinned reference lanes before timing, validates 17,844 normalization/range inputs and 463,944 expression/capture pairs, builds all eight unaugmented release binaries and admits 192 untimed public output records. Independently verify ZIP/files/source fingerprints, binary hashes/UUIDs, all 108 runs/1,800 records/222 comparisons, samples, command order, block effects and all 20 median/146 spread flags. Normalization alone meets the frozen RFC source/reused rule in both callers/clocks. Final source-bound CI qualifies the exact public patch separately; no release is prepared."
     }
   ]
 }

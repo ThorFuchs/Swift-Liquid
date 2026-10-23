@@ -28,6 +28,7 @@
     "LiquidTests.CustomFilterTests/unsupportedComparisonLiteralsAndOversizedInputsFailBeforeCallback()": null,
     "LiquidTests.DateFormattingTests/cancellationAndScalarDateDirectivesRetainBytesAndBudgets(_:)": 12,
     "LiquidTests.DateFormattingTests/concurrentRendersKeepDateFormatsInvocationOwned()": null,
+    "LiquidTests.DateNormalizationTests/normalizationRetainsBytesAndInputBoundary(parsedInput:policy:)": 8,
     "LiquidTests.DependencyInspectionTests/cancellationAtCoordinatedInspectionEntryLeavesReuseHealthy(parsedInput:)": 2,
     "LiquidTests.DependencyInspectionTests/cancellationInPublicAndCycleTraversals()": null,
     "LiquidTests.DependencyInspectionTests/concurrentRendersMetricsAndDependencyInspection()": null,
