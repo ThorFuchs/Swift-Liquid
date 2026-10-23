@@ -1,0 +1,849 @@
+{
+  "schema": "SwiftLiquidU4QCasePlan/1",
+  "note": "This is a source plan, not qualification. Measurement completion and independent compatibility are separate statuses in the dated return.",
+  "count": 60,
+  "cases": [
+    {
+      "id": "U4-Q001",
+      "gate": "U4-G0",
+      "title": "Reconstruct immutable U3 branch",
+      "expected": "Verify head 35af81b parent U2 ad58068 and 284 source blobs; clean isolated branch",
+      "evidence_kind": "git/source",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "source-bundle-and-baseline"
+      ]
+    },
+    {
+      "id": "U4-Q002",
+      "gate": "U4-G0",
+      "title": "Check current main and PR23",
+      "expected": "Record date-parser ownership and avoid any automatic merge/rebase",
+      "evidence_kind": "repo",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "owner-main-pr23-guards"
+      ]
+    },
+    {
+      "id": "U4-Q003",
+      "gate": "U4-G0",
+      "title": "Pin Ruby/Golden and liquid-spec inputs",
+      "expected": "Exact upstream SHAs/gem/Ruby versions/fixture hashes, readable clean paths",
+      "evidence_kind": "pins",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "upstream-gem-fixture-pins"
+      ]
+    },
+    {
+      "id": "U4-Q004",
+      "gate": "U4-G0",
+      "title": "Preserve root package dependency law",
+      "expected": "Root Package.swift zero dependencies; tools/adapter remains development-only",
+      "evidence_kind": "manifest",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "all-production-and-manifest-hashes"
+      ]
+    },
+    {
+      "id": "U4-Q005",
+      "gate": "U4-G0",
+      "title": "Control test execution and workspaces",
+      "expected": "No shared cache deletion, overlapping jobs, remote write or unbounded memory hog",
+      "evidence_kind": "environment",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "serialized-bounded-process-and-cleanup-evidence"
+      ]
+    },
+    {
+      "id": "U4-Q006",
+      "gate": "U4-G1",
+      "title": "Re-run Golden 1098 cases",
+      "expected": "Unchanged fixture outcomes and source SHA",
+      "evidence_kind": "reference",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-golden"
+      ]
+    },
+    {
+      "id": "U4-Q007",
+      "gate": "U4-G1",
+      "title": "Re-run authored 221 probes",
+      "expected": "Exact output, modes, native errors and recovery",
+      "evidence_kind": "reference",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-probes"
+      ]
+    },
+    {
+      "id": "U4-Q008",
+      "gate": "U4-G1",
+      "title": "Re-run Ruby date grammar 337",
+      "expected": "Line/field/date/time/calendar expectations retained",
+      "evidence_kind": "reference",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-grammar"
+      ]
+    },
+    {
+      "id": "U4-Q009",
+      "gate": "U4-G1",
+      "title": "Re-run date-filter 376",
+      "expected": "Typed outside-year domain remains explicit",
+      "evidence_kind": "reference",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-date"
+      ]
+    },
+    {
+      "id": "U4-Q010",
+      "gate": "U4-G1",
+      "title": "Classify all 2032 observations",
+      "expected": "1502 renders,337 parses,132 expected-error,26 recovery,35 outside domain or exact explained deltas",
+      "evidence_kind": "classification",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-classification"
+      ]
+    },
+    {
+      "id": "U4-Q011",
+      "gate": "U4-G1",
+      "title": "Verify 15 host-extension tests separately",
+      "expected": "No inflation of core reference denominator; Ruby/Swift callbacks matched",
+      "evidence_kind": "host",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "reference-host-extensions"
+      ]
+    },
+    {
+      "id": "U4-Q012",
+      "gate": "U4-G2",
+      "title": "Use only existing LiquidSpecAdapter",
+      "expected": "Development-only public Liquid module bridge, no duplicated JSON-RPC runtime",
+      "evidence_kind": "source",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "all-adapter-sources-unchanged"
+      ]
+    },
+    {
+      "id": "U4-Q013",
+      "gate": "U4-G2",
+      "title": "Reproduce pinned liquid-spec runner",
+      "expected": "Shopify 84bf25e and upstream Ruby pinned, correct gems/protocol",
+      "evidence_kind": "pins",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "upstream-gem-fixture-pins"
+      ]
+    },
+    {
+      "id": "U4-Q014",
+      "gate": "U4-G2",
+      "title": "Audit source case versus variant population",
+      "expected": "5099 source,5112 variant old baseline and actual new counts with full explanation",
+      "evidence_kind": "population",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "full-spec-population-ledger"
+      ]
+    },
+    {
+      "id": "U4-Q015",
+      "gate": "U4-G2",
+      "title": "Preserve explicit five-suite list",
+      "expected": "basics,liquid_ruby,liquid_ruby_lax,parser_errors,partials; benchmarks excluded",
+      "evidence_kind": "suite",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "full-spec-five-suite-pins"
+      ]
+    },
+    {
+      "id": "U4-Q016",
+      "gate": "U4-G2",
+      "title": "Account for parser mode expansion",
+      "expected": "lax,strict,strict2 variants; unsupported warn and other options visible",
+      "evidence_kind": "modes",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "full-spec-mode-ledger"
+      ]
+    },
+    {
+      "id": "U4-Q017",
+      "gate": "U4-G2",
+      "title": "Account for every excluded variant",
+      "expected": "Transport, numeric-domain, hosted Ruby objects and unavailable policies individual reasons",
+      "evidence_kind": "excluded",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "full-spec-eligibility-reasons"
+      ]
+    },
+    {
+      "id": "U4-Q018",
+      "gate": "U4-G2",
+      "title": "Retain original upstream comparator",
+      "expected": "upstreamVerdict and comparison copied from actual runner, not Python substitutes",
+      "evidence_kind": "raw",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "raw-upstream-verdicts"
+      ]
+    },
+    {
+      "id": "U4-Q019",
+      "gate": "U4-G2",
+      "title": "Retain strict qualified comparator",
+      "expected": "qualificationComparison tracks phase and operational checks, separately",
+      "evidence_kind": "strict",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "strict-qualification-verdicts"
+      ]
+    },
+    {
+      "id": "U4-Q020",
+      "gate": "U4-G2",
+      "title": "Treat 10 historical quota failures as failures",
+      "expected": "Fresh typed operational failures not language matches or skips",
+      "evidence_kind": "operational",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "operational-error-ledger"
+      ]
+    },
+    {
+      "id": "U4-Q021",
+      "gate": "U4-G2",
+      "title": "No retry-to-green or expectation rewrite",
+      "expected": "All attempts and timestamped output preserved without overwriting historic receipts",
+      "evidence_kind": "provenance",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "complete-attempt-history"
+      ]
+    },
+    {
+      "id": "U4-Q022",
+      "gate": "U4-G2",
+      "title": "Run real source-locked full suite",
+      "expected": "Command exit and binary/source/fixture/gem hashes recorded, even when nonzero",
+      "evidence_kind": "execution",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "source-bound-spec-nonzero"
+      ]
+    },
+    {
+      "id": "U4-Q023",
+      "gate": "U4-G2",
+      "title": "Classify new match mismatch counts",
+      "expected": "Complete U3 actual status ledger; never substitute historic result",
+      "evidence_kind": "measurement",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "new-spec-outcomes"
+      ]
+    },
+    {
+      "id": "U4-Q024",
+      "gate": "U4-G2",
+      "title": "Compute normalized delta only on same inputs",
+      "expected": "Compare historical 2253/2361/10 to matching cases/versions, note changed population",
+      "evidence_kind": "delta",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "normalized-equivalent-input-delta"
+      ]
+    },
+    {
+      "id": "U4-Q025",
+      "gate": "U4-G3",
+      "title": "Eight registry rendering entry points",
+      "expected": "Raw/parsed; render, diagnostics, metrics, both; exact output/errors/clocks",
+      "evidence_kind": "api",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/ordinaryNamesAllTenAPIsPreserveScopeClockAndLogicalCounters(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q026",
+      "gate": "U4-G3",
+      "title": "Two exact registry graph entry points",
+      "expected": "Raw/parsed inspectDependencies and same named registry; exact identities",
+      "evidence_kind": "api",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/ordinaryNamesAllTenAPIsPreserveScopeClockAndLogicalCounters(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q027",
+      "gate": "U4-G3",
+      "title": "Unicode composed and decomposed names",
+      "expected": "é versus e+combining, exact stored/referenced output",
+      "evidence_kind": "identity",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/canonicalDifferenceAndSuffixIdentityAreIntentional(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q028",
+      "gate": "U4-G3",
+      "title": "Kelvin versus ASCII K",
+      "expected": "K/K distinct in registry and exact graph, old dictionary behavior preserved",
+      "evidence_kind": "identity",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/canonicalDifferenceAndSuffixIdentityAreIntentional(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q029",
+      "gate": "U4-G3",
+      "title": "Exact suffix/double-suffix lookup",
+      "expected": "base-first and +.liquid only on true exact miss; no canonical alias",
+      "evidence_kind": "identity",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/canonicalDifferenceAndSuffixIdentityAreIntentional(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q030",
+      "gate": "U4-G3",
+      "title": "Nested include and render behavior",
+      "expected": "Same first-candidate selection on static graph/runtime; legacy semantics unchanged",
+      "evidence_kind": "parity",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/ordinaryNamesAllTenAPIsPreserveScopeClockAndLogicalCounters(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q031",
+      "gate": "U4-G3",
+      "title": "Missing literal with context retry",
+      "expected": "Graph reports missing; runtime may retry context value; no false parity",
+      "evidence_kind": "static-limit",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/dynamicMissingAndCyclicStaticFindingsDoNotPredictExecution()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q032",
+      "gate": "U4-G3",
+      "title": "Dynamic partial names",
+      "expected": "Graph reports dynamic origin, not predicted target",
+      "evidence_kind": "static-limit",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/dynamicMissingAndCyclicStaticFindingsDoNotPredictExecution()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q033",
+      "gate": "U4-G3",
+      "title": "Conditional dead branch",
+      "expected": "Syntactic literal edge can exist even if never executed",
+      "evidence_kind": "static-limit",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/dynamicMissingAndCyclicStaticFindingsDoNotPredictExecution()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q034",
+      "gate": "U4-G3",
+      "title": "Exact stable ordering with permutations",
+      "expected": "Declaration admission and presentation rank intentionally distinct",
+      "evidence_kind": "order",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/parsedModeAndDeclarationOrderRemainIndependentOfGraphRank()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q035",
+      "gate": "U4-G3",
+      "title": "Filter callbacks not invoked by inspection",
+      "expected": "No evaluation/I-O effects during static graph",
+      "evidence_kind": "safety",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/ordinaryNamesAllTenAPIsPreserveScopeClockAndLogicalCounters(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q036",
+      "gate": "U4-G3",
+      "title": "Strict/lax/strict2 parsed/raw modes",
+      "expected": "Parsed AST retains original mode; new raw entries use requested mode",
+      "evidence_kind": "mode",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/parsedModeAndDeclarationOrderRemainIndependentOfGraphRank()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q037",
+      "gate": "U4-G3",
+      "title": "Diagnostics and metrics preserve meanings",
+      "expected": "Raising/recovered error, clock and performance measurement outputs scoped",
+      "evidence_kind": "semantics",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/recoveredAndRaisingPoliciesMatchForOrdinaryNames()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q038",
+      "gate": "U4-G3",
+      "title": "Quota and cancellation error precedence",
+      "expected": "No fallback after capacity/cancel/host failures; atomic admission",
+      "evidence_kind": "safety",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/atomicCapacityAndHostErrorsNeverBecomeFallbackSuccess()",
+        "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()",
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cumulativeNameAndSourceBoundariesIncludeUnused(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q039",
+      "gate": "U4-G3",
+      "title": "Concurrent immutable same-engine workloads",
+      "expected": "16+ renders/inspections independent invocation state",
+      "evidence_kind": "concurrency",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [
+        "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U4-Q040",
+      "gate": "U4-G4",
+      "title": "Fresh reproduce render globals scope",
+      "expected": "If mismatch remains: minimal pinned Ruby and public Swift repro, not automatic fix",
+      "evidence_kind": "triage",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "paired-minimal-render-global"
+      ]
+    },
+    {
+      "id": "U4-Q041",
+      "gate": "U4-G4",
+      "title": "Fresh reproduce dynamic property include",
+      "expected": "Check parser/error phase and host selection before classification",
+      "evidence_kind": "triage",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "paired-minimal-dynamic-property"
+      ]
+    },
+    {
+      "id": "U4-Q042",
+      "gate": "U4-G4",
+      "title": "Fresh reproduce object-property size",
+      "expected": "Compare size property vs size filter on typed maps",
+      "evidence_kind": "triage",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "paired-minimal-object-size"
+      ]
+    },
+    {
+      "id": "U4-Q043",
+      "gate": "U4-G4",
+      "title": "Fresh reproduce mixed sort failure",
+      "expected": "Verify Ruby failure type vs Swift response without arbitrary-type claims",
+      "evidence_kind": "triage",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "paired-minimal-mixed-sort"
+      ]
+    },
+    {
+      "id": "U4-Q044",
+      "gate": "U4-G4",
+      "title": "Fresh parser diagnostic classification",
+      "expected": "Distinguish location/message/phase/general condition differences",
+      "evidence_kind": "triage",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "fresh-phase-diagnostic-ledger"
+      ]
+    },
+    {
+      "id": "U4-Q045",
+      "gate": "U4-G4",
+      "title": "Select top 3-5 general rules by severity",
+      "expected": "Scoped effort and regression blast radius, avoid PR23 date files",
+      "evidence_kind": "priority",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "ranked-defect-proposals"
+      ]
+    },
+    {
+      "id": "U4-Q046",
+      "gate": "U4-G4",
+      "title": "Host/transport artifact vs core defect",
+      "expected": "Eager-unused-partial admission vs Ruby lazy loader not conflated",
+      "evidence_kind": "classification",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "paired-unused-partial-host-control"
+      ]
+    },
+    {
+      "id": "U4-Q047",
+      "gate": "U4-G4",
+      "title": "Unsupported Ruby types and numbers",
+      "expected": "Not relabeled engine bugs without representability proof",
+      "evidence_kind": "domain",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "transport-domain-and-reference-concerns"
+      ]
+    },
+    {
+      "id": "U4-Q048",
+      "gate": "U4-G4",
+      "title": "Prepare separate U4-F approval proposal",
+      "expected": "No broad production implementation or merge without owner approval",
+      "evidence_kind": "authorization",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "production-unchanged-and-U4F-hold"
+      ]
+    },
+    {
+      "id": "U4-Q049",
+      "gate": "U4-G5",
+      "title": "Full final source native Debug",
+      "expected": "Real Swift 6.4, test counts and event stream hashes bound to final commit",
+      "evidence_kind": "native",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "native-debug"
+      ]
+    },
+    {
+      "id": "U4-Q050",
+      "gate": "U4-G5",
+      "title": "Full final source native Release",
+      "expected": "Same source and zero issues/skips; compare output reference",
+      "evidence_kind": "native",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "native-release"
+      ]
+    },
+    {
+      "id": "U4-Q051",
+      "gate": "U4-G5",
+      "title": "Full final source AddressSanitizer",
+      "expected": "All full suites and instrumented executable; failures retained",
+      "evidence_kind": "safety",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "full-asan"
+      ]
+    },
+    {
+      "id": "U4-Q052",
+      "gate": "U4-G5",
+      "title": "Selected TSan workload",
+      "expected": "Actual concurrent registry/runtime/graph tests run with instrumented source",
+      "evidence_kind": "safety",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "selected-tsan"
+      ]
+    },
+    {
+      "id": "U4-Q053",
+      "gate": "U4-G5",
+      "title": "Independent SwiftPM consumer",
+      "expected": "Import Liquid only, all public exact render/graph APIs compile",
+      "evidence_kind": "consumer",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "independent-public-consumer"
+      ]
+    },
+    {
+      "id": "U4-Q054",
+      "gate": "U4-G5",
+      "title": "DocC and public symbols",
+      "expected": "No removed authored declarations; additions documented or none",
+      "evidence_kind": "docs",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "docs-zero-api-diff"
+      ]
+    },
+    {
+      "id": "U4-Q055",
+      "gate": "U4-G5",
+      "title": "No speculative performance or minimum platform",
+      "expected": "Preserve published matrix claims and benchmark segregation",
+      "evidence_kind": "claim",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "no-performance-or-platform-claims"
+      ]
+    },
+    {
+      "id": "U4-Q056",
+      "gate": "U4-G6",
+      "title": "Return distinct reference/spec pass ledgers",
+      "expected": "Separate completed test transport vs Shopify comparator compliance",
+      "evidence_kind": "report",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "measurement-versus-compatibility-ledger"
+      ]
+    },
+    {
+      "id": "U4-Q057",
+      "gate": "U4-G6",
+      "title": "Return complete case/eligibility source hashes",
+      "expected": "All selected/unselected source variants traceable and finite",
+      "evidence_kind": "report",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "all-variant-input-and-output-hashes"
+      ]
+    },
+    {
+      "id": "U4-Q058",
+      "gate": "U4-G6",
+      "title": "Ranked mismatch and owner decision",
+      "expected": "Small reproducible U4-F proposal separate from measurement gate",
+      "evidence_kind": "report",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "ranked-defect-proposals-and-U5-hold"
+      ]
+    },
+    {
+      "id": "U4-Q059",
+      "gate": "U4-G6",
+      "title": "Record U5 and Vapor holds explicitly",
+      "expected": "No upgrade, merge, tag, PR, publish or false shared TSAN claim",
+      "evidence_kind": "authority",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "owner-and-Vapor-pins-unchanged"
+      ]
+    },
+    {
+      "id": "U4-Q060",
+      "gate": "U4-G6",
+      "title": "SHA-256 sealed return ZIP",
+      "expected": "Full git, source, events, failures and docs consistent and inspectable",
+      "evidence_kind": "integrity",
+      "execution_status": "SOURCE_PLAN_ONLY",
+      "result": "PENDING_EXTERNAL_RECEIPTS",
+      "source": "U3 review + existing LQ1/LQ1-R2, not newly run",
+      "test_functions": [],
+      "controls": [
+        "source-zip-roundtrip-and-manifest"
+      ]
+    }
+  ]
+}

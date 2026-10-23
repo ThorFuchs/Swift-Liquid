@@ -1,0 +1,233 @@
+{
+  "schema": "SwiftLiquidExactGraphOracle/1",
+  "status": "DESIGN-TIME EXPECTATIONS ONLY, NOT EXECUTED",
+  "oracle_count": 7,
+  "oracles": [
+    {
+      "id": "EG-01",
+      "name": "composed-decomposed",
+      "root": "{% include 'é' %}{% include 'é' %}",
+      "entries": [
+        {
+          "name": "é",
+          "utf8": "c3a9",
+          "raw": "A"
+        },
+        {
+          "name": "é",
+          "utf8": "65cc81",
+          "raw": "B"
+        }
+      ],
+      "nodes": [
+        "root",
+        "partial:65cc81",
+        "partial:c3a9"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "65cc81",
+          "resolved": "65cc81"
+        },
+        {
+          "origin": "root",
+          "requested": "c3a9",
+          "resolved": "c3a9"
+        }
+      ],
+      "cycles": [],
+      "notes": "All source spellings are exact. Static edge order is UTF8 sorted."
+    },
+    {
+      "id": "EG-02",
+      "name": "kelvin-ascii",
+      "root": "{% include 'K' %}{% include 'K' %}",
+      "entries": [
+        {
+          "name": "K",
+          "utf8": "e284aa",
+          "raw": "Kelvin"
+        },
+        {
+          "name": "K",
+          "utf8": "4b",
+          "raw": "ASCII"
+        }
+      ],
+      "nodes": [
+        "root",
+        "partial:4b",
+        "partial:e284aa"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "4b",
+          "resolved": "4b"
+        },
+        {
+          "origin": "root",
+          "requested": "e284aa",
+          "resolved": "e284aa"
+        }
+      ],
+      "cycles": []
+    },
+    {
+      "id": "EG-03",
+      "name": "exact-vs-suffix",
+      "root": "{% include 'x' %}{% include 'x.liquid' %}",
+      "entries": [
+        {
+          "name": "x",
+          "utf8": "78",
+          "raw": "X"
+        },
+        {
+          "name": "x.liquid",
+          "utf8": "782e6c6971756964",
+          "raw": "Y"
+        }
+      ],
+      "nodes": [
+        "root",
+        "partial:78",
+        "partial:782e6c6971756964"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "78",
+          "resolved": "78"
+        },
+        {
+          "origin": "root",
+          "requested": "782e6c6971756964",
+          "resolved": "782e6c6971756964"
+        }
+      ],
+      "cycles": []
+    },
+    {
+      "id": "EG-04",
+      "name": "suffix-only",
+      "root": "{% include 'x' %}",
+      "entries": [
+        {
+          "name": "x.liquid",
+          "utf8": "782e6c6971756964",
+          "raw": "Y"
+        }
+      ],
+      "nodes": [
+        "root",
+        "partial:782e6c6971756964"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "78",
+          "resolved": "782e6c6971756964"
+        }
+      ],
+      "cycles": []
+    },
+    {
+      "id": "EG-05",
+      "name": "canonical-neighbor-missing",
+      "root": "{% include 'é' %}",
+      "entries": [
+        {
+          "name": "é.liquid",
+          "utf8": "c3a92e6c6971756964",
+          "raw": "A"
+        }
+      ],
+      "nodes": [
+        "root"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "65cc81",
+          "resolved": null
+        }
+      ],
+      "cycles": [],
+      "notes": "Canonical-equivalent neighbor must not satisfy the exact literal."
+    },
+    {
+      "id": "EG-06",
+      "name": "two-member-cycle",
+      "root": "{% include 'é' %}",
+      "entries": [
+        {
+          "name": "é",
+          "utf8": "c3a9",
+          "raw": "{% include 'é' %}"
+        },
+        {
+          "name": "é",
+          "utf8": "65cc81",
+          "raw": "{% include 'é' %}"
+        }
+      ],
+      "nodes": [
+        "root",
+        "partial:65cc81",
+        "partial:c3a9"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "c3a9",
+          "resolved": "c3a9"
+        },
+        {
+          "origin": "partial:65cc81",
+          "requested": "c3a9",
+          "resolved": "c3a9"
+        },
+        {
+          "origin": "partial:c3a9",
+          "requested": "65cc81",
+          "resolved": "65cc81"
+        }
+      ],
+      "cycles": [
+        [
+          "partial:65cc81",
+          "partial:c3a9"
+        ]
+      ]
+    },
+    {
+      "id": "EG-07",
+      "name": "unreachable-dynamic",
+      "root": "{% if false %}{% include 'missing' %}{% endif %}{% include selected %}",
+      "entries": [
+        {
+          "name": "unused",
+          "utf8": "756e75736564",
+          "raw": "OK"
+        }
+      ],
+      "nodes": [
+        "root"
+      ],
+      "edges": [
+        {
+          "origin": "root",
+          "requested": "6d697373696e67",
+          "resolved": null
+        }
+      ],
+      "cycles": [],
+      "dynamic": [
+        "root"
+      ],
+      "notes": "Syntactic unreachable literal retained; dynamic target not guessed."
+    }
+  ]
+}

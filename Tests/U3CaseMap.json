@@ -1,0 +1,789 @@
+{
+  "schema": "SwiftLiquidU3SourceCasePlan/1",
+  "note": "Mappings are not execution receipts. Final status and source-bound raw events are in the dated U3 return. U1/U2 cases are not new U3 cases.",
+  "count": 60,
+  "cases": [
+    {
+      "id": "U3-001",
+      "gate": "U3-G0",
+      "scenario": "Restore complete U2 feature history",
+      "required_assertion": "U3 parent SHA is ad58068; U1 grandparent f6245aa; exact tree and source snapshot match",
+      "execution_mode": "git",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "source-history-roundtrip"
+      ]
+    },
+    {
+      "id": "U3-002",
+      "gate": "U3-G0",
+      "scenario": "No active source ownership collision",
+      "required_assertion": "Live main and date PR23 checked, only isolated U3 worktree used, owner changes untouched",
+      "execution_mode": "git",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "owner-reconciliation"
+      ]
+    },
+    {
+      "id": "U3-003",
+      "gate": "U3-G0",
+      "scenario": "Freeze U1 registry and U2 runtime",
+      "required_assertion": "No unintended diff in LiquidTemplateRegistry, TemplateLoader or Renderer+ControlFlow",
+      "execution_mode": "source",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "source-allowlist"
+      ]
+    },
+    {
+      "id": "U3-004",
+      "gate": "U3-G0",
+      "scenario": "Preserve root SwiftPM manifest",
+      "required_assertion": "Swift 6.4, language 6, zero root dependencies and current platform/product claims unchanged",
+      "execution_mode": "manifest",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "manifest-lock-guard"
+      ]
+    },
+    {
+      "id": "U3-005",
+      "gate": "U3-G0",
+      "scenario": "Baseline public API inventory",
+      "required_assertion": "164 existing authored declarations preserved; proposed two graph overloads are additive",
+      "execution_mode": "symbolgraph",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "compiler-api-diff"
+      ]
+    },
+    {
+      "id": "U3-006",
+      "gate": "U3-G0",
+      "scenario": "Preserve reference, fixture and date sources",
+      "required_assertion": "Unrelated parser/date, Ruby/Golden fixtures and other worktrees remain byte-identical",
+      "execution_mode": "sha256",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "protected-source-hashes"
+      ]
+    },
+    {
+      "id": "U3-007",
+      "gate": "U3-G1",
+      "scenario": "Raw-root graph overload compiles",
+      "required_assertion": "import Liquid caller invokes inspectDependencies(template:registry:syntaxMode:analysisLimits:)",
+      "execution_mode": "compiler",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-008",
+      "gate": "U3-G1",
+      "scenario": "Parsed-root graph overload compiles",
+      "required_assertion": "import Liquid caller invokes inspectDependencies(_:registry:syntaxMode:analysisLimits:)",
+      "execution_mode": "compiler",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-009",
+      "gate": "U3-G1",
+      "scenario": "Required registry has no default",
+      "required_assertion": "No overload ambiguity for existing inspectDependencies(template:) and inspectDependencies(parsed)",
+      "execution_mode": "compiler",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/parsedModesRetainedAndRawEntryModeExplicit()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-010",
+      "gate": "U3-G1",
+      "scenario": "Raw root and raw entries parsed once",
+      "required_assertion": "Raw constructors run once each in declaration order; no second parse for summaries",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/sharedPreparationPreservesU2TimingSourcesAndErrors()"
+      ],
+      "controls": [
+        "single-constructor-path-source-audit"
+      ]
+    },
+    {
+      "id": "U3-011",
+      "gate": "U3-G1",
+      "scenario": "Parsed root retains AST",
+      "required_assertion": "Parsed root not reparsed or coerced to default lax parser mode",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/parsedModesRetainedAndRawEntryModeExplicit()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-012",
+      "gate": "U3-G1",
+      "scenario": "Parsed partial retains AST",
+      "required_assertion": "Retained parsed partial not reparsed; its original syntax mode remains intact",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/parsedModesRetainedAndRawEntryModeExplicit()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-013",
+      "gate": "U3-G1",
+      "scenario": "Parsed root with raw entries uses syntaxMode",
+      "required_assertion": "syntaxMode applies only to raw entries under parsed root; strict2/lax comparisons valid",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/parsedModesRetainedAndRawEntryModeExplicit()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-014",
+      "gate": "U3-G1",
+      "scenario": "Unused raw invalid input is fatal",
+      "required_assertion": "Graph throws syntax error for unreachable unused invalid .raw content; no findings",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-015",
+      "gate": "U3-G1",
+      "scenario": "Unused parsed AST checked under current profile",
+      "required_assertion": "Lower current engine nesting limit rejects retained unused parsed AST",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-016",
+      "gate": "U3-G1",
+      "scenario": "Root duplicated as registry entry",
+      "required_assertion": "Root and partial both charged in source bytes and maintain distinct IDs",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-017",
+      "gate": "U3-G1",
+      "scenario": "Graph-only analysis limit validation",
+      "required_assertion": "Invalid templates/nameBytes/edges rejected before any result",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/countInvalidProfilesAndMaxIntRemainSubtractive()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-018",
+      "gate": "U3-G1",
+      "scenario": "No filter or host callback evaluation",
+      "required_assertion": "Injected throwing filter untouched during dependency analysis",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/syntacticFindingsNeverEvaluateConditionsOrHostFilters()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-019",
+      "gate": "U3-G1",
+      "scenario": "Whole-bundle preflight before findings",
+      "required_assertion": "No partial graph published upon invalid unused source or cancellation",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/unusedSourcesAreFatalBeforeFindings()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-020",
+      "gate": "U3-G2",
+      "scenario": "Composed/decomposed accent siblings",
+      "required_assertion": "Two distinct UTF8 names and graph edges when both literal references present",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-021",
+      "gate": "U3-G2",
+      "scenario": "ASCII K versus Kelvin sign siblings",
+      "required_assertion": "Separate K and K nodes/edges despite canonical Swift String equality",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suppliedByteOraclesUseStoredRanks(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-022",
+      "gate": "U3-G2",
+      "scenario": "Literal exact selection precedes suffix",
+      "required_assertion": "x selects x before x.liquid",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-023",
+      "gate": "U3-G2",
+      "scenario": "Literal exact suffix and double suffix",
+      "required_assertion": "x.liquid selects exact x.liquid or falls back to x.liquid.liquid",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-024",
+      "gate": "U3-G2",
+      "scenario": "Canonical sibling is not a fallback",
+      "required_assertion": "Other canonical spelling yields missing edge, not canonical selection",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/canonicalMissStaysMissingWhileLegacyAndContextRetryRemain(pair:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-025",
+      "gate": "U3-G2",
+      "scenario": "Stored name preserved in result edge",
+      "required_assertion": "requestedName is original reference; resolvedName is original stored name, exact bytes",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/firstLiteralParityAcrossEightRuntimeFamilies(mode:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-026",
+      "gate": "U3-G2",
+      "scenario": "Root is distinct from same-source named partial",
+      "required_assertion": "Graph retains .root and .partial even for identical content/name",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/suffixOpaqueNamesAndSeparateRootIdentity()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-027",
+      "gate": "U3-G2",
+      "scenario": "UTF8 byte sort not declaration order",
+      "required_assertion": "Graph nodes ordered root then reachable partials by stored UTF8 lex order",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-028",
+      "gate": "U3-G2",
+      "scenario": "Graph invariance across entry permutations",
+      "required_assertion": "Valid registry permutations produce same graph output despite admission order change",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-029",
+      "gate": "U3-G2",
+      "scenario": "Sorted unique per-origin literal edges",
+      "required_assertion": "Repeated identical literals produce one edge; distinct scalar variants remain separate",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-030",
+      "gate": "U3-G2",
+      "scenario": "Unresolved literal missing edge",
+      "required_assertion": "Missing reference recorded with nil resolvedName and no guessed target",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/reachableUniqueMissingEdgesChargeExactly()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-031",
+      "gate": "U3-G2",
+      "scenario": "Dynamic source detected without evaluation",
+      "required_assertion": "include selected creates dynamicReferences origin, no predicted edge",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/syntacticFindingsNeverEvaluateConditionsOrHostFilters()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-032",
+      "gate": "U3-G2",
+      "scenario": "Self-loop SCC",
+      "required_assertion": "Self-edge yields one-member SCC with exact stored identity",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-033",
+      "gate": "U3-G2",
+      "scenario": "Two-component canonical-variant cycle",
+      "required_assertion": "Distinct variants form deterministic two-member SCC without collapsing",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-034",
+      "gate": "U3-G2",
+      "scenario": "Multi-component SCC order",
+      "required_assertion": "Cycles and members ordered by graph rank consistently across permutations",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/permutationsKeepCyclesAndOutgoingOrderExact()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-035",
+      "gate": "U3-G3",
+      "scenario": "Template-count root inclusion exactly",
+      "required_assertion": "analysis.templates=1 admits empty registry but no partial; zero invalid",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/countInvalidProfilesAndMaxIntRemainSubtractive()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-036",
+      "gate": "U3-G3",
+      "scenario": "Max Int analysis count",
+      "required_assertion": "Registry count < Int.max tested without overflow or count+1",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/countInvalidProfilesAndMaxIntRemainSubtractive()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-037",
+      "gate": "U3-G3",
+      "scenario": "Aggregate graph nameBytes",
+      "required_assertion": "All original stored name bytes, including unused entries, charged exactly",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cumulativeNameAndSourceBoundariesIncludeUnused(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-038",
+      "gate": "U3-G3",
+      "scenario": "NameBytes exact/one-below boundary",
+      "required_assertion": "UTF8 lengths byte-charged; zero allowed for only empty names",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cumulativeNameAndSourceBoundariesIncludeUnused(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-039",
+      "gate": "U3-G3",
+      "scenario": "U1 lookup nameUTF8Bytes is terminal",
+      "required_assertion": "Overlong literal lookup throws typed admission exception, never missing edge",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/lookupCapacityIsTerminalAndEdgeCapacityPrecedesLookup()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-040",
+      "gate": "U3-G3",
+      "scenario": "Engine sourceBytes includes unused",
+      "required_assertion": "Root plus all registry sources charged with subtractive capacity",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cumulativeNameAndSourceBoundariesIncludeUnused(parsed:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-041",
+      "gate": "U3-G3",
+      "scenario": "Source failure before summary/host callbacks",
+      "required_assertion": "Bad unused source plus no reachable reference still terminal",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/admissionAndParsePrecedenceIsExplicit()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-042",
+      "gate": "U3-G3",
+      "scenario": "Edge budget reachable requests only",
+      "required_assertion": "Unreachable summary references do not consume analysis.edges",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/reachableUniqueMissingEdgesChargeExactly()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-043",
+      "gate": "U3-G3",
+      "scenario": "Edge budget includes missing and unique",
+      "required_assertion": "One missing edge consumes one allowance; repeated same literal deduplicated",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/reachableUniqueMissingEdgesChargeExactly()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-044",
+      "gate": "U3-G3",
+      "scenario": "Edge-zero boundary",
+      "required_assertion": "analysis.edges=0 accepts no reachable literal, rejects one",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/reachableUniqueMissingEdgesChargeExactly()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-045",
+      "gate": "U3-G3",
+      "scenario": "Cancellation before graph entry",
+      "required_assertion": "CancellationError thrown without partial graph or mutation",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationAtEntryPrecedesInvalidLimitsAndKeepsSiblingHealthy()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-046",
+      "gate": "U3-G3",
+      "scenario": "Cancellation during resolution and SCC",
+      "required_assertion": "Deterministic cooperative cancellation probes cover lookup/traversal/cycles",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-047",
+      "gate": "U3-G3",
+      "scenario": "Deep chain 2000+ graph",
+      "required_assertion": "Iterative graph traversal and SCC bounded, no recursion/path enumeration",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/deepAndWideGraphsUseIterativeSCCAndIndependentRuntimeBudgets()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-048",
+      "gate": "U3-G3",
+      "scenario": "Wide graph 2000+",
+      "required_assertion": "Deterministic edge ordering and finite memory without per-path blowup",
+      "execution_mode": "native",
+      "priority": "P1",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/deepAndWideGraphsUseIterativeSCCAndIndependentRuntimeBudgets()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-049",
+      "gate": "U3-G3",
+      "scenario": "Concurrent U2 render and U3 inspect",
+      "required_assertion": "Shared engine/registry safe under TaskGroup, disjoint invocation state",
+      "execution_mode": "native",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/concurrentRendersAndExactGraphInspectionStayInvocationOwned()"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-050",
+      "gate": "U3-G4",
+      "scenario": "Native Debug on final tree",
+      "required_assertion": "Full Swift6.4 Debug with strict concurrency/warnings passes, actual functions/cases reported",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "native-debug"
+      ]
+    },
+    {
+      "id": "U3-051",
+      "gate": "U3-G4",
+      "scenario": "Native Release on same tree",
+      "required_assertion": "Release pass same public source, no skipped or known issues",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "native-release"
+      ]
+    },
+    {
+      "id": "U3-052",
+      "gate": "U3-G4",
+      "scenario": "Full ASan source qualified",
+      "required_assertion": "Address sanitizer with correctly instrumented package passes full supported suite",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "safety-address"
+      ]
+    },
+    {
+      "id": "U3-053",
+      "gate": "U3-G4",
+      "scenario": "Selected TSan source qualified",
+      "required_assertion": "Available selected thread sanitizer tests run and pass; unsupported labelled",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "safety-thread"
+      ]
+    },
+    {
+      "id": "U3-054",
+      "gate": "U3-G4",
+      "scenario": "Ruby/Golden historical regression",
+      "required_assertion": "Pinned reference classifications and fixtures unchanged; no inflation of successes",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "pinned-reference-and-golden"
+      ]
+    },
+    {
+      "id": "U3-055",
+      "gate": "U3-G4",
+      "scenario": "Public independent consumer",
+      "required_assertion": "Two new graph APIs and eight U2 render APIs work from only import Liquid",
+      "execution_mode": "consumer",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "external-public-consumer"
+      ]
+    },
+    {
+      "id": "U3-056",
+      "gate": "U3-G4",
+      "scenario": "DocC and symbolgraph check",
+      "required_assertion": "Exactly two additive declarations, no changed/removed published symbols, docs compile",
+      "execution_mode": "compiler",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "docs-and-api"
+      ]
+    },
+    {
+      "id": "U3-057",
+      "gate": "U3-G4",
+      "scenario": "Legacy templates graph unchanged",
+      "required_assertion": "All original canonical String dictionary graph outputs/limits and methods pass byte-exact oracle",
+      "execution_mode": "runner",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [
+        "LiquidTests.ExactRegistryDependencyInspectionTests/canonicalMissStaysMissingWhileLegacyAndContextRetryRemain(pair:)"
+      ],
+      "controls": []
+    },
+    {
+      "id": "U3-058",
+      "gate": "U3-G5",
+      "scenario": "Git bundle and source export roundtrip",
+      "required_assertion": "Complete U2→U3 history and reproducible patch, source hashes match receipts",
+      "execution_mode": "git",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "source-history-roundtrip"
+      ]
+    },
+    {
+      "id": "U3-059",
+      "gate": "U3-G5",
+      "scenario": "Evidence archive self-check",
+      "required_assertion": "Every ZIP member hashed; error logs/test event streams captured; case-to-test mapping complete",
+      "execution_mode": "sha256",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "archive-verifier"
+      ]
+    },
+    {
+      "id": "U3-060",
+      "gate": "U3-G5",
+      "scenario": "No unauthorized downstream change",
+      "required_assertion": "No Vapor re-pin, PR, merge, tag, release or remote mutation; separate U4/D decisions",
+      "execution_mode": "git",
+      "priority": "P0",
+      "source_plan_status": "PROPOSED_EXECUTION_MAP",
+      "test_functions": [],
+      "controls": [
+        "owner-reconciliation-no-remote-mutation"
+      ]
+    }
+  ]
+}

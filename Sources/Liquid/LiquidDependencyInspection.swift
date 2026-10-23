@@ -186,6 +186,40 @@ extension LiquidEngine {
         return .init(nodes: nodes, edges: edges, cycles: cycles)
     }
 
+    /// Inspects an exact-name registry after admitting and preparing every source, including unused entries.
+    /// No context, filters or I/O are evaluated. Literal reachability is syntactic, not a prediction of execution.
+    /// - Parameters:
+    ///   - template: Explicit root source, distinct from all named partials.
+    ///   - registry: Immutable exact-UTF-8 registry; stored names and entry indexes govern selection.
+    ///   - syntaxMode: Parser mode for the raw root and raw registry entries.
+    ///   - analysisLimits: Independent whole-bundle count/name and reachable-edge capacities.
+    /// - Returns: Root-first, UTF-8-ordered reachable nodes, literal edges and iterative cycle groups.
+    /// - Throws: Syntax, engine/analysis limits, registry admission or cancellation errors; no partial graph.
+    public func inspectDependencies(template: String, registry: LiquidTemplateRegistry,
+                                    syntaxMode: LiquidSyntaxMode = .lax,
+                                    analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection {
+        let prepared = try prepareExact(.raw(template), registry: registry, syntaxMode: syntaxMode,
+                                        measuring: false, analysisLimits: analysisLimits)
+        return try inspectExactDependencies(prepared, limits: limits, analysisLimits: analysisLimits)
+    }
+
+    /// Inspects retained parsed input and an exact registry without reparsing any parsed content.
+    /// Every unused entry is admitted and validated under the executing engine's current limits.
+    /// - Parameters:
+    ///   - template: Parsed root retaining its original AST and syntax mode.
+    ///   - registry: Immutable exact-UTF-8 entries, prepared in declaration order.
+    ///   - syntaxMode: Parser mode for raw registry entries only; parsed inputs retain their ASTs.
+    ///   - analysisLimits: Independent whole-bundle count/name and reachable-edge capacities.
+    /// - Returns: Deterministically ordered literal-reachable nodes, references and cycle groups.
+    /// - Throws: Syntax/depth, invalid-limit, capacity, registry admission or cancellation errors; no partial graph.
+    public func inspectDependencies(_ template: LiquidTemplate, registry: LiquidTemplateRegistry,
+                                    syntaxMode: LiquidSyntaxMode = .lax,
+                                    analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection {
+        let prepared = try prepareExact(.parsed(template), registry: registry, syntaxMode: syntaxMode,
+                                        measuring: false, analysisLimits: analysisLimits)
+        return try inspectExactDependencies(prepared, limits: limits, analysisLimits: analysisLimits)
+    }
+
     private func admitDependencies<T>(root: String, templates: [String: T], source: (T) -> String,
                                       analysisLimits: LiquidDependencyLimits) throws {
         try Task.checkCancellation()
@@ -211,14 +245,80 @@ extension LiquidEngine {
 
 internal func dependencyNameOrder(_ a: String, _ b: String) -> Bool { a.utf8.lexicographicallyPrecedes(b.utf8) }
 
+// Internal cooperative checkpoints permit deterministic phase tests without a
+// public callback, global instrumentation or a second graph implementation.
+internal enum ExactDependencyPhase: Sendable { case ordering, inspection, resolution, traversal, cycles, publication }
+
+internal func inspectExactDependencies(_ prepared: ExactTemplateBundle, limits: LiquidLimits,
+    analysisLimits: LiquidDependencyLimits,
+    checkpoint: (ExactDependencyPhase) throws -> Void = { _ in try Task.checkCancellation() }
+) throws -> LiquidDependencyInspection {
+    let entries = prepared.templates.registry.entries
+    let sortedEntries = try entries.indices.sorted {
+        try checkpoint(.ordering)
+        return dependencyNameOrder(entries[$0].name, entries[$1].name)
+    }
+    var rankOfEntry = [Int](repeating: 0, count: entries.count)
+    var summaries = [try inspectTemplate(prepared.root, limits: limits)]
+    for (offset, entryIndex) in sortedEntries.enumerated() {
+        try checkpoint(.inspection)
+        rankOfEntry[entryIndex] = offset + 1 // preflight proved entries.count < templates <= Int.max
+        summaries.append(try inspectTemplate(prepared.templates.asts[entryIndex], limits: limits))
+    }
+    func identity(_ rank: Int) -> LiquidDependencyNodeID {
+        rank == 0 ? .root : .partial(entries[sortedEntries[rank - 1]].name)
+    }
+    var reachable = Set([0])
+    var pending = [0]
+    var outgoing = [[LiquidDependencyEdge]](repeating: [], count: summaries.count)
+    var adjacency = [[Int]](repeating: [], count: summaries.count)
+    var edgeRemaining = analysisLimits.edges
+    while let origin = pending.popLast() {
+        try checkpoint(.traversal)
+        for name in summaries[origin].literalPartialNames {
+            try checkpoint(.resolution)
+            guard edgeRemaining > 0 else { throw LiquidError.limitExceeded("dependencyEdges") }
+            edgeRemaining -= 1
+            // The frozen U2 selector calls U1 resolve exactly once. Never re-key
+            // its stored spelling through Swift String dictionary equality.
+            let selected = try prepared.templates.select(name)
+            let target = selected.map { rankOfEntry[$0.entryIndex] }
+            outgoing[origin].append(.init(origin: identity(origin), requestedName: name,
+                                           resolvedName: selected?.storedName))
+            if let target {
+                adjacency[origin].append(target)
+                if reachable.insert(target).inserted { pending.append(target) }
+            }
+        }
+    }
+    let ordered = try reachable.sorted { a, b in try checkpoint(.ordering); return a < b }
+    let groups = try dependencyCycles(adjacency, reachable: ordered, checkCancellation: { try checkpoint(.cycles) })
+    var nodes: [LiquidDependencyNode] = []
+    var edges: [LiquidDependencyEdge] = []
+    var cycles: [[LiquidDependencyNodeID]] = []
+    for rank in ordered {
+        try checkpoint(.publication)
+        nodes.append(.init(id: identity(rank), inspection: summaries[rank]))
+        edges.append(contentsOf: outgoing[rank])
+    }
+    for group in groups {
+        var members: [LiquidDependencyNodeID] = []
+        for rank in group { try checkpoint(.publication); members.append(identity(rank)) }
+        cycles.append(members)
+    }
+    try checkpoint(.publication)
+    return .init(nodes: nodes, edges: edges, cycles: cycles)
+}
+
 /// Iterative Kosaraju traversal followed by deterministic ordering; no recursion or cycle path expansion.
-internal func dependencyCycles(_ adjacency: [[Int]], reachable: [Int]) throws -> [[Int]] {
+internal func dependencyCycles(_ adjacency: [[Int]], reachable: [Int],
+    checkCancellation: () throws -> Void = { try Task.checkCancellation() }) throws -> [[Int]] {
     var visited = Set<Int>()
     var finish: [Int] = []
     for start in reachable where visited.insert(start).inserted {
         var stack = [(start, 0)]
         while let (node, offset) = stack.last {
-            try Task.checkCancellation()
+            try checkCancellation()
             if offset < adjacency[node].count {
                 let child = adjacency[node][offset]
                 stack[stack.count - 1].1 += 1
@@ -228,7 +328,7 @@ internal func dependencyCycles(_ adjacency: [[Int]], reachable: [Int]) throws ->
     }
     var reverse = [[Int]](repeating: [], count: adjacency.count)
     for node in reachable {
-        for child in adjacency[node] { try Task.checkCancellation(); reverse[child].append(node) }
+        for child in adjacency[node] { try checkCancellation(); reverse[child].append(node) }
     }
     visited.removeAll(keepingCapacity: true)
     var groups: [[Int]] = []
@@ -236,15 +336,15 @@ internal func dependencyCycles(_ adjacency: [[Int]], reachable: [Int]) throws ->
         var members: [Int] = []
         var stack = [start]
         while let node = stack.popLast() {
-            try Task.checkCancellation()
+            try checkCancellation()
             members.append(node)
             for parent in reverse[node] {
-                try Task.checkCancellation()
+                try checkCancellation()
                 if visited.insert(parent).inserted { stack.append(parent) }
             }
         }
         if members.count > 1 || adjacency[start].contains(start) { groups.append(members.sorted()) }
     }
-    try Task.checkCancellation()
+    try checkCancellation()
     return groups.sorted { $0[0] < $1[0] }
 }

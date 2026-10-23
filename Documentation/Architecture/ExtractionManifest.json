@@ -758,6 +758,85 @@
         "Retain the pre-run workflow-context validation failure, all complete runs and every median/spread flag without subtraction, trimming, universal speedup or historical-regression clearance."
       ],
       "qualification": "PR #22 and fresh main independently passed all nine Scripts/ci.py lanes. Frozen hosted study 38947177449 qualifies baseline and both candidates separately through native and pinned reference lanes before timing, validates 17,844 normalization/range inputs and 463,944 expression/capture pairs, builds all eight unaugmented release binaries and admits 192 untimed public output records. Independently verify ZIP/files/source fingerprints, binary hashes/UUIDs, all 108 runs/1,800 records/222 comparisons, samples, command order, block effects and all 20 median/146 spread flags. Normalization alone meets the frozen RFC source/reused rule in both callers/clocks. Final source-bound CI qualifies the exact public patch separately; no release is prepared."
+    },
+    {
+      "area": "U1 immutable exact template registry",
+      "scopeDecision": "Direct U1 dispatch authorizes an isolated local registry/resolver only; no engine/graph/Vapor wiring or remote actions.",
+      "changes": [
+        "Original Apache-2.0 implementation reuses unchanged internal ScalarKey with ordered raw/parsed entries, checked Sendable and typed finite name admission.",
+        "Preserve every existing API, interpreter/parser/AST/diagnostic source, package dependency/platform and pinned fixture; no content parsing or source-memory certificate.",
+        "Add public consumer and tests for byte-exact identity, quotas, suffix, cooperative cancellation and concurrent readers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplateRegistry.swift",
+        "Tests/LiquidTests/TemplateRegistryTests.swift",
+        "Tests/TestInventory.json",
+        "Examples/RegistryConsumer/Package.swift",
+        "Examples/RegistryConsumer/Sources/LiquidRegistryConsumer/main.swift",
+        "Documentation/ExactTemplateRegistry.md",
+        "Sources/Liquid/Documentation.docc/ExactTemplateRegistry.md",
+        "Documentation/README.md",
+        "Sources/Liquid/Documentation.docc/Liquid.md"
+      ],
+      "qualification": "Native source-bound U1 receipts are external to tracked source. This records scope and authorship, not an unexecuted pass, full conformance, rendering integration or release approval."
+    },
+    {
+      "area": "U2 exact registry runtime bridge",
+      "scopeDecision": "Direct owner U2 dispatch authorizes isolated local runtime integration only; U3 graph/Vapor/publication remain held.",
+      "changes": [
+        "Original Apache-2.0 bridge prepares root plus every raw/parsed source atomically and preserves one ordered AST table and U1 resolver.",
+        "Tagged exact loader and missing-only context retry share the existing evaluator, budgets, metrics/recovery and fast paths; legacy canonical dictionary path retained.",
+        "Add eight required registry: runtime overloads, source/cancellation/identity/scope/concurrent regressions, independent public consumer and precise metric/docs contracts."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Support/TemplateLoader.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U2CaseMap.json",
+        "Examples/ExactRegistryConsumer",
+        "Documentation/ExactRegistryRendering.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryRendering.md"
+      ],
+      "qualification": "Exact-source native/debug/release/safety/reference/docs/public-consumer receipts belong to the external U2 return; this scope record does not assert an unexecuted pass, conformance/performance clearance or release approval."
+    },
+    {
+      "area": "U3 exact registry dependency inspection",
+      "scopeDecision": "Direct owner U3 dispatch authorizes isolated local graph implementation only; U4/U5, Vapor and publication remain held.",
+      "changes": [
+        "Two required registry: graph overloads reuse U2 whole-bundle preparation and U1 selection with declaration-index to UTF-8-rank mapping.",
+        "Preserve legacy graph/render APIs, result types and iterative SCC algorithm; injectable internal task checks qualify deterministic cancellation without public callbacks.",
+        "Original Apache-2.0 tests/docs and byte fixtures qualify atomic limits, exact graphs, runtime parity, concurrency and independent public consumers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Tests/LiquidTests/ExactRegistryDependencyInspectionTests.swift",
+        "Tests/LiquidTests/Fixtures/U3ExactGraphOracles.json",
+        "Tests/TestInventory.json",
+        "Tests/U3CaseMap.json",
+        "Documentation/ExactRegistryDependencies.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryDependencies.md"
+      ],
+      "qualification": "Exact-source native and consumer results belong to the external U3 return. This record does not assert unexecuted qualification, complete conformance, performance or release clearance."
+    },
+    {
+      "area": "U4-Q independent conformance and exact registry audit",
+      "scopeDecision": "Direct owner dispatch authorizes qualification and bounded test/docs additions only. All production/adapter sources and pins remain accepted U3 bytes; U4-F/U5/Vapor are held.",
+      "changes": [
+        "Add original Apache-2.0 public-API metamorphic regressions, source-plan case map and candidate/control minimal inputs.",
+        "Reuse the existing pinned Ruby/Golden and liquid-spec JSON-RPC programmes, preserving raw upstream and strict qualification verdicts.",
+        "Keep complete execution results and proposed repairs in an external evidence packet; no engine or comparator change."
+      ],
+      "files": [
+        "Tests/LiquidTests/RegistryConformanceAuditTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U4CaseMap.json",
+        "Tests/U4Minimals.json",
+        "Documentation/U4-Q/README.md"
+      ],
+      "qualification": "This records authorized audit scope, not an unexecuted pass or Shopify conformance/release clearance. Final exact-source receipts belong to the dated U4-Q return."
     }
   ]
 }

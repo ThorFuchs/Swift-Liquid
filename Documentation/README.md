@@ -40,6 +40,7 @@ guides that are compiled from the public Swift symbol graph.
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
 | [1.3.1 release notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
 | [1.3.0 release notes](Releases/1.3.0.md) | Additive dependency tooling, compatibility, measurements and release assets |
+| [Exact registry graphs](ExactRegistryDependencies.md) | Two exact-name overloads, atomic admission and runtime parity |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
 | [1.3 roadmap](Roadmap-1.3.md) | Adopted bounded partial-dependency inspection, explicit CLI mode and acceptance gates |
 | [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |
@@ -48,3 +49,12 @@ Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files 
 under Artifacts and remain outside source control.
 
 - [Maintained development and CI operations](Maintenance.md)
+
+## Development exact-name primitive
+
+[Exact template registry](ExactTemplateRegistry.md) documents the additive U1
+registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
+describes the additive U2 runtime bridge. Graph inspection, the CLI and Vapor
+retain their existing APIs; dictionary behavior remains unchanged.
+
+The local [U4-Q independent audit](U4-Q/README.md) separates measured conformance failures from registry API regression qualification.
