@@ -187,7 +187,8 @@
     "LiquidTests.RegistryConformanceAuditTests/htmlRemainsRawUnlessTheTemplateExplicitlyEscapes()": null,
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()": null,
-    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null
+    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null,
+    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -242,6 +243,7 @@
     "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)",
     "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()",
     "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()",
-    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()"
+    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()",
+    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()"
   ]
 }

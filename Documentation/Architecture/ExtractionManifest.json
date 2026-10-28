@@ -843,7 +843,7 @@
       "scopeDecision": "The maintainer requested review and qualification of the 25 unpublished local commits and a consolidation PR while preserving PR23 and all existing holds.",
       "changes": [
         "Build and run both original public registry consumers through the existing native/development lanes; exercise both public exact dependency-inspection overloads from import-only client code.",
-        "Replace two test-only rendezvous actors with one cancellation-responsive test gate, retaining deterministic arrival counts and adding pre-entry/in-wait cancellation regressions.",
+        "Replace two test-only rendezvous actors with one cancellation-responsive test gate, retaining deterministic arrival counts and adding pre-entry/in-wait cancellation and throwing-peer drain regressions. Propagate group errors immediately so structured cancellation can drain suspended peers.",
         "Correct the documentation index wording for additive U3 overloads; preserve all production, parser, fixture, comparator, dependency, pin, platform and workflow-policy bytes."
       ],
       "files": [

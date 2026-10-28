@@ -214,7 +214,7 @@ struct RegistryConformanceAuditTests {
                     #expect(try engine.inspectDependencies(LiquidTemplate(source), registry: registry) == graph)
                 }
             }
-            try await group.waitForAll()
+            for try await _ in group {}
         }
         #expect(await barrier.arrivals == 16)
     }

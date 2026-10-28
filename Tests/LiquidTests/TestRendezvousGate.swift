@@ -99,4 +99,22 @@ struct TestRendezvousGateTests {
         }
         #expect(await gate.firstReleaseCount == 0)
     }
+
+    @Test func cancellationFromThrowingBarrierParticipantDrainsPeers() async throws {
+        let gate = TestRendezvousGate(target: 2)
+        do {
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                group.addTask { await gate.enter() }
+                try await gate.waitForArrivals(1)
+                group.addTask { throw RendezvousPeerFailure.expected }
+                // Propagate the first peer failure out of the group body. The
+                // structured cancellation then releases the parked participant.
+                for try await _ in group {}
+            }
+            Issue.record("Expected original peer failure")
+        } catch RendezvousPeerFailure.expected {}
+        #expect(await gate.firstReleaseCount == 0)
+    }
 }
+
+private enum RendezvousPeerFailure: Error { case expected }

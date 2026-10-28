@@ -404,7 +404,7 @@ struct ExactRegistryRenderingTests {
                     }
                 }
             }
-            try await group.waitForAll()
+            for try await _ in group {}
         }
         #expect(await barrier.arrivals == 32)
         #expect(await barrier.firstReleaseCount == 16)
