@@ -185,7 +185,9 @@
     "LiquidTests.RegistryConformanceAuditTests/atomicCapacityAndHostErrorsNeverBecomeFallbackSuccess()": null,
     "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()": null,
     "LiquidTests.RegistryConformanceAuditTests/htmlRemainsRawUnlessTheTemplateExplicitlyEscapes()": null,
-    "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null
+    "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null,
+    "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()": null,
+    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -238,6 +240,8 @@
     "LiquidTests.ExactRegistryRenderingTests/cancellationDuringSuspendedFilterAndSiblingReuse(recovering:)",
     "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationAtEntryPrecedesInvalidLimitsAndKeepsSiblingHealthy()",
     "LiquidTests.ExactRegistryDependencyInspectionTests/cancellationInsideGraphPhasesPublishesNothing(phase:)",
-    "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()"
+    "LiquidTests.RegistryConformanceAuditTests/cancellationBeforeAdmissionAndDuringSuspendedCallbacksIsTerminal()",
+    "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()",
+    "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()"
   ]
 }

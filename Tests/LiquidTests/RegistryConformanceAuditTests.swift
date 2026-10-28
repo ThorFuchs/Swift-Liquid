@@ -198,7 +198,7 @@ struct RegistryConformanceAuditTests {
     }
 
     @Test func concurrentRendersAndRegistryAuditPreserveRequestIsolation() async throws {
-        let barrier = AuditBarrier(target: 16)
+        let barrier = TestRendezvousGate(target: 16)
         let engine = try LiquidEngine(filters: [LiquidFilter("audit_hold") { value, _, _ in await barrier.enter(); return value }])
         let source = "{% include 'p' %}|{% render 'q', marker: marker %}|{{ touched }}"
         let entries = [("p", "{{ marker | audit_hold }}{% assign touched='S' %}"), ("q", "{{ marker }}{% assign touched='I' %}")]
@@ -217,18 +217,5 @@ struct RegistryConformanceAuditTests {
             try await group.waitForAll()
         }
         #expect(await barrier.arrivals == 16)
-    }
-}
-private actor AuditBarrier {
-    let target: Int
-    var arrivals = 0
-    var waiters: [CheckedContinuation<Void, Never>] = []
-    init(target: Int) { self.target = target }
-    func enter() async {
-        arrivals += 1
-        if arrivals >= target {
-            let pending = waiters; waiters.removeAll()
-            for value in pending { value.resume() }
-        } else { await withCheckedContinuation { waiters.append($0) } }
     }
 }

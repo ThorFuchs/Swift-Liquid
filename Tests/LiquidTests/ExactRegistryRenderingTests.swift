@@ -381,7 +381,7 @@ struct ExactRegistryRenderingTests {
     }
 
     @Test func concurrentRendersKeepExactASTsBudgetsAndContextsInvocationOwned() async throws {
-        let barrier = ExactRenderBarrier(target: 16)
+        let barrier = TestRendezvousGate(target: 16)
         let engine = try LiquidEngine(filters: [LiquidFilter("hold") { value, _, _ in await barrier.enter(); return value }])
         let registry = try ExactRegistry([
             .init("é", .raw("A{{ marker | hold }}{% include 'e\u{301}' %}{% assign shared = 'S' %}")),
@@ -451,22 +451,5 @@ private struct ExactCancellingEntries: RandomAccessCollection {
         visits.count += 1
         if index == 64 { withUnsafeCurrentTask { $0?.cancel() } }
         return source[index]
-    }
-}
-private actor ExactRenderBarrier {
-    let target: Int
-    var arrivals = 0
-    var firstReleaseCount = 0
-    private var waiters: [CheckedContinuation<Void, Never>] = []
-    init(target: Int) { self.target = target }
-    func enter() async {
-        arrivals += 1
-        if arrivals >= target {
-            if firstReleaseCount == 0 { firstReleaseCount = arrivals }
-            let pending = waiters; waiters.removeAll()
-            for continuation in pending { continuation.resume() }
-        } else {
-            await withCheckedContinuation { waiters.append($0) }
-        }
     }
 }

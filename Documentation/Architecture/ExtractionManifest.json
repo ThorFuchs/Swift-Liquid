@@ -837,6 +837,26 @@
         "Documentation/U4-Q/README.md"
       ],
       "qualification": "This records authorized audit scope, not an unexecuted pass or Shopify conformance/release clearance. Final exact-source receipts belong to the dated U4-Q return."
+    },
+    {
+      "area": "Consolidation review qualification coverage",
+      "scopeDecision": "The maintainer requested review and qualification of the 25 unpublished local commits and a consolidation PR while preserving PR23 and all existing holds.",
+      "changes": [
+        "Build and run both original public registry consumers through the existing native/development lanes; exercise both public exact dependency-inspection overloads from import-only client code.",
+        "Replace two test-only rendezvous actors with one cancellation-responsive test gate, retaining deterministic arrival counts and adding pre-entry/in-wait cancellation regressions.",
+        "Correct the documentation index wording for additive U3 overloads; preserve all production, parser, fixture, comparator, dependency, pin, platform and workflow-policy bytes."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Examples/ExactRegistryConsumer/Sources/LiquidExactRegistryConsumer/main.swift",
+        "Tests/LiquidTests/TestRendezvousGate.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/LiquidTests/RegistryConformanceAuditTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/README.md",
+        "CHANGELOG.md"
+      ],
+      "qualification": "Exact-source checks and original failures belong to external receipts and PR CI. This authorship/coverage record asserts no unexecuted pass, independent-conformance repair, performance acceptance, PR23 decision, merge or release approval."
     }
   ]
 }

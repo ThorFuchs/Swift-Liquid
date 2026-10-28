@@ -124,6 +124,8 @@ def main():
             run(swift() + ['run', '--package-path', 'Examples/InspectionConsumer', 'LiquidInspectionConsumer'], 'inspection-consumer')
             run(swift() + ['run', '--package-path', 'Examples/MetricsConsumer', 'LiquidMetricsConsumer'], 'metrics-consumer')
             run(swift() + ['run', '--package-path', 'Examples/DependencyConsumer', 'LiquidDependencyConsumer'], 'dependency-consumer')
+            run(swift() + ['run', '--package-path', 'Examples/RegistryConsumer', 'LiquidRegistryConsumer'], 'registry-consumer')
+            run(swift() + ['run', '--package-path', 'Examples/ExactRegistryConsumer', 'LiquidExactRegistryConsumer'], 'exact-registry-consumer')
             run([sys.executable, '-B', 'Scripts/check_readme_examples.py'], 'readme-consumer')
             binary_path = run(swift() + ['build', '--show-bin-path'], 'binary-path').strip().splitlines()[-1]
             run([sys.executable, '-B', 'Scripts/check_cli.py', str(Path(binary_path) / 'liquid')], 'cli')

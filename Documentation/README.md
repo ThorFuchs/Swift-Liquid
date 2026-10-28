@@ -54,7 +54,8 @@ under Artifacts and remain outside source control.
 
 [Exact template registry](ExactTemplateRegistry.md) documents the additive U1
 registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
-describes the additive U2 runtime bridge. Graph inspection, the CLI and Vapor
-retain their existing APIs; dictionary behavior remains unchanged.
+describes the additive U2 runtime bridge. [Exact registry graphs](ExactRegistryDependencies.md)
+documents the two additive U3 inspection overloads. Existing dictionary, CLI and
+Vapor APIs retain their behavior.
 
 The local [U4-Q independent audit](U4-Q/README.md) separates measured conformance failures from registry API regression qualification.

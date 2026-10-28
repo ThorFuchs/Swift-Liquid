@@ -59,6 +59,11 @@ private struct Observation {
         let mixed = try LiquidTemplateRegistry([.init("p", .parsed(LiquidTemplate("π"))), .init("unused", .raw("z"))])
         let source = "L{% include 'p' %}"
         let root = try LiquidTemplate(source)
+        let rawGraph = try engine.inspectDependencies(template: source, registry: allParsed)
+        let parsedGraph = try engine.inspectDependencies(root, registry: allParsed)
+        precondition(rawGraph == parsedGraph && rawGraph.nodes.count == 2 && rawGraph.edges.count == 1)
+        precondition(rawGraph.edges[0].requestedName == "p" && rawGraph.edges[0].resolvedName == "p")
+        print("U3_TWO_PUBLIC_GRAPH_APIS\tPASS")
         for (label, value, expectedParse, bytes) in [("all-parsed", allParsed, false, source.utf8.count + 2), ("mixed", mixed, true, source.utf8.count + 3)] {
             let result = try await engine.renderWithMetrics(root, registry: value)
             precondition(result.output == "Lπ" && result.metrics.sourceBytes == bytes && (result.metrics.parseDuration != nil) == expectedParse)
