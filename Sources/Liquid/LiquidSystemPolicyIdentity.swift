@@ -40,6 +40,10 @@ public struct LiquidSystemPolicyIdentity: Sendable, Equatable {
     /// Empty opaque bytes are permitted; the host decides whether they identify
     /// a meaningful policy. The capacities are Liquid admission limits, not a
     /// Content issuance rule or an aggregate invocation budget.
+    /// - Parameters:
+    ///   - role: Bounded ASCII policy role.
+    ///   - bytes: Opaque exact identity bytes.
+    ///   - context: Closed versioned representation context.
     /// - Throws: `CancellationError` or ``AdmissionError``.
     public init(role: String, bytes: [UInt8], context: Context) throws {
         try Task.checkCancellation()

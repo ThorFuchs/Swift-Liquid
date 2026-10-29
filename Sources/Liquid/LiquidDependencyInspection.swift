@@ -205,6 +205,13 @@ extension LiquidEngine {
 
     /// Inspects an extended parsed root and its exact registry with the same
     /// explicit raw-entry profile and mismatch rules as rich rendering.
+    /// - Parameters:
+    ///   - template: Parsed root with the selected profile.
+    ///   - registry: Exact-name raw or parsed partials.
+    ///   - extensionProfile: Profile used for raw entries and checked for parsed entries.
+    ///   - analysisLimits: Finite graph admission and edge capacities.
+    /// - Returns: The bounded dependency graph.
+    /// - Throws: Profile, syntax, capacity or cancellation errors.
     public func inspectDependencies(_ template: LiquidTemplate, registry: LiquidTemplateRegistry,
                                     extensionProfile: LiquidExtensionProfile,
                                     analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection {

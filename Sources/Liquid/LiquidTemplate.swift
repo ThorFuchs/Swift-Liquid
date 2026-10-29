@@ -21,6 +21,12 @@ public struct LiquidTemplate: Sendable {
     }
 
     /// Parses source with an explicit extension profile and Shopify parser mode.
+    /// - Parameters:
+    ///   - source: Exact template source.
+    ///   - syntaxMode: Shopify parser policy.
+    ///   - extensionProfile: Explicit extension grammar.
+    ///   - limits: Finite source and syntax-depth capacities.
+    /// - Throws: Syntax, capacity or cancellation errors.
     public init(_ source: String, syntaxMode: LiquidSyntaxMode = .lax,
                 extensionProfile: LiquidExtensionProfile, limits: LiquidLimits = .default) throws {
         try limits.validate()

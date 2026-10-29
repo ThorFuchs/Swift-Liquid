@@ -371,6 +371,12 @@ public struct LiquidEngine: Sendable {
     /// The root and parsed entries must have the same syntax and extension profiles;
     /// raw registry entries use the root profiles. The registry remains exact.
     /// Admission does not certify Content provenance or an output placement.
+    /// - Parameters:
+    ///   - template: Parsed root with the closed system profile.
+    ///   - environment: Admitted resident values for this invocation.
+    ///   - registry: Explicit exact-name partials with matching profiles.
+    /// - Returns: Complete rendered output.
+    /// - Throws: Profile, availability, runtime, quota or cancellation errors.
     public func render(_ template: LiquidTemplate, environment: LiquidSystemEnvironment,
                        registry: LiquidTemplateRegistry) async throws -> String {
         try Task.checkCancellation()

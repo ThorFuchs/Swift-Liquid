@@ -18,6 +18,9 @@ public indirect enum LiquidSystemValue: Sendable {
         /// Resident value declared under this name.
         public let value: LiquidSystemValue
         /// Creates a declaration; environment admission checks its name and value.
+        /// - Parameters:
+        ///   - name: Exact UTF-8 member name.
+        ///   - value: Resident value declaration.
         public init(_ name: String, _ value: LiquidSystemValue) {
             self.name = name; self.value = value
         }
@@ -60,6 +63,12 @@ public indirect enum LiquidSystemValue: Sendable {
         /// Resident DIV-flow HTML representation state.
         public let html: HTML
         /// Creates a declaration; environment admission validates the entire tree.
+        /// - Parameters:
+        ///   - primary: The ordinary primary value or container.
+        ///   - descriptor: Optional admitted descriptor view.
+        ///   - plain: Plain-text representation state.
+        ///   - htmlText: HTML text-node representation state.
+        ///   - html: HTML flow-fragment representation state.
         public init(primary: LiquidSystemValue, descriptor: LiquidSystemDescriptor? = nil,
                     plain: Plain = .notRequested, htmlText: HTML = .notRequested,
                     html: HTML = .notRequested) {
@@ -99,6 +108,18 @@ public struct LiquidSystemEnvironment: Sendable {
         /// Maximum construction steps, independent of elapsed time.
         public let work: Int
         /// Creates inclusive construction capacities; all accept zero.
+        /// - Parameters:
+        ///   - nodes: Maximum value occurrences.
+        ///   - depth: Maximum root-relative value depth, at most 128.
+        ///   - textBytes: Aggregate primary text and member-name bytes.
+        ///   - descriptorFields: Maximum descriptor-field occurrences.
+        ///   - descriptorBytes: Aggregate descriptor UTF-8 bytes.
+        ///   - representationSlots: Maximum requested or unavailable slots.
+        ///   - representationBytes: Aggregate representation and reason bytes.
+        ///   - identityBytes: Aggregate policy identity bytes.
+        ///   - reasonBytes: Maximum bytes in one reason.
+        ///   - retainedBytes: Maximum logical retained weight.
+        ///   - work: Maximum construction steps.
         public init(nodes: Int = 100_000, depth: Int = 64, textBytes: Int = 8_388_608,
                     descriptorFields: Int = 10_000, descriptorBytes: Int = 1_048_576,
                     representationSlots: Int = 10_000, representationBytes: Int = 8_388_608,
@@ -134,6 +155,9 @@ public struct LiquidSystemEnvironment: Sendable {
     public let entries: [LiquidSystemValue.Entry]
 
     /// Admits every reachable occurrence, including repeated aliases.
+    /// - Parameters:
+    ///   - entries: Ordered named resident value declarations.
+    ///   - limits: Independent finite construction capacities.
     /// - Throws: `CancellationError` or ``AdmissionError``.
     public init(_ entries: [LiquidSystemValue.Entry], limits: Limits = .default) throws {
         try Task.checkCancellation()

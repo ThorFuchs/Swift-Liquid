@@ -22,6 +22,9 @@ public struct LiquidSystemDescriptor: Sendable, Equatable {
         /// The supplied field value.
         public let value: Value
         /// Creates a declaration. Validation occurs during descriptor admission.
+        /// - Parameters:
+        ///   - name: Exact supported field name.
+        ///   - value: Field value to validate.
         public init(_ name: String, _ value: Value) {
             self.name = name
             self.value = value
@@ -37,6 +40,10 @@ public struct LiquidSystemDescriptor: Sendable, Equatable {
         /// Maximum aggregate number of type-name elements.
         public let typeNames: Int
         /// Creates capacities checked at admission.
+        /// - Parameters:
+        ///   - fields: Maximum field occurrences.
+        ///   - textBytes: Aggregate field-name and value UTF-8 bytes.
+        ///   - typeNames: Maximum aggregate type-name elements.
         public init(fields: Int = 7, textBytes: Int = 1_048_576, typeNames: Int = 1_024) {
             self.fields = fields
             self.textBytes = textBytes
@@ -66,6 +73,9 @@ public struct LiquidSystemDescriptor: Sendable, Equatable {
     /// Validates a closed field set before exposing the immutable view.
     /// Unknown field knowledge is represented by omission, not a null value.
     /// Type-name vocabulary and Content-issued qualification remain host duties.
+    /// - Parameters:
+    ///   - entries: Ordered closed-field declarations.
+    ///   - limits: Finite descriptor capacities.
     /// - Throws: `CancellationError` or ``AdmissionError``.
     public init(_ entries: [Entry], limits: Limits = .default) throws {
         try Task.checkCancellation()
