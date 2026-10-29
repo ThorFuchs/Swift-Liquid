@@ -40,6 +40,7 @@ extension Renderer {
     }
 
     internal func stringify(_ value: Any, escape: Bool? = nil) -> String {
+        let value = systemPrimary(value)
         if let escape {
             let stringValue = stringifyUnescapedPreservingSafeHTML(value)
             return escape ? HTMLEscape.escape(stringValue) : stringValue
@@ -57,6 +58,7 @@ extension Renderer {
 
     @inline(__always)
     internal func stringifyUnescapedPreservingSafeHTML(_ value: Any) -> String {
+        let value = systemPrimary(value)
         if let safeHTML = value as? SafeHTML {
             return safeHTML.value
         }
@@ -65,6 +67,7 @@ extension Renderer {
 
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
+        let value = systemPrimary(value)
         switch value {
         case is LiquidSpecialValue: return ""
         case let range as RuntimeRange: return range.description
@@ -129,6 +132,7 @@ extension Renderer {
 
     @inline(__always)
     internal func integerValue(_ value: Any) -> Int? {
+        let value = systemPrimary(value)
         switch value {
         case let int as Int:
             return int
@@ -151,6 +155,7 @@ extension Renderer {
 
     @inline(__always)
     internal func numericValue(_ value: Any) -> Double? {
+        let value = systemPrimary(value)
         switch value {
         case let double as Double:
             return double
@@ -172,6 +177,7 @@ extension Renderer {
     }
     
     internal func isTruthy(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case let bool as Bool:
             return bool
@@ -183,6 +189,7 @@ extension Renderer {
     }
     
     internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+        let left = systemPrimary(left); let right = systemPrimary(right)
         if let left = left as? LiquidSpecialValue, let right = right as? LiquidSpecialValue { return left == right }
         if let special = left as? LiquidSpecialValue { return special == .blank ? isBlank(right) : isEmpty(right) }
         if let special = right as? LiquidSpecialValue { return special == .blank ? isBlank(left) : isEmpty(left) }
@@ -265,6 +272,7 @@ extension Renderer {
     }
 
     internal func compareValues(_ left: Any, _ right: Any) throws -> Int {
+        let left = systemPrimary(left); let right = systemPrimary(right)
         if let left = left as? Int, let right = right as? Int {
             return left == right ? 0 : (left < right ? -1 : 1)
         }
@@ -297,6 +305,7 @@ extension Renderer {
     
     @inline(__always)
     internal func isFloatLike(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         if value is Double { return true }
         if let str = value as? String { return str.contains(".") && Double(str)?.isFinite == true }
         if let inline = value as? InlineString { return inline.string.contains(".") && Double(inline.string)?.isFinite == true }
@@ -307,6 +316,7 @@ extension Renderer {
 
     @inline(__always)
     internal func orderedDictPairs(_ value: Any) -> [(key: String, value: Any)]? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered.map { (key: $0.key, value: $0.value) }
         }
@@ -318,6 +328,7 @@ extension Renderer {
 
     @inline(__always)
     internal func dictValue(_ value: Any, forKey key: String) -> Any? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered[key]
         }
@@ -329,11 +340,13 @@ extension Renderer {
 
     @inline(__always)
     internal func isDictLike(_ value: Any) -> Bool {
-        value is [String: Any] || value is RuntimeObject
+        let value = systemPrimary(value)
+        return value is [String: Any] || value is RuntimeObject
     }
 
     @inline(__always)
     internal func dictCount(_ value: Any) -> Int? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered.count
         }
@@ -452,6 +465,7 @@ extension Renderer {
     }
 
     internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
+        let haystack = systemPrimary(haystack); let needle = systemPrimary(needle)
         // Shopify: contains with false/nil/undefined needle always returns false
         if needle is Bool || needle is NSNull { return false }
         if let s = needle as? String, s.isEmpty { return false }  // undefined var
@@ -466,11 +480,13 @@ extension Renderer {
     }
     
     internal func getSize(_ value: Any) -> Int {
-        runtimeValueSize(value) ?? dictCount(value) ?? 0
+        let value = systemPrimary(value)
+        return runtimeValueSize(value) ?? dictCount(value) ?? 0
     }
     
 
     internal func getFirst(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let string = value as? String { return string.unicodeScalars.first.map(String.init) ?? "" }
         if let array = value as? [Any], !array.isEmpty {
             return array[0]
@@ -482,6 +498,7 @@ extension Renderer {
     }
 
     internal func getLast(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let string = value as? String { return string.unicodeScalars.last.map(String.init) ?? "" }
         if let array = value as? [Any], !array.isEmpty {
             return array[array.count - 1]
@@ -490,6 +507,7 @@ extension Renderer {
     }
     
     internal func isNilOrEmpty(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case is NSNull:
             return true
@@ -511,6 +529,7 @@ extension Renderer {
     }
     
     internal func isEmpty(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case let string as String: return string.isEmpty
         case let array as [Any]: return array.isEmpty
@@ -521,6 +540,7 @@ extension Renderer {
     }
     
     internal func isBlank(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         if let boolean = value as? Bool { return !boolean }
         if value is NSNull { return true }
         if let string = value as? String { return string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -535,6 +555,7 @@ extension Renderer {
     }
 
     internal func compareForSort(_ a: Any, _ b: Any) -> Bool {
+        let a = systemPrimary(a); let b = systemPrimary(b)
         // If both are numeric, compare numerically
         if let na = numericValue(a), let nb = numericValue(b),
            (a is Int || a is Double), (b is Int || b is Double) {
@@ -544,6 +565,7 @@ extension Renderer {
     }
 
     internal func compareForSortNatural(_ a: Any, _ b: Any) -> Bool {
+        let a = systemPrimary(a); let b = systemPrimary(b)
         if a is NSNull { return false }
         if b is NSNull { return true }
         if let na = numericValue(a), let nb = numericValue(b),
@@ -566,6 +588,7 @@ extension Renderer {
     }
     
     internal func reverseValue(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let array = value as? [Any] {
             return Array(array.reversed())
         }
@@ -573,6 +596,7 @@ extension Renderer {
     }
     
     internal func sortValue(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let array = value as? [Any] {
             return array.sorted { compareForSort($0, $1) }
         }
@@ -657,6 +681,7 @@ extension Renderer {
     }
     
     internal func getProperty(from object: Any, key: String) -> Any? {
+        let object = systemPrimary(object)
         // This is a simplified implementation
         // In a full implementation, you'd use Mirror or KVC
         if let val = dictValue(object, forKey: key) { return val }

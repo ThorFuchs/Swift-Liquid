@@ -9,6 +9,7 @@ internal indirect enum RuntimeEqualityKey: Hashable {
     struct Member: Hashable { let key: ScalarKey; let value: RuntimeEqualityKey }
 
     static func make(_ value: Any) -> Self? {
+        if let wrapped = value as? SystemRuntimeValue { return make(wrapped.primary) }
         switch value {
         case is NSNull: return .null
         case let value as Bool: return .boolean(value)

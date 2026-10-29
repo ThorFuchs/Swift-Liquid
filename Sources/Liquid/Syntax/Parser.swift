@@ -24,6 +24,7 @@ internal final class Parser {
     private let source: String?
     private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
+    private let extensionProfile: LiquidExtensionProfile
     private let lineOffset: Int
     private let maxNestingDepth: Int
     private var parseDepth = 0
@@ -46,6 +47,7 @@ internal final class Parser {
         source: String? = nil,
         sourceProvenance: DiagnosticSourceProvenance = .unmapped,
         syntaxMode: LiquidSyntaxMode = .lax,
+        extensionProfile: LiquidExtensionProfile = .standard,
         maxNestingDepth: Int = 64,
         lineOffset: Int = 0
     ) {
@@ -53,6 +55,7 @@ internal final class Parser {
         self.source = source
         self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
+        self.extensionProfile = extensionProfile
         self.lineOffset = lineOffset
         self.maxNestingDepth = maxNestingDepth
         self.currentTokenStorage = tokens.first ?? Self.eofToken
@@ -875,7 +878,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                 }
                 startExpr = expr
             } else {
@@ -900,7 +903,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                 }
                 endExpr = expr
             } else {
@@ -955,7 +958,7 @@ internal final class Parser {
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
-                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                expr = try propertyAccess(expr, property: prop)
             }
             return expr
 
@@ -985,7 +988,7 @@ internal final class Parser {
                         throw ParserError.unexpectedToken(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                     hasMoreAccess = true
                 }
             }
@@ -1006,6 +1009,7 @@ internal final class Parser {
             guard case .identifier(let property) = nextTokenStorage.type else {
                 throw ParserError.unexpectedToken(nextTokenStorage)
             }
+            if property.string.utf8.first == 0x24 { break }
             advance()
             advance()
             components.append(property)
@@ -1111,12 +1115,24 @@ internal final class Parser {
                     guard case .identifier(let prop) = nextTokenStorage.type else { break }
                     advance() // consume .
                     advance() // consume identifier
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                     hasMoreAccess = true
                 }
             }
 
             return expr
+    }
+
+    private func propertyAccess(_ expression: LiquidExpression, property: InlineString) throws -> LiquidExpression {
+        let name = property.string
+        guard name.utf8.first == 0x24 else {
+            return .access(expr: expression, key: .literal(.string(property)), command: true)
+        }
+        guard extensionProfile == .closedSystemV1,
+              let system = LiquidSystemProperty(rawValue: String(name.dropFirst())) else {
+            throw ParserError.unsupportedFeature("Unknown system property")
+        }
+        return .systemAccess(expr: expression, property: system)
     }
 
     private func literalExpression(for identifier: InlineString) -> LiquidExpression? {
@@ -1935,7 +1951,7 @@ internal final class Parser {
 
         let nestedTokens: [Token]
         do {
-            nestedTokens = try Lexer(rewrittenTemplate).tokenize()
+            nestedTokens = try Lexer(rewrittenTemplate, extensionProfile: extensionProfile).tokenize()
         } catch {
             throw ParserError.unsupportedFeature("Lexer error in liquid tag body: \(error)")
         }
@@ -1943,6 +1959,7 @@ internal final class Parser {
             consuming: nestedTokens,
             source: rewrittenTemplate,
             syntaxMode: syntaxMode,
+            extensionProfile: extensionProfile,
             maxNestingDepth: maxNestingDepth,
             lineOffset: lineOffset + markupLine - 1
         )

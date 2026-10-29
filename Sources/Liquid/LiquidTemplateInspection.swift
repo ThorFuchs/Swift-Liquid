@@ -58,6 +58,7 @@ internal func inspectTemplate(_ ast: ASTNode, limits: LiquidLimits) throws -> Li
         case .unary(_, let value): children = [value]
         case .range(let start, let end): children = [start, end]
         case .access(let value, let key, _): children = [value, key]
+        case .systemAccess(let value, _): children = [value]
         case .filtered(let value, let pipeline):
             for filter in pipeline { filters.insert(ScalarKey(filter.name.string)) }
             children = [value] + pipeline.flatMap { $0.arguments + $0.namedArguments.map(\.value) }

@@ -917,6 +917,32 @@
         "Preserve standard Liquid, fixtures, root dependencies and Content issuance boundaries."
       ],
       "qualification": "Requires actual exact-source tests. This admission component alone does not implement or qualify rich rendering, syntax, propagation, Content issuance, performance or release."
+    },
+    {
+      "area": "Closed system environment rendering",
+      "scopeDecision": "Maintainer adopted the three bounded Content and Vapor handshake choices for isolated implementation.",
+      "changes": [
+        "Add an opt-in closed system syntax profile and exact-registry rendering with typed system property availability.",
+        "Retain child decorations on selection and recursively strip them at value extraction and custom filter boundaries.",
+        "Charge invocation-owned evaluation and context budgets and check partial profile compatibility before rendering.",
+        "Preserve standard mode, pinned fixtures, dependency-free core and host responsibility for provenance and placement."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidExtensionProfile.swift",
+        "Sources/Liquid/LiquidSystemError.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Sources/Liquid/Rendering",
+        "Sources/Liquid/Support",
+        "Sources/Liquid/Syntax",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/SystemEnvironment.md",
+        "Documentation/README.md"
+      ],
+      "qualification": "Actual source-bound test results and remaining limitations are recorded externally. No complete conformance, performance, downstream acceptance, merge or release is asserted."
     }
   ]
 }

@@ -13,6 +13,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Quality sprints](QualityRoadmap.md) | Public quality work, acceptance gates and subsequent audits |
 | [Language](Language.md) | Syntax, standard surface, coercion, and compatibility boundaries |
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
+| [Closed system environment](SystemEnvironment.md) | Opt-in resident values, representations and trust boundaries |
 | [Custom filters](CustomFilters.md) | Typed engine-scoped callbacks, arguments, admission and failures |
 | [Inspection](Inspection.md) | AST summary, syntactic references, limits and CLI JSON schema |
 | [Metrics](Metrics.md) | Opt-in elapsed durations, logical budget counts, recovery and CLI metrics schema |

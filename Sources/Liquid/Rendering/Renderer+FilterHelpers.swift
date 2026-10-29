@@ -192,6 +192,7 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
+        let object = systemPrimary(object)
         // Handle different object types
         if let val = dictValue(object, forKey: key) { return val }
         else if isDictLike(object) { return nil }

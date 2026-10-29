@@ -24,7 +24,7 @@ extension Renderer {
         case .variable(let name):
             return stringify(context.getVariable(name.string) ?? NSNull())
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 return stringify(context.getVariable(path) ?? NSNull())
             }
             return stringify(try await evaluateExpressionFast(expression))
@@ -54,8 +54,11 @@ extension Renderer {
         case .variable(let name):
             return context.getVariable(name.string) ?? NSNull()
 
+        case .systemAccess(let base, let property):
+            return try systemAccess(property, from: try await evaluateExpressionFast(base))
+
         case .access(let expr, let key, let command):
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 return context.getVariable(path) ?? NSNull()
             }
             // Handle bracket notation sentinel: .access(.variable(""), key)
@@ -65,7 +68,7 @@ extension Renderer {
                 let varName = stringify(keyValue)
                 return context.getLiteralVariable(varName) ?? NSNull()
             }
-            let baseValue = try await evaluateExpressionFast(expr)
+            let baseValue = systemPrimary(try await evaluateExpressionFast(expr))
             switch key {
             case .literal(.string(let keyName)):
                 return evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string, command: command)
@@ -178,6 +181,7 @@ extension Renderer {
 
     @inline(__always)
     internal func evaluateAccessValueWithIndex(baseValue: Any, index: Int) -> Any {
+        let baseValue = systemPrimary(baseValue)
         guard let array = baseValue as? [Any] else {
             return NSNull()
         }
@@ -191,6 +195,7 @@ extension Renderer {
 
     @inline(__always)
     internal func evaluateAccessValueWithStringKey(baseValue: Any, key: String, command: Bool = false) -> Any {
+        let baseValue = systemPrimary(baseValue)
         if let range = baseValue as? RuntimeRange {
             guard command, let value = range.commandValue(for: key) else { return NSNull() }
             return value
@@ -241,7 +246,7 @@ extension Renderer {
         case .variable(let name):
             return context.getVariable(name.string) ?? NSNull()
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)

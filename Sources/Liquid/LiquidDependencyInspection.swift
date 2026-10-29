@@ -203,6 +203,17 @@ extension LiquidEngine {
         return try inspectExactDependencies(prepared, limits: limits, analysisLimits: analysisLimits)
     }
 
+    /// Inspects an extended parsed root and its exact registry with the same
+    /// explicit raw-entry profile and mismatch rules as rich rendering.
+    public func inspectDependencies(_ template: LiquidTemplate, registry: LiquidTemplateRegistry,
+                                    extensionProfile: LiquidExtensionProfile,
+                                    analysisLimits: LiquidDependencyLimits = .default) throws -> LiquidDependencyInspection {
+        guard template.extensionProfile == extensionProfile else { throw LiquidSystemError.incompatibleProfile }
+        let prepared = try prepareExact(.parsed(template), registry: registry, syntaxMode: template.syntaxMode,
+                                        measuring: false, analysisLimits: analysisLimits, extensionProfile: extensionProfile)
+        return try inspectExactDependencies(prepared, limits: limits, analysisLimits: analysisLimits)
+    }
+
     /// Inspects retained parsed input and an exact registry without reparsing any parsed content.
     /// Every unused entry is admitted and validated under the executing engine's current limits.
     /// - Parameters:

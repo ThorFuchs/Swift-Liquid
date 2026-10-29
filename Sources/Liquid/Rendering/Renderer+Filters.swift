@@ -34,13 +34,22 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if let wrapped = input as? SystemRuntimeValue, filter.name.equals("default"), !filter.arguments.isEmpty {
+            let fallback = try await evaluateFilterArgumentFast(filter.arguments[0])
+            if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value,
+               (try await evaluateExpression(allow)) as? Bool == true {
+                return wrapped.primary is NSNull || (wrapped.primary as? String)?.isEmpty == true ? fallback : input
+            }
+            return isNilOrEmpty(wrapped.primary) ? fallback : input
+        }
         let value: Any
-        if let range = input as? RuntimeRange {
+        let primary = systemPrimary(input)
+        if let range = primary as? RuntimeRange {
             if filter.arguments.isEmpty, filter.namedArguments.isEmpty,
                let result = range.commandValue(for: filter.name.string) { return result }
             let arrayFilters: Set<String> = ["join", "first", "last", "size", "sort", "sort_natural", "reverse", "map", "where", "reject", "find", "find_index", "has", "sum", "uniq", "compact", "concat"]
             value = arrayFilters.contains(filter.name.string) ? range.values : range.description
-        } else { value = input }
+        } else { value = primary }
 
         // Handle default filter with allow_false named argument
         if filter.name.equals("default"), !filter.namedArguments.isEmpty {
@@ -198,7 +207,7 @@ extension Renderer {
         case .variable(let name):
             return context.getVariable(name.string) ?? NSNull()
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)
@@ -482,8 +491,9 @@ extension Renderer {
             else if value is NSNull { left = [] }
             else if let s = value as? String, s.isEmpty { left = [] }
             else { left = [value] }
-            guard let right = args.first as? [Any] else {
-                throw RenderError.typeError(expected: "array", actual: "\(type(of: args.first ?? NSNull()))", operation: "concat")
+            let rightArgument = systemPrimary(args.first ?? NSNull())
+            guard let right = rightArgument as? [Any] else {
+                throw RenderError.typeError(expected: "array", actual: "\(type(of: rightArgument))", operation: "concat")
             }
             return left + right
         }

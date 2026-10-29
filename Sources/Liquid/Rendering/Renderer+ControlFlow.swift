@@ -154,7 +154,7 @@ extension Renderer {
     // MARK: - For Loop Rendering
 
     internal func renderFor(variable: InlineString, collection: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams) async throws -> String {
-        let collectionValue = try await evaluateExpression(collection)
+        let collectionValue = systemPrimary(try await evaluateExpression(collection))
         let forloopName = "\(variable.string)-\(expressionToPath(collection))"
 
         // Build collection key for offset:continue tracking
@@ -368,7 +368,7 @@ extension Renderer {
     }
 
     internal func renderTableRow(variable: InlineString, collection: LiquidExpression, body: [ASTNode], params: TableRowParams) async throws -> String {
-        let collectionValue = try await evaluateExpression(collection)
+        let collectionValue = systemPrimary(try await evaluateExpression(collection))
         
         // Convert collection to array
         var items: [Any] = []

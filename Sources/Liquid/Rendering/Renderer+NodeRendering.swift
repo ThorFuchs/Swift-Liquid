@@ -323,7 +323,7 @@ extension Renderer {
             appendStringifiedUnescapedValueFast(context.getVariable(name.string) ?? NSNull(), to: &output)
 
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 appendStringifiedUnescapedValueFast(context.getVariable(path) ?? NSNull(), to: &output)
             } else {
                 output.append(try await renderExpressionFast(expression))
@@ -339,6 +339,7 @@ extension Renderer {
 
     @inline(__always)
     internal func appendStringifiedUnescapedValueFast(_ value: Any, to output: inout String) {
+        let value = systemPrimary(value)
         switch value {
         case let str as String:
             output.append(str)
@@ -451,6 +452,9 @@ extension Renderer {
         case .access(let expr, let key, _):
             return expressionReferencesVariable(expr, named: variableName)
                 || expressionReferencesVariable(key, named: variableName)
+
+        case .systemAccess(let expr, _):
+            return expressionReferencesVariable(expr, named: variableName)
 
         case .call(_, let arguments):
             for argument in arguments where expressionReferencesVariable(argument.value, named: variableName) {

@@ -1,6 +1,15 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SystemRenderingTests/descriptorProjectionChargesElementsAndCancellationDoesNotPoisonReuse()": null,
+    "LiquidTests.SystemRenderingTests/propertiesAndOrdinaryKeysRemainDistinct(mode:)": 3,
+    "LiquidTests.SystemRenderingTests/childSelectionRetainsDecorationAndValueExtractionStripsIt(mode:)": 3,
+    "LiquidTests.SystemRenderingTests/typedUnavailableAndRegistryProfileAdmission()": null,
+    "LiquidTests.SystemRenderingTests/exactPartialBindingsAndFilterTrustLoss()": null,
+    "LiquidTests.SystemRenderingTests/primaryTruthinessAndUnavailableRepresentations()": null,
+    "LiquidTests.SystemRenderingTests/selectingFiltersRetainChildrenAndNewContainersLoseDecoration()": null,
+    "LiquidTests.SystemRenderingTests/systemLookupsChargeTheInvocationValueBudget()": null,
+    "LiquidTests.SystemRenderingTests/mapDefaultAndChangedValuesDoNotInventQualification()": null,
     "LiquidTests.SystemEnvironmentAdmissionTests/residentTreesAndFiniteOccurrenceLimits()": null,
     "LiquidTests.SystemEnvironmentAdmissionTests/representationsAreResidentBoundedAndContextSpecific()": null,
     "LiquidTests.SystemPolicyIdentityTests/exactBytesContextsCapacitiesAndCancellation()": null,
