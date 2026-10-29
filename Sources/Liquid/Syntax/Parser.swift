@@ -430,8 +430,10 @@ internal final class Parser {
         // VariableSignature is \(?[\w\-\.\[\]]\)?; Ruby's \w is ASCII.
         // Reverse matching has no regex backtracking, even for hostile targets.
         var start = bytes.count
+        var steps = 0
         while start > 0 {
-            if start & 255 == 0 { try Task.checkCancellation() }
+            if steps & 255 == 0 { try Task.checkCancellation() }
+            steps += 1
             var cursor = start
             if bytes[cursor - 1] == 41 { cursor -= 1 }
             guard cursor > 0, signatureByte(bytes[cursor - 1]) else { break }
