@@ -203,4 +203,28 @@ struct SystemRenderingTests {
         #expect(try await LiquidEngine().render(template, environment: env, registry: LiquidTemplateRegistry([])) == "keep|3")
     }
 
+    @Test func decoratedIntegerArgumentsPreservePrecisionAndOverflow() async throws {
+        let large = 9_007_199_254_740_993
+        let wrapped: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(large))))
+        let max: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(Int.max))))
+        let neg: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(-1))))
+        let minimum: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(Int.min))))
+        let env = try LiquidSystemEnvironment([.init("plain", .ordinary(.integer(large))), .init("wrapped", wrapped), .init("max", max), .init("min", minimum), .init("neg", neg)])
+        let engine = LiquidEngine(); let registry = try LiquidTemplateRegistry([])
+        for filter in ["plus", "minus", "times", "divided_by", "modulo"] {
+            let plain = try LiquidTemplate("{{ 1 | \(filter): plain }}", extensionProfile: .closedSystemV1)
+            let decorated = try LiquidTemplate("{{ 1 | \(filter): wrapped }}", extensionProfile: .closedSystemV1)
+            #expect(try await engine.render(plain, environment: env, registry: registry) == engine.render(decorated, environment: env, registry: registry))
+        }
+        let precise = try LiquidTemplate("{{ 1 | plus: wrapped }}", extensionProfile: .closedSystemV1)
+        #expect(try await engine.render(precise, environment: env, registry: registry) == "9007199254740994")
+        for source in ["{{ 1 | plus: max }}", "{{ 0 | minus: min }}", "{{ 2 | times: max }}", "{{ min | divided_by: neg }}"] {
+            let overflow = try LiquidTemplate(source, extensionProfile: .closedSystemV1)
+            do { _ = try await engine.render(overflow, environment: env, registry: registry); Issue.record("Decorated integer overflow succeeded: \(source)") }
+            catch let error as LiquidError { if case .invalidValue = error { } else { Issue.record("Wrong overflow error: \(error)") } }
+        }
+        let remainder = try LiquidTemplate("{{ min | modulo: neg }}", extensionProfile: .closedSystemV1)
+        #expect(try await engine.render(remainder, environment: env, registry: registry) == "0")
+    }
+
 }

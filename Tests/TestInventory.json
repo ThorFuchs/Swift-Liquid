@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SystemRenderingTests/decoratedIntegerArgumentsPreservePrecisionAndOverflow()": null,
     "LiquidTests.SystemRenderingTests/childOperationsUsePrimaryAndRetainSelectedValues()": null,
     "LiquidTests.SystemRenderingTests/decoratedArgumentsAndNullChildrenMatchOrdinarySemantics()": null,
     "LiquidTests.SystemRenderingTests/decoratedDynamicIndicesUsePrimaryAndPreserveSelectedChild()": null,
