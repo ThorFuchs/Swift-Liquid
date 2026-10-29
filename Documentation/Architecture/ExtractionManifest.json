@@ -898,6 +898,15 @@
         "Keep type-name vocabulary and Content provenance at the host boundary; do not decide absent descriptor, policy identity or propagation."
       ],
       "qualification": "Public-only regression and external CI receipts qualify only this standalone carrier. Full rich environment, rendering, inspection, conformance, performance, merge and release remain pending."
+    },
+    {
+      "area": "System policy identity admission",
+      "scopeDecision": "Thor adopted bounded opaque exact-byte policy identity with a closed versioned context; generic construction does not establish Content provenance or placement.",
+      "changes": [
+        "Add checked Sendable role, opaque byte and context identity admission with finite capacities and cancellation.",
+        "Add public regression controls for exact byte identity, context distinction, boundaries and cancellation."
+      ],
+      "qualification": "Pending exact-source qualification. This component does not implement a rich environment, rendering, complete conformance, performance or release acceptance."
     }
   ]
 }
