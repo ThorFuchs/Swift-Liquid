@@ -754,3 +754,10 @@ thead {
     height:auto
   }
 }
+
+@media (max-width: 680px) {
+  th:first-child { width: 36%; }
+  th:nth-child(2) { width: 20%; }
+  th:nth-child(3) { width: 17%; }
+  th:last-child { width: 27%; }
+}
