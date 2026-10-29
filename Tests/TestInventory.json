@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SystemEnvironmentAdmissionTests/residentTreesAndFiniteOccurrenceLimits()": null,
+    "LiquidTests.SystemEnvironmentAdmissionTests/representationsAreResidentBoundedAndContextSpecific()": null,
     "LiquidTests.SystemPolicyIdentityTests/exactBytesContextsCapacitiesAndCancellation()": null,
     "LiquidTests.SystemDescriptorAdmissionTests/fieldsKindsLimitsAndCancellation()": null,
     "LiquidTests.AssignmentTargetTests/longTargetsRetainSourceLimitsAndCancellation()": null,

@@ -907,6 +907,16 @@
         "Add public regression controls for exact byte identity, context distinction, boundaries and cancellation."
       ],
       "qualification": "Pending exact-source qualification. This component does not implement a rich environment, rendering, complete conformance, performance or release acceptance."
+    },
+    {
+      "area": "Resident system environment admission",
+      "scopeDecision": "Thor authorized closed bounded values and the three reviewed Content/Vapor handshake decisions.",
+      "changes": [
+        "Admit immutable recursive resident values, exact ordered names, qualified representation contexts and finite repeated-occurrence construction quotas.",
+        "Represent an unadmitted descriptor distinctly from an admitted empty descriptor; leave renderer and extension syntax for subsequent implementation.",
+        "Preserve standard Liquid, fixtures, root dependencies and Content issuance boundaries."
+      ],
+      "qualification": "Requires actual exact-source tests. This admission component alone does not implement or qualify rich rendering, syntax, propagation, Content issuance, performance or release."
     }
   ]
 }
