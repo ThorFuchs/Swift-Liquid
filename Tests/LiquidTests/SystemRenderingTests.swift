@@ -227,4 +227,28 @@ struct SystemRenderingTests {
         #expect(try await engine.render(remainder, environment: env, registry: registry) == "0")
     }
 
+    @Test func decoratedPartialNamesAndRenderCollectionsUsePrimaryValues() async throws {
+        let descriptor = try LiquidSystemDescriptor([.init("title", .text("selected"))])
+        let child: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("visible")), descriptor: descriptor))
+        let part: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("p"))))
+        let items: LiquidSystemValue = .decorated(.init(primary: .array([child])))
+        let env = try LiquidSystemEnvironment([.init("part", part), .init("items", items)])
+        let registry = try LiquidTemplateRegistry([.init("p", .raw("X{{ item.$descriptor.title }}"))])
+        let render = try LiquidTemplate("{% render 'p' for items as item %}", extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(render, environment: env, registry: registry) == "Xselected")
+        let includeRegistry = try LiquidTemplateRegistry([.init("p", .raw("included"))])
+        let include = try LiquidTemplate("{% include part %}", extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(include, environment: env, registry: includeRegistry) == "included")
+        let literalFirst = try LiquidTemplateRegistry([.init("part", .raw("literal")), .init("p", .raw("fallback"))])
+        #expect(try await LiquidEngine().render(include, environment: env, registry: literalFirst) == "literal")
+        do { _ = try await LiquidEngine().render(include, environment: env, registry: LiquidTemplateRegistry([])); Issue.record("Missing partial succeeded") }
+        catch is LiquidError { }
+        let cancelled = Task { () throws -> String in
+            withUnsafeCurrentTask { $0?.cancel() }
+            return try await LiquidEngine().render(render, environment: env, registry: registry)
+        }
+        do { _ = try await cancelled.value; Issue.record("Cancelled partial render succeeded") }
+        catch is CancellationError { }
+    }
+
 }

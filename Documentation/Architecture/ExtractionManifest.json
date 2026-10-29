@@ -950,10 +950,12 @@
       "changes": [
         "Dispatch decorated dynamic keys and built-in arguments by their primary values, preserving default fallback identity.",
         "Compare, flatten and filter decorated children using their primary values while retaining selected child decorations.",
+        "Use primary values for dynamic partial names and render-for collections while retaining exact lookup precedence and selected children.",
         "Add public regressions for the three independently reproduced Vapor findings and related collection and metadata boundaries."
       ],
       "files": [
         "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
         "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
         "Sources/Liquid/Rendering/Renderer+Filters.swift",
         "Sources/Liquid/Rendering/Renderer+Utilities.swift",

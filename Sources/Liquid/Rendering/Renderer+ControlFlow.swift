@@ -662,7 +662,7 @@ extension Renderer {
             let selected: PreparedExactTemplates.Selected
             if let literal = try prepared.select(templateName) {
                 selected = literal
-            } else if let variableName = context.getVariable(templateName) as? String {
+            } else if let variableName = context.getVariable(templateName).map({ systemPrimary($0) }) as? String {
                 templateName = variableName
                 guard let fallback = try prepared.select(templateName) else {
                     throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
@@ -686,7 +686,7 @@ extension Renderer {
                 )
             } catch {
                 // If literal name fails, try resolving as a variable reference
-                if let variableValue = context.getVariable(templateName) as? String {
+                if let variableValue = context.getVariable(templateName).map({ systemPrimary($0) }) as? String {
                     templateName = variableValue
                     do {
                         resolvedPath = try templateLoader.resolvedTemplatePath(
@@ -712,7 +712,7 @@ extension Renderer {
 
         // Handle {% render "template" for collection %} — iterate and render for each item
         if isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let collection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(try await evaluateExpression(forExpr))
             guard let items = collection as? [Any] else {
                 return ""
             }
