@@ -889,6 +889,15 @@
         "Preserve existing fixtures, root dependencies, public API, RHS parsing, quotas, recovery and historical failed independent observations."
       ],
       "qualification": "External exact-source receipts retain actual iterations and results. No full-conformance, performance, merge or release approval is asserted."
+    },
+    {
+      "area": "Closed system descriptor admission",
+      "scopeDecision": "Local independent preparation for the requested Content and Vapor handshake; no rich environment or source acceptance is claimed.",
+      "changes": [
+        "Add a finite checked Sendable descriptor carrier for the seven supplied field names, validate field kinds, duplicates, UTF-8 capacities and cancellation.",
+        "Keep type-name vocabulary and Content provenance at the host boundary; do not decide absent descriptor, policy identity or propagation."
+      ],
+      "qualification": "Public-only regression and external CI receipts qualify only this standalone carrier. Full rich environment, rendering, inspection, conformance, performance, merge and release remain pending."
     }
   ]
 }
