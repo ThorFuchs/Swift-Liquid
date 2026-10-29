@@ -37,7 +37,7 @@ extension Renderer {
         if let wrapped = input as? SystemRuntimeValue, filter.name.equals("default"), !filter.arguments.isEmpty {
             let fallback = try await evaluateFilterArgumentFast(filter.arguments[0])
             if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value,
-               (try await evaluateExpression(allow)) as? Bool == true {
+               systemPrimary(try await evaluateExpression(allow)) as? Bool == true {
                 return wrapped.primary is NSNull || (wrapped.primary as? String)?.isEmpty == true ? fallback : input
             }
             return isNilOrEmpty(wrapped.primary) ? fallback : input
@@ -55,7 +55,7 @@ extension Renderer {
         if filter.name.equals("default"), !filter.namedArguments.isEmpty {
             let defaultValue = filter.arguments.isEmpty ? "" : try await evaluateFilterArgumentFast(filter.arguments[0])
             if let allowFalseExpr = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
-                let allowFalse = try await evaluateExpression(allowFalseExpr)
+                let allowFalse = systemPrimary(try await evaluateExpression(allowFalseExpr))
                 if allowFalse as? Bool == true {
                     // With allow_false: only use default for nil/empty, NOT for false
                     if value is NSNull || (value as? String)?.isEmpty == true {
@@ -79,7 +79,8 @@ extension Renderer {
             if let literalArgument = filter.singleLiteralIntegerArgument {
                 argument = literalArgument
             } else {
-                argument = try await evaluateFilterArgumentFast(filter.arguments[0])
+                let evaluated = try await evaluateFilterArgumentFast(filter.arguments[0])
+                argument = filter.name.equals("default") ? evaluated : systemPrimary(evaluated)
             }
             if let builtinKind = filter.builtinKind,
                let result = try applyBuiltinFilterSingleArgument(kind: builtinKind, to: value, argument: argument) {
@@ -87,7 +88,8 @@ extension Renderer {
             }
             return try await applyFilterInternal(filterName: filter.name, to: value, args: [argument])
         default:
-            let args = try await evaluateFilterArgumentsFast(filter.arguments)
+            let evaluated = try await evaluateFilterArgumentsFast(filter.arguments)
+            let args = filter.name.equals("default") ? evaluated : evaluated.map { systemPrimary($0) }
             return try await applyFilterInternal(filterName: filter.name, to: value, args: args)
         }
     }
@@ -716,11 +718,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // Array of strings: substring matching
                     for item in array {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return item }
                             } else {
@@ -774,11 +776,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // String array: substring matching
                     for (index, item) in array.enumerated() {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return index }
                             } else {
@@ -857,10 +859,10 @@ extension Renderer {
                         return false
                     }
                     // Arrays with non-string/non-dict elements → return nil or throw
-                    let hasNonStringNonDict = array.contains { !($0 is String) && !isDictLike($0) && !($0 is NSNull) }
+                    let hasNonStringNonDict = array.contains { !(systemPrimary($0) is String) && !isDictLike($0) && !(systemPrimary($0) is NSNull) }
                     if hasNonStringNonDict {
                         // Pure int arrays → throw; mixed arrays → return nil
-                        let allInts = array.allSatisfy { $0 is Int }
+                        let allInts = array.allSatisfy { systemPrimary($0) is Int }
                         if allInts {
                             throw RenderError.typeError(expected: "string or hash", actual: "int array", operation: "has")
                         }
@@ -868,7 +870,7 @@ extension Renderer {
                     }
                     // String array: substring matching
                     for item in array {
-                        if let str = item as? String, str.contains(property) { return true }
+                        if let str = systemPrimary(item) as? String, str.contains(property) { return true }
                     }
                     return false
                 } else {
@@ -892,7 +894,7 @@ extension Renderer {
                 for item in items {
                     try budget.step()
                     if isDictLike(item) { continue } // A missing hash key selects nil.
-                    if item is String || item is Int {
+                    if systemPrimary(item) is String || systemPrimary(item) is Int {
                         throw RenderError.custom("cannot select the property ''")
                     }
                     // Ruby stops the entire selection on the first value without
@@ -947,16 +949,16 @@ extension Renderer {
                 // For string arrays, do substring matching
                 if let searchStr = property {
                     // If array has non-string items (nil, bool, int), throw or return empty
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString {
-                        if array.contains(where: { $0 is Int }) {
+                        if array.contains(where: { systemPrimary($0) is Int }) {
                             throw RenderError.typeError(expected: "string or hash", actual: "Int", operation: "reject")
                         }
                         return [Any]()
                     }
                     var result: [Any] = []
                     for item in array {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if !str.contains(searchStr) { result.append(item) }
                         } else {
                             result.append(item)

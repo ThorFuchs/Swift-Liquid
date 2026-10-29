@@ -160,6 +160,7 @@ extension Renderer {
     }
     
     internal func evaluateAccessValueWithKey(baseValue: Any, keyValue: Any) async throws -> Any {
+        let keyValue = systemPrimary(keyValue)
         if let index = keyValue as? Int {
             return evaluateAccessValueWithIndex(baseValue: baseValue, index: index)
         }

@@ -943,6 +943,24 @@
         "Documentation/README.md"
       ],
       "qualification": "Actual source-bound test results and remaining limitations are recorded externally. No complete conformance, performance, downstream acceptance, merge or release is asserted."
+    },
+    {
+      "area": "System primary-value dispatch parity",
+      "scopeDecision": "Address the downstream handshake review while retaining all existing holds and selection semantics.",
+      "changes": [
+        "Dispatch decorated dynamic keys and built-in arguments by their primary values, preserving default fallback identity.",
+        "Compare, flatten and filter decorated children using their primary values while retaining selected child decorations.",
+        "Add public regressions for the three independently reproduced Vapor findings and related collection and metadata boundaries."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Record exact-source qualification and downstream review externally; no conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

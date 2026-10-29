@@ -79,12 +79,12 @@ extension Renderer {
             return array.filter { item in
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
-                return !(val is NSNull)
+                return !(systemPrimary(val) is NSNull)
             }
         }
 
         return array.compactMap { item -> Any? in
-            if item is NSNull { return nil }
+            if systemPrimary(item) is NSNull { return nil }
             return item
         }
     }
@@ -158,7 +158,7 @@ extension Renderer {
         if let arr = value as? [Any] {
             // Flatten nested arrays (Shopify behavior)
             array = arr.flatMap { item -> [Any] in
-                if let nested = item as? [Any] { return nested }
+                if let nested = systemPrimary(item) as? [Any] { return nested }
                 return [item]
             }
         } else if isDictLike(value) {
@@ -177,12 +177,12 @@ extension Renderer {
         for item in array {
             if isDictLike(item) {
                 result.append(dictValue(item, forKey: propertyName) as Any? ?? NSNull())
-            } else if item is [Any] {
+            } else if systemPrimary(item) is [Any] {
                 // Empty arrays or nested arrays are not objects
                 throw RenderError.typeError(expected: "hash", actual: "array", operation: "map")
-            } else if item is NSNull {
+            } else if systemPrimary(item) is NSNull {
                 result.append(NSNull())
-            } else if item is Int || item is Double || item is Bool || item is String {
+            } else if systemPrimary(item) is Int || systemPrimary(item) is Double || systemPrimary(item) is Bool || systemPrimary(item) is String {
                 throw RenderError.typeError(expected: "hash", actual: "\(type(of: item))", operation: "map")
             } else {
                 result.append(getObjectProperty(item, key: propertyName) ?? NSNull())
@@ -210,6 +210,7 @@ extension Renderer {
     }
     
     internal func areValuesEqual(_ a: Any?, _ b: Any?) -> Bool {
+        let a = a.map { systemPrimary($0) }; let b = b.map { systemPrimary($0) }
         // Handle nil/NSNull — treat Swift nil and NSNull as equivalent
         let aIsNil = a == nil || a is NSNull
         let bIsNil = b == nil || b is NSNull
@@ -265,8 +266,8 @@ extension Renderer {
             }
         } else {
             // Check for incompatible mixed complex/primitive types
-            let hasComplex = array.contains { isDictLike($0) || $0 is [Any] }
-            let hasPrimitive = array.contains { $0 is String || $0 is Int || $0 is Double || $0 is Bool }
+            let hasComplex = array.contains { isDictLike($0) || systemPrimary($0) is [Any] }
+            let hasPrimitive = array.contains { let v = systemPrimary($0); return v is String || v is Int || v is Double || v is Bool }
             if hasComplex && hasPrimitive {
                 throw RenderError.typeError(expected: "homogeneous array", actual: "mixed complex/primitive types", operation: "sort")
             }
@@ -311,8 +312,9 @@ extension Renderer {
                 guard isDictLike(item) else { throw RenderError.typeError(expected: "hash", actual: "value", operation: "sum") }
                 target = dictValue(item, forKey: property) ?? 0
             } else { target = item }
-            if target is Int || target is Double { result = try add(result, target) }
-            else if let text = target as? String {
+            let primary = systemPrimary(target)
+            if primary is Int || primary is Double { result = try add(result, primary) }
+            else if let text = primary as? String {
                 if let integer = Int(text) { result = try add(result, integer) }
                 else if let number = Double(text) { result = try add(result, number) }
             }

@@ -578,7 +578,7 @@ extension Renderer {
     internal func flattenArray(_ array: [Any]) -> [Any] {
         var result: [Any] = []
         for item in array {
-            if let nested = item as? [Any] {
+            if let nested = systemPrimary(item) as? [Any] {
                 result.append(contentsOf: flattenArray(nested))
             } else {
                 result.append(item)

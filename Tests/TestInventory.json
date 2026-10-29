@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SystemRenderingTests/childOperationsUsePrimaryAndRetainSelectedValues()": null,
+    "LiquidTests.SystemRenderingTests/decoratedArgumentsAndNullChildrenMatchOrdinarySemantics()": null,
+    "LiquidTests.SystemRenderingTests/decoratedDynamicIndicesUsePrimaryAndPreserveSelectedChild()": null,
+    "LiquidTests.SystemRenderingTests/ordinaryContainerRenderingNeverExposesDecorations()": null,
     "LiquidTests.SystemRenderingTests/descriptorProjectionChargesElementsAndCancellationDoesNotPoisonReuse()": null,
     "LiquidTests.SystemRenderingTests/propertiesAndOrdinaryKeysRemainDistinct(mode:)": 3,
     "LiquidTests.SystemRenderingTests/childSelectionRetainsDecorationAndValueExtractionStripsIt(mode:)": 3,

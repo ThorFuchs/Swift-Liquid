@@ -165,4 +165,42 @@ struct SystemRenderingTests {
         #expect(try await engine.render(template, environment: env, registry: registry) == "2")
     }
 
+    @Test func ordinaryContainerRenderingNeverExposesDecorations() async throws {
+        let env = try environment()
+        let template = try LiquidTemplate("{{ article }}|{{ article.items }}", extensionProfile: .closedSystemV1)
+        let result = try await LiquidEngine().render(template, environment: env, registry: LiquidTemplateRegistry([]))
+        #expect(result == "{\"child\"=>B, \"items\"=>B, \"$descriptor\"=>ordinary-dollar, \"descriptor\"=>ordinary-name}|B")
+        #expect(!result.contains("SystemRuntimeValue"))
+        #expect(!result.contains("Child"))
+        #expect(!result.contains("A &amp; B"))
+    }
+
+    @Test func decoratedDynamicIndicesUsePrimaryAndPreserveSelectedChild() async throws {
+        let descriptor = try LiquidSystemDescriptor([.init("title", .text("selected"))])
+        let child: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("visible")), descriptor: descriptor))
+        let index: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(0))))
+        let key: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("child"))))
+        let env = try LiquidSystemEnvironment([.init("items", .array([child])), .init("index", index), .init("key", key), .init("obj", .object([.init("child", child)]))])
+        let template = try LiquidTemplate("{{ items[index] }}|{{ items[index].$descriptor.title }}|{{ obj[key].$descriptor.title }}", extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(template, environment: env, registry: LiquidTemplateRegistry([])) == "visible|selected|selected")
+    }
+
+    @Test func decoratedArgumentsAndNullChildrenMatchOrdinarySemantics() async throws {
+        let d2: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(2))))
+        let nilValue: LiquidSystemValue = .decorated(.init(primary: .ordinary(.null)))
+        let env = try LiquidSystemEnvironment([.init("d2", d2), .init("p2", .ordinary(.integer(2))), .init("nils", .array([nilValue])), .init("plainNils", .array([.ordinary(.null)]))])
+        let template = try LiquidTemplate("{{ 5 | divided_by: p2 }}|{{ 5 | divided_by: d2 }}|{{ plainNils | compact | size }}|{{ nils | compact | size }}", extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(template, environment: env, registry: LiquidTemplateRegistry([])) == "2|2|0|0")
+    }
+
+    @Test func childOperationsUsePrimaryAndRetainSelectedValues() async throws {
+        let descriptor = try LiquidSystemDescriptor([.init("title", .text("keep"))])
+        let word: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("alpha")), descriptor: descriptor))
+        let number: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(3))))
+        let nested: LiquidSystemValue = .decorated(.init(primary: .array([number])))
+        let env = try LiquidSystemEnvironment([.init("words", .array([word])), .init("numbers", .array([nested]))])
+        let template = try LiquidTemplate("{% assign found = words | find: 'alp' %}{{ found.$descriptor.title }}|{{ numbers | sum }}", extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(template, environment: env, registry: LiquidTemplateRegistry([])) == "keep|3")
+    }
+
 }
