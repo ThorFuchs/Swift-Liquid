@@ -54,7 +54,9 @@ def source_revision(archive_provenance=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'conformance-console'], default='native')
+    parser.add_argument('--output-root', type=Path,
+                        help='External artifacts root for isolated liquid-spec or conformance-console runs')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
     parser.add_argument('--spec-path', type=Path, help='Clean pinned liquid-spec checkout for the opt-in functional lane')
     parser.add_argument('--archive-provenance', type=Path,
@@ -62,7 +64,12 @@ def main():
     args = parser.parse_args()
     if args.archive_provenance is not None and args.lane != 'native':
         parser.error('--archive-provenance is only for native qualification of a source export')
-    output = ROOT / 'Artifacts' / args.lane
+    if args.output_root is not None:
+        if args.lane not in ['liquid-spec', 'conformance-console']:
+            parser.error('--output-root is supported only for liquid-spec and conformance-console')
+        if args.output_root.resolve().is_relative_to(ROOT):
+            parser.error('--output-root must be outside the source checkout')
+    output = (args.output_root.resolve() if args.output_root else ROOT / 'Artifacts') / args.lane
     output.mkdir(parents=True, exist_ok=True)
     env = environment()
     env['LIQUID_TEST_EVIDENCE_PROBE_OUTPUT'] = str(output / 'runner-probe')
@@ -135,6 +142,10 @@ def main():
         elif args.lane == 'safety':
             run_tests(['--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run_tests(['--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread', profile='thread')
+        elif args.lane == 'conformance-console':
+            run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
+            run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')
+            run([sys.executable, '-B', 'Scripts/check_conformance_console.py'], 'console-contract')
         elif args.lane == 'liquid-spec':
             if not args.spec_path or not args.reference_path:
                 raise RuntimeError('liquid-spec requires --spec-path and --reference-path')

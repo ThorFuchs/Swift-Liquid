@@ -857,6 +857,28 @@
         "CHANGELOG.md"
       ],
       "qualification": "Exact-source checks and original failures belong to external receipts and PR CI. This authorship/coverage record asserts no unexecuted pass, independent-conformance repair, performance acceptance, PR23 decision, merge or release approval."
+    },
+    {
+      "area": "Local conformance control center",
+      "scopeDecision": "The maintainer requested the existing Shopify JSON-RPC conformance runner locally, with a plain HTML/CSS/vanilla JavaScript control center using the sibling MCP dashboard visual style. No global Shopify endpoint or hosted automation is needed.",
+      "changes": [
+        "Reuse the existing pinned five-suite public-API adapter and canonical ci.py liquid-spec lane without changing the engine, comparator, fixture population, missing-feature policy, resource limits or pins.",
+        "Add external output roots only for liquid-spec and console control checks; preserve existing lane defaults and historical artifacts.",
+        "Add a loopback-only standard-library Python control server, source/pin/tool admission, one owned run at a time, original evidence downloads and explicit failure/cancellation states.",
+        "Add source/receipt/hash/accounting checks and meaningful authentication, origin, failure-taxonomy and process-cancellation controls. Keep generated data, gems, screenshots and private records outside Git."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Scripts/check_conformance_console.py",
+        "Tools/ConformanceConsole/server.py",
+        "Tools/ConformanceConsole/web/index.html",
+        "Tools/ConformanceConsole/web/style.css",
+        "Tools/ConformanceConsole/web/app.js",
+        "Tools/ConformanceConsole/README.md",
+        "Documentation/ConformanceConsole.md",
+        "Documentation/README.md"
+      ],
+      "qualification": "Focused iterations and actual final-source conformance observations belong to external receipts. This authorship record asserts no unexecuted pass, complete conformance, performance clearance, hosted deployment or release acceptance. Preserve historical failures, exclusions and provenance limits."
     }
   ]
 }
