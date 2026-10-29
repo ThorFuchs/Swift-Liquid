@@ -185,7 +185,7 @@ extension Renderer {
             offset = paramOffset
         } else if let offsetExpr = params.offsetExpression {
             // Runtime evaluation of offset expression (e.g., limit: my_var)
-            let offsetValue = try await evaluateExpression(offsetExpr)
+            let offsetValue = systemPrimary(try await evaluateExpression(offsetExpr))
             if let intVal = offsetValue as? Int { offset = intVal }
             else if let dblVal = offsetValue as? Double { offset = try checkedInteger(dblVal) }
             else if let strVal = offsetValue as? String, let intVal = Int(strVal) { offset = intVal }
@@ -200,7 +200,7 @@ extension Renderer {
         // Determine limit (static or from expression)
         var resolvedLimit = params.limit
         if resolvedLimit == nil, let limitExpr = params.limitExpression {
-            let limitValue = try await evaluateExpression(limitExpr)
+            let limitValue = systemPrimary(try await evaluateExpression(limitExpr))
             if let intVal = limitValue as? Int { resolvedLimit = intVal }
             else if let dblVal = limitValue as? Double { resolvedLimit = try checkedInteger(dblVal) }
             else if let strVal = limitValue as? String, let intVal = Int(strVal) { resolvedLimit = intVal }
@@ -753,7 +753,7 @@ extension Renderer {
 
         // Handle {% include "template" for collection %} (non-render mode)
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let collection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(try await evaluateExpression(forExpr))
             guard let items = collection as? [Any] else {
                 return ""
             }

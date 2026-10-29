@@ -251,4 +251,21 @@ struct SystemRenderingTests {
         catch is CancellationError { }
     }
 
+    @Test func decoratedLoopParametersAndIncludeCollectionsUsePrimaryValues() async throws {
+        let descriptor = try LiquidSystemDescriptor([.init("title", .text("selected"))])
+        let child: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("value")), descriptor: descriptor))
+        let one: LiquidSystemValue = .decorated(.init(primary: .ordinary(.integer(1))))
+        let items: LiquidSystemValue = .decorated(.init(primary: .array([child])))
+        let env = try LiquidSystemEnvironment([.init("one", one), .init("two", .array([.ordinary(.string("A")), .ordinary(.string("B"))])), .init("items", items)])
+        let registry = try LiquidTemplateRegistry([.init("p", .raw("{{ p.$descriptor.title }}"))])
+        let source = "{% for x in two limit: one %}{{ x }}{% endfor %}|{% for x in two offset: one %}{{ x }}{% endfor %}|{% include 'p' for items %}"
+        let template = try LiquidTemplate(source, extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(template, environment: env, registry: registry) == "A|B|selected")
+        let invalid: LiquidSystemValue = .decorated(.init(primary: .ordinary(.string("not-a-number"))))
+        let invalidEnv = try LiquidSystemEnvironment([.init("one", invalid), .init("two", .array([.ordinary(.string("A"))]))])
+        let invalidTemplate = try LiquidTemplate("{% for x in two limit: one %}{{ x }}{% endfor %}", extensionProfile: .closedSystemV1)
+        do { _ = try await LiquidEngine().render(invalidTemplate, environment: invalidEnv, registry: registry); Issue.record("Invalid decorated loop limit succeeded") }
+        catch is LiquidError { }
+    }
+
 }
