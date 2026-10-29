@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.AssignmentTargetTests/longTargetsRetainSourceLimitsAndCancellation()": null,
+    "LiquidTests.AssignmentTargetTests/originalTwentyRejectBeforeRendering(index:)": 60,
+    "LiquidTests.AssignmentTargetTests/supplementaryTargetsMatchPinnedRuby(index:)": 81,
+    "LiquidTests.AssignmentTargetTests/assignmentBoundariesPreserveOpaqueTextAndSource(mode:)": 3,
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)": 4,
     "LiquidTests.AdversarialTests/jsonNestingHasAnExactPublicBoundary()": null,
     "LiquidTests.AdversarialTests/quotedDelimitersAndOpaqueBlocksDoNotBecomeExecutable(seed:)": 4,

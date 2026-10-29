@@ -1,0 +1,1190 @@
+[
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:944/assign-mut-lhs_id-lexerr-ampersand/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:944/assign-mut-lhs_id-lexerr-ampersand/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"& = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:944/assign-mut-lhs_id-lexerr-ampersand/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"& = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:950/assign-mut-lhs_id-lexerr-asterisk/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:950/assign-mut-lhs_id-lexerr-asterisk/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"* = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:950/assign-mut-lhs_id-lexerr-asterisk/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"* = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:956/assign-mut-lhs_id-lexerr-at/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:956/assign-mut-lhs_id-lexerr-at/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"@ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:956/assign-mut-lhs_id-lexerr-at/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"@ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:962/assign-mut-lhs_id-lexerr-backslash/strict2/raise",
+    "original": true,
+    "source": "{% assign \\ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:962/assign-mut-lhs_id-lexerr-backslash/strict2/raise",
+    "original": true,
+    "source": "{% assign \\ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"\\ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:962/assign-mut-lhs_id-lexerr-backslash/strict2/raise",
+    "original": true,
+    "source": "{% assign \\ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"\\ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:968/assign-mut-lhs_id-lexerr-backtick/strict2/raise",
+    "original": true,
+    "source": "{% assign ` = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:968/assign-mut-lhs_id-lexerr-backtick/strict2/raise",
+    "original": true,
+    "source": "{% assign ` = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"` = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:968/assign-mut-lhs_id-lexerr-backtick/strict2/raise",
+    "original": true,
+    "source": "{% assign ` = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"` = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:974/assign-mut-lhs_id-lexerr-caret/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:974/assign-mut-lhs_id-lexerr-caret/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"^ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:974/assign-mut-lhs_id-lexerr-caret/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"^ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:980/assign-mut-lhs_id-lexerr-dollar/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:980/assign-mut-lhs_id-lexerr-dollar/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"$ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:980/assign-mut-lhs_id-lexerr-dollar/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"$ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:986/assign-mut-lhs_id-lexerr-hash/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:986/assign-mut-lhs_id-lexerr-hash/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"# = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:986/assign-mut-lhs_id-lexerr-hash/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"# = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:992/assign-mut-lhs_id-lexerr-semicolon/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:992/assign-mut-lhs_id-lexerr-semicolon/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"; = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:992/assign-mut-lhs_id-lexerr-semicolon/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"; = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:998/assign-mut-lhs_id-lexerr-tilde/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:998/assign-mut-lhs_id-lexerr-tilde/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"~ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:998/assign-mut-lhs_id-lexerr-tilde/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"~ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1040/assign-mut-pregate-003/strict2/raise",
+    "original": true,
+    "source": "{% assign \"hi\" = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1040/assign-mut-pregate-003/strict2/raise",
+    "original": true,
+    "source": "{% assign \"hi\" = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"\"hi\" = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1040/assign-mut-pregate-003/strict2/raise",
+    "original": true,
+    "source": "{% assign \"hi\" = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"\"hi\" = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1046/assign-mut-pregate-004/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1046/assign-mut-pregate-004/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"@ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1046/assign-mut-pregate-004/strict2/raise",
+    "original": true,
+    "source": "{% assign @ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"@ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1058/assign-mut-pregate-005/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1058/assign-mut-pregate-005/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"# = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1058/assign-mut-pregate-005/strict2/raise",
+    "original": true,
+    "source": "{% assign # = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"# = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1070/assign-mut-pregate-006/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1070/assign-mut-pregate-006/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"$ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1070/assign-mut-pregate-006/strict2/raise",
+    "original": true,
+    "source": "{% assign $ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"$ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1082/assign-mut-pregate-007/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1082/assign-mut-pregate-007/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"^ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1082/assign-mut-pregate-007/strict2/raise",
+    "original": true,
+    "source": "{% assign ^ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"^ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1094/assign-mut-pregate-008/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1094/assign-mut-pregate-008/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"& = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1094/assign-mut-pregate-008/strict2/raise",
+    "original": true,
+    "source": "{% assign & = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"& = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1106/assign-mut-pregate-009/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1106/assign-mut-pregate-009/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"* = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1106/assign-mut-pregate-009/strict2/raise",
+    "original": true,
+    "source": "{% assign * = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"* = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1118/assign-mut-pregate-010/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1118/assign-mut-pregate-010/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"~ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1118/assign-mut-pregate-010/strict2/raise",
+    "original": true,
+    "source": "{% assign ~ = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"~ = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1130/assign-mut-pregate-011/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1130/assign-mut-pregate-011/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"; = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1130/assign-mut-pregate-011/strict2/raise",
+    "original": true,
+    "source": "{% assign ; = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"; = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1142/assign-mut-pregate-012/strict2/raise",
+    "original": true,
+    "source": "{% assign | = x %}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1142/assign-mut-pregate-012/strict2/raise",
+    "original": true,
+    "source": "{% assign | = x %}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"| = x\""
+  },
+  {
+    "name": "parser_errors/specs/parser_errors/assign.yml:1142/assign-mut-pregate-012/strict2/raise",
+    "original": true,
+    "source": "{% assign | = x %}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"| = x\""
+  },
+  {
+    "name": "foo",
+    "original": false,
+    "source": "{% assign foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "foo",
+    "original": false,
+    "source": "{% assign foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "foo",
+    "original": false,
+    "source": "{% assign foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "_name",
+    "original": false,
+    "source": "{% assign _name = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "_name",
+    "output": "||V"
+  },
+  {
+    "name": "_name",
+    "original": false,
+    "source": "{% assign _name = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "_name",
+    "output": "||V"
+  },
+  {
+    "name": "_name",
+    "original": false,
+    "source": "{% assign _name = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "_name",
+    "output": "||V"
+  },
+  {
+    "name": "foo--bar",
+    "original": false,
+    "source": "{% assign foo--bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo--bar",
+    "output": "||"
+  },
+  {
+    "name": "foo--bar",
+    "original": false,
+    "source": "{% assign foo--bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo--bar",
+    "output": "||"
+  },
+  {
+    "name": "foo--bar",
+    "original": false,
+    "source": "{% assign foo--bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo--bar",
+    "output": "||"
+  },
+  {
+    "name": "@foo",
+    "original": false,
+    "source": "{% assign @foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "@foo",
+    "original": false,
+    "source": "{% assign @foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "@foo",
+    "original": false,
+    "source": "{% assign @foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "foo$bar",
+    "original": false,
+    "source": "{% assign foo$bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo$bar",
+    "original": false,
+    "source": "{% assign foo$bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo$bar",
+    "original": false,
+    "source": "{% assign foo$bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo.bar",
+    "original": false,
+    "source": "{% assign foo.bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo.bar",
+    "output": "||"
+  },
+  {
+    "name": "foo.bar",
+    "original": false,
+    "source": "{% assign foo.bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo.bar",
+    "output": "||"
+  },
+  {
+    "name": "foo.bar",
+    "original": false,
+    "source": "{% assign foo.bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected end_of_string but found dot in \"foo.bar = x\""
+  },
+  {
+    "name": "[foo]",
+    "original": false,
+    "source": "{% assign [foo] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "[foo]",
+    "output": "||"
+  },
+  {
+    "name": "[foo]",
+    "original": false,
+    "source": "{% assign [foo] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "[foo]",
+    "output": "||"
+  },
+  {
+    "name": "[foo]",
+    "original": false,
+    "source": "{% assign [foo] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected id but found open_square in \"[foo] = x\""
+  },
+  {
+    "name": "(foo)",
+    "original": false,
+    "source": "{% assign (foo) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "(foo)",
+    "output": "||"
+  },
+  {
+    "name": "(foo)",
+    "original": false,
+    "source": "{% assign (foo) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "(foo)",
+    "output": "||"
+  },
+  {
+    "name": "(foo)",
+    "original": false,
+    "source": "{% assign (foo) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected id but found open_round in \"(foo) = x\""
+  },
+  {
+    "name": "123",
+    "original": false,
+    "source": "{% assign 123 = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "123",
+    "output": "||"
+  },
+  {
+    "name": "123",
+    "original": false,
+    "source": "{% assign 123 = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "123",
+    "output": "||"
+  },
+  {
+    "name": "123",
+    "original": false,
+    "source": "{% assign 123 = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected id but found number in \"123 = x\""
+  },
+  {
+    "name": "1foo",
+    "original": false,
+    "source": "{% assign 1foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "1foo",
+    "output": "||"
+  },
+  {
+    "name": "1foo",
+    "original": false,
+    "source": "{% assign 1foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "1foo",
+    "output": "||"
+  },
+  {
+    "name": "1foo",
+    "original": false,
+    "source": "{% assign 1foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected id but found number in \"1foo = x\""
+  },
+  {
+    "name": "-foo",
+    "original": false,
+    "source": "{% assign -foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "-foo",
+    "output": "||"
+  },
+  {
+    "name": "-foo",
+    "original": false,
+    "source": "{% assign -foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "-foo",
+    "output": "||"
+  },
+  {
+    "name": "-foo",
+    "original": false,
+    "source": "{% assign -foo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected id but found dash in \"-foo = x\""
+  },
+  {
+    "name": "foo?",
+    "original": false,
+    "source": "{% assign foo? = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "foo?",
+    "original": false,
+    "source": "{% assign foo? = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo? = x\""
+  },
+  {
+    "name": "foo?",
+    "original": false,
+    "source": "{% assign foo? = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo? = x\""
+  },
+  {
+    "name": "foo@",
+    "original": false,
+    "source": "{% assign foo@ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "foo@",
+    "original": false,
+    "source": "{% assign foo@ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo@ = x\""
+  },
+  {
+    "name": "foo@",
+    "original": false,
+    "source": "{% assign foo@ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo@ = x\""
+  },
+  {
+    "name": "foo$",
+    "original": false,
+    "source": "{% assign foo$ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "foo$",
+    "original": false,
+    "source": "{% assign foo$ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo$ = x\""
+  },
+  {
+    "name": "foo$",
+    "original": false,
+    "source": "{% assign foo$ = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"foo$ = x\""
+  },
+  {
+    "name": "foo(bar)",
+    "original": false,
+    "source": "{% assign foo(bar) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo(bar)",
+    "output": "||"
+  },
+  {
+    "name": "foo(bar)",
+    "original": false,
+    "source": "{% assign foo(bar) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo(bar)",
+    "output": "||"
+  },
+  {
+    "name": "foo(bar)",
+    "original": false,
+    "source": "{% assign foo(bar) = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected end_of_string but found open_round in \"foo(bar) = x\""
+  },
+  {
+    "name": "foo[bar]",
+    "original": false,
+    "source": "{% assign foo[bar] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo[bar]",
+    "output": "||"
+  },
+  {
+    "name": "foo[bar]",
+    "original": false,
+    "source": "{% assign foo[bar] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo[bar]",
+    "output": "||"
+  },
+  {
+    "name": "foo[bar]",
+    "original": false,
+    "source": "{% assign foo[bar] = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected end_of_string but found open_square in \"foo[bar] = x\""
+  },
+  {
+    "name": "foo..bar",
+    "original": false,
+    "source": "{% assign foo..bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo..bar",
+    "output": "||"
+  },
+  {
+    "name": "foo..bar",
+    "original": false,
+    "source": "{% assign foo..bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo..bar",
+    "output": "||"
+  },
+  {
+    "name": "foo..bar",
+    "original": false,
+    "source": "{% assign foo..bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Expected end_of_string but found dotdot in \"foo..bar = x\""
+  },
+  {
+    "name": "éfoo",
+    "original": false,
+    "source": "{% assign éfoo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "éfoo",
+    "original": false,
+    "source": "{% assign éfoo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "éfoo",
+    "original": false,
+    "source": "{% assign éfoo = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo",
+    "output": "V||"
+  },
+  {
+    "name": "fooé",
+    "original": false,
+    "source": "{% assign fooé = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
+  },
+  {
+    "name": "fooé",
+    "original": false,
+    "source": "{% assign fooé = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"fooé = x\""
+  },
+  {
+    "name": "fooé",
+    "original": false,
+    "source": "{% assign fooé = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": false,
+    "message": "Liquid syntax error (line 1): Syntax Error in 'assign' - Valid syntax: assign [var] = [source] in \"fooé = x\""
+  },
+  {
+    "name": "foo-bar",
+    "original": false,
+    "source": "{% assign foo-bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo-bar",
+    "output": "||"
+  },
+  {
+    "name": "foo-bar",
+    "original": false,
+    "source": "{% assign foo-bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo-bar",
+    "output": "||"
+  },
+  {
+    "name": "foo-bar",
+    "original": false,
+    "source": "{% assign foo-bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo-bar",
+    "output": "||"
+  },
+  {
+    "name": "foo_bar",
+    "original": false,
+    "source": "{% assign foo_bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "foo_bar",
+    "output": "||"
+  },
+  {
+    "name": "foo_bar",
+    "original": false,
+    "source": "{% assign foo_bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "foo_bar",
+    "output": "||"
+  },
+  {
+    "name": "foo_bar",
+    "original": false,
+    "source": "{% assign foo_bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "foo_bar",
+    "output": "||"
+  },
+  {
+    "name": "true",
+    "original": false,
+    "source": "{% assign true = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "true",
+    "output": "||"
+  },
+  {
+    "name": "true",
+    "original": false,
+    "source": "{% assign true = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "true",
+    "output": "||"
+  },
+  {
+    "name": "true",
+    "original": false,
+    "source": "{% assign true = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "true",
+    "output": "||"
+  },
+  {
+    "name": "nil",
+    "original": false,
+    "source": "{% assign nil = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "nil",
+    "output": "||"
+  },
+  {
+    "name": "nil",
+    "original": false,
+    "source": "{% assign nil = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "nil",
+    "output": "||"
+  },
+  {
+    "name": "nil",
+    "original": false,
+    "source": "{% assign nil = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "nil",
+    "output": "||"
+  },
+  {
+    "name": "foo#bar",
+    "original": false,
+    "source": "{% assign foo#bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo#bar",
+    "original": false,
+    "source": "{% assign foo#bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo#bar",
+    "original": false,
+    "source": "{% assign foo#bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo\\bar",
+    "original": false,
+    "source": "{% assign foo\\bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo\\bar",
+    "original": false,
+    "source": "{% assign foo\\bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo\\bar",
+    "original": false,
+    "source": "{% assign foo\\bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo:bar",
+    "original": false,
+    "source": "{% assign foo:bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo:bar",
+    "original": false,
+    "source": "{% assign foo:bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo:bar",
+    "original": false,
+    "source": "{% assign foo:bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo,bar",
+    "original": false,
+    "source": "{% assign foo,bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "lax",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo,bar",
+    "original": false,
+    "source": "{% assign foo,bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  },
+  {
+    "name": "foo,bar",
+    "original": false,
+    "source": "{% assign foo,bar = x %}{{ foo }}|{{ bar }}|{{ _name }}",
+    "mode": "strict2",
+    "parsed": true,
+    "target": "bar",
+    "output": "|V|"
+  }
+]

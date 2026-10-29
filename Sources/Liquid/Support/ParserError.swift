@@ -93,7 +93,7 @@ extension ParserError {
         case .nestingTooDeep(let depth):
             return "Nesting too deep (\(depth) levels)"
         case .invalidAssignmentTarget:
-            return "Invalid assignment target"
+            return "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
         case .duplicateParameter(let param):
             return "Duplicate parameter '\(param)'"
         case .missingRequiredParameter(let param):

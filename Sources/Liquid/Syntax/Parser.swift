@@ -403,6 +403,7 @@ internal final class Parser {
         } else {
             throw ParserError.unexpectedToken(currentToken)
         }
+        let admittedName = try admittedAssignmentTarget(variableName)
         advance()
         
         guard currentToken.type == .equals else {
@@ -413,9 +414,48 @@ internal final class Parser {
         let value = try parseExpression()
         try consumeTagEnd()
         
-        return .assign(variable: variableName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
+        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
     }
     
+    /// Pinned Assign::Syntax is unanchored: only its final matching signature
+    /// before `=` becomes the target. Match that small precheck in linear time;
+    /// do not rewrite source bytes or relax the expression parser.
+    private func admittedAssignmentTarget(_ raw: InlineString) throws -> InlineString {
+        let bytes = Array(raw.string.utf8)
+        func signatureByte(_ byte: UInt8) -> Bool {
+            (65...90).contains(byte) || (97...122).contains(byte) ||
+                (48...57).contains(byte) || byte == 95 || byte == 45 ||
+                byte == 46 || byte == 91 || byte == 93
+        }
+        // VariableSignature is \(?[\w\-\.\[\]]\)?; Ruby's \w is ASCII.
+        // Reverse matching has no regex backtracking, even for hostile targets.
+        var start = bytes.count
+        while start > 0 {
+            if start & 255 == 0 { try Task.checkCancellation() }
+            var cursor = start
+            if bytes[cursor - 1] == 41 { cursor -= 1 }
+            guard cursor > 0, signatureByte(bytes[cursor - 1]) else { break }
+            cursor -= 1
+            if cursor > 0, bytes[cursor - 1] == 40 { cursor -= 1 }
+            start = cursor
+        }
+        guard start < bytes.count else { throw ParserError.invalidAssignmentTarget }
+        if syntaxMode == .strict2 {
+            let first = bytes[start]
+            guard (65...90).contains(first) || (97...122).contains(first) || first == 95 else {
+                throw ParserError.expectedIdentifier
+            }
+            for index in start..<bytes.count {
+                if index & 255 == 0 { try Task.checkCancellation() }
+                let byte = bytes[index]
+                guard signatureByte(byte), byte != 46, byte != 91, byte != 93 else {
+                    throw ParserError.invalidAssignmentTarget
+                }
+            }
+        }
+        return InlineString(utf8: bytes[start...])
+    }
+
     private func parseEchoTag() throws ->ASTNode {
         let line = currentToken.line + lineOffset
         // Empty echo: {% echo %} outputs nothing

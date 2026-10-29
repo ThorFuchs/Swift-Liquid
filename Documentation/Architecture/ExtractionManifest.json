@@ -879,6 +879,16 @@
         "Documentation/README.md"
       ],
       "qualification": "Focused iterations and actual final-source conformance observations belong to external receipts. This authorship record asserts no unexecuted pass, complete conformance, performance clearance, hosted deployment or release acceptance. Preserve historical failures, exclusions and provenance limits."
+    },
+    {
+      "area": "Assignment target admission",
+      "scopeDecision": "Maintainer commissioned the twenty strict2 assignment false-acceptance fixes using existing R2 studies and public regressions, preserving golden fixtures and all holds.",
+      "changes": [
+        "Apply the pinned unanchored assignment signature precheck and strict2 identifier admission within the existing parser, with linear cancellable scanning.",
+        "Preserve the twenty original inputs; add separately attributed all-mode reference controls, public regressions and upstream MIT notice.",
+        "Preserve existing fixtures, root dependencies, public API, RHS parsing, quotas, recovery and historical failed independent observations."
+      ],
+      "qualification": "External exact-source receipts retain actual iterations and results. No full-conformance, performance, merge or release approval is asserted."
     }
   ]
 }
