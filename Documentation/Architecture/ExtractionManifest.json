@@ -704,20 +704,20 @@
       "qualification": "PR #21 and fresh merged main are independently admitted against all nine source-bound Scripts/ci.py qualification lanes. The frozen study separately qualifies original and augmented current sources (81 functions / 2,178 cases each), builds all six binaries and validates all component outputs before timing. Independently admit 72 runs, 5,424 records and 852 comparisons, prefix/suffix inventories, executable/dSYM UUIDs, typed checksums, exact commands/order, raw sample summaries, six-run distributions and both flag lists; qualify the exact final documentation through Scripts/ci.py. No release performance clearance."
     },
     {
-  "area": "PF1-002 source and documentation reconciliation",
-  "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
-  "changes": [
-    "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
-    "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
-    "Hold PR23 separately and retain all independent conformance and latency flags."
-  ],
-  "files": [
-    "CHANGELOG.md",
-    "Documentation/Architecture/ExtractionManifest.json",
-    "Documentation/README.md"
-  ],
-  "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
-},
+      "area": "PF1-002 source and documentation reconciliation",
+      "scopeDecision": "PF1-002 constructed the isolated reconciled candidate b14d91bde71270fdded001775ed99d0e4d99f65a (tree dd8196c1d57cd364f19707f0cdf2d6a9d79e862a), preserving ordered parents PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d then main 1c37b11f1487453772aaae9e6be0cfd75ab2af01. This records historical construction, not source, whole-PR, conformance, performance, merge or release acceptance.",
+      "changes": [
+        "Preserve PR19 8bceeb8f6568a32d49d4290d752eb76ec7e5894d and main 1c37b11f1487453772aaae9e6be0cfd75ab2af01 histories, including original failure and narrow C approval records.",
+        "Combine only the three documentation review surfaces; inherit runtime, tests, fixtures, API, root dependency graph, platform floors and archive/workflow controls unchanged from their named sources.",
+        "Hold PR23 separately and retain all independent conformance and latency flags."
+      ],
+      "files": [
+        "CHANGELOG.md",
+        "Documentation/Architecture/ExtractionManifest.json",
+        "Documentation/README.md"
+      ],
+      "qualification": "Historical b14 evidence: PF1-002 passed native, safety, reference, platforms and installation; its original docs failure and dependent archive block remain retained. PF1-003 then passed docs and strict archive, including the full Git-free native child, on the same clean b14 source. These seven non-timing passes do not qualify a different successor. Independent liquid-spec remains failed (qualified 2736 matched, 1878 mismatched, 10 operational; 4624 selected of 5112 variants, 488 excluded), not rerun by PF1-007. Performance remains HOLD_PERFORMANCE_PENDING_QUIET_WINDOW; PF1-005 and PF1-006 are sealed terminal records. All exact-source, whole-PR, performance, merge and release acceptance remains pending. Preserve F01-F14, F13 original-capture loss and the narrow C assertion decision with its missing originating-turn provenance. New successor qualification belongs in external exact-source receipts; this historical record grants no gate or compatibility exception."
+    },
     {
       "area": "R6 typed expected-token diagnostic presentation",
       "scopeDecision": "Direct LIQUID-PF1-012 maintainer instruction designates exact35ab as limited local R6 baseline and commissions an independent local successor only; no whole-PR/conformance/performance/merge/release acceptance.",
@@ -738,6 +738,125 @@
         "Documentation/LQ1-R6/EXPECTED_TOKEN_DIAGNOSTICS.md"
       ],
       "qualification": "Focused before/after development observations are logged externally. One final clean successor requires native/safety/reference/platforms/installation/docs/strict archive through unchanged ci.py, with actual new counts and full Git-free native child; stop on first failure. Exact-source receipts/review remain external without a post-check stamp. Independent conformance remains failed/unrerun and timing held; new source acceptance is pending."
+    },
+    {
+      "area": "Measured ASCII date normalization",
+      "scopeDecision": "Maintainer requested qualification and merge of PR #22 followed by targeted normalization and matching optimizations.",
+      "files": [
+        "Sources/Liquid/Support/RubyDateParser.swift",
+        "Tests/LiquidTests/DateNormalizationTests.swift",
+        "Tests/LiquidTests/DateFormattingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/PerformanceReview-DateOptimizations.md",
+        "Documentation/PerformanceReview-DateOptimizations-Data.md"
+      ],
+      "changes": [
+        "Replace the pinned regex normalization only for ASCII inputs with an invocation-owned UTF-8 scan preserving the exact allowed-byte set and maximal excluded-run replacement; non-ASCII input uses the original whole-string regex.",
+        "Preserve grammar expressions/order, compiled-pattern initialization, capture/mutation code, 128-byte public bound, cancellation checkpoints, budgets, checked Sendable public contracts, products, empty root dependencies and pinned fixture/license bytes.",
+        "Reject the independently measured matching-range-only candidate because it does not meet the frozen both-caller successful-date criterion; retain original matching code.",
+        "Add public source/parsed regressions across all four policies for ASCII controls/runs, Unicode/decomposed/non-BMP prefixes, invalid byte preservation and 128/129-byte bounds; mix ISO/RFC/Unicode timestamps in existing concurrent reuse coverage.",
+        "Retain the pre-run workflow-context validation failure, all complete runs and every median/spread flag without subtraction, trimming, universal speedup or historical-regression clearance."
+      ],
+      "qualification": "PR #22 and fresh main independently passed all nine Scripts/ci.py lanes. Frozen hosted study 38947177449 qualifies baseline and both candidates separately through native and pinned reference lanes before timing, validates 17,844 normalization/range inputs and 463,944 expression/capture pairs, builds all eight unaugmented release binaries and admits 192 untimed public output records. Independently verify ZIP/files/source fingerprints, binary hashes/UUIDs, all 108 runs/1,800 records/222 comparisons, samples, command order, block effects and all 20 median/146 spread flags. Normalization alone meets the frozen RFC source/reused rule in both callers/clocks. Final source-bound CI qualifies the exact public patch separately; no release is prepared."
+    },
+    {
+      "area": "U1 immutable exact template registry",
+      "scopeDecision": "Direct U1 dispatch authorizes an isolated local registry/resolver only; no engine/graph/Vapor wiring or remote actions.",
+      "changes": [
+        "Original Apache-2.0 implementation reuses unchanged internal ScalarKey with ordered raw/parsed entries, checked Sendable and typed finite name admission.",
+        "Preserve every existing API, interpreter/parser/AST/diagnostic source, package dependency/platform and pinned fixture; no content parsing or source-memory certificate.",
+        "Add public consumer and tests for byte-exact identity, quotas, suffix, cooperative cancellation and concurrent readers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplateRegistry.swift",
+        "Tests/LiquidTests/TemplateRegistryTests.swift",
+        "Tests/TestInventory.json",
+        "Examples/RegistryConsumer/Package.swift",
+        "Examples/RegistryConsumer/Sources/LiquidRegistryConsumer/main.swift",
+        "Documentation/ExactTemplateRegistry.md",
+        "Sources/Liquid/Documentation.docc/ExactTemplateRegistry.md",
+        "Documentation/README.md",
+        "Sources/Liquid/Documentation.docc/Liquid.md"
+      ],
+      "qualification": "Native source-bound U1 receipts are external to tracked source. This records scope and authorship, not an unexecuted pass, full conformance, rendering integration or release approval."
+    },
+    {
+      "area": "U2 exact registry runtime bridge",
+      "scopeDecision": "Direct owner U2 dispatch authorizes isolated local runtime integration only; U3 graph/Vapor/publication remain held.",
+      "changes": [
+        "Original Apache-2.0 bridge prepares root plus every raw/parsed source atomically and preserves one ordered AST table and U1 resolver.",
+        "Tagged exact loader and missing-only context retry share the existing evaluator, budgets, metrics/recovery and fast paths; legacy canonical dictionary path retained.",
+        "Add eight required registry: runtime overloads, source/cancellation/identity/scope/concurrent regressions, independent public consumer and precise metric/docs contracts."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Support/TemplateLoader.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U2CaseMap.json",
+        "Examples/ExactRegistryConsumer",
+        "Documentation/ExactRegistryRendering.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryRendering.md"
+      ],
+      "qualification": "Exact-source native/debug/release/safety/reference/docs/public-consumer receipts belong to the external U2 return; this scope record does not assert an unexecuted pass, conformance/performance clearance or release approval."
+    },
+    {
+      "area": "U3 exact registry dependency inspection",
+      "scopeDecision": "Direct owner U3 dispatch authorizes isolated local graph implementation only; U4/U5, Vapor and publication remain held.",
+      "changes": [
+        "Two required registry: graph overloads reuse U2 whole-bundle preparation and U1 selection with declaration-index to UTF-8-rank mapping.",
+        "Preserve legacy graph/render APIs, result types and iterative SCC algorithm; injectable internal task checks qualify deterministic cancellation without public callbacks.",
+        "Original Apache-2.0 tests/docs and byte fixtures qualify atomic limits, exact graphs, runtime parity, concurrency and independent public consumers."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Tests/LiquidTests/ExactRegistryDependencyInspectionTests.swift",
+        "Tests/LiquidTests/Fixtures/U3ExactGraphOracles.json",
+        "Tests/TestInventory.json",
+        "Tests/U3CaseMap.json",
+        "Documentation/ExactRegistryDependencies.md",
+        "Sources/Liquid/Documentation.docc/ExactRegistryDependencies.md"
+      ],
+      "qualification": "Exact-source native and consumer results belong to the external U3 return. This record does not assert unexecuted qualification, complete conformance, performance or release clearance."
+    },
+    {
+      "area": "U4-Q independent conformance and exact registry audit",
+      "scopeDecision": "Direct owner dispatch authorizes qualification and bounded test/docs additions only. All production/adapter sources and pins remain accepted U3 bytes; U4-F/U5/Vapor are held.",
+      "changes": [
+        "Add original Apache-2.0 public-API metamorphic regressions, source-plan case map and candidate/control minimal inputs.",
+        "Reuse the existing pinned Ruby/Golden and liquid-spec JSON-RPC programmes, preserving raw upstream and strict qualification verdicts.",
+        "Keep complete execution results and proposed repairs in an external evidence packet; no engine or comparator change."
+      ],
+      "files": [
+        "Tests/LiquidTests/RegistryConformanceAuditTests.swift",
+        "Tests/TestInventory.json",
+        "Tests/U4CaseMap.json",
+        "Tests/U4Minimals.json",
+        "Documentation/U4-Q/README.md"
+      ],
+      "qualification": "This records authorized audit scope, not an unexecuted pass or Shopify conformance/release clearance. Final exact-source receipts belong to the dated U4-Q return."
+    },
+    {
+      "area": "Consolidation review qualification coverage",
+      "scopeDecision": "The maintainer requested review and qualification of the 25 unpublished local commits and a consolidation PR while preserving PR23 and all existing holds.",
+      "changes": [
+        "Build and run both original public registry consumers through the existing native/development lanes; exercise both public exact dependency-inspection overloads from import-only client code.",
+        "Replace two test-only rendezvous actors with one cancellation-responsive test gate, retaining deterministic arrival counts and adding pre-entry/in-wait cancellation and throwing-peer drain regressions. Propagate group errors immediately so structured cancellation can drain suspended peers.",
+        "Correct the documentation index wording for additive U3 overloads; preserve all production, parser, fixture, comparator, dependency, pin, platform and workflow-policy bytes."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Examples/ExactRegistryConsumer/Sources/LiquidExactRegistryConsumer/main.swift",
+        "Tests/LiquidTests/TestRendezvousGate.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/LiquidTests/RegistryConformanceAuditTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/README.md",
+        "CHANGELOG.md"
+      ],
+      "qualification": "Exact-source checks and original failures belong to external receipts and PR CI. This authorship/coverage record asserts no unexecuted pass, independent-conformance repair, performance acceptance, PR23 decision, merge or release approval."
     }
   ]
 }

@@ -33,12 +33,14 @@ guides that are compiled from the public Swift symbol graph.
 | [CPU and executor tracing](PerformanceReview-DateTracing.md) | Recorded execution paths, repaired symbol coverage, retained failures and unresolved date flags |
 | [Date-recognition CPU costs](PerformanceReview-DateRecognition.md) | Controlled component boundaries, typed audit controls, complete comparisons and unresolved flags |
 | [Parser operation costs](PerformanceReview-ParserOperations.md) | Normalization, matching, captures, original helpers and complete variability review |
+| [Targeted date optimizations](PerformanceReview-DateOptimizations.md) | Measured ASCII normalization, rejected matching candidate and [all 222 comparisons](PerformanceReview-DateOptimizations-Data.md) |
 | [Measured maintenance](MeasuredMaintenance.md) | Larger inputs, observed spread and cancellation response |
 | [Release plan](ReleasePlan.md) | Required gates for 1.0 and subsequent work |
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
 | [1.3.1 release notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
 | [1.3.0 release notes](Releases/1.3.0.md) | Additive dependency tooling, compatibility, measurements and release assets |
+| [Exact registry graphs](ExactRegistryDependencies.md) | Two exact-name overloads, atomic admission and runtime parity |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
 | [1.3 roadmap](Roadmap-1.3.md) | Adopted bounded partial-dependency inspection, explicit CLI mode and acceptance gates |
 | [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |
@@ -47,3 +49,13 @@ Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files 
 under Artifacts and remain outside source control.
 
 - [Maintained development and CI operations](Maintenance.md)
+
+## Development exact-name primitive
+
+[Exact template registry](ExactTemplateRegistry.md) documents the additive U1
+registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
+describes the additive U2 runtime bridge. [Exact registry graphs](ExactRegistryDependencies.md)
+documents the two additive U3 inspection overloads. Existing dictionary, CLI and
+Vapor APIs retain their behavior.
+
+The local [U4-Q independent audit](U4-Q/README.md) separates measured conformance failures from registry API regression qualification.

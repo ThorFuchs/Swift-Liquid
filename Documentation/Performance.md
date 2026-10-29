@@ -171,3 +171,11 @@ Its [complete aggregate appendix](PerformanceReview-ParserOperations-Data.md)
 retains all 852 comparisons, including substantial identical-source spread.
 Matching and normalization are next investigation targets for the selected inputs;
 no runtime optimization or historical regression clearance is adopted.
+
+The [targeted normalization and matching experiment](PerformanceReview-DateOptimizations.md)
+compares independent production candidates with merged main and identical-source
+controls. Its [complete aggregate appendix](PerformanceReview-DateOptimizations-Data.md)
+retains all 222 comparisons. The ASCII normalization candidate meets the frozen
+RFC criterion and proceeds to final qualification; the matching-range candidate
+is rejected. Unicode fallback, cancellation checks and historical uncertainty
+remain explicit. No universal date speedup or release clearance follows.

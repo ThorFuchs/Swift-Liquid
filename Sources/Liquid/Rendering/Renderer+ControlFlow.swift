@@ -655,38 +655,58 @@ extension Renderer {
         var resolvedPath: String
         var ast: ASTNode
 
-        do {
-            // Try literal template name first
-            resolvedPath = try templateLoader.resolvedTemplatePath(
-                for: templateName,
-                relativeTo: currentTemplatePath
-            )
-            ast = try templateLoader.loadTemplateAST(
-                templateName,
-                relativeTo: currentTemplatePath
-            )
-        } catch {
-            // If literal name fails, try resolving as a variable reference
-            if let variableValue = context.getVariable(templateName) as? String {
-                templateName = variableValue
-                do {
-                    resolvedPath = try templateLoader.resolvedTemplatePath(
-                        for: templateName,
-                        relativeTo: currentTemplatePath
-                    )
-                    ast = try templateLoader.loadTemplateAST(
-                        templateName,
-                        relativeTo: currentTemplatePath
-                    )
-                } catch let innerError as TemplateLoaderError {
-                    throw mapTemplateLoaderError(innerError, template: templateName)
-                } catch {
+        switch templateLoader {
+        case .exact(let prepared):
+            // A nil selection is the only retry condition. Capacity, cancellation
+            // and unexpected errors leave this branch without a fallback catch.
+            let selected: PreparedExactTemplates.Selected
+            if let literal = try prepared.select(templateName) {
+                selected = literal
+            } else if let variableName = context.getVariable(templateName) as? String {
+                templateName = variableName
+                guard let fallback = try prepared.select(templateName) else {
+                    throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
+                }
+                selected = fallback
+            } else {
+                throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
+            }
+            resolvedPath = selected.storedName
+            ast = selected.ast
+        case .legacy(let templateLoader):
+            do {
+                // Try literal template name first
+                resolvedPath = try templateLoader.resolvedTemplatePath(
+                    for: templateName,
+                    relativeTo: currentTemplatePath
+                )
+                ast = try templateLoader.loadTemplateAST(
+                    templateName,
+                    relativeTo: currentTemplatePath
+                )
+            } catch {
+                // If literal name fails, try resolving as a variable reference
+                if let variableValue = context.getVariable(templateName) as? String {
+                    templateName = variableValue
+                    do {
+                        resolvedPath = try templateLoader.resolvedTemplatePath(
+                            for: templateName,
+                            relativeTo: currentTemplatePath
+                        )
+                        ast = try templateLoader.loadTemplateAST(
+                            templateName,
+                            relativeTo: currentTemplatePath
+                        )
+                    } catch let innerError as TemplateLoaderError {
+                        throw mapTemplateLoaderError(innerError, template: templateName)
+                    } catch {
+                        throw RenderError.includeError(templateName, reason: error.localizedDescription)
+                    }
+                } else if let loadError = error as? TemplateLoaderError {
+                    throw mapTemplateLoaderError(loadError, template: templateName)
+                } else {
                     throw RenderError.includeError(templateName, reason: error.localizedDescription)
                 }
-            } else if let loadError = error as? TemplateLoaderError {
-                throw mapTemplateLoaderError(loadError, template: templateName)
-            } else {
-                throw RenderError.includeError(templateName, reason: error.localizedDescription)
             }
         }
 
