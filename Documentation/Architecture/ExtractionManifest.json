@@ -999,6 +999,23 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh exact-source checks and independent results are required; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Shopify self scope proxy",
+      "scopeDecision": "Maintainer commissioned the next conformance mismatch group and full Shopify compatibility while preserving pinned fixtures, separate branches and existing holds.",
+      "changes": [
+        "Add an invocation-owned live self proxy resolving through the originating scope, with a weak edge to avoid self-reference cycles and a separate state object for each isolated render.",
+        "Preserve assignment, host input and counter precedence, nested render origin, explicit self shadowing and property access without exposing context internals.",
+        "Add public regressions across parser modes, nested rendering, mutable assignments, Unicode-safe lookup paths, and concurrent invocations."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SelfScopeConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Candidate requires fresh exact-source qualification and independent comparison; no conformance, performance, merge, release or downstream acceptance is asserted."
     }
   ]
 }

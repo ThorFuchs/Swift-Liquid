@@ -178,6 +178,7 @@ extension Renderer {
 
     @inline(__always)
     internal func evaluateAccessValueWithIndex(baseValue: Any, index: Int) -> Any {
+        if let selfValue = baseValue as? RuntimeSelf { return selfValue.lookup(String(index)) ?? NSNull() }
         guard let array = baseValue as? [Any] else {
             return NSNull()
         }
@@ -191,6 +192,7 @@ extension Renderer {
 
     @inline(__always)
     internal func evaluateAccessValueWithStringKey(baseValue: Any, key: String, command: Bool = false) -> Any {
+        if let selfValue = baseValue as? RuntimeSelf { return selfValue.lookup(key) ?? NSNull() }
         if let range = baseValue as? RuntimeRange {
             guard command, let value = range.commandValue(for: key) else { return NSNull() }
             return value

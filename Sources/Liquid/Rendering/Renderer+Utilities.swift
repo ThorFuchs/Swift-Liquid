@@ -66,6 +66,7 @@ extension Renderer {
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
         switch value {
+        case is RuntimeSelf: return "Liquid::SelfDrop"
         case is LiquidSpecialValue: return ""
         case let range as RuntimeRange: return range.description
         case let str as String:
@@ -183,6 +184,10 @@ extension Renderer {
     }
     
     internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+        if let left = left as? RuntimeSelf, let right = right as? RuntimeSelf {
+            return left.scope === right.scope
+        }
+        if left is RuntimeSelf || right is RuntimeSelf { return false }
         if let left = left as? LiquidSpecialValue, let right = right as? LiquidSpecialValue { return left == right }
         if let special = left as? LiquidSpecialValue { return special == .blank ? isBlank(right) : isEmpty(right) }
         if let special = right as? LiquidSpecialValue { return special == .blank ? isBlank(left) : isEmpty(left) }

@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SelfScopeConformanceTests/liveSelfLookupAndShadowing()": null,
+    "LiquidTests.SelfScopeConformanceTests/capturedSelfKeepsOriginAcrossNestedRender()": null,
+    "LiquidTests.SelfScopeConformanceTests/selfScopeIsInvocationOwnedDuringConcurrentRenders()": null,
     "LiquidTests.ExpressionTokenDiagnosticTests/pinnedOperatorsUseShopifyReasons()": null,
     "LiquidTests.ExpressionTokenDiagnosticTests/otherModesAndValidOperatorsRemainUnchanged()": null,
     "LiquidTests.LoopAttributeDiagnosticTests/pinnedUnknownAttributesUseShopifyReasons()": null,
