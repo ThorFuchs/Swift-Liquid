@@ -102,6 +102,79 @@ extension Renderer {
         }
     }
 
+    // Ruby Liquid inspects composite values when a string-oriented filter
+    // coerces its input. Normal template output keeps its separate array rules.
+    internal func rubyInspect(_ value: Any) throws -> String {
+        try Task.checkCancellation()
+        if let string = value as? String { return try rubyInspectedString(string) }
+        if let string = value as? InlineString { return try rubyInspectedString(string.string) }
+        if value is NSNull { return "nil" }
+        if let array = value as? [Any] {
+            var parts: [String] = []
+            parts.reserveCapacity(array.count)
+            for item in array { parts.append(try rubyInspect(item)) }
+            return "[" + parts.joined(separator: ", ") + "]"
+        }
+        if let object = value as? RuntimeObject {
+            var parts: [String] = []
+            parts.reserveCapacity(object.count)
+            for (key, item) in object {
+                parts.append(try rubyInspectedString(key) + "=>" + rubyInspect(item))
+            }
+            return "{" + parts.joined(separator: ", ") + "}"
+        }
+        if let object = value as? [String: Any] {
+            var parts: [String] = []
+            parts.reserveCapacity(object.count)
+            for key in object.keys.sorted() {
+                guard let item = object[key] else { continue }
+                parts.append(try rubyInspectedString(key) + "=>" + rubyInspect(item))
+            }
+            return "{" + parts.joined(separator: ", ") + "}"
+        }
+        return stringifyUnescaped(value)
+    }
+
+    private func rubyInspectedString(_ string: String) throws -> String {
+        var result = "\""
+        let scalars = string.unicodeScalars
+        var position = scalars.startIndex
+        var count = 0
+        while position < scalars.endIndex {
+            if count & 255 == 0 { try Task.checkCancellation() }
+            let scalar = scalars[position]
+            let next = scalars.index(after: position)
+            switch scalar.value {
+            case 0x22: result += "\\\""
+            case 0x5c: result += "\\\\"
+            case 0x07: result += "\\a"
+            case 0x08: result += "\\b"
+            case 0x09: result += "\\t"
+            case 0x0a: result += "\\n"
+            case 0x0b: result += "\\v"
+            case 0x0c: result += "\\f"
+            case 0x0d: result += "\\r"
+            case 0x1b: result += "\\e"
+            case 0x23 where next < scalars.endIndex && [0x7b, 0x24, 0x40].contains(scalars[next].value):
+                result += "\\#"
+            default:
+                switch scalar.properties.generalCategory {
+                case .control, .format, .lineSeparator, .paragraphSeparator:
+                    if scalar.value <= 0xffff {
+                        result += String(format: "\\u%04X", scalar.value)
+                    } else {
+                        result += String(format: "\\u{%X}", scalar.value)
+                    }
+                default: result.unicodeScalars.append(scalar)
+                }
+            }
+            position = next
+            count += 1
+        }
+        result += "\""
+        return result
+    }
+
     internal func joinedStringifiedValues(_ array: [Any], separator: String, escapeElements: Bool) -> String {
         guard !array.isEmpty else { return "" }
 

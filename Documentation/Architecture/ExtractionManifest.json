@@ -1030,6 +1030,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Exact-source tests and independent evidence remain external; no full conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Composite values in string-oriented filters",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving pinned fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Coerce arrays and objects using Shopify Ruby-style inspected representations for the selected standard string filters, while retaining ordinary template-output array rendering.",
+        "Preserve exact scalar spelling, insertion order for runtime objects, nested values, bounded admitted input, cooperative cancellation and existing output admission.",
+        "Exercise public source and parsed APIs, parser modes, nested and escaped Unicode strings, output capacity and cancellation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh source-bound results and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }

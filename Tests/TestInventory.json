@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.FilterStringCoercionTests/compositeInputsUseRubyInspectionAtPublicEntryPoints()": null,
+    "LiquidTests.FilterStringCoercionTests/escapedNestedStringsAndCapacityRemainCorrect()": null,
     "LiquidTests.SelfScopeConformanceTests/mapReadsSelfPropertiesWithoutExposingInternals()": null,
     "LiquidTests.SelfScopeConformanceTests/liveSelfLookupAndShadowing()": null,
     "LiquidTests.SelfScopeConformanceTests/capturedSelfKeepsOriginAcrossNestedRender()": null,
