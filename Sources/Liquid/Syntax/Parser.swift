@@ -1303,6 +1303,9 @@ internal final class Parser {
     }
     
     private func identifierExpected(_ token: Token) -> ParserError {
+        if syntaxMode == .strict2, case .number = token.type {
+            return .expectedIdentifierBeforeNumber(token)
+        }
         if syntaxMode == .strict2, token.type == .tagEnd || token.type == .variableEnd {
             return .expectedIdentifierAtMarkupEnd(token)
         }

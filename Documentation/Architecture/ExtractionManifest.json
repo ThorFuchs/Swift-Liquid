@@ -952,6 +952,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Exact-source qualification and case-level comparison remain external. No full-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 identifier-before-number diagnostics",
+      "scopeDecision": "Maintainer requested the next conformance group while retaining pinned fixtures, separate branches, evidence and holds.",
+      "changes": [
+        "When an existing strict2 identifier guard rejects a numeric token, present the Shopify identifier-before-number reason with the existing token location.",
+        "Cover original selected cases through public entry points and preserve numeric bracket access, other modes and the established trailing-dot exception.",
+        "Leave numeric assignment and numeric capture admission to separate source-aware compatibility work."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/IdentifierNumberDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source results remain external; no complete-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }
