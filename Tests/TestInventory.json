@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.Strict2PunctuationTests/originalEarlierCommaRejectionsRetainPriority()": null,
+    "LiquidTests.Strict2PunctuationTests/directAndTrailingPunctuationUseTypedReason()": null,
+    "LiquidTests.Strict2PunctuationTests/lexicalErrorsAndOtherModesRetainBoundaries()": null,
     "LiquidTests.FilterStringCoercionTests/compositeInputsUseRubyInspectionAtPublicEntryPoints()": null,
     "LiquidTests.FilterStringCoercionTests/escapedNestedStringsAndCapacityRemainCorrect()": null,
     "LiquidTests.SelfScopeConformanceTests/mapReadsSelfPropertiesWithoutExposingInternals()": null,

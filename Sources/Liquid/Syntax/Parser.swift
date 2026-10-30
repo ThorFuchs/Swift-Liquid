@@ -226,8 +226,13 @@ internal final class Parser {
         let expression = try parseExpression()
         
         guard currentTokenStorage.type == .variableEnd else {
-            if syntaxMode == .strict2, case .identifier = currentToken.type {
-                throw ParserError.unexpectedTrailingIdentifier(currentToken)
+            if syntaxMode == .strict2 {
+                switch currentToken.type {
+                case .identifier: throw ParserError.unexpectedTrailingIdentifier(currentToken)
+                case .question: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "question")
+                case .dash: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "dash")
+                default: break
+                }
             }
             throw ParserError.unexpectedToken(currentToken)
         }
@@ -1018,6 +1023,8 @@ internal final class Parser {
                 case .dot: reason = ("dot", ".")
                 case .range: reason = ("dotdot", "..")
                 case .filter: reason = ("pipe", "|")
+                case .question: reason = ("question", "?")
+                case .dash: reason = ("dash", "-")
                 default: reason = nil
                 }
                 if let (kind, spelling) = reason {
@@ -1335,8 +1342,13 @@ internal final class Parser {
     @inline(__always)
     private func consumeTagEnd() throws {
         guard currentTokenStorage.type == .tagEnd else {
-            if syntaxMode == .strict2, case .identifier = currentToken.type {
-                throw ParserError.unexpectedTrailingIdentifier(currentToken)
+            if syntaxMode == .strict2 {
+                switch currentToken.type {
+                case .identifier: throw ParserError.unexpectedTrailingIdentifier(currentToken)
+                case .question: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "question")
+                case .dash: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "dash")
+                default: break
+                }
             }
             throw ParserError.unexpectedToken(currentToken)
         }

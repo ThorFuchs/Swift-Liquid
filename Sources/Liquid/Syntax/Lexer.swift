@@ -590,9 +590,16 @@ internal final class Lexer {
                     } else {
                         throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                     }
+                } else if syntaxMode == .strict2 {
+                    advanceASCII()
+                    tokens.append(Token(type: .dash, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 } else {
                     throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                 }
+
+            case 0x3F where syntaxMode == .strict2:
+                advanceASCII()
+                tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
@@ -876,10 +883,16 @@ internal final class Lexer {
                     } else {
                         throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                     }
+                } else if syntaxMode == .strict2 {
+                    advanceASCII()
+                    tokens.append(Token(type: .dash, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 } else {
-                    // Bare `-` not followed by digit or `%}` — invalid in Liquid
                     throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                 }
+
+            case 0x3F where syntaxMode == .strict2:
+                advanceASCII()
+                tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)

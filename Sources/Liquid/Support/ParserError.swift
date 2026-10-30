@@ -17,6 +17,7 @@ internal enum ParserError: Error, Sendable, Equatable {
     case invalidCloseRoundExpression(Token)
     case invalidOperatorExpression(Token, kind: String, spelling: String)
     case unexpectedTrailingIdentifier(Token)
+    case unexpectedTrailingPunctuation(Token, kind: String)
     case missingAttributeColonBeforeComma(Token)
     case invalidExpressionAtMarkupEnd(Token)
     case expectedIdentifierAtMarkupEnd(Token)
@@ -74,6 +75,8 @@ extension ParserError {
             return "[:\(kind), \"\(spelling)\"] is not a valid expression"
         case .unexpectedTrailingIdentifier:
             return "Expected end_of_string but found id"
+        case .unexpectedTrailingPunctuation(_, let kind):
+            return "Expected end_of_string but found \(kind)"
         case .missingAttributeColonBeforeComma:
             return "Expected colon but found comma"
         case .invalidExpressionAtMarkupEnd:
@@ -131,7 +134,7 @@ extension ParserError {
     
     internal var category: ParserErrorCategory {
         switch self {
-        case .unexpectedToken, .invalidCommaExpression, .invalidCloseRoundExpression, .invalidOperatorExpression, .unexpectedTrailingIdentifier,
+        case .unexpectedToken, .invalidCommaExpression, .invalidCloseRoundExpression, .invalidOperatorExpression, .unexpectedTrailingIdentifier, .unexpectedTrailingPunctuation,
              .missingAttributeColonBeforeComma, .invalidExpressionAtMarkupEnd, .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedToken, .expectedIdentifier, .expectedNumber,
              .expectedString, .expectedExpression, .expectedTestOperator:
             return .syntax
@@ -153,7 +156,7 @@ extension ParserError {
     
     internal var sourceLocation: SourceLocation? {
         switch self {
-        case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token),
+        case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token), .unexpectedTrailingPunctuation(let token, _),
              .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token):
             return token.sourceLocation
         case .expectedToken(_, _, .resolved(let origin)?):
@@ -184,8 +187,8 @@ extension ParserError {
             return "Provide an expression before the closing parenthesis"
         case .invalidOperatorExpression:
             return "Provide an expression in place of the operator"
-        case .unexpectedTrailingIdentifier:
-            return "Remove the unexpected trailing identifier"
+        case .unexpectedTrailingIdentifier, .unexpectedTrailingPunctuation:
+            return "Remove the unexpected trailing token"
         case .missingAttributeColonBeforeComma:
             return "Add a colon after the attribute name"
         case .invalidExpressionAtMarkupEnd:

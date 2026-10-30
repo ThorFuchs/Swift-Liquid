@@ -29,6 +29,8 @@ internal enum TokenType: Equatable, Sendable {
     case colon
     case comma
     case dot
+    case question
+    case dash
     case equals
     case notEquals
     case lessThan
@@ -159,6 +161,10 @@ extension TokenType {
             return ","
         case .dot:
             return "."
+        case .question:
+            return "?"
+        case .dash:
+            return "-"
         case .equals:
             return "="
         case .notEquals:
@@ -361,6 +367,8 @@ extension TokenType: CustomStringConvertible {
         case .colon: return ":"
         case .comma: return ","
         case .dot: return "."
+        case .question: return "?"
+        case .dash: return "-"
         case .equals: return "=="
         case .notEquals: return "!="
         case .lessThan: return "<"

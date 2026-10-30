@@ -1046,6 +1046,24 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh source-bound results and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 question and standalone dash tokenization",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving fixture pins, separate branches, retained evidence and existing holds.",
+      "changes": [
+        "Recognize question marks and nonnumeric standalone dashes in strict2 markup so the existing parser can determine the earlier syntax rejection, as in the pinned Shopify lexer.",
+        "Present typed primary-expression and trailing-token reasons while retaining lexically invalid later characters, existing non-strict2 behavior, negative numbers and trim markers.",
+        "Exercise original parser-error inputs across public entry points and supplementary lexical-order and mode controls without modifying fixtures."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/TokenType.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/Strict2PunctuationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound lane results and independent comparison are retained externally; no full conformance, performance, merge, release or downstream acceptance is asserted."
     }
   ]
 }
