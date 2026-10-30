@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.CloseRoundDiagnosticTests/pinnedExpressionFailuresUseTypedReason()": null,
+    "LiquidTests.CloseRoundDiagnosticTests/modesAndNeighboringSyntaxRetainBehavior()": null,
     "LiquidTests.RecoveredDiagnosticTests/missingIdentifierRetainsExistingRejection()": null,
     "LiquidTests.RecoveredDiagnosticTests/validatedUnclosedQuotesPreserveOriginsAndAdmission()": null,
     "LiquidTests.RecoveredDiagnosticTests/trailingIdentifiersKeepTheirRejection()": null,

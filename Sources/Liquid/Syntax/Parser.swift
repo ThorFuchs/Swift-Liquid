@@ -907,6 +907,9 @@ internal final class Parser {
                 }
                 endExpr = expr
             } else {
+                if syntaxMode == .strict2, currentToken.type == .rightParen {
+                    throw ParserError.invalidCloseRoundExpression(currentToken)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
 
@@ -996,6 +999,8 @@ internal final class Parser {
 
         case .comma where syntaxMode == .strict2:
             throw ParserError.invalidCommaExpression(currentToken)
+        case .rightParen where syntaxMode == .strict2:
+            throw ParserError.invalidCloseRoundExpression(currentToken)
         case .tagEnd where syntaxMode == .strict2, .variableEnd where syntaxMode == .strict2:
             throw ParserError.invalidExpressionAtMarkupEnd(currentToken)
         default:

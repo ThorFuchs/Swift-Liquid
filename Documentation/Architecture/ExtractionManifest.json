@@ -922,6 +922,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Reconstructed source requires fresh qualification. Lost original branches and evidence cannot be recreated; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 closing parenthesis expression diagnostic",
+      "scopeDecision": "Maintainer requested the next largest diagnostic mismatch group while retaining pinned fixtures, separate branches, evidence and holds.",
+      "changes": [
+        "Present the pinned close_round reason for a closing parenthesis only when the existing strict2 parser rejects it as a primary expression; retain token location and rejection.",
+        "Exercise pinned source examples, all public entry points, other parser modes, trailing-token behavior and valid range syntax."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CloseRoundDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source results are retained separately; no full-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }
