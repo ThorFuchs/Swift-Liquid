@@ -1332,6 +1332,9 @@ internal final class Parser {
         if syntaxMode == .strict2, case .number = token.type {
             return .expectedIdentifierBeforeNumber(token)
         }
+        if syntaxMode == .strict2, case .string = token.type {
+            return .expectedIdentifierBeforeString(token)
+        }
         if syntaxMode == .strict2, token.type == .tagEnd || token.type == .variableEnd {
             return .expectedIdentifierAtMarkupEnd(token)
         }

@@ -1108,6 +1108,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh exact-source checks and independent comparison are retained externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 identifier-before-string diagnostics",
+      "scopeDecision": "Maintainer commissioned the next conformance mismatch group while preserving fixture pins, separate branches, evidence and existing holds.",
+      "changes": [
+        "Present the Shopify identifier-before-string reason at an existing strict2 identifier guard without changing parser acceptance or token location.",
+        "Retain valid bracket and dot lookups, other modes, and the existing trailing-dot boundary; add public regressions based on pinned cases."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/IdentifierStringDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }

@@ -22,6 +22,7 @@ internal enum ParserError: Error, Sendable, Equatable {
     case invalidExpressionAtMarkupEnd(Token)
     case expectedIdentifierAtMarkupEnd(Token)
     case expectedIdentifierBeforeNumber(Token)
+    case expectedIdentifierBeforeString(Token)
     
     case expectedToken(TokenType, got: TokenType, origin: DiagnosticOriginResolution? = nil)
     
@@ -85,6 +86,8 @@ extension ParserError {
             return "Expected id but found end_of_string"
         case .expectedIdentifierBeforeNumber:
             return "Expected id but found number"
+        case .expectedIdentifierBeforeString:
+            return "Expected id but found string"
         case .expectedToken(let expected, let got, .resolved(let origin)?):
             guard let wanted = expectedTokenName(expected), let found = expectedTokenName(got) else {
                 return "Expected \(expected) but found \(got)"
@@ -135,7 +138,7 @@ extension ParserError {
     internal var category: ParserErrorCategory {
         switch self {
         case .unexpectedToken, .invalidCommaExpression, .invalidCloseRoundExpression, .invalidOperatorExpression, .unexpectedTrailingIdentifier, .unexpectedTrailingToken,
-             .missingAttributeColonBeforeComma, .invalidExpressionAtMarkupEnd, .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedToken, .expectedIdentifier, .expectedNumber,
+             .missingAttributeColonBeforeComma, .invalidExpressionAtMarkupEnd, .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedIdentifierBeforeString, .expectedToken, .expectedIdentifier, .expectedNumber,
              .expectedString, .expectedExpression, .expectedTestOperator:
             return .syntax
         case .unknownTag, .unknownForLoopParameter:
@@ -157,7 +160,7 @@ extension ParserError {
     internal var sourceLocation: SourceLocation? {
         switch self {
         case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token), .unexpectedTrailingToken(let token, _),
-             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token):
+             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token), .expectedIdentifierBeforeString(let token):
             return token.sourceLocation
         case .expectedToken(_, _, .resolved(let origin)?):
             return .init(position: origin.anchor, line: origin.position.line, column: origin.position.column)
@@ -193,7 +196,7 @@ extension ParserError {
             return "Add a colon after the attribute name"
         case .invalidExpressionAtMarkupEnd:
             return "Provide the missing expression"
-        case .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber:
+        case .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedIdentifierBeforeString:
             return "Provide the missing identifier"
         case .expectedToken(let expected, let got, _):
             switch expected {

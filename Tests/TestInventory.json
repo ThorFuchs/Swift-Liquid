@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.IdentifierStringDiagnosticTests/pinnedStringAfterDotRejectionsUseTypedReason()": null,
+    "LiquidTests.IdentifierStringDiagnosticTests/otherModesAndValidLookupsRemainUnchanged()": null,
     "LiquidTests.RangeExpectedTokenTests/pinnedRangeErrorsUseValidatedExpectedTokens()": null,
     "LiquidTests.RangeExpectedTokenTests/sourceOriginsModesAndValidRangesRemainBounded()": null,
     "LiquidTests.TrailingTokenDiagnosticTests/pinnedTrailingTokensRetainTypedReason()": null,
