@@ -1080,6 +1080,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed trailing-token regression controls",
+      "scopeDecision": "Preserve the existing public rejection cases while aligning their strict2 message expectations with the pinned Ruby reference and the newly commissioned diagnostic behavior.",
+      "changes": [
+        "Keep both original authored test inputs, rejection assertions, other-mode controls and valid syntax controls; update only the two strict2 message assertions that contradicted the pinned Ruby reference.",
+        "Retain the failed prior native run and exact pinned-reference observations externally; no golden fixture or comparator changes."
+      ],
+      "files": [
+        "Tests/LiquidTests/CommaDiagnosticTests.swift",
+        "Tests/LiquidTests/CloseRoundDiagnosticTests.swift"
+      ],
+      "qualification": "The previous candidate failed native on the two retained assertions; the successor requires fresh exact-source qualification. No complete conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

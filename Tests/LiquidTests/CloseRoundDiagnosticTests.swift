@@ -40,7 +40,8 @@ struct CloseRoundDiagnosticTests {
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: )") }
         }
         do { _ = try LiquidTemplate("{{ x ) }}", syntaxMode: .strict2); Issue.record("Expected rejection") }
-        catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: )") }
+        // Pinned Shopify strict2 reports the closing parenthesis at the end check.
+        catch LiquidError.syntax(let message, _, _) { #expect(message == "Expected end_of_string but found close_round") }
         #expect(try await LiquidEngine().render(template: "{% for x in (1..3) %}{{ x }}{% endfor %}", syntaxMode: .strict2) == "123")
     }
 }

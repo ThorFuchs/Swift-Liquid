@@ -41,6 +41,7 @@ struct CommaDiagnosticTests {
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: ,") }
         }
         do { _ = try LiquidTemplate("{{ value, }}", syntaxMode: .strict2); Issue.record("Expected rejection") }
-        catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: ,") }
+        // Pinned Shopify strict2 rejects the same trailing comma at the end check.
+        catch LiquidError.syntax(let message, _, _) { #expect(message == "Expected end_of_string but found comma") }
     }
 }
