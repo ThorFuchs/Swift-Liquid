@@ -889,6 +889,20 @@
         "Preserve existing fixtures, root dependencies, public API, RHS parsing, quotas, recovery and historical failed independent observations."
       ],
       "qualification": "External exact-source receipts retain actual iterations and results. No full-conformance, performance, merge or release approval is asserted."
+    },
+    {
+      "area": "Split trailing-empty semantics reconstruction",
+      "scopeDecision": "Reconstruct the maintainer-commissioned split repair from recorded source after the original local branch and receipts were lost; preserve pinned fixtures and existing holds.",
+      "changes": [
+        "Remove trailing empty split fields for nonempty separators while retaining leading and interior fields.",
+        "Exercise pinned liquid-spec inputs and Ruby-verified edge cases through public source and parsed-template APIs."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SplitConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh receipts apply to the reconstructed source only; original branch history and source-bound evidence were lost. No complete-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

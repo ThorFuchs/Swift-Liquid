@@ -446,9 +446,10 @@ extension Renderer {
             let parts = str.split(omittingEmptySubsequences: true, whereSeparator: { $0.isWhitespace })
             return parts.map { String($0) } as [Any]
         }
-        // Standard split — preserve empty parts if any non-empty parts exist
-        let parts = str.components(separatedBy: sep)
-        return parts.contains(where: { !$0.isEmpty }) ? parts : [Any]()
+        // Ruby removes trailing empty fields while retaining leading and interior fields.
+        var parts = str.components(separatedBy: sep)
+        while parts.last?.isEmpty == true { parts.removeLast() }
+        return parts
     }
 
     internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
