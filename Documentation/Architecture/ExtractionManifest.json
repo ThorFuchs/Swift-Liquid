@@ -1093,6 +1093,21 @@
         "Tests/LiquidTests/CloseRoundDiagnosticTests.swift"
       ],
       "qualification": "The previous candidate failed native on the two retained assertions; the successor requires fresh exact-source qualification. No complete conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 range expected-token diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving pinned fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Reuse the existing typed expected-token and immutable original-byte origin pipeline at the existing range separator and closing-delimiter rejection guards in strict2.",
+        "Preserve the same parser rejection, other syntax modes, valid ranges, when presentation, partial-local source origins, source limits and cancellation.",
+        "Add public regressions from the pinned independent corpus and supplementary source-origin controls without changing fixtures or comparators."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent comparison are retained externally; full conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }

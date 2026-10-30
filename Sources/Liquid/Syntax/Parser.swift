@@ -884,6 +884,9 @@ internal final class Parser {
             }
 
             guard currentToken.type == .range else {
+                if syntaxMode == .strict2, currentToken.type == .comma {
+                    throw ParserError.expectedToken(.range, got: currentToken.type)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             advance() // consume ..
@@ -912,6 +915,9 @@ internal final class Parser {
             }
 
             guard currentToken.type == .rightParen else {
+                if syntaxMode == .strict2, currentToken.type == .tagEnd || currentToken.type == .variableEnd {
+                    throw ParserError.expectedToken(.rightParen, got: currentToken.type)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             advance() // consume )
