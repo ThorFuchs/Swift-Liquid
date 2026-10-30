@@ -226,6 +226,9 @@ internal final class Parser {
         let expression = try parseExpression()
         
         guard currentTokenStorage.type == .variableEnd else {
+            if syntaxMode == .strict2, case .identifier = currentToken.type {
+                throw ParserError.unexpectedTrailingIdentifier(currentToken)
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance() // consume }}
@@ -754,7 +757,7 @@ internal final class Parser {
         advance() // consume |
 
         guard case .identifier(let firstFilterName) = currentTokenStorage.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
 
@@ -777,7 +780,7 @@ internal final class Parser {
             advance() // consume |
 
             guard case .identifier(let filterName) = currentTokenStorage.type else {
-                throw ParserError.unexpectedToken(currentToken)
+                throw identifierExpected(currentToken)
             }
             advance()
 
@@ -872,7 +875,7 @@ internal final class Parser {
                 while currentToken.type == .dot {
                     advance() // consume .
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -897,7 +900,7 @@ internal final class Parser {
                 while currentToken.type == .dot {
                     advance()
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -952,7 +955,7 @@ internal final class Parser {
             while currentTokenStorage.type == .dot {
                 advance()
                 guard case .identifier(let prop) = currentToken.type else {
-                    throw ParserError.unexpectedToken(currentToken)
+                    throw identifierExpected(currentToken)
                 }
                 advance()
                 expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -982,7 +985,7 @@ internal final class Parser {
                 while currentTokenStorage.type == .dot {
                     advance()
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -991,6 +994,10 @@ internal final class Parser {
             }
             return expr
 
+        case .comma where syntaxMode == .strict2:
+            throw ParserError.invalidCommaExpression(currentToken)
+        case .tagEnd where syntaxMode == .strict2, .variableEnd where syntaxMode == .strict2:
+            throw ParserError.invalidExpressionAtMarkupEnd(currentToken)
         default:
             throw ParserError.unexpectedToken(currentToken)
         }
@@ -1004,7 +1011,11 @@ internal final class Parser {
 
         while currentTokenStorage.type == .dot {
             guard case .identifier(let property) = nextTokenStorage.type else {
-                throw ParserError.unexpectedToken(nextTokenStorage)
+                if current >= 2, tokens[current - 2].type == .variableStart,
+                   nextTokenStorage.type == .variableEnd {
+                    throw ParserError.unexpectedToken(nextTokenStorage)
+                }
+                throw identifierExpected(nextTokenStorage)
             }
             advance()
             advance()
@@ -1286,9 +1297,19 @@ internal final class Parser {
         nextTokenStorage = (current + 1) < tokens.count ? tokens[current + 1] : Self.eofToken
     }
     
+    private func identifierExpected(_ token: Token) -> ParserError {
+        if syntaxMode == .strict2, token.type == .tagEnd || token.type == .variableEnd {
+            return .expectedIdentifierAtMarkupEnd(token)
+        }
+        return .unexpectedToken(token)
+    }
+
     @inline(__always)
     private func consumeTagEnd() throws {
         guard currentTokenStorage.type == .tagEnd else {
+            if syntaxMode == .strict2, case .identifier = currentToken.type {
+                throw ParserError.unexpectedTrailingIdentifier(currentToken)
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -1555,7 +1576,7 @@ internal final class Parser {
     
     private func parseForTag() throws ->ASTNode {
         guard case .identifier(let variable) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         
@@ -1721,7 +1742,7 @@ internal final class Parser {
     
     private func parseTableRowTag() throws ->ASTNode {
         guard case .identifier(let variable) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         
@@ -1798,7 +1819,7 @@ internal final class Parser {
             // Digit-only variable names: {% capture 123 %}
             variable = InlineString(String(Int(num)))
         } else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -1821,7 +1842,7 @@ internal final class Parser {
     
     private func parseIncrementTag() throws ->ASTNode {
         guard case .identifier(let counter) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -1831,7 +1852,7 @@ internal final class Parser {
     
     private func parseDecrementTag() throws ->ASTNode {
         guard case .identifier(let counter) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -2128,6 +2149,9 @@ internal final class Parser {
                 advance()
 
                 guard currentToken.type == .colon else {
+                    if syntaxMode == .strict2, currentToken.type == .comma {
+                        throw ParserError.missingAttributeColonBeforeComma(currentToken)
+                    }
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
@@ -2147,7 +2171,7 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()
@@ -2184,6 +2208,9 @@ internal final class Parser {
                 advance()
                 
                 guard currentToken.type == .colon else {
+                    if syntaxMode == .strict2, currentToken.type == .comma {
+                        throw ParserError.missingAttributeColonBeforeComma(currentToken)
+                    }
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
@@ -2202,7 +2229,7 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()
@@ -2214,7 +2241,7 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()

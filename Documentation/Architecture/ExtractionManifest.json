@@ -903,6 +903,25 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh receipts apply to the reconstructed source only; original branch history and source-bound evidence were lost. No complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 diagnostic family reconstruction",
+      "scopeDecision": "Reconstruct six maintainer-commissioned diagnostic groups from retained session evidence after loss of original local branches and receipts.",
+      "changes": [
+        "Present typed reasons for comma, trailing identifier, missing attribute colon, missing expression and missing identifier while preserving existing parser rejection and other language modes.",
+        "Present unmatched quotes only for strict2 markup with validated original source provenance and an earlier token; preserve unmapped and standalone cases.",
+        "Add separately attributed public regression cases and preserve pinned fixtures and the prior split repair."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommaDiagnosticTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Reconstructed source requires fresh qualification. Lost original branches and evidence cannot be recreated; no complete-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

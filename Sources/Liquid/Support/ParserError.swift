@@ -11,6 +11,13 @@ import Foundation
 
 internal enum ParserError: Error, Sendable, Equatable {
     case unexpectedToken(Token)
+
+    // Rejection of a comma where a primary expression is required.
+    case invalidCommaExpression(Token)
+    case unexpectedTrailingIdentifier(Token)
+    case missingAttributeColonBeforeComma(Token)
+    case invalidExpressionAtMarkupEnd(Token)
+    case expectedIdentifierAtMarkupEnd(Token)
     
     case expectedToken(TokenType, got: TokenType, origin: DiagnosticOriginResolution? = nil)
     
@@ -56,6 +63,16 @@ extension ParserError {
         switch self {
         case .unexpectedToken(let token):
             return "Unexpected token: \(token.type)"
+        case .invalidCommaExpression:
+            return "[:comma, \",\"] is not a valid expression"
+        case .unexpectedTrailingIdentifier:
+            return "Expected end_of_string but found id"
+        case .missingAttributeColonBeforeComma:
+            return "Expected colon but found comma"
+        case .invalidExpressionAtMarkupEnd:
+            return "[:end_of_string] is not a valid expression"
+        case .expectedIdentifierAtMarkupEnd:
+            return "Expected id but found end_of_string"
         case .expectedToken(let expected, let got, .resolved(let origin)?):
             guard let wanted = expectedTokenName(expected), let found = expectedTokenName(got) else {
                 return "Expected \(expected) but found \(got)"
@@ -105,7 +122,8 @@ extension ParserError {
     
     internal var category: ParserErrorCategory {
         switch self {
-        case .unexpectedToken, .expectedToken, .expectedIdentifier, .expectedNumber, 
+        case .unexpectedToken, .invalidCommaExpression, .unexpectedTrailingIdentifier,
+             .missingAttributeColonBeforeComma, .invalidExpressionAtMarkupEnd, .expectedIdentifierAtMarkupEnd, .expectedToken, .expectedIdentifier, .expectedNumber,
              .expectedString, .expectedExpression, .expectedTestOperator:
             return .syntax
         case .unknownTag, .unknownForLoopParameter:
@@ -126,7 +144,8 @@ extension ParserError {
     
     internal var sourceLocation: SourceLocation? {
         switch self {
-        case .unexpectedToken(let token):
+        case .unexpectedToken(let token), .invalidCommaExpression(let token), .unexpectedTrailingIdentifier(let token),
+             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token):
             return token.sourceLocation
         case .expectedToken(_, _, .resolved(let origin)?):
             return .init(position: origin.anchor, line: origin.position.line, column: origin.position.column)
@@ -150,6 +169,16 @@ extension ParserError {
             default:
                 return "Check the syntax around this token"
             }
+        case .invalidCommaExpression:
+            return "Provide an expression before or after the comma"
+        case .unexpectedTrailingIdentifier:
+            return "Remove the unexpected trailing identifier"
+        case .missingAttributeColonBeforeComma:
+            return "Add a colon after the attribute name"
+        case .invalidExpressionAtMarkupEnd:
+            return "Provide the missing expression"
+        case .expectedIdentifierAtMarkupEnd:
+            return "Provide the missing identifier"
         case .expectedToken(let expected, let got, _):
             switch expected {
             case .tagEnd:

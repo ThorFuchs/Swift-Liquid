@@ -43,6 +43,7 @@ internal final class Lexer {
 
     private let bytes: [UInt8]
     private let sourceProvenance: DiagnosticSourceProvenance
+    private let syntaxMode: LiquidSyntaxMode
 
     private var byteIndex: Int = 0
     
@@ -56,9 +57,11 @@ internal final class Lexer {
     
     // MARK: - Initialization
     
-    internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped) {
+    internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped,
+                  syntaxMode: LiquidSyntaxMode = .lax) {
         self.bytes = Array(input.utf8)
         self.sourceProvenance = sourceProvenance
+        self.syntaxMode = syntaxMode
     }
     
     // MARK: - Public Interface
@@ -78,6 +81,22 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                // Only present an unmatched quote when its original markup frame is validated.
+                if syntaxMode == .strict2, case .unterminatedString(let offset) = error,
+                   offset >= 0, offset < bytes.count,
+                   bytes[offset] == Self.singleQuote || bytes[offset] == Self.doubleQuote,
+                   case .original(let identity) = sourceProvenance {
+                    let frameTokens = tokens[firstToken...]
+                    let minimum = frameTokens.first?.type == .variableStart ? 2 : 3
+                    if frameTokens.count >= minimum {
+                        let character = Character(UnicodeScalar(bytes[offset]))
+                        let origin = try diagnosticOrigin(character, at: offset, start: start.position,
+                                                          tokens: frameTokens, identity: identity)
+                        if case .resolved = origin {
+                            throw LexerError.unexpectedCharacter(character, position: offset, origin: origin)
+                        }
+                    }
+                }
                 guard case .unexpectedCharacter(let character, let offset, _) = error else { throw error }
                 let origin: DiagnosticOriginResolution
                 switch sourceProvenance {

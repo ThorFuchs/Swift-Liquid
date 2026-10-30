@@ -1,6 +1,13 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.RecoveredDiagnosticTests/missingIdentifierRetainsExistingRejection()": null,
+    "LiquidTests.RecoveredDiagnosticTests/validatedUnclosedQuotesPreserveOriginsAndAdmission()": null,
+    "LiquidTests.RecoveredDiagnosticTests/trailingIdentifiersKeepTheirRejection()": null,
+    "LiquidTests.RecoveredDiagnosticTests/partialAttributeCommaKeepsItsRejection()": null,
+    "LiquidTests.RecoveredDiagnosticTests/missingExpressionAtMarkupEndKeepsItsRejection()": null,
+    "LiquidTests.CommaDiagnosticTests/originalPrimaryExpressionFailuresRetainTypedReason()": null,
+    "LiquidTests.CommaDiagnosticTests/neighboringContextsKeepTheirExistingRejectionAndValidCommaSyntax()": null,
     "LiquidTests.SplitConformanceTests/splitKeepsOutputLimitsAndCancellation()": null,
     "LiquidTests.SplitConformanceTests/trailingEmptyFieldsMatchRubyWithoutRemovingInteriorFields(mode:)": 3,
     "LiquidTests.AssignmentTargetTests/longTargetsRetainSourceLimitsAndCancellation()": null,
