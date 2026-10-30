@@ -9,7 +9,7 @@ struct InlineHashDiagnosticTests {
         let sources = ["{% assign x = x | x : x , , # %}", "{% assign x = # %}",
             "{% case # %}{% endcase %}", "{% echo # %}",
             "{% for x in # %}{% endfor %}", "{% if # %}{% endif %}",
-            "{% include # %}", "{% render # %}", "{% unless # %}{% endunless %}"]
+            "{% include # %}", "{% render 'snippet' for # %}", "{% unless # %}{% endunless %}"]
         let engine = LiquidEngine()
         for source in sources {
             for entry in 0..<4 {
