@@ -226,14 +226,7 @@ internal final class Parser {
         let expression = try parseExpression()
         
         guard currentTokenStorage.type == .variableEnd else {
-            if syntaxMode == .strict2 {
-                switch currentToken.type {
-                case .identifier: throw ParserError.unexpectedTrailingIdentifier(currentToken)
-                case .question: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "question")
-                case .dash: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "dash")
-                default: break
-                }
-            }
+            if let error = trailingTokenError(currentToken) { throw error }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance() // consume }}
@@ -1117,7 +1110,7 @@ internal final class Parser {
 
             let components = try collectQualifiedIdentifierComponents(startingWith: name)
 
-            if currentTokenStorage.type == .leftParen {
+            if currentTokenStorage.type == .leftParen, syntaxMode != .strict2 {
                 advance()
                 let arguments = try parseCallArguments()
                 guard currentToken.type == .rightParen else {
@@ -1339,17 +1332,37 @@ internal final class Parser {
         return .unexpectedToken(token)
     }
 
+    private func trailingTokenError(_ token: Token) -> ParserError? {
+        guard syntaxMode == .strict2 else { return nil }
+        let kind: String
+        switch token.type {
+        case .identifier: return .unexpectedTrailingIdentifier(token)
+        case .number: kind = "number"
+        case .string: kind = "string"
+        case .question: kind = "question"
+        case .dash: kind = "dash"
+        case .leftParen: kind = "open_round"
+        case .rightParen: kind = "close_round"
+        case .leftBracket: kind = "open_square"
+        case .rightBracket: kind = "close_square"
+        case .colon: kind = "colon"
+        case .comma: kind = "comma"
+        case .dot: kind = "dot"
+        case .range: kind = "dotdot"
+        case .filter: kind = "pipe"
+        case .notEquals, .lessThan, .greaterThan, .lessThanOrEqual, .greaterThanOrEqual, .contains:
+            kind = "comparison"
+        // `equals` represents both '=' and '=='; its original spelling needs
+        // source validation before it can be assigned a Shopify token name.
+        default: return nil
+        }
+        return .unexpectedTrailingToken(token, kind: kind)
+    }
+
     @inline(__always)
     private func consumeTagEnd() throws {
         guard currentTokenStorage.type == .tagEnd else {
-            if syntaxMode == .strict2 {
-                switch currentToken.type {
-                case .identifier: throw ParserError.unexpectedTrailingIdentifier(currentToken)
-                case .question: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "question")
-                case .dash: throw ParserError.unexpectedTrailingPunctuation(currentToken, kind: "dash")
-                default: break
-                }
-            }
+            if let error = trailingTokenError(currentToken) { throw error }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()

@@ -1064,6 +1064,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound lane results and independent comparison are retained externally; no full conformance, performance, merge, release or downstream acceptance is asserted."
+    },
+    {
+      "area": "Strict2 trailing token diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving fixture pins, separate branches, evidence and existing holds.",
+      "changes": [
+        "Leave an opening parenthesis after a named expression unconsumed in strict2, allowing the existing end-of-markup check to reject it before constructing an unsupported function call.",
+        "Report typed unexpected trailing token reasons for unambiguous punctuation, identifiers, strings, numbers and comparisons; preserve ambiguous equals spelling for separate source-aware work.",
+        "Exercise pinned case inputs through public entry points and retain valid ranges, bracket access, other parser modes and the existing trailing-dot boundary."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/TrailingTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }
