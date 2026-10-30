@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LoopAttributeDiagnosticTests/pinnedUnknownAttributesUseShopifyReasons()": null,
+    "LiquidTests.LoopAttributeDiagnosticTests/validParametersAndOtherModesKeepBehavior()": null,
     "LiquidTests.IdentifierNumberDiagnosticTests/pinnedRejectionsHaveTypedReason()": null,
     "LiquidTests.IdentifierNumberDiagnosticTests/otherModesAndValidNumericAccessArePreserved()": null,
     "LiquidTests.InlineHashDiagnosticTests/strict2MarkupRejectsOriginalHash()": null,

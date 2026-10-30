@@ -968,6 +968,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Exact-source results remain external; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 unknown loop attribute diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance group while retaining fixture pins, branch isolation, evidence and existing holds.",
+      "changes": [
+        "At an already-rejected unknown for or tablerow attribute, present the pinned Shopify reason in strict2; preserve token position and the other parser modes.",
+        "Exercise public entry points, valid loop parameters, other parser modes and original plus supplementary attribute examples.",
+        "Keep earlier lexical rejection ordering and its differences as an explicit separate issue."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LoopAttributeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "External exact-source checks and independent results are required; no complete-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

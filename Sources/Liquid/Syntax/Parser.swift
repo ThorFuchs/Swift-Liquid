@@ -1619,6 +1619,7 @@ internal final class Parser {
             guard paramName.equals("limit")
                     || paramName.equals("offset")
                     || paramName.equals("reversed") else {
+                if syntaxMode == .strict2 { throw invalidAttribute() }
                 break
             }
 
@@ -1770,6 +1771,12 @@ internal final class Parser {
             guard paramName.equals("cols")
                     || paramName.equals("limit")
                     || paramName.equals("offset") else {
+                if syntaxMode == .strict2 {
+                    throw LiquidError.syntax(
+                        message: "Invalid attribute '\(paramName.string)' in tablerow loop. Valid attributes are cols, limit, offset, and range",
+                        line: currentToken.line + lineOffset, column: currentToken.column
+                    )
+                }
                 break
             }
 
