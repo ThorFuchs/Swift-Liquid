@@ -937,6 +937,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh exact-source results are retained separately; no full-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 hash in ordinary tag markup",
+      "scopeDecision": "Maintainer explicitly authorized Shopify-conformant inline-comment behavior while preserving fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Reject hash lexically within ordinary strict2 tag markup; retain standalone inline-comment tags, quoted hashes, lax behavior, and outer liquid-block comment tokenization.",
+        "Keep original source-frame validation and existing error handling; strict-mode per-tag behavior and rewritten liquid-body handling remain separate work.",
+        "Add public-entry-point regressions with independent comment and mode controls."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/InlineHashDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source qualification and case-level comparison remain external. No full-conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

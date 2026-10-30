@@ -626,6 +626,7 @@ internal final class Lexer {
     }
     
     private func tokenizeTag(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
+        let tagTokenStart = tokens.count
         advanceASCII() // consume {
         advanceASCII() // consume %
 
@@ -884,7 +885,14 @@ internal final class Lexer {
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeIdentifier(&tokens, start: tokenStart)
 
-            case 0x23: // '#' — inline comment inside tag, skip to end of line
+            case 0x23:
+                // A standalone comment is handled at the tag header above. A liquid
+                // block still needs its line comments retained for the body parser.
+                // Other strict2 markup must reject the hash as a lexical error.
+                let liquidBody = tokens.count > tagTokenStart + 1 && tokens[tagTokenStart + 1].type == .liquid
+                if syntaxMode == .strict2 && !liquidBody {
+                    throw LexerError.unexpectedCharacter("#", position: byteIndex)
+                }
                 while byteIndex < bytes.count {
                     let b = bytes[byteIndex]
                     if b == 0x0A /* \n */ { break } // stop at newline

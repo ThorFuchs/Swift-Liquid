@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.InlineHashDiagnosticTests/strict2MarkupRejectsOriginalHash()": null,
+    "LiquidTests.InlineHashDiagnosticTests/commentTagsQuotedHashesAndLegacyModesRemainValid()": null,
     "LiquidTests.CloseRoundDiagnosticTests/pinnedExpressionFailuresUseTypedReason()": null,
     "LiquidTests.CloseRoundDiagnosticTests/modesAndNeighboringSyntaxRetainBehavior()": null,
     "LiquidTests.RecoveredDiagnosticTests/missingIdentifierRetainsExistingRejection()": null,
