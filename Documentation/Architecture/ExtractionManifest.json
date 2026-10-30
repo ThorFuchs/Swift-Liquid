@@ -1123,6 +1123,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Fresh exact-source checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Recursive partial operational boundary controls",
+      "scopeDecision": "Maintainer commissioned investigation of the ten operational conformance cases while retaining fixture pins, source evidence, cancellation and existing resource limits.",
+      "changes": [
+        "Add public regression controls that finite recursion completes, cancellation propagates, and an explicitly small caller-selected nesting limit remains operational under raising and recovering render policies.",
+        "Retain exact ten-variant reproductions and independently measured default/maximum depth boundaries outside the source tree without treating them as successful conformance outcomes.",
+        "Do not alter the default, maximum, accounting, fixture inputs, comparator, error categorization or recovery policy."
+      ],
+      "files": [
+        "Tests/LiquidTests/RecursionOperationalEvidenceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Ten independent operational failures remain unresolved. Any Shopify language-stack guard or capacity/accounting policy change requires its own source-bound design and qualification; no conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

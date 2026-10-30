@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.RecursionOperationalEvidenceTests/explicitlySmallCallerLimitRemainsOperationalForBothPolicies()": null,
+    "LiquidTests.RecursionOperationalEvidenceTests/finiteRecursiveIncludeAndCancellationRetainBehavior()": null,
     "LiquidTests.IdentifierStringDiagnosticTests/pinnedStringAfterDotRejectionsUseTypedReason()": null,
     "LiquidTests.IdentifierStringDiagnosticTests/otherModesAndValidLookupsRemainUnchanged()": null,
     "LiquidTests.RangeExpectedTokenTests/pinnedRangeErrorsUseValidatedExpectedTokens()": null,
