@@ -1004,6 +1004,26 @@ internal final class Parser {
         case .tagEnd where syntaxMode == .strict2, .variableEnd where syntaxMode == .strict2:
             throw ParserError.invalidExpressionAtMarkupEnd(currentToken)
         default:
+            if syntaxMode == .strict2 {
+                let reason: (String, String)?
+                switch currentToken.type {
+                case .rightBracket: reason = ("close_square", "]")
+                case .colon: reason = ("colon", ":")
+                case .notEquals: reason = ("comparison", "!=")
+                case .lessThan: reason = ("comparison", "<")
+                case .greaterThan: reason = ("comparison", ">")
+                case .lessThanOrEqual: reason = ("comparison", "<=")
+                case .greaterThanOrEqual: reason = ("comparison", ">=")
+                case .contains: reason = ("comparison", "contains")
+                case .dot: reason = ("dot", ".")
+                case .range: reason = ("dotdot", "..")
+                case .filter: reason = ("pipe", "|")
+                default: reason = nil
+                }
+                if let (kind, spelling) = reason {
+                    throw ParserError.invalidOperatorExpression(currentToken, kind: kind, spelling: spelling)
+                }
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
     }

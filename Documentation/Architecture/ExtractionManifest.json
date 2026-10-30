@@ -983,6 +983,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "External exact-source checks and independent results are required; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 invalid expression operator diagnostics",
+      "scopeDecision": "Maintainer requested continued Shopify conformance groups with fixture pins, independent branches, evidence and holds preserved.",
+      "changes": [
+        "On existing strict2 primary-expression rejection, present pinned token-specific reasons for unambiguous punctuation and comparison tokens while retaining the original token and location.",
+        "Preserve the equals token ambiguity and earlier lexer error ordering for separate source-aware work; retain valid syntax and other parser modes.",
+        "Add public regressions and positive controls without modifying fixture inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ExpressionTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent results are required; no conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }
