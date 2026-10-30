@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SelfScopeConformanceTests/mapReadsSelfPropertiesWithoutExposingInternals()": null,
     "LiquidTests.SelfScopeConformanceTests/liveSelfLookupAndShadowing()": null,
     "LiquidTests.SelfScopeConformanceTests/capturedSelfKeepsOriginAcrossNestedRender()": null,
     "LiquidTests.SelfScopeConformanceTests/selfScopeIsInvocationOwnedDuringConcurrentRenders()": null,

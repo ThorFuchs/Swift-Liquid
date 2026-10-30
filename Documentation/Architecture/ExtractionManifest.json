@@ -1016,6 +1016,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Candidate requires fresh exact-source qualification and independent comparison; no conformance, performance, merge, release or downstream acceptance is asserted."
+    },
+    {
+      "area": "Shopify self proxy map",
+      "scopeDecision": "Complete the remaining selected self-scope conformance case while preserving fixture pins and existing holds.",
+      "changes": [
+        "Treat the internal self proxy as one map item and delegate property lookup to its originating invocation-owned scope.",
+        "Add public source/parsed regressions across parser modes and a context-privacy control."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/SelfScopeConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source tests and independent evidence remain external; no full conformance, performance, merge or release acceptance is asserted."
     }
   ]
 }

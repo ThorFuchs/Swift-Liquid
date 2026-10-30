@@ -50,4 +50,15 @@ struct SelfScopeConformanceTests {
             for try await matched in group { #expect(matched) }
         }
     }
+    @Test func mapReadsSelfPropertiesWithoutExposingInternals() async throws {
+        let engine = LiquidEngine()
+        let source = "{% assign x = 'X' %}{{ self | map: 'x' | join: ',' }}|{{ self | map: 'missing' | join: ',' }}"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, syntaxMode: mode) == "X|")
+            let parsed = try LiquidTemplate(source, syntaxMode: mode)
+            #expect(try await engine.render(parsed) == "X|")
+        }
+        #expect(try await engine.render(template: "{{ self | map: 'scope' | join: ',' }}", syntaxMode: .strict2) == "")
+    }
+
 }

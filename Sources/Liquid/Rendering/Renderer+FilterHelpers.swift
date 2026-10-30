@@ -161,7 +161,7 @@ extension Renderer {
                 if let nested = item as? [Any] { return nested }
                 return [item]
             }
-        } else if isDictLike(value) {
+        } else if isDictLike(value) || value is RuntimeSelf {
             array = [value]
         } else if value is NSNull {
             return [Any]()
@@ -175,7 +175,9 @@ extension Renderer {
         var result: [Any] = []
         result.reserveCapacity(array.count)
         for item in array {
-            if isDictLike(item) {
+            if let selfValue = item as? RuntimeSelf {
+                result.append(selfValue.lookup(propertyName) ?? NSNull())
+            } else if isDictLike(item) {
                 result.append(dictValue(item, forKey: propertyName) as Any? ?? NSNull())
             } else if item is [Any] {
                 // Empty arrays or nested arrays are not objects
