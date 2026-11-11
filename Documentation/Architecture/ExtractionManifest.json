@@ -1137,6 +1137,24 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Ten independent operational failures remain unresolved. Any Shopify language-stack guard or capacity/accounting policy change requires its own source-bound design and qualification; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Shopify render scope and separate resource capacities",
+      "scopeDecision": "Maintainer selected Shopify-compatible defaults while preserving explicit caller-selected limits and finite syntax and value admission.",
+      "changes": [
+        "Track Shopify local and isolated scope frames per invocation, presenting scope overflow through existing render recovery.",
+        "Keep syntax and value nesting bounds intact, and give the standard profile a separate finite 384-frame rendering capacity. Explicit nestingDepth initialization or assignment continues to set both limits.",
+        "Add public regressions for include/render boundaries, recovery, explicit limits, deep host values, syntax and rendering limits without changing pinned inputs or comparators."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidLimits.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Documentation.docc/LimitsAndConcurrency.md",
+        "Tests/LiquidTests/RecursionOperationalEvidenceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source safety and independent conformance results remain separately recorded. Complete conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }

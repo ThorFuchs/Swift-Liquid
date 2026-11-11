@@ -15,6 +15,13 @@ state. There is no implicit global cache or mutable template registry.
 syntax/render depth, evaluator steps, and admitted context values. The defaults
 are finite. Invalid limits fail at operation entry. Nested partials share the
 same invocation budget; the budget does not reset when entering a partial.
+The standard profile keeps syntax and admitted-value depth at 64 and allows 384
+active evaluator frames. Shopify scope depth is separately bounded at 100 and
+produces a recoverable language error. An explicitly supplied `nestingDepth`, or
+subsequent assignment to that property, also sets the rendering depth to the same
+value. `renderingDepth` can subsequently be set independently, up to 384; its
+exhaustion retains the `nestingDepth` operational error. Both profiles remain
+finite and independent of input parsing and host-value admission.
 
 ```swift
 let engine = LiquidEngine(limits: .init(loopIterations: 1_000))

@@ -70,6 +70,28 @@ internal final class Renderer {
     internal var diagnostics: [LiquidDiagnostic] = []
     internal var lastIfChanged: String?
     internal var context: RenderingContext
+    // Ruby Liquid counts local scopes separately from isolated render contexts.
+    internal var liquidBaseScopeDepth = 0
+    internal var liquidLocalScopeDepth = 1
+
+    internal func enterLiquidScope() throws {
+        try Task.checkCancellation()
+        guard liquidBaseScopeDepth + liquidLocalScopeDepth < 100 else {
+            throw RenderError.custom("Nesting too deep")
+        }
+        liquidLocalScopeDepth += 1
+    }
+
+    internal func enterLiquidIsolatedScope() throws -> (Int, Int) {
+        try Task.checkCancellation()
+        guard liquidBaseScopeDepth + liquidLocalScopeDepth <= 100 else {
+            throw RenderError.custom("Nesting too deep")
+        }
+        let saved = (liquidBaseScopeDepth, liquidLocalScopeDepth)
+        liquidBaseScopeDepth += 1
+        liquidLocalScopeDepth = 1
+        return saved
+    }
 
     internal let configuration: RendererConfiguration
 

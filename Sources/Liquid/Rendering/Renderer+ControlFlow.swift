@@ -238,6 +238,8 @@ extension Renderer {
             }
         }
 
+        try enterLiquidScope()
+        defer { liquidLocalScopeDepth -= 1 }
         let itemCount = items.count
         let lastIndex = itemCount - 1
         let itemCountInt = itemCount
@@ -396,6 +398,10 @@ extension Renderer {
             items = Array(items.prefix(limit))
         }
         
+        guard !items.isEmpty else { return "" }
+        try enterLiquidScope()
+        defer { liquidLocalScopeDepth -= 1 }
+
         // Get column count (default to items.count if not specified)
         let columnCount = params.cols ?? items.count
         let itemCount = items.count
@@ -736,6 +742,8 @@ extension Renderer {
                 // don't use it as parentloop.
                 itemVars["forloop"] = forloop
                 itemVars["__render_forloop__"] = true  // Flag for parentloop suppression
+                let savedLiquidScope = try enterLiquidIsolatedScope()
+                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
@@ -753,6 +761,8 @@ extension Renderer {
 
         // Handle {% include "template" for collection %} (non-render mode)
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
+            try enterLiquidScope()
+            defer { liquidLocalScopeDepth -= 1 }
             let collection = try await evaluateExpression(forExpr)
             guard let items = collection as? [Any] else {
                 return ""
@@ -777,6 +787,8 @@ extension Renderer {
         }
 
         if isRender {
+            let savedLiquidScope = try enterLiquidIsolatedScope()
+            defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
             let savedState = context.saveState()
             context.isolateScope(with: evaluatedVariables)
             templatePathStack.append(resolvedPath)
@@ -789,6 +801,8 @@ extension Renderer {
                 try await renderNode(preparedAST)
             }
         } else {
+            try enterLiquidScope()
+            defer { liquidLocalScopeDepth -= 1 }
             // Push keyword args in a scope so they're protected from assigns
             // (assigns use setRootVariable which writes to root, keyword args shadow them)
             if !evaluatedVariables.isEmpty {

@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.RecursionOperationalEvidenceTests/shopifyScopeBoundaryAndRecoveredOutput()": null,
+    "LiquidTests.RecursionOperationalEvidenceTests/separateRenderAndInputLimitsPreserveExplicitLimits()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/explicitlySmallCallerLimitRemainsOperationalForBothPolicies()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/finiteRecursiveIncludeAndCancellationRetainBehavior()": null,
     "LiquidTests.IdentifierStringDiagnosticTests/pinnedStringAfterDotRejectionsUseTypedReason()": null,
