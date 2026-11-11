@@ -1013,6 +1013,7 @@ internal final class Parser {
                 switch currentToken.type {
                 case .rightBracket: reason = ("close_square", "]")
                 case .colon: reason = ("colon", ":")
+                case .equals where isOriginalComparison(currentToken): reason = ("comparison", "==")
                 case .notEquals: reason = ("comparison", "!=")
                 case .lessThan: reason = ("comparison", "<")
                 case .greaterThan: reason = ("comparison", ">")
@@ -1341,6 +1342,16 @@ internal final class Parser {
         return .unexpectedToken(token)
     }
 
+    // The lexer represents '=' and '==' with the same token. Only assign the
+    // comparison reason after checking the original, immutable UTF-8 source.
+    // Rewritten `liquid` bodies and ambiguous longer operators stay unmapped.
+    private func isOriginalComparison(_ token: Token) -> Bool {
+        guard token.type == .equals, case .original = sourceProvenance,
+              let source, let start = stringIndex(in: source, utf8Offset: token.position) else { return false }
+        let remaining = source[start...]
+        return remaining.hasPrefix("==") && !remaining.hasPrefix("===")
+    }
+
     private func trailingTokenError(_ token: Token) -> ParserError? {
         guard syntaxMode == .strict2 else { return nil }
         let kind: String
@@ -1361,8 +1372,9 @@ internal final class Parser {
         case .filter: kind = "pipe"
         case .notEquals, .lessThan, .greaterThan, .lessThanOrEqual, .greaterThanOrEqual, .contains:
             kind = "comparison"
-        // `equals` represents both '=' and '=='; its original spelling needs
-        // source validation before it can be assigned a Shopify token name.
+        case .equals where isOriginalComparison(token): kind = "comparison"
+        // Single '=' and rewritten or otherwise unmapped tokens keep their
+        // original rejection: their spelling has not been established.
         default: return nil
         }
         return .unexpectedTrailingToken(token, kind: kind)
@@ -2246,6 +2258,9 @@ internal final class Parser {
                     advance()
                 }
             } else {
+                if syntaxMode == .strict2, isOriginalComparison(currentToken) {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
         }
@@ -2316,6 +2331,9 @@ internal final class Parser {
                     advance()
                 }
             } else {
+                if syntaxMode == .strict2, isOriginalComparison(currentToken) {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
         }

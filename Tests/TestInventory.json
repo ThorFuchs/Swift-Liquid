@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.ComparisonTokenDiagnosticTests/pinnedComparisonRejectionsUseOriginalSpelling()": null,
+    "LiquidTests.ComparisonTokenDiagnosticTests/comparisonsKeepModesAndByteOrigins()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/shopifyScopeBoundaryAndRecoveredOutput()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/separateRenderAndInputLimitsPreserveExplicitLimits()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/explicitlySmallCallerLimitRemainsOperationalForBothPolicies()": null,
