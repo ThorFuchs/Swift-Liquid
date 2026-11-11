@@ -297,7 +297,7 @@ internal final class Parser {
     @inline(__always)
     private func parseIdentifierTag(named name: InlineString) throws ->ASTNode {
         if name.equals("doc") {
-            try consumeTagEnd()
+            try consumeTagEnd(presentComparison: false)
             guard currentTagMatchesIdentifier("enddoc") else { throw ParserError.unclosedTag("doc") }
             advance(); advance(); try consumeTagEnd()
             return .comment
@@ -1381,8 +1381,11 @@ internal final class Parser {
     }
 
     @inline(__always)
-    private func consumeTagEnd() throws {
+    private func consumeTagEnd(presentComparison: Bool = true) throws {
         guard currentTokenStorage.type == .tagEnd else {
+            if !presentComparison, currentToken.type == .equals {
+                throw ParserError.unexpectedToken(currentToken)
+            }
             if let error = trailingTokenError(currentToken) { throw error }
             throw ParserError.unexpectedToken(currentToken)
         }
@@ -1956,7 +1959,7 @@ internal final class Parser {
     private func parseRawTag() throws ->ASTNode {
         // Record position right after {% raw %} tag end
         let tagEndToken = currentToken
-        try consumeTagEnd()
+        try consumeTagEnd(presentComparison: false)
 
         // If we have the original source, extract raw content verbatim
         if let source {

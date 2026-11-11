@@ -1164,7 +1164,7 @@
       "scopeDecision": "The maintainer commissioned the next pinned conformance mismatch batch while preserving modes, original rejection, fixtures, evidence and existing holds.",
       "changes": [
         "At existing strict2 rejection points, validate the original UTF-8 spelling of the shared equals token before presenting the Shopify comparison reason.",
-        "Keep single equals, longer ambiguous operators, rewritten or unmapped bodies, other modes, valid comparisons, source limits and cancellation behavior on their existing paths.",
+        "Keep single equals, longer ambiguous operators, unrelated raw/doc syntax errors, rewritten or unmapped bodies, other modes, valid comparisons, source limits and cancellation behavior on their existing paths.",
         "Add public regressions for the 32 selected pinned inputs and supplementary original-byte, mode and neighboring-token controls without changing fixtures or conformance comparators."
       ],
       "files": [
