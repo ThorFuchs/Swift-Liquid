@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.UnclosedQuoteDiagnosticTests/pinnedQuotesRetainSourceAndRejection()": null,
+    "LiquidTests.UnclosedQuoteDiagnosticTests/quoteBoundariesRetainModesAndOriginalSourceOwnership()": null,
     "LiquidTests.ComparisonTokenDiagnosticTests/pinnedComparisonRejectionsUseOriginalSpelling()": null,
     "LiquidTests.ComparisonTokenDiagnosticTests/comparisonsKeepModesAndByteOrigins()": null,
     "LiquidTests.RecursionOperationalEvidenceTests/shopifyScopeBoundaryAndRecoveredOutput()": null,

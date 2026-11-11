@@ -1173,6 +1173,23 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent matrix comparisons are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 first-token unclosed quote diagnostics",
+      "scopeDecision": "The maintainer commissioned the next reference-backed mismatch batch while preserving pinned fixtures, source ownership, mode boundaries and existing holds.",
+      "changes": [
+        "Allow the existing source-origin validator to present an unterminated quote at the first markup position when the original delimiter and any tag header are established.",
+        "Preserve original rejection, strict and lax behavior, missing or ambiguous terminator fallback, rewritten liquid-body fallback, source admission and cancellation checkpoints.",
+        "Add public regressions from 27 pinned cases and source-boundary controls; update two older strict2-only expectations that contradicted the pinned Ruby reference while retaining their input and other-mode assertions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/UnclosedQuoteDiagnosticTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/LiquidTests/DiagnosticOriginTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent matrix comparisons are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
     }
   ]
 }

@@ -87,7 +87,9 @@ internal final class Lexer {
                    bytes[offset] == Self.singleQuote || bytes[offset] == Self.doubleQuote,
                    case .original(let identity) = sourceProvenance {
                     let frameTokens = tokens[firstToken...]
-                    let minimum = frameTokens.first?.type == .variableStart ? 2 : 3
+                    // The opening delimiter (and a tag header where present)
+                    // suffices; diagnosticOrigin validates the complete frame.
+                    let minimum = frameTokens.first?.type == .variableStart ? 1 : 2
                     if frameTokens.count >= minimum {
                         let character = Character(UnicodeScalar(bytes[offset]))
                         let origin = try diagnosticOrigin(character, at: offset, start: start.position,

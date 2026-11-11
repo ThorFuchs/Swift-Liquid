@@ -92,7 +92,12 @@ struct RecoveredDiagnosticTests {
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
             do { _ = try LiquidTemplate("{{ 'unterminated }}", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, let line, let column) {
-                #expect(message == "Unterminated string literal" && line == nil && column == nil)
+                if mode == .strict2 {
+                    #expect(message == "Unexpected character ' in \"{{ 'unterminated }}\"")
+                    #expect(line == 1 && column == 1)
+                } else {
+                    #expect(message == "Unterminated string literal" && line == nil && column == nil)
+                }
             }
         }
         let valid = try LiquidTemplate("{{ '}}' }}", syntaxMode: .strict2)
