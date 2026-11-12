@@ -391,13 +391,22 @@ internal final class Parser {
     private func parseAssignTag() throws ->ASTNode {
         let line = currentToken.line + lineOffset
         if syntaxMode == .strict2 {
-            if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true { throw ParserError.expectedIdentifier }
-            if case .number = currentToken.type { throw ParserError.expectedIdentifier }
+            if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true {
+                if name.string.utf8.allSatisfy({ (48...57).contains($0) }) {
+                    throw ParserError.expectedIdentifierBeforeNumber(currentToken)
+                }
+                throw ParserError.expectedIdentifier
+            }
+            if case .number = currentToken.type { throw identifierExpected(currentToken) }
+            if currentToken.type == .equals { throw ParserError.invalidAssignmentTargetAt(currentToken) }
         }
         let variableName: InlineString
         if case .identifier(let name) = currentToken.type {
             // Trailing '?' is not allowed in assignment targets (Shopify behavior)
             if name.string.hasSuffix("?") {
+                if syntaxMode == .strict2 && name.string == "?" {
+                    throw ParserError.invalidAssignmentTargetAt(currentToken)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             variableName = name
@@ -413,6 +422,14 @@ internal final class Parser {
         guard currentToken.type == .equals else {
             if syntaxMode == .strict2, case .number = currentToken.type {
                 throw identifierExpected(currentToken)
+            }
+            if syntaxMode == .strict2, nextTokenStorage.type == .equals,
+               !isOriginalComparison(nextTokenStorage) {
+                switch currentToken.type {
+                case .rightParen, .colon, .comma, .leftParen, .filter, .question, .string:
+                    throw ParserError.invalidAssignmentTargetAt(currentToken)
+                default: break
+                }
             }
             throw ParserError.unexpectedToken(currentToken)
         }
@@ -2209,9 +2226,19 @@ internal final class Parser {
             values.append(firstExpr)
         }
 
-        // Parse remaining values
-        while currentToken.type == .comma {
-            advance() // consume comma
+        // Ruby's lax cycle parser takes the first expression in each
+        // comma-separated fragment and ignores a trailing fragment suffix.
+        // Strict2 instead validates the full token stream.
+        while true {
+            if syntaxMode != .strict2 {
+                while !isAtEnd && currentToken.type != .comma && currentToken.type != .tagEnd {
+                    try Task.checkCancellation()
+                    advance()
+                }
+            }
+            guard currentToken.type == .comma else { break }
+            advance()
+            if currentToken.type == .tagEnd { break }
             values.append(try parsePrimaryExpression())
         }
 

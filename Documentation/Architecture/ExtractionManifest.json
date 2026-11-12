@@ -1347,6 +1347,24 @@
         "Documentation/Errors.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Cycle fragment and assignment precheck compatibility",
+      "scopeDecision": "The maintainer commissioned further Shopify mismatch batches while preserving original fixtures, modes, cancellation, resource budgets and existing holds.",
+      "changes": [
+        "Apply Ruby's lax and strict cycle fragment handling while retaining strict2 validation and bounded cancellation checks.",
+        "Present established strict2 assignment precheck failures with original token locations and typed reasons without admitting rejected inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/CycleCompatibilityTests.swift",
+        "Tests/LiquidTests/AssignmentPrecheckCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md",
+        "Documentation/AssignmentTargets.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

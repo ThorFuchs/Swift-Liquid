@@ -22,6 +22,9 @@ Standard surface:
 time. Like Shopify's table-row tag, it coerces string attributes through their
 integer prefix and emits an empty row for an empty, non-nil collection. Its
 `col_last` indicates the configured last column, including in a partial row.
+In lax and strict modes, `cycle` uses a leading expression in a
+comma-separated fragment even if that fragment has trailing tokens. Strict2
+validates the full cycle markup.
 
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop

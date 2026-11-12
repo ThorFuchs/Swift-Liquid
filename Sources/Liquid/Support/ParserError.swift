@@ -55,6 +55,7 @@ internal enum ParserError: Error, Sendable, Equatable {
     case nestingTooDeep(Int)
     
     case invalidAssignmentTarget
+    case invalidAssignmentTargetAt(Token)
     
     case duplicateParameter(String)
     
@@ -130,7 +131,7 @@ extension ParserError {
             return "Malformed filter '\(filter)'"
         case .nestingTooDeep(let depth):
             return "Nesting too deep (\(depth) levels)"
-        case .invalidAssignmentTarget:
+        case .invalidAssignmentTarget, .invalidAssignmentTargetAt:
             return "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
         case .duplicateParameter(let param):
             return "Duplicate parameter '\(param)'"
@@ -154,7 +155,7 @@ extension ParserError {
         case .unclosedTag, .unclosedShopifyBlock, .invalidBlockMarkup:
             return .structure
         case .invalidForLoopParameter, .invalidRange, .malformedFilter, 
-             .invalidAssignmentTarget, .invalidParameterValue:
+             .invalidAssignmentTarget, .invalidAssignmentTargetAt, .invalidParameterValue:
             return .semantic
         case .nestingTooDeep:
             return .limit
@@ -166,7 +167,7 @@ extension ParserError {
     internal var sourceLocation: SourceLocation? {
         switch self {
         case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token), .unexpectedTrailingToken(let token, _),
-             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token), .expectedIdentifierBeforeString(let token):
+             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token), .expectedIdentifierBeforeString(let token), .invalidAssignmentTargetAt(let token):
             return token.sourceLocation
         case .unclosedShopifyBlock(_, let opening), .invalidBlockMarkup(_, let opening):
             return opening.sourceLocation
@@ -245,7 +246,7 @@ extension ParserError {
             return "Check the syntax for filter '\(filter)' and its arguments"
         case .nestingTooDeep:
             return "Reduce the nesting depth of your template structure"
-        case .invalidAssignmentTarget:
+        case .invalidAssignmentTarget, .invalidAssignmentTargetAt:
             return "Assign only to simple variable names"
         case .duplicateParameter(let param):
             return "Remove the duplicate '\(param)' parameter"

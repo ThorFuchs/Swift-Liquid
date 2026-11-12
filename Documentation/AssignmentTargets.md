@@ -21,6 +21,11 @@ recoverable runtime diagnostics. No public API, second parser or message adapter
 is added. Unsupported grammar outside this narrow target-token boundary remains
 outside this correction; this is not a full assignment-grammar parity claim.
 
+Strict2 also reports the established assignment precheck failure with the
+offending token's source location for missing targets and for punctuation
+directly before the assignment operator. Numeric targets retain the typed
+expected-identifier reason. These diagnostics do not admit rejected templates.
+
 ## Regression provenance
 
 AssignmentTargetCases.json retains each of the twenty original case IDs and exact

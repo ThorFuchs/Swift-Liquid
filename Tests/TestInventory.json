@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.AssignmentPrecheckCompatibilityTests/invalidOriginalPrecheckKeepsSourceLocation()": null,
+    "LiquidTests.CycleCompatibilityTests/laxAndStrictUseFirstExpressionPerFragment()": null,
+    "LiquidTests.CycleCompatibilityTests/quotaAndCancellationRemainTerminal()": null,
     "LiquidTests.BlockRecoveryCompatibilityTests/comparisonsPreserveReasonsAndBlankRecovery()": null,
     "LiquidTests.BlockRecoveryCompatibilityTests/loopErrorsRespectModeLocationsAndBudgets()": null,
     "LiquidTests.TableRowCompatibilityTests/emptyAndCoercedAttributesMatchRuby()": null,
