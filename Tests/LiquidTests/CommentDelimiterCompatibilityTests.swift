@@ -21,6 +21,7 @@ struct CommentDelimiterCompatibilityTests {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
             #expect(try await engine.render(template: "a{% comment extra %}hidden{% endcomment %}b", syntaxMode: mode) == "ab")
+            #expect(try await engine.render(template: "a{% # hidden %}b", syntaxMode: mode) == "ab")
         }
         for source in ["{% comment extra %}hello", "{% comment %}this is {{{ not }}} valid{{ liquid{% endcomment %}"] {
             do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }

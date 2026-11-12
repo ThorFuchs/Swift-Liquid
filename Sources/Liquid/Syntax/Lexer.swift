@@ -279,7 +279,8 @@ internal final class Lexer {
                 // After tokenizing a comment tag, skip to endcomment
                 // (avoids lexer errors from invalid syntax inside comments)
                 if tokens.count > openingIndex + 1,
-                   tokens[openingIndex + 1].type == .comment {
+                   tokens[openingIndex + 1].type == .comment,
+                   tokens[openingIndex + 1].position != startPosition.position {
                     try skipCommentBlock(&tokens)
                 }
                 // After tokenizing a raw tag, skip to endraw

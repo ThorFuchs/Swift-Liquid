@@ -1794,6 +1794,18 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Preserve inline comment boundaries",
+      "scopeDecision": "The maintainer requires preservation of existing qualified behavior while closing Shopify compatibility gaps.",
+      "changes": [
+        "Distinguish synthetic inline-comment tokens from opening block-comment tokens; retain the initial failed independent comparison and its seven regressions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
