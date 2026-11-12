@@ -70,6 +70,7 @@ Unknown filters leave their input unchanged by default, as in open-source Liquid
 `LiquidEngine(strictFilters: true)` makes them errors. Rhoe extension filters are
 treated as unknown filters. Unknown tags are syntax errors. `LiquidSyntaxMode`
 selects lax, strict, or strict2 parsing; the fixture runner preserves these modes.
+Lax parsing ignores empty filter segments; strict and strict2 reject them.
 
 The 1.1 [custom-filter API](CustomFilters.md) lets a host explicitly
 provide additional names for one engine. Empty configuration preserves the 1.0

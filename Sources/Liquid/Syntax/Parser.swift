@@ -924,6 +924,13 @@ internal final class Parser {
 
         advance() // consume |
 
+        // Ruby's lax scanner ignores empty filter segments. Strict modes
+        // still reject the original pipe or end-of-string token.
+        if syntaxMode == .lax {
+            while currentTokenStorage.type == .filter { advance() }
+            if currentTokenStorage.type == .variableEnd || currentTokenStorage.type == .tagEnd { return expr }
+        }
+
         guard case .identifier(let firstFilterName) = currentTokenStorage.type else {
             throw identifierExpected(currentToken)
         }
@@ -946,6 +953,11 @@ internal final class Parser {
 
         repeat {
             advance() // consume |
+
+            if syntaxMode == .lax {
+                while currentTokenStorage.type == .filter { advance() }
+                if currentTokenStorage.type == .variableEnd || currentTokenStorage.type == .tagEnd { break }
+            }
 
             guard case .identifier(let filterName) = currentTokenStorage.type else {
                 throw identifierExpected(currentToken)

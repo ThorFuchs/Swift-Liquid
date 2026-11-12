@@ -2090,6 +2090,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax empty filter segments",
+      "scopeDecision": "The maintainer requested pinned Ruby compatibility while preserving strict parser modes and fixture metadata.",
+      "changes": [
+        "Ignore empty filter segments in lax parsing while preserving strict and strict2 rejection and original token diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
