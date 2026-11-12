@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxIncompleteLookupTests/terminalBracketRecoveryMatchesRuby()": null,
     "LiquidTests.AssignmentAndEmptyOutputTests/emptyOutputKeepsWhitespaceControls()": null,
     "LiquidTests.AssignmentAndEmptyOutputTests/assignmentPrecheckPresentsOriginalToken()": null,
     "LiquidTests.LoopHeaderDiagnosticTests/missingInAndTrailingPipesUseReferenceDiagnostics()": null,

@@ -1649,6 +1649,19 @@
         "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax incomplete root lookup",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance with pinned fixtures, strict modes and resource limits preserved.",
+      "changes": [
+        "Preserve Ruby lax terminal incomplete root-lookup behavior without creating additional indirection, while keeping strict modes unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxIncompleteLookupTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

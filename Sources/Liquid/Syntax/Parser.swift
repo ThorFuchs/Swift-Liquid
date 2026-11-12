@@ -1025,6 +1025,15 @@ internal final class Parser {
             advance() // consume [
             let keyExpr = try parsePrimaryExpression()
             guard currentToken.type == .rightBracket else {
+                // Ruby's lax root lookup consumes an incomplete terminal
+                // bracket as the lookup it already found, without inventing
+                // another indirect lookup for nested brackets.
+                if syntaxMode == .lax, currentToken.type == .variableEnd {
+                    if case .literal(.string) = keyExpr {
+                        return .access(expr: .variable(InlineString("")), key: keyExpr)
+                    }
+                    return keyExpr
+                }
                 throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
             }
             advance() // consume ]
