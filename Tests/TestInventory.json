@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxOutputTailTests/completeLeadingExpressionSurvivesTerminalSuffix()": null,
+    "LiquidTests.LaxOutputTailTests/boundsAndCancellationRemainTerminal()": null,
     "LiquidTests.DynamicIncludeAccessTests/accessNamesResolveAgainstBothTemplateLoaders()": null,
     "LiquidTests.DynamicIncludeAccessTests/computedNamesKeepExactIdentityAndDoNotRetryVariables()": null,
     "LiquidTests.AssignmentPrecheckCompatibilityTests/invalidOriginalPrecheckKeepsSourceLocation()": null,

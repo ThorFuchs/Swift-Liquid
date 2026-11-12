@@ -224,6 +224,18 @@ internal final class Parser {
         advance() // consume {{
         
         let expression = try parseExpression()
+
+        // Ruby's lax variable parser retains a leading expression when one
+        // further non-filter token immediately precedes the closing delimiter.
+        let hasFilters: Bool
+        if case .filtered = expression { hasFilters = true } else { hasFilters = false }
+        if syntaxMode == .lax, !hasFilters, nextTokenStorage.type == .variableEnd {
+            switch currentToken.type {
+            case .identifier, .number, .string, .equals:
+                advance()
+            default: break
+            }
+        }
         
         guard currentTokenStorage.type == .variableEnd else {
             if let error = trailingTokenError(currentToken) { throw error }

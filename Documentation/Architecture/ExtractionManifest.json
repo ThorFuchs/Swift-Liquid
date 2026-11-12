@@ -1383,6 +1383,22 @@
         "Documentation/Inspection.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax output terminal suffix handling",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while retaining strict parser modes, original fixture bytes, cancellation and resource bounds.",
+      "changes": [
+        "In unfiltered lax output, retain a complete leading expression for a bounded class of terminal suffixes using the existing lexer and parser.",
+        "Keep strict and strict2 rejection, filtered-markup boundaries, output quotas and cancellation covered by public regressions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

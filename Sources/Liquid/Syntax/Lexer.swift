@@ -491,6 +491,24 @@ internal final class Lexer {
         }
     }
 
+    // The lax Ruby variable parser may keep a complete leading expression
+    // when a single, whitespace-separated punctuation suffix precedes `}}`.
+    // Keep filtered and ambiguous markup on the existing lexer path.
+    private func isLaxTerminalOutputSuffix(_ tokens: [Token], at offset: Int) -> Bool {
+        guard offset > 0, bytes[offset - 1].isWhitespaceByte,
+              let opening = tokens.lastIndex(where: { $0.type == .variableStart }),
+              opening + 1 < tokens.count,
+              !tokens[(opening + 1)...].contains(where: { $0.type == .filter }),
+              let last = tokens.last else { return false }
+        switch last.type {
+        case .identifier, .number, .string, .rightBracket, .rightParen: break
+        default: return false
+        }
+        var next = offset + 1
+        while next < bytes.count && bytes[next].isWhitespaceByte { next += 1 }
+        return next + 1 < bytes.count && bytes[next] == Self.closeBrace && bytes[next + 1] == Self.closeBrace
+    }
+
     private func tokenizeVariable(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
         advanceASCII() // consume first {
         advanceASCII() // consume second {
@@ -588,6 +606,10 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .equals, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
+            case let suffix where syntaxMode == .lax && (suffix == Self.exclamation || suffix == Self.lessThan || suffix == Self.greaterThan)
+                && isLaxTerminalOutputSuffix(tokens, at: tokenPosition):
+                advanceASCII()
+
             // Strict2 recognizes comparison tokens in output markup before
             // rejecting them in the expression grammar. This preserves an
             // earlier parser error, such as a doubled filter-argument comma.
@@ -613,6 +635,10 @@ internal final class Lexer {
                 try tokenizeNumber(&tokens, start: tokenStart)
 
             case Self.dash:
+                if syntaxMode == .lax && isLaxTerminalOutputSuffix(tokens, at: tokenPosition) {
+                    advanceASCII()
+                    break
+                }
                 // Check if this is a negative number literal (-5, -3.14)
                 // vs a trim marker (-%}) — look ahead for digit
                 let nextIdx = byteIndex + 1

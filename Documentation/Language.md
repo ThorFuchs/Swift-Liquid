@@ -25,6 +25,10 @@ integer prefix and emits an empty row for an empty, non-nil collection. Its
 In lax and strict modes, `cycle` uses a leading expression in a
 comma-separated fragment even if that fragment has trailing tokens. Strict2
 validates the full cycle markup.
+For an unfiltered output expression, lax mode also retains a complete leading
+expression when it is followed by one identifier, number, string or `=`, or by
+a whitespace-separated terminal `!`, `<`, `>` or `-`. Strict and strict2 continue
+to reject that markup.
 
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
