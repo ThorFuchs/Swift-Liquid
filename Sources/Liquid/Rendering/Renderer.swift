@@ -108,6 +108,7 @@ internal final class Renderer {
     internal var rootTemplatePath: String?
 
     internal var templatePathStack: [String]
+    internal var diagnosticTemplateNameStack: [String] = []
 
 
 

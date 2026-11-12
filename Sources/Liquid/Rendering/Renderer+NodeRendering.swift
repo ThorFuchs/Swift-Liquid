@@ -23,11 +23,16 @@ extension Renderer {
             guard recoveryEnabled, error.renderErrorCategory != .resource,
                   error.renderErrorCategory != .security else { throw error }
             let location: RenderLocation?
+            let diagnosticName: String?
             if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
                 location = includeLocation
-            } else { location = node.renderLocation }
+                diagnosticName = diagnosticTemplateNameStack.last ?? currentTemplatePath
+            } else {
+                location = node.renderLocation
+                diagnosticName = currentTemplatePath
+            }
             let message = error.message
-            diagnostics.append(.init(message: message, line: location?.line, templateName: currentTemplatePath))
+            diagnostics.append(.init(message: message, line: location?.line, templateName: diagnosticName))
             if location?.suppressErrorText == true {
                 switch node {
                 case .if, .unless, .for:
@@ -37,7 +42,7 @@ extension Renderer {
                 }
             }
             if case .undefinedFilter = error { return "" }
-            let prefix = location.map { "Liquid error (\(currentTemplatePath.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
+            let prefix = location.map { "Liquid error (\(diagnosticName.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
             let output = prefix + message
             try budget.output(output)
             return output
@@ -539,6 +544,7 @@ extension Renderer {
     }
 
     internal func resetTemplatePathStack() {
+        diagnosticTemplateNameStack.removeAll(keepingCapacity: true)
         if !templatePathStack.isEmpty {
             templatePathStack.removeAll(keepingCapacity: true)
         }

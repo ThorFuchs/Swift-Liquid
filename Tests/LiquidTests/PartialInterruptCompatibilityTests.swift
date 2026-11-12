@@ -21,6 +21,12 @@ struct PartialInterruptCompatibilityTests {
             #expect(recovered.diagnostics.first?.line == 2 && recovered.diagnostics.first?.templateName == "p")
             let registry = try LiquidTemplateRegistry([.init("p", .raw(partial)), .init("ok", .raw("OK"))])
             #expect(try await engine.renderWithDiagnostics(template: source, registry: registry, syntaxMode: mode).output == recovered.output)
+            let suffixed = ["p.liquid": partial, "ok.liquid": "OK"]
+            let legacySuffix = try await engine.renderWithDiagnostics(template: source, templates: suffixed, syntaxMode: mode)
+            #expect(legacySuffix.diagnostics.first?.templateName == "p")
+            let suffixRegistry = try LiquidTemplateRegistry([.init("p.liquid", .raw(partial)), .init("ok.liquid", .raw("OK"))])
+            let exactSuffix = try await engine.renderWithDiagnostics(template: source, registry: suffixRegistry, syntaxMode: mode)
+            #expect(exactSuffix.diagnostics.first?.templateName == "p.liquid")
             let nested = ["p": "{% render 'inner' %}", "inner": "{% include 'ok' %}", "ok": "OK"]
             let nestedResult = try await engine.renderWithDiagnostics(template: "{% render 'p' %}", templates: nested, syntaxMode: mode)
             #expect(nestedResult.diagnostics.first?.templateName == "inner")

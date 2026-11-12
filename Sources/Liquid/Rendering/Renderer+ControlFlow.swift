@@ -738,6 +738,11 @@ extension Renderer {
             }
         }
 
+        let diagnosticName: String
+        switch templateLoader {
+        case .exact: diagnosticName = resolvedPath
+        case .legacy: diagnosticName = templateName
+        }
         var evaluatedVariables = bindings.variables
         if let value = bindings.withValue {
             let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
@@ -765,7 +770,9 @@ extension Renderer {
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreState(savedState)
                 }
@@ -803,7 +810,9 @@ extension Renderer {
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreState(savedState)
                 }
@@ -840,7 +849,9 @@ extension Renderer {
                 let snapshots = context.snapshotVariables(named: [alias])
                 context.setVariable(alias, value: item)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreVariables(snapshots)
                 }
@@ -863,7 +874,9 @@ extension Renderer {
             let savedState = context.saveState()
             context.isolateScope(with: evaluatedVariables)
             templatePathStack.append(resolvedPath)
+            diagnosticTemplateNameStack.append(diagnosticName)
             defer {
+                _ = diagnosticTemplateNameStack.popLast()
                 _ = templatePathStack.popLast()
                 context.restoreState(savedState)
             }
@@ -885,7 +898,9 @@ extension Renderer {
             }
 
             templatePathStack.append(resolvedPath)
+            diagnosticTemplateNameStack.append(diagnosticName)
             defer {
+                _ = diagnosticTemplateNameStack.popLast()
                 _ = templatePathStack.popLast()
                 if !evaluatedVariables.isEmpty {
                     context.popScope()

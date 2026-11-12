@@ -2257,6 +2257,20 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes. Downstream review, performance and release holds remain."
+    },
+    {
+      "area": "Partial diagnostic name provenance",
+      "scopeDecision": "The maintainer requested Ruby-compatible render diagnostics while preserving exact-registry stored-name identity and partial resolution behavior.",
+      "changes": [
+        "Keep requested legacy partial names separate from resolved loader paths for the include-disabled diagnostic; exact registries continue to report selected stored spellings."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes. Downstream review, performance and release holds remain."
     }
   ]
 }
