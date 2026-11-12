@@ -745,11 +745,37 @@ extension Renderer {
 
         // Handle {% render "template" for collection %} — iterate and render for each item
         if isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let collection = systemPrimary(try await evaluateExpression(forExpr))
-            guard let items = collection as? [Any] else {
-                return ""
-            }
+            let suppliedCollection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(suppliedCollection)
             let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
+            let items: [Any]?
+            if let array = collection as? [Any] { items = array }
+            else if let range = collection as? RuntimeRange { items = range.values }
+            else if let pairs = orderedDictPairs(collection) { items = pairs.map { [$0.key, $0.value] as [Any] } }
+            else { items = nil }
+            guard let items else {
+                // Ruby renders once for non-enumerable values. A nil value
+                // does not overwrite an explicit argument with the same name.
+                var itemVars = evaluatedVariables
+                if !(collection is NSNull) { itemVars[alias] = suppliedCollection }
+                let savedLiquidScope = try enterLiquidIsolatedScope()
+                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
+                let savedState = context.saveState()
+                context.isolateScope(with: itemVars)
+                templatePathStack.append(resolvedPath)
+                defer {
+                    _ = templatePathStack.popLast()
+                    context.restoreState(savedState)
+                }
+                let preparedAST = try await prepareASTForRendering(ast)
+                do {
+                    return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    return signal.partialOutput
+                }
+            }
             let itemCount = items.count
             let lastIndex = itemCount - 1
             let forloopName = "\(alias)-\(template.string)"

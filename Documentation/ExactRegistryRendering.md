@@ -59,6 +59,8 @@ immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
 not filter pipelines. Include-for and render-for support explicit aliases, and
 `with`/`for` bindings may be followed by comma-separated named arguments.
+For `render ... for`, arrays, ranges, and objects render once per element; a scalar
+renders once, and a nil value leaves any explicitly supplied alias argument intact.
 Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 

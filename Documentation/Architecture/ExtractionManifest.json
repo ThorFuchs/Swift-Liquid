@@ -2024,6 +2024,33 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Render-for scalar and nil behavior",
+      "scopeDecision": "The maintainer requested Shopify-compatible behavior while preserving exact registry identity, render isolation and existing holds.",
+      "changes": [
+        "Render a non-enumerable render-for input once, retain decorated inputs, and avoid overwriting a named alias argument for nil; keep array iteration and isolated scope unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Render-for enumerable values",
+      "scopeDecision": "The maintainer requested Ruby-compatible partial rendering with preserved registry and scope contracts.",
+      "changes": [
+        "Iterate ranges and ordered object entries for render-for, using the same sequence representations as ordinary for loops."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
