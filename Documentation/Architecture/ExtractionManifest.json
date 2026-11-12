@@ -1581,6 +1581,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Comment closing-tag compatibility",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving nested comments, source limits and whitespace control.",
+      "changes": [
+        "Consume ignored closing markup through its actual delimiter while preserving exact tag-name boundaries and right whitespace trimming."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

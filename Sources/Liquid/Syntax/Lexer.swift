@@ -361,16 +361,17 @@ internal final class Lexer {
                 if wordLen == 10, word.elementsEqual("endcomment".utf8) {
                     depth -= 1
                     if depth == 0 {
-                        // Emit tagStart, endcomment, tagEnd
+                        // Ruby ignores closing-tag markup, but the complete tag
+                        // still has to end at an actual %} delimiter.
+                        while byteIndex + 1 < end && !(bytes[byteIndex] == Self.percent && bytes[byteIndex + 1] == Self.closeBrace) {
+                            advance()
+                        }
+                        guard byteIndex + 1 < end else { return }
+                        let trimRight = byteIndex > wordStart && bytes[byteIndex - 1] == Self.dash
+                        advanceASCII() // %
+                        advanceASCII() // }
                         tokens.append(Token(type: .tagStart, position: tagStartPos, line: tagStartLine, column: tagStartCol))
                         tokens.append(Token(type: .endcomment, position: tagStartPos, line: tagStartLine, column: tagStartCol))
-                        skipWhitespace()
-                        // Skip optional trim marker before %}
-                        let trimRight = byteIndex < end && bytes[byteIndex] == Self.dash
-                        if trimRight { advanceASCII() }
-                        // Skip %}
-                        if byteIndex < end, bytes[byteIndex] == Self.percent { advanceASCII() }
-                        if byteIndex < end, bytes[byteIndex] == Self.closeBrace { advanceASCII() }
                         tokens.append(Token(type: .tagEnd, position: tagStartPos, line: tagStartLine, column: tagStartCol, trimRight: trimRight))
                         context = .text
                         return
