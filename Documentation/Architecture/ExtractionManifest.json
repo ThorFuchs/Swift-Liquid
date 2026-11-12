@@ -1765,6 +1765,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Capture assignment scope and lax names",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving separate render isolation and exact registry behavior.",
+      "changes": [
+        "Write capture results to the current render root so they persist after loop scopes, preserving isolated render state.",
+        "Accept the reference lax and strict quoted-name capture behavior while retaining strict2 rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CaptureScopeCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

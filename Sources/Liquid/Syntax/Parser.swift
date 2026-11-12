@@ -2081,6 +2081,9 @@ internal final class Parser {
         let variable: InlineString
         if case .identifier(let name) = currentToken.type {
             variable = name
+        } else if case .string(let name) = currentToken.type, syntaxMode != .strict2,
+                  let range = name.string.range(of: #"[\w.\[\]-]+"#, options: .regularExpression) {
+            variable = InlineString(String(name.string[range]))
         } else if case .number(let num, _) = currentToken.type {
             if syntaxMode == .strict2 { throw identifierExpected(currentToken) }
             // Digit-only variable names: {% capture 123 %}

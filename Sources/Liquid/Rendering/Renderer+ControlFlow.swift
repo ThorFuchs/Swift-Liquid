@@ -595,7 +595,7 @@ extension Renderer {
     
     internal func renderCapture(variable: InlineString, body: [ASTNode]) async throws -> String {
         let capturedOutput = try await renderNodeListFast(body)
-        context.setVariable(variable.string, value: capturedOutput)
+        context.setRootVariable(variable.string, value: capturedOutput)
         return "" // Capture produces no output
     }
     
