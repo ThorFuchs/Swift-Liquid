@@ -133,7 +133,7 @@ extension Renderer {
         for item in array {
             try Task.checkCancellation()
             let itemValue: Any?
-            if let string = item as? String {
+            if let string = systemPrimary(item) as? String {
                 itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
             } else {
                 itemValue = getObjectProperty(item, key: property)

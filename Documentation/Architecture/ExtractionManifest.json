@@ -1961,6 +1961,18 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Local source-bound qualification and downstream handshake remain pending; no complete conformance, performance, merge, publication or release approval is implied."
+    },
+    {
+      "area": "Decorated string selection during reconciliation",
+      "scopeDecision": "The maintainer requires the closed system selection contract while preserving Shopify where behavior.",
+      "changes": [
+        "Apply substring selection to a decorated string primary value while retaining the selected wrapper and its descriptor."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift"
+      ],
+      "qualification": "Source-bound checks and downstream review remain pending; conformance, performance, release and publication holds remain."
     }
   ]
 }

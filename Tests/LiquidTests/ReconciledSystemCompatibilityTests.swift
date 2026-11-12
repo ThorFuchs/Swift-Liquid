@@ -23,5 +23,7 @@ struct ReconciledSystemCompatibilityTests {
         let environment = try LiquidSystemEnvironment([.init("items", .array([child]))])
         let template = try LiquidTemplate("{{ items[0].$descriptor.title }}|{{ 'hi there' | split$$$: ' ' | first }}", syntaxMode: .lax, extensionProfile: .closedSystemV1)
         #expect(try await LiquidEngine().render(template, environment: environment, registry: LiquidTemplateRegistry([])) == "kept|hi")
+        let selected = try LiquidTemplate("{% assign found = items | where: 'b' | first %}{{ found.$descriptor.title }}", syntaxMode: .strict2, extensionProfile: .closedSystemV1)
+        #expect(try await LiquidEngine().render(selected, environment: environment, registry: LiquidTemplateRegistry([])) == "kept")
     }
 }
