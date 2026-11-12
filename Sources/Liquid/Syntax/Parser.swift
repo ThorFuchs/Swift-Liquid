@@ -864,6 +864,12 @@ internal final class Parser {
 
     @inline(__always)
     private func parseComparisonContinuation(startingWith left: LiquidExpression) throws ->LiquidExpression {
+        if syntaxMode == .strict2, currentToken.type == .equals, nextTokenStorage.type == .equals,
+           nextTokenStorage.position == currentToken.position + 2, case .original = sourceProvenance,
+           let source, let start = stringIndex(in: source, utf8Offset: currentToken.position),
+           source[start...].hasPrefix("==="), !source[start...].hasPrefix("====") {
+            throw LiquidError.syntax(message: "Unexpected character =", line: nextTokenStorage.line + lineOffset, column: nextTokenStorage.column)
+        }
         if syntaxMode == .lax {
             let unknown: InlineString?
             if currentToken.type == .equals && !isOriginalComparison(currentToken) {

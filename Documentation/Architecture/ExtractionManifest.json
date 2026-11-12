@@ -2194,6 +2194,18 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Conditional triple-equals diagnostics",
+      "scopeDecision": "The maintainer requested Shopify strict2 diagnostics while retaining original-byte provenance and earlier rejection order.",
+      "changes": [
+        "Present a source-validated triple-equals conditional operator as the pinned Ruby unexpected-character error without changing rewritten-source or longer-operator handling."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
