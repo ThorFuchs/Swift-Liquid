@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.NilComparisonTests/specialComparisonLiteralsRemainPredicates()": null,
     "LiquidTests.StandardFilterCoercionTests/invalidSliceArgumentsReportRubyIntegerError()": null,
     "LiquidTests.StandardFilterCoercionTests/arraySumUsesDecimalInputsBeforeConvertingBackToFloat()": null,
     "LiquidTests.ReconciledSystemCompatibilityTests/multilineAndNestedSystemSelectionKeepScope()": null,

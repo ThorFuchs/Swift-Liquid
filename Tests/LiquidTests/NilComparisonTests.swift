@@ -4,6 +4,20 @@ import Testing
 
 @Suite("Shopify nil ordering")
 struct NilComparisonTests {
+    @Test func specialComparisonLiteralsRemainPredicates() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for left in ["blank", "empty"] {
+                for right in ["blank", "empty"] {
+                    let source = "{% if \(left) == \(right) %}equal{% else %}different{% endif %}"
+                    #expect(try await engine.render(template: source, syntaxMode: mode) == "different")
+                    #expect(try await engine.renderWithDiagnostics(template: source, syntaxMode: mode).diagnostics.isEmpty)
+                }
+            }
+            let controls = "{% if '' == empty %}E{% endif %}{% if false == blank %}B{% endif %}{% if empty != blank %}D{% endif %}"
+            #expect(try await engine.render(template: controls, syntaxMode: mode) == "EBD")
+        }
+    }
     @Test func nilRelationalComparisonsAreFalseAcrossPolicies() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {

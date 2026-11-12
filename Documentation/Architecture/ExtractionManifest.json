@@ -2011,6 +2011,19 @@
         "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
       ],
       "qualification": "Public parser regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Blank and empty literal comparison",
+      "scopeDecision": "The maintainer requested pinned Shopify behavior while retaining original fixtures and compatibility holds.",
+      "changes": [
+        "Compare two blank or empty predicate literals as unequal, preserving their ordinary predicate behavior against other values."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/NilComparisonTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

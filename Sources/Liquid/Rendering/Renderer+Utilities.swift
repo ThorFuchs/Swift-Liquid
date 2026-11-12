@@ -294,7 +294,9 @@ extension Renderer {
             return left.scope === right.scope
         }
         if left is RuntimeSelf || right is RuntimeSelf { return false }
-        if let left = left as? LiquidSpecialValue, let right = right as? LiquidSpecialValue { return left == right }
+        // Ruby's blank and empty comparison literals are predicates, not
+        // values that compare equal to themselves or to each other.
+        if left is LiquidSpecialValue && right is LiquidSpecialValue { return false }
         if let special = left as? LiquidSpecialValue { return special == .blank ? isBlank(right) : isEmpty(right) }
         if let special = right as? LiquidSpecialValue { return special == .blank ? isBlank(left) : isEmpty(left) }
         if left is NSNull || right is NSNull { return left is NSNull && right is NSNull }
