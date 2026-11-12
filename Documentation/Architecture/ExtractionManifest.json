@@ -2206,6 +2206,19 @@
         "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Unclosed control-block diagnostics",
+      "scopeDecision": "The maintainer requested stack-safe Shopify diagnostics while preserving source authority and earlier rejection behavior.",
+      "changes": [
+        "Retain each original control-block opening in the explicit parser frame and report its unclosed tag at end of input; leave rewritten-source fallback unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

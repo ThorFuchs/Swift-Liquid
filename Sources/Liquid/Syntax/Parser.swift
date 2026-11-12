@@ -619,6 +619,7 @@ internal final class Parser {
         // including mixed nesting, so source depth does not consume the native stack.
         struct Frame {
             let kind: BlockStart
+            let opening: Token?
             var condition: LiquidExpression? = nil
             var location: RenderLocation? = nil
             var variable: InlineString? = nil
@@ -639,20 +640,21 @@ internal final class Parser {
         let entryDepth = parseDepth
         defer { parseDepth = entryDepth }
         func beginFrame(_ kind: BlockStart) throws -> Frame {
+            let opening = originalBlockOpening()
             if case .loop = kind {
                 let (variable, collection, params) = try parseForHeader()
-                return Frame(kind: kind, variable: variable, collection: collection, params: params)
+                return Frame(kind: kind, opening: opening, variable: variable, collection: collection, params: params)
             }
             if case .table = kind {
                 let (variable, collection, params) = try parseTableRowHeader()
-                return Frame(kind: kind, variable: variable, collection: collection, tableParams: params)
+                return Frame(kind: kind, opening: opening, variable: variable, collection: collection, tableParams: params)
             }
             if case .capture = kind {
-                return Frame(kind: kind, variable: try parseCaptureHeader())
+                return Frame(kind: kind, opening: opening, variable: try parseCaptureHeader())
             }
             if case .ifChanged = kind {
                 try consumeTagEnd()
-                return Frame(kind: kind)
+                return Frame(kind: kind, opening: opening)
             }
             if case .caseBlock = kind {
                 let expression = try parseCaseOperand()
@@ -663,12 +665,12 @@ internal final class Parser {
                     }
                 }
                 try consumeTagEnd()
-                return Frame(kind: kind, condition: expression)
+                return Frame(kind: kind, opening: opening, condition: expression)
             }
             let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
             let condition = try parseComplexExpression()
             try consumeTagEnd()
-            return Frame(kind: kind, condition: condition, location: location)
+            return Frame(kind: kind, opening: opening, condition: condition, location: location)
         }
         var frames = [try beginFrame(initial)]
         func finishElsif(_ index: Int) {
@@ -817,6 +819,19 @@ internal final class Parser {
                     append(node, to: index)
                 }
             }
+        }
+        if let frame = frames.last, let opening = frame.opening {
+            let tag: String
+            switch frame.kind {
+            case .conditional: tag = "if"
+            case .unless: tag = "unless"
+            case .loop: tag = "for"
+            case .table: tag = "tablerow"
+            case .capture: tag = "capture"
+            case .caseBlock: tag = "case"
+            case .ifChanged: tag = "ifchanged"
+            }
+            throw ParserError.unclosedShopifyBlock(tag, opening: opening)
         }
         if frames.last?.kind == .ifChanged { throw ParserError.unclosedTag("ifchanged") }
         throw ParserError.unexpectedToken(currentToken)

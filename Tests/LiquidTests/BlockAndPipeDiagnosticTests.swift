@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Strict2 unclosed blocks and trailing pipes")
 struct BlockAndPipeDiagnosticTests {
+    @Test func unclosedControlBlocksRetainOriginalOpening() throws {
+        let cases = [("one\n{% if true %}hello", "if", 2),
+                     ("{% unless false %}hello", "unless", 1),
+                     ("{% for x in (1..2) %}hello", "for", 1),
+                     ("{% if true %}\n{% for x in (1..2) %}hello", "for", 2)]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (source, tag, expectedLine) in cases {
+                do { _ = try LiquidTemplate(source, syntaxMode: mode); Issue.record("Expected unclosed block") }
+                catch LiquidError.syntax(let message, let line, _) {
+                    #expect(message == "'\(tag)' tag was never closed")
+                    #expect(line == expectedLine)
+                }
+            }
+        }
+    }
     @Test func pinnedRejectionsRetainSourceAndReason() async throws {
         // Original templates and expectations from the pinned Shopify corpus.
         let cases: [(String, String, Int)] = [

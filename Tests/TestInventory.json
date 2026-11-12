@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.BlockAndPipeDiagnosticTests/unclosedControlBlocksRetainOriginalOpening()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/dynamicIncludeWithUsesResolvedNameAsDefaultAlias()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/laxPartialAttributesIgnoreUnrecognizedPunctuation()": null,
     "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
