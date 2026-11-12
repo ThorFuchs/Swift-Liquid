@@ -302,7 +302,12 @@ extension Renderer {
     internal func sumValues(_ value: Any, property: String? = nil) throws -> Any {
         guard let array = value as? [Any] else {
             if let integer = value as? Int { return integer }
-            return numericValue(value) ?? 0
+            guard let number = numericValue(value) else { return 0 }
+            if let string = value as? String {
+                if let integer = Int(string) { return integer }
+                if !string.contains(".") || Double(string) == nil { return try checkedInteger(number) }
+            }
+            return number
         }
         var result: Any = 0
         for item in flattenArray(array) {

@@ -16,7 +16,7 @@ extension Renderer {
         "escape", "escape_once", "url_encode", "url_decode", "base64_encode",
         "base64_url_safe_encode", "truncate", "truncatewords", "split", "strip_html",
         "strip_newlines", "newline_to_br", "replace", "replace_first", "replace_last",
-        "remove", "remove_first", "remove_last", "append", "prepend"
+        "remove", "remove_first", "remove_last", "append", "prepend", "squish"
     ]
 
     // MARK: - Filter Application
@@ -60,11 +60,10 @@ extension Renderer {
             if let allowFalseExpr = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
                 let allowFalse = try await evaluateExpression(allowFalseExpr)
                 if allowFalse as? Bool == true {
-                    // With allow_false: only use default for nil/empty, NOT for false
-                    if value is NSNull || (value as? String)?.isEmpty == true {
-                        return defaultValue
-                    }
-                    return value
+                    // Preserve false while still treating all empty containers
+                    // as empty, as in Shopify's default filter.
+                    if let boolean = value as? Bool, !boolean { return value }
+                    return isNilOrEmpty(value) ? defaultValue : value
                 }
             }
             return isNilOrEmpty(value) ? defaultValue : value

@@ -1416,6 +1416,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard-filter composite and scalar coercion",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving pinned fixtures, finite numeric bounds, cancellation and existing holds.",
+      "changes": [
+        "Use Ruby-style composite inspection for squish and preserve empty arrays and objects under default with allow_false.",
+        "Preserve integer zero for nonnumeric scalar sums and floating-point identity for scalar floating inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

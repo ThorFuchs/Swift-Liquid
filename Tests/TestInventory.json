@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.StandardFilterCoercionTests/defaultAndSquishHandleCompositeInputs()": null,
+    "LiquidTests.StandardFilterCoercionTests/scalarSumKeepsIntegerAndFloatIdentity()": null,
     "LiquidTests.LaxCaseMarkupTests/retainedLookupAndTrailingTextMatchReference()": null,
     "LiquidTests.LaxCaseMarkupTests/limitsAndCancellationStayTerminal()": null,
     "LiquidTests.LaxOutputTailTests/completeLeadingExpressionSurvivesTerminalSuffix()": null,
