@@ -1752,6 +1752,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "String inputs to map",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance while retaining dependency-free and safe host value access.",
+      "changes": [
+        "Wrap scalar strings for map and use Ruby-compatible string-key substring selection without exposing arbitrary host methods."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/MapStringCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

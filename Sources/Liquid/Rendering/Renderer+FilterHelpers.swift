@@ -167,7 +167,7 @@ extension Renderer {
                 if let nested = item as? [Any] { return nested }
                 return [item]
             }
-        } else if isDictLike(value) || value is RuntimeSelf {
+        } else if isDictLike(value) || value is RuntimeSelf || value is String {
             array = [value]
         } else if value is NSNull {
             return [Any]()
@@ -190,7 +190,9 @@ extension Renderer {
                 throw RenderError.typeError(expected: "hash", actual: "array", operation: "map")
             } else if item is NSNull {
                 result.append(NSNull())
-            } else if item is Int || item is Double || item is Bool || item is String {
+            } else if let string = item as? String {
+                result.append(string.range(of: propertyName, options: .literal) == nil ? NSNull() : propertyName as Any)
+            } else if item is Int || item is Double || item is Bool {
                 throw RenderError.typeError(expected: "hash", actual: "\(type(of: item))", operation: "map")
             } else {
                 result.append(getObjectProperty(item, key: propertyName) ?? NSNull())
