@@ -2051,6 +2051,20 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Counter visibility over host inputs",
+      "scopeDecision": "The maintainer requested the pinned Shopify scope behavior while preserving invocation ownership and isolated render visibility of original host inputs.",
+      "changes": [
+        "Give an initialized local counter precedence over a same-named host input, below explicit local bindings and assignments."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Tests/LiquidTests/PublicContractTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

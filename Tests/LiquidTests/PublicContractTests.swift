@@ -3,6 +3,18 @@ import Foundation
 import Testing
 import Liquid
 
+@Test func countersShadowHostInputsButRemainRenderLocal() async throws {
+    let engine = LiquidEngine()
+    let source = "{{ n }}|{% decrement n %}|{{ n }}|{% render 'p' %}|{{ n }}"
+    let child = "{{ n }}:{% increment n %}:{{ n }}"
+    for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+        let parsed = try LiquidTemplate(source, syntaxMode: mode)
+        let partial = try LiquidTemplate(child, syntaxMode: mode)
+        #expect(try await engine.render(parsed, context: ["n": 10], templates: ["p": partial]) == "10|-1|-1|10:0:1|-1")
+        #expect(try await engine.render(template: "{% increment n %}{% assign n = 5 %}{{ n }}", context: ["n": 10], syntaxMode: mode) == "05")
+    }
+}
+
 @Test func concurrentRendersOwnTheirScopesAndCounters() async throws {
     let engine = LiquidEngine(referenceTime: Date(timeIntervalSince1970: 0))
     let template = try LiquidTemplate("{% increment n %}:{{ name }}:{% assign name = 'local' %}{{ name }}")

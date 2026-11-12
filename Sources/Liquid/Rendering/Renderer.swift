@@ -179,8 +179,8 @@ internal final class RuntimeSelfScope {
             if let value = scope[name] { return value }
         }
         if let value = variables[name] { return value }
-        if let value = hostInputs[name], !(name == "self" && value is NSNull) { return value }
         if let value = counters[name] { return value }
+        if let value = hostInputs[name], !(name == "self" && value is NSNull) { return value }
         if name == "self" { return RuntimeSelf(scope: self) }
         return nil
     }
