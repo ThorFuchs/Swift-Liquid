@@ -552,6 +552,26 @@ internal final class Lexer {
         return next + 1 < bytes.count && bytes[next] == Self.closeBrace && bytes[next + 1] == Self.closeBrace
     }
 
+    private func isLaxTerminalAssignmentSuffix(_ tokens: [Token], tagStart: Int, at offset: Int) -> Bool {
+        guard syntaxMode == .lax, offset > 0, bytes[offset - 1].isWhitespaceByte,
+              tagStart + 1 < tokens.count, let last = tokens.last, last.line == line else { return false }
+        let header = tokens[tagStart + 1].type
+        guard header == .assign || header == .liquid else { return false }
+        guard let assignment = tokens.lastIndex(where: { $0.type == .assign && $0.line == line }),
+              assignment >= tagStart + 1, assignment + 3 < tokens.count,
+              tokens[assignment + 2].type == .equals,
+              !tokens[(assignment + 3)...].contains(where: { $0.type == .filter }) else { return false }
+        switch last.type {
+        case .identifier, .number, .string, .rightBracket, .rightParen: break
+        default: return false
+        }
+        var next = offset + 1
+        while next < bytes.count && (bytes[next] == 32 || bytes[next] == 9 || bytes[next] == 13) { next += 1 }
+        if header == .liquid, next < bytes.count, bytes[next] == Self.newline { return true }
+        while next < bytes.count && bytes[next].isWhitespaceByte { next += 1 }
+        return next + 1 < bytes.count && bytes[next] == Self.percent && bytes[next + 1] == Self.closeBrace
+    }
+
     private func tokenizeVariable(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
         advanceASCII() // consume first {
         advanceASCII() // consume second {
@@ -941,6 +961,8 @@ internal final class Lexer {
                     advanceASCII()
                     advanceASCII()
                     tokens.append(Token(type: .notEquals, position: tokenPosition, line: tokenLine, column: tokenColumn))
+                } else if isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
+                    advanceASCII()
                 } else {
                     throw LexerError.unexpectedCharacter("!", position: tokenPosition)
                 }
@@ -1038,7 +1060,9 @@ internal final class Lexer {
                 // Negative number literal (-5, -3.14)
                 // Note: -%} trim markers are already handled before this switch
                 let nextIdx = byteIndex + 1
-                if nextIdx < end, bytes[nextIdx].isDigitByte {
+                if isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
+                    advanceASCII()
+                } else if nextIdx < end, bytes[nextIdx].isDigitByte {
                     let isUnary = tokens.isEmpty || {
                         let lastType = tokens.last!.type
                         switch lastType {

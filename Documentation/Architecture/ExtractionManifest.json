@@ -2113,6 +2113,18 @@
       ],
       "files": ["Scripts/check_liquid_spec_protocol.py"],
       "qualification": "Protocol and pinned conformance remain subject to their recorded outcomes; no conformance or release claim is implied."
+    },
+    {
+      "area": "Lax assignment terminal punctuation",
+      "scopeDecision": "The maintainer requested Ruby-compatible lax behavior while preserving strict parser modes, pinned fixtures and source provenance.",
+      "changes": [
+        "Accept a whitespace-separated terminal exclamation mark or dash after a complete unfiltered lax assignment, including within liquid blocks."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
