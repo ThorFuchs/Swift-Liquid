@@ -1195,9 +1195,9 @@
       "area": "Strict2 unclosed blocks and trailing-pipe diagnostics",
       "scopeDecision": "The maintainer commissioned several reference-backed mismatch batches while preserving pinned fixtures, mode boundaries, source ownership and existing holds.",
       "changes": [
-        "Present unclosed raw, comment and doc block reasons only at established strict2 first rejections with original opening-token locations; preserve unmapped and other-mode behavior.",
+        "Present unclosed raw, comment and doc block reasons only at established strict2 rejections with original opening-token locations, including an unclosed raw inside comment; preserve ambiguous doc boundaries, unmapped and other-mode behavior.",
         "Present the existing trailing-pipe rejection in condition operands and partial tag argument parsing with the Ruby token reason, without changing acceptance.",
-        "Retain all pinned inputs and comparators; add public regressions for 24 pinned variants, valid blocks, other modes and cancellation."
+        "Retain all pinned inputs and comparators; add public regressions for 26 pinned variants, valid blocks, other modes and cancellation."
       ],
       "files": [
         "Sources/Liquid/LiquidError.swift",

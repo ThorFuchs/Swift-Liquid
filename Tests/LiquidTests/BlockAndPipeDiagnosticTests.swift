@@ -33,7 +33,10 @@ struct BlockAndPipeDiagnosticTests {
             ("{% unless x || y %}{% endunless %}", "Expected end_of_string but found pipe", 1),
         ]
         let engine = LiquidEngine()
-        for (source, expected, expectedLine) in cases {
+        for (source, expected, expectedLine) in cases + [
+            ("{% comment %}{% raw %}hello{% endcomment %}", "'raw' tag was never closed", 1),
+            ("{% comment %}{% raw %}hello", "'raw' tag was never closed", 1)
+        ] {
             for entry in 0..<4 {
                 do {
                     switch entry {
@@ -60,6 +63,13 @@ struct BlockAndPipeDiagnosticTests {
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: text()") }
             do { _ = try LiquidTemplate("{% doc %}text", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unclosed delimiter 'doc'") }
+        }
+        // Incomplete nested or argument-bearing doc boundaries remain unmapped.
+        for source in ["{% doc %}{% doc %}content", "{% doc %}123{% enddoc xyz %}"] {
+            do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+            catch LiquidError.syntax(let message, let line, let column) {
+                #expect(message == "Unclosed delimiter 'doc'" && line == nil && column == nil)
+            }
         }
         let worker = Task { () async throws -> String in
             withUnsafeCurrentTask { $0?.cancel() }

@@ -84,7 +84,13 @@ internal final class Lexer {
                 if syntaxMode == .strict2, case .unclosedDelimiter("doc", _) = error,
                    case .original = sourceProvenance, firstToken < tokens.count,
                    tokens[firstToken].type == .tagStart {
-                    throw LexerError.unclosedShopifyBlock("doc", opening: tokens[firstToken])
+                    // An unrecognized nested/opening or closing doc tag is an
+                    // ambiguous grammar case, not an established missing close.
+                    try Task.checkCancellation()
+                    let body = String(decoding: bytes[byteIndex...], as: UTF8.self)
+                    let ambiguous = body.range(of: #"\{%-?\s*(?:doc|enddoc)(?:\s|%|-)"#, options: .regularExpression) != nil
+                    try Task.checkCancellation()
+                    if !ambiguous { throw LexerError.unclosedShopifyBlock("doc", opening: tokens[firstToken]) }
                 }
                 // Only present an unmatched quote when its original markup frame is validated.
                 if syntaxMode == .strict2, case .unterminatedString(let offset) = error,
@@ -353,6 +359,7 @@ internal final class Lexer {
                         advance()
                     }
                     // Now scan for {% endraw %}
+                    var foundEndRaw = false
                     while byteIndex < end {
                         if bytes[byteIndex] == Self.openBrace, byteIndex + 1 < end, bytes[byteIndex + 1] == Self.percent {
                             let probe = byteIndex + 2
@@ -364,6 +371,7 @@ internal final class Lexer {
                                bytes[p] == 0x65, bytes[p+1] == 0x6E, bytes[p+2] == 0x64,
                                bytes[p+3] == 0x72, bytes[p+4] == 0x61, bytes[p+5] == 0x77 {
                                 // Found endraw — skip past the closing %}
+                                foundEndRaw = true
                                 byteIndex = p + 6
                                 while byteIndex < end {
                                     if bytes[byteIndex] == Self.percent, byteIndex + 1 < end, bytes[byteIndex + 1] == Self.closeBrace {
@@ -377,6 +385,10 @@ internal final class Lexer {
                             }
                         }
                         advance()
+                    }
+                    if !foundEndRaw, syntaxMode == .strict2, case .original = sourceProvenance {
+                        let opening = Token(type: .tagStart, position: tagStartPos, line: tagStartLine, column: tagStartCol)
+                        throw LexerError.unclosedShopifyBlock("raw", opening: opening)
                     }
                     continue // Don't fall through to the "skip to %}" below
                 }
