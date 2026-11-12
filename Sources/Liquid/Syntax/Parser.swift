@@ -2130,7 +2130,7 @@ internal final class Parser {
             return .liquid(body: [])
         }
 
-        return .liquid(body: normalizeLiquidBodyNodes(nodes))
+        return .liquid(body: try normalizeLiquidBodyNodes(nodes))
     }
 
 
@@ -2188,67 +2188,82 @@ internal final class Parser {
         return result.joined(separator: "\n")
     }
 
-    private func normalizeLiquidBodyNodes(_ nodes: [ASTNode]) -> [ASTNode] {
-        nodes.compactMap(normalizeLiquidBodyNode)
+    private func normalizeLiquidBodyNodes(_ nodes: [ASTNode]) throws -> [ASTNode] {
+        enum Work {
+            case list([ASTNode])
+            case node(ASTNode)
+            case finishList(Int)
+            case finishNode(ASTNode, Int)
+        }
+        var work: [Work] = [.list(nodes)]
+        var results: [[ASTNode]] = []
+        while let item = work.popLast() {
+            try Task.checkCancellation()
+            switch item {
+            case .list(let children):
+                work.append(.finishList(children.count))
+                for child in children.reversed() { work.append(.node(child)) }
+            case .finishList(let count):
+                let start = results.count - count
+                let merged = results[start...].flatMap { $0 }
+                results.removeLast(count)
+                results.append(merged)
+            case .node(let node):
+                if case .text(let text) = node {
+                    results.append(text.string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? [] : [node])
+                    continue
+                }
+                let groups: [[ASTNode]]
+                switch node {
+                case .template(let body), .ifchanged(let body), .capture(_, let body), .tablerow(_, _, let body, _):
+                    groups = [body]
+                case .if(_, let body, let branches, let fallback, _):
+                    groups = [body] + branches.map { $0.1 } + (fallback.map { [$0] } ?? [])
+                case .unless(_, let body, let fallback, _), .for(_, _, let body, let fallback, _):
+                    groups = [body] + (fallback.map { [$0] } ?? [])
+                case .case(_, let branches):
+                    groups = branches.map(\.body)
+                default:
+                    results.append([node])
+                    continue
+                }
+                work.append(.finishNode(node, groups.count))
+                for group in groups.reversed() { work.append(.list(group)) }
+            case .finishNode(let node, let count):
+                let start = results.count - count
+                let groups = Array(results[start...])
+                results.removeLast(count)
+                let rebuilt: ASTNode
+                switch node {
+                case .template: rebuilt = .template(groups[0])
+                case .ifchanged: rebuilt = .ifchanged(groups[0])
+                case .capture(let name, _): rebuilt = .capture(variable: name, body: groups[0])
+                case .tablerow(let name, let collection, _, let params):
+                    rebuilt = .tablerow(variable: name, in: collection, body: groups[0], params: params)
+                case .if(let condition, _, let branches, let fallback, let location):
+                    let mapped = branches.enumerated().map { ($0.element.0, groups[$0.offset + 1]) }
+                    rebuilt = .if(condition: condition, then: groups[0], elsif: mapped,
+                                  else: fallback == nil ? nil : groups[branches.count + 1], location: location)
+                case .unless(let condition, _, let fallback, let location):
+                    rebuilt = .unless(condition: condition, then: groups[0], else: fallback == nil ? nil : groups[1], location: location)
+                case .for(let name, let collection, _, let fallback, let params):
+                    rebuilt = .for(variable: name, in: collection, body: groups[0], empty: fallback == nil ? nil : groups[1], params: params)
+                case .case(let value, let branches):
+                    let mapped = branches.enumerated().map { index, branch -> CaseBranch in
+                        switch branch {
+                        case .when(let expression, _): return .when(expression, groups[index])
+                        case .otherwise: return .otherwise(groups[index])
+                        }
+                    }
+                    rebuilt = .case(value: value, branches: mapped)
+                default: preconditionFailure("Unexpected liquid body normalization frame")
+                }
+                results.append([rebuilt])
+            }
+        }
+        return results.first ?? []
     }
 
-    private func normalizeLiquidBodyNode(_ node: ASTNode) -> ASTNode? {
-        switch node {
-        case .text(let text):
-            let trimmed = text.string.trimmingCharacters(in: .whitespacesAndNewlines)
-            return trimmed.isEmpty ? nil : node
-        case .template(let nodes):
-            return .template(normalizeLiquidBodyNodes(nodes))
-        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes, let location):
-            return .if(
-                condition: condition,
-                then: normalizeLiquidBodyNodes(thenNodes),
-                elsif: elsifBranches.map { condition, branch in
-                    (condition, normalizeLiquidBodyNodes(branch))
-                },
-                else: elseNodes.map(normalizeLiquidBodyNodes),
-                location: location
-            )
-        case .unless(let condition, let thenNodes, let elseNodes, let location):
-            return .unless(
-                condition: condition,
-                then: normalizeLiquidBodyNodes(thenNodes),
-                else: elseNodes.map(normalizeLiquidBodyNodes),
-                location: location
-            )
-        case .case(let value, let branches):
-            return .case(value: value, branches: branches.map { branch in
-                switch branch {
-                case .when(let expression, let body):
-                    return .when(expression, normalizeLiquidBodyNodes(body))
-                case .otherwise(let body):
-                    return .otherwise(normalizeLiquidBodyNodes(body))
-                }
-            })
-        case .for(let variable, let collection, let body, let empty, let params):
-            return .for(
-                variable: variable,
-                in: collection,
-                body: normalizeLiquidBodyNodes(body),
-                empty: empty.map(normalizeLiquidBodyNodes),
-                params: params
-            )
-        case .tablerow(let variable, let collection, let body, let params):
-            return .tablerow(
-                variable: variable,
-                in: collection,
-                body: normalizeLiquidBodyNodes(body),
-                params: params
-            )
-        case .capture(let variable, let body):
-            return .capture(variable: variable, body: normalizeLiquidBodyNodes(body))
-        case .ifchanged(let body):
-            return .ifchanged(normalizeLiquidBodyNodes(body))
-        default:
-            return node
-        }
-    }
-    
     private func parseCycleOperand() throws -> LiquidExpression {
         // Ruby's lax cycle parser treats a dot followed by digits as a
         // variable lookup. Preserve its exact original spelling, including

@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.DeepParserStackTests/admittedNestedLiquidTag()": null,
     "LiquidTests.DeepParserStackTests/admittedDefaultDepth()": null,
     "LiquidTests.DeepParserStackTests/admittedExplicitDepth()": null,
     "LiquidTests.DeepParserStackTests/overLimitReportsCapacity()": null,

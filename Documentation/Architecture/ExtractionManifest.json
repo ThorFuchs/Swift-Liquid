@@ -1850,6 +1850,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Stack-safe multiline liquid normalization",
+      "scopeDecision": "The maintainer commissioned stack-safe deep template parsing while preserving multiline liquid behavior and resource limits.",
+      "changes": [
+        "Normalize rewritten liquid-tag AST bodies with an explicit postorder work stack, preserving whitespace filtering and branch order.",
+        "Check cancellation while traversing and cover valid, over-limit and mixed multiline blocks."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/DeepParserStackTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

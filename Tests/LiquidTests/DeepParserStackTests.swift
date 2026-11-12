@@ -61,6 +61,14 @@ struct DeepParserStackTests {
         _ = try LiquidTemplate(source, limits: LiquidLimits(nestingDepth: 128))
     }
 
+    @Test func admittedNestedLiquidTag() throws {
+        let source = "{% liquid\n" + String(repeating: "if true\n", count: 100) + "echo 'x'\n" + String(repeating: "endif\n", count: 100) + "%}"
+        _ = try LiquidTemplate(source, limits: LiquidLimits(nestingDepth: 128))
+        let tooDeep = "{% liquid\n" + String(repeating: "if true\n", count: 200) + String(repeating: "endif\n", count: 200) + "%}"
+        let error = #expect(throws: LiquidError.self) { try LiquidTemplate(tooDeep) }
+        guard case .limitExceeded("nestingDepth")? = error else { Issue.record("Expected nesting depth error"); return }
+    }
+
     @Test func unsupportedNestedCallsRejectSafely() throws {
         let source = "{{ " + String(repeating: "f(", count: 100) + "x" + String(repeating: ")", count: 100) + " }}"
         #expect(throws: LiquidError.self) { try LiquidTemplate(source, limits: LiquidLimits(nestingDepth: 128)) }
@@ -80,6 +88,8 @@ struct DeepParserStackTests {
         let source = "{% for n in (1..2) %}{% case n %}{% when 1 %}{% if true %}A{% else %}bad{% endif %}{% else %}{% unless false %}B{% endunless %}{% endcase %}{% endfor %}"
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
             #expect(try await LiquidEngine().render(template: source, syntaxMode: mode) == "AB")
+            let liquid = "{% liquid\nfor n in (1..2)\ncase n\nwhen 1\necho 'A'\nelse\nunless false\necho 'B'\nendunless\nendcase\nendfor\n%}"
+            #expect(try await LiquidEngine().render(template: liquid, syntaxMode: mode) == "AB")
         }
         let task = Task { () throws -> LiquidTemplate in
             withUnsafeCurrentTask { $0?.cancel() }
