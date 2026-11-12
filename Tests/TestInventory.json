@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.PartialArgumentCompatibilityTests/laxPartialAttributesIgnoreUnrecognizedPunctuation()": null,
     "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/includeForCarriesPriorOutputAndRestoresBindings()": null,
     "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,

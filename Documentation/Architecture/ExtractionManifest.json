@@ -2167,6 +2167,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax partial attribute punctuation",
+      "scopeDecision": "The maintainer requested pinned Ruby lax parsing while preserving strict-mode rejection and exact registry selection.",
+      "changes": [
+        "Ignore unrecognized exclamation and tilde punctuation after a partial name in lax include/render attribute markup."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

@@ -572,6 +572,17 @@ internal final class Lexer {
         return next + 1 < bytes.count && bytes[next] == Self.percent && bytes[next + 1] == Self.closeBrace
     }
 
+    private func isLaxPartialAttributeJunk(_ tokens: [Token], tagStart: Int) -> Bool {
+        guard syntaxMode == .lax, tagStart + 2 < tokens.count else { return false }
+        let tag = tokens[tagStart + 1].type
+        guard tag == .include || tag == .render else { return false }
+        // Do not skip punctuation before a partial-name expression.
+        switch tokens[tagStart + 2].type {
+        case .string, .identifier: return true
+        default: return false
+        }
+    }
+
     private func tokenizeVariable(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
         advanceASCII() // consume first {
         advanceASCII() // consume second {
@@ -961,7 +972,8 @@ internal final class Lexer {
                     advanceASCII()
                     advanceASCII()
                     tokens.append(Token(type: .notEquals, position: tokenPosition, line: tokenLine, column: tokenColumn))
-                } else if isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
+                } else if isLaxPartialAttributeJunk(tokens, tagStart: tagTokenStart) ||
+                            isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
                     advanceASCII()
                 } else {
                     throw LexerError.unexpectedCharacter("!", position: tokenPosition)
@@ -1088,6 +1100,9 @@ internal final class Lexer {
             case 0x3F where syntaxMode == .strict2:
                 advanceASCII()
                 tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
+            case 0x7E where isLaxPartialAttributeJunk(tokens, tagStart: tagTokenStart):
+                advanceASCII()
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)

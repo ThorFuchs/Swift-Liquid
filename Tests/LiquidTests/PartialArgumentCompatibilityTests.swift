@@ -4,6 +4,20 @@ import Testing
 
 @Suite("Partial argument syntax")
 struct PartialArgumentCompatibilityTests {
+    @Test func laxPartialAttributesIgnoreUnrecognizedPunctuation() async throws {
+        let engine = LiquidEngine()
+        let partial = "{{ a }}:{{ b }}"
+        let registry = try LiquidTemplateRegistry([.init("p", .raw(partial))])
+        for tag in ["include", "render"] {
+            let source = "{% \(tag) 'p' !!! a: 'A' ~~~ b: 'B' %}"
+            #expect(try await engine.render(template: source, registry: registry, syntaxMode: .lax) == "A:B")
+            #expect(try await engine.render(template: "{% \(tag) 'p' a: '!' b: '~' %}", registry: registry, syntaxMode: .lax) == "!:~")
+            for mode in [LiquidSyntaxMode.strict, .strict2] {
+                #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: mode) }
+            }
+            #expect(throws: LiquidError.self) { try LiquidTemplate("{% \(tag) !!! 'p' %}", syntaxMode: .lax) }
+        }
+    }
     @Test func renderForNonEnumerableValuesRendersOnce() async throws {
         let engine = LiquidEngine()
         let partial = "{{ item }}:{{ forloop.index }}"
