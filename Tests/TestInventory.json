@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.UnterminatedMarkupTests/originalDelimiterOwnsTheLocation()": null,
+    "LiquidTests.UnterminatedMarkupTests/sourceBudgetAndCancellationStayTerminal()": null,
     "LiquidTests.WhereAndLoopLookupTests/whereSupportsStringsAndObjectInputs()": null,
     "LiquidTests.WhereAndLoopLookupTests/dottedAndIndexedBoundsAreEvaluatedPerInvocation()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/renderContainsSignalsAndIncludePropagatesThem()": null,

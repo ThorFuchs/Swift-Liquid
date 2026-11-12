@@ -1490,6 +1490,23 @@
       ],
       "files": ["Sources/Liquid/Syntax/Parser.swift", "Tests/LiquidTests/CycleCompatibilityTests.swift"],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Original-source unterminated markup diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving original-source authority, strict modes, pinned fixtures, cancellation and source limits.",
+      "changes": [
+        "Report an unterminated outer tag or output delimiter only after verifying no matching terminator exists in the original bytes, retaining the original opening line and column.",
+        "Preserve existing quote diagnostics when an outer terminator is present and leave rewritten or unmapped source on its existing path."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/LiquidError.swift",
+        "Tests/LiquidTests/UnterminatedMarkupTests.swift",
+        "Tests/LiquidTests/UnclosedQuoteDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

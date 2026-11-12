@@ -81,6 +81,25 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                // Ruby tokenizes the outer delimiter before interpreting
+                // quotes. Present an unclosed construct only when the
+                // original bytes contain no matching outer terminator.
+                if case .unterminatedString = error, case .original = sourceProvenance,
+                   firstToken < tokens.count {
+                    let opening = tokens[firstToken]
+                    let variable = opening.type == .variableStart
+                    if variable || opening.type == .tagStart {
+                        let first: UInt8 = variable ? Self.closeBrace : Self.percent
+                        var index = opening.position + 2
+                        var found = false
+                        while index + 1 < bytes.count {
+                            if index & 255 == 0 { try Task.checkCancellation() }
+                            if bytes[index] == first && bytes[index + 1] == Self.closeBrace { found = true; break }
+                            index += 1
+                        }
+                        if !found { throw LexerError.unclosedMarkup(variable: variable, opening: opening) }
+                    }
+                }
                 if syntaxMode == .strict2, case .unclosedDelimiter("nested doc", _) = error,
                    case .original = sourceProvenance, firstToken < tokens.count,
                    tokens[firstToken].type == .tagStart {
