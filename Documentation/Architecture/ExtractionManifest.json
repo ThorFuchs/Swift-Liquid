@@ -1736,6 +1736,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Tag boundary and trailing lookup diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance and preservation of pinned fixtures and first-rejection locations.",
+      "changes": [
+        "Report Shopify errors for numeric strict capture names, unexpected block tags, missing cycle values and incomplete partial arguments.",
+        "Correct authored trailing-dot expectations to the unchanged pinned fixtures and Ruby reference."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/TagBoundaryDiagnosticTests.swift",
+        "Tests/LiquidTests/IdentifierNumberDiagnosticTests.swift",
+        "Tests/LiquidTests/TrailingTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

@@ -38,6 +38,6 @@ struct IdentifierNumberDiagnosticTests {
         let engine = LiquidEngine()
         #expect(try await engine.render(template: "{{ x[0] }}", context: ["x": ["ok"]], syntaxMode: .strict2) == "ok")
         do { _ = try LiquidTemplate("{{ x. }}", syntaxMode: .strict2); Issue.record("Expected rejection") }
-        catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: }}") }
+        catch LiquidError.syntax(let message, _, _) { #expect(message == "Expected id but found end_of_string") }
     }
 }

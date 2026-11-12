@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.TagBoundaryDiagnosticTests/strict2ReportsShopifyFirstRejection()": null,
     "LiquidTests.NilTruncationTests/nilInputSkipsArgumentCoercion()": null,
     "LiquidTests.LaxNumericFragmentTests/dotsFollowReferenceWithoutChangingRanges()": null,
     "LiquidTests.LaxUnknownConditionTests/recoveryAndShortCircuitMatchRuby()": null,

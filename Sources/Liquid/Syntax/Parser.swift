@@ -309,6 +309,14 @@ internal final class Parser {
 
         case .identifier(let name):
             return try parseIdentifierTag(named: name)
+        case .elsif, .endraw, .endcomment:
+            let name: String
+            switch tagToken.type {
+            case .elsif: name = "elsif"
+            case .endraw: name = "endraw"
+            default: name = "endcomment"
+            }
+            throw LiquidError.syntax(message: "Unknown tag '\(name)'", line: tagToken.line + lineOffset, column: tagToken.column)
         default:
             throw ParserError.unexpectedToken(tagToken)
         }
@@ -1164,7 +1172,7 @@ internal final class Parser {
 
         while currentTokenStorage.type == .dot {
             guard case .identifier(let property) = nextTokenStorage.type else {
-                if current >= 2, tokens[current - 2].type == .variableStart,
+                if syntaxMode != .strict2, current >= 2, tokens[current - 2].type == .variableStart,
                    nextTokenStorage.type == .variableEnd {
                     throw ParserError.unexpectedToken(nextTokenStorage)
                 }
@@ -1740,6 +1748,8 @@ internal final class Parser {
                     elseNodes.append(try parseNode())
                 }
                 branches.append(.otherwise(elseNodes))
+            } else if currentTagMatches(.elsif, identifier: "elsif") {
+                throw LiquidError.syntax(message: "Unknown tag 'elsif'", line: nextTokenStorage.line + lineOffset, column: nextTokenStorage.column)
             } else {
                 // Skip whitespace/text between branches
                 advance()
@@ -2072,6 +2082,7 @@ internal final class Parser {
         if case .identifier(let name) = currentToken.type {
             variable = name
         } else if case .number(let num, _) = currentToken.type {
+            if syntaxMode == .strict2 { throw identifierExpected(currentToken) }
             // Digit-only variable names: {% capture 123 %}
             variable = InlineString(String(Int(num)))
         } else {
@@ -2377,6 +2388,10 @@ internal final class Parser {
     private func parseCycleTag() throws ->ASTNode {
         var values = makeExpressionBuffer(initialCapacity: 4)
 
+        if currentToken.type == .tagEnd {
+            throw LiquidError.syntax(message: "Syntax Error in 'cycle' - Valid syntax: cycle [name :] var [, var2, var3 ...]", line: currentToken.line + lineOffset, column: currentToken.column)
+        }
+
         // Parse first value — might be a group name followed by ':'
         let firstExpr = try parseCycleOperand()
 
@@ -2469,6 +2484,9 @@ internal final class Parser {
                     if syntaxMode == .strict2, currentToken.type == .comma {
                         throw ParserError.missingAttributeColonBeforeComma(currentToken)
                     }
+                    if syntaxMode == .strict2, currentToken.type == .tagEnd {
+                        throw LiquidError.syntax(message: "Expected colon but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
+                    }
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
@@ -2512,6 +2530,9 @@ internal final class Parser {
     
     private func parseRenderTag() throws ->ASTNode {
         // Similar to include but with isolated scope
+        if syntaxMode == .strict2, currentToken.type == .tagEnd {
+            throw LiquidError.syntax(message: "Expected string but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
+        }
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
@@ -2545,6 +2566,9 @@ internal final class Parser {
                 guard currentToken.type == .colon else {
                     if syntaxMode == .strict2, currentToken.type == .comma {
                         throw ParserError.missingAttributeColonBeforeComma(currentToken)
+                    }
+                    if syntaxMode == .strict2, currentToken.type == .tagEnd {
+                        throw LiquidError.syntax(message: "Expected colon but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
                     }
                     throw ParserError.unexpectedToken(currentToken)
                 }
