@@ -2271,6 +2271,20 @@
         "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes. Downstream review, performance and release holds remain."
+    },
+    {
+      "area": "Empty counter names in legacy parser modes",
+      "scopeDecision": "The maintainer requested pinned Ruby parser-mode behavior while retaining strict2 validation and invocation-owned counters.",
+      "changes": [
+        "Accept an empty increment or decrement name in lax and strict modes, preserving render-local counter isolation."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

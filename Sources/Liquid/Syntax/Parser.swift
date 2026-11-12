@@ -2051,6 +2051,10 @@ internal final class Parser {
     }
 
     private func parseIncrementTag() throws ->ASTNode {
+        if syntaxMode != .strict2, currentToken.type == .tagEnd {
+            advance()
+            return .increment(name: InlineString(""))
+        }
         guard case .identifier(let counter) = currentToken.type else {
             throw identifierExpected(currentToken)
         }
@@ -2061,6 +2065,10 @@ internal final class Parser {
     }
     
     private func parseDecrementTag() throws ->ASTNode {
+        if syntaxMode != .strict2, currentToken.type == .tagEnd {
+            advance()
+            return .decrement(name: InlineString(""))
+        }
         guard case .identifier(let counter) = currentToken.type else {
             throw identifierExpected(currentToken)
         }

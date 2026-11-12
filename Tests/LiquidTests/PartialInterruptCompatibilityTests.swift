@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Partial interrupt boundaries")
 struct PartialInterruptCompatibilityTests {
+    @Test func emptyCounterNamesFollowParserModeAndRenderIsolation() async throws {
+        let engine = LiquidEngine()
+        let cases = [("increment", "010"), ("decrement", "-1-2-1")]
+        for mode in [LiquidSyntaxMode.lax, .strict] {
+            for (tag, expected) in cases {
+                let source = "{% \(tag) %}{% \(tag) %}{% render 'p' %}"
+                let result = try await engine.renderWithDiagnostics(template: source, templates: ["p": "{% \(tag) %}"], syntaxMode: mode)
+                #expect(result.output == expected && result.diagnostics.isEmpty)
+                #expect(try await engine.render(template: source, templates: ["p": "{% \(tag) %}"], syntaxMode: mode) == expected)
+            }
+        }
+        for tag in ["increment", "decrement"] {
+            #expect(throws: LiquidError.self) { try LiquidTemplate("{% \(tag) %}", syntaxMode: .strict2) }
+        }
+    }
     @Test func renderDisallowsIncludeInItsIsolatedSubtree() async throws {
         let engine = LiquidEngine()
         let reason = "include usage is not allowed in this context"
