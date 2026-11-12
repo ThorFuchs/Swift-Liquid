@@ -1568,6 +1568,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Filter argument boundary compatibility",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving syntax mode distinctions and pinned cases.",
+      "changes": [
+        "Accept empty filter argument lists and terminal commas in lax and strict2 modes while preserving strict-mode rejection and invalid interior comma diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

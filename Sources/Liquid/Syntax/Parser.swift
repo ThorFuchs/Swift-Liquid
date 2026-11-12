@@ -861,6 +861,10 @@ internal final class Parser {
         advance()
         var arguments: [LiquidExpression] = []
         var positions: [ScalarKey: Int] = [:]
+        func atFilterEnd() -> Bool {
+            currentToken.type == .filter || currentToken.type == .variableEnd || currentToken.type == .tagEnd
+        }
+        if syntaxMode != .strict && atFilterEnd() { return arguments }
         repeat {
             if case .identifier(let name) = currentToken.type, nextTokenStorage.type == .colon {
                 advance()
@@ -878,6 +882,7 @@ internal final class Parser {
             }
             guard currentToken.type == .comma else { break }
             advance()
+            if syntaxMode != .strict && atFilterEnd() { break }
         } while true
         return arguments
     }
