@@ -145,6 +145,19 @@ internal final class Lexer {
                 case .unmapped:
                     origin = .unmapped(.unspecifiedOrRewrittenSource)
                 }
+                // The strict2 grammar rejects any raw/doc opening markup as
+                // a whole. Only use that presentation when the original frame
+                // and its opening tag have been validated by the lexer.
+                if syntaxMode == .strict2, case .resolved = origin,
+                   tokens.count >= firstToken + 2, tokens[firstToken].type == .tagStart {
+                    let tag = tokens[firstToken + 1].type
+                    if tag == .raw {
+                        throw ParserError.invalidBlockMarkup("raw", opening: tokens[firstToken])
+                    }
+                    if case .identifier(let name) = tag, name.equals("doc") {
+                        throw ParserError.invalidBlockMarkup("doc", opening: tokens[firstToken])
+                    }
+                }
                 throw LexerError.unexpectedCharacter(character, position: offset, origin: origin)
             }
         }
