@@ -168,6 +168,9 @@ extension Renderer {
     
     internal func evaluateAccessValueWithKey(baseValue: Any, keyValue: Any) async throws -> Any {
         let keyValue = systemPrimary(keyValue)
+        // Ruby Liquid does not stringify a range into a hash key or use it
+        // as an array slice when it appears in bracket lookup.
+        if keyValue is RuntimeRange { return NSNull() }
         if let index = keyValue as? Int {
             return evaluateAccessValueWithIndex(baseValue: baseValue, index: index)
         }
@@ -345,10 +348,10 @@ extension Renderer {
         let startValue = try await evaluateExpression(start)
         let endValue = try await evaluateExpression(end)
         if startValue is Double, case .literal = start {} else if startValue is Double {
-            throw RenderError.custom("Range bounds from variables must be integers")
+            throw RenderError.custom("invalid integer")
         }
         if endValue is Double, case .literal = end {} else if endValue is Double {
-            throw RenderError.custom("Range bounds from variables must be integers")
+            throw RenderError.custom("invalid integer")
         }
         return try await evaluateRangeValues(startValue: startValue, endValue: endValue)
     }

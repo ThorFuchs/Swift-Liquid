@@ -54,11 +54,18 @@ For an include whose name is a property or index expression, the expression is
 evaluated to a string and that exact name is resolved once; it does not receive
 the separate context-variable fallback. Existing simple-name lookup retains its
 literal-first behavior.
+An include with a `with` binding and no explicit alias derives the alias from
+the selected name after any variable fallback; argument expressions retain
+their established evaluation order.
 Shared include scope, isolated render scope, iteration/cycle/interrupt state and
 immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
 not filter pipelines. Include-for and render-for support explicit aliases, and
 `with`/`for` bindings may be followed by comma-separated named arguments.
+For `render ... for`, arrays, ranges, and objects render once per element; a scalar
+renders once, and a nil value leaves any explicitly supplied alias argument intact.
+For `include ... for`, an array renders once per element; other inputs render once.
+Named arguments are scoped to the include, including when control flow propagates.
 Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 

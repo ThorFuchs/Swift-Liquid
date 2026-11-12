@@ -552,6 +552,37 @@ internal final class Lexer {
         return next + 1 < bytes.count && bytes[next] == Self.closeBrace && bytes[next + 1] == Self.closeBrace
     }
 
+    private func isLaxTerminalAssignmentSuffix(_ tokens: [Token], tagStart: Int, at offset: Int) -> Bool {
+        guard syntaxMode == .lax, offset > 0, bytes[offset - 1].isWhitespaceByte,
+              tagStart + 1 < tokens.count, let last = tokens.last, last.line == line else { return false }
+        let header = tokens[tagStart + 1].type
+        guard header == .assign || header == .liquid else { return false }
+        guard let assignment = tokens.lastIndex(where: { $0.type == .assign && $0.line == line }),
+              assignment >= tagStart + 1, assignment + 3 < tokens.count,
+              tokens[assignment + 2].type == .equals,
+              !tokens[(assignment + 3)...].contains(where: { $0.type == .filter }) else { return false }
+        switch last.type {
+        case .identifier, .number, .string, .rightBracket, .rightParen: break
+        default: return false
+        }
+        var next = offset + 1
+        while next < bytes.count && (bytes[next] == 32 || bytes[next] == 9 || bytes[next] == 13) { next += 1 }
+        if header == .liquid, next < bytes.count, bytes[next] == Self.newline { return true }
+        while next < bytes.count && bytes[next].isWhitespaceByte { next += 1 }
+        return next + 1 < bytes.count && bytes[next] == Self.percent && bytes[next + 1] == Self.closeBrace
+    }
+
+    private func isLaxPartialAttributeJunk(_ tokens: [Token], tagStart: Int) -> Bool {
+        guard syntaxMode == .lax, tagStart + 2 < tokens.count else { return false }
+        let tag = tokens[tagStart + 1].type
+        guard tag == .include || tag == .render else { return false }
+        // Do not skip punctuation before a partial-name expression.
+        switch tokens[tagStart + 2].type {
+        case .string, .identifier: return true
+        default: return false
+        }
+    }
+
     private func tokenizeVariable(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
         advanceASCII() // consume first {
         advanceASCII() // consume second {
@@ -875,11 +906,13 @@ internal final class Lexer {
                 advanceASCII()
                 advanceASCII()
                 context = .text
-                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol, trimRight: trimRight))
+                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol))
                 // Emit synthetic {% endcomment %} so the parser can treat it as a block comment
                 tokens.append(Token(type: .tagStart, position: endPos, line: endLn, column: endCol))
                 tokens.append(Token(type: .endcomment, position: endPos, line: endLn, column: endCol))
-                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol))
+                // Trimming runs over token neighbors, so the synthetic closing
+                // tag must carry the original delimiter's right-trim marker.
+                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol, trimRight: trimRight))
             }
             return
         }
@@ -939,6 +972,9 @@ internal final class Lexer {
                     advanceASCII()
                     advanceASCII()
                     tokens.append(Token(type: .notEquals, position: tokenPosition, line: tokenLine, column: tokenColumn))
+                } else if isLaxPartialAttributeJunk(tokens, tagStart: tagTokenStart) ||
+                            isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
+                    advanceASCII()
                 } else {
                     throw LexerError.unexpectedCharacter("!", position: tokenPosition)
                 }
@@ -1036,7 +1072,9 @@ internal final class Lexer {
                 // Negative number literal (-5, -3.14)
                 // Note: -%} trim markers are already handled before this switch
                 let nextIdx = byteIndex + 1
-                if nextIdx < end, bytes[nextIdx].isDigitByte {
+                if isLaxTerminalAssignmentSuffix(tokens, tagStart: tagTokenStart, at: tokenPosition) {
+                    advanceASCII()
+                } else if nextIdx < end, bytes[nextIdx].isDigitByte {
                     let isUnary = tokens.isEmpty || {
                         let lastType = tokens.last!.type
                         switch lastType {
@@ -1062,6 +1100,9 @@ internal final class Lexer {
             case 0x3F where syntaxMode == .strict2:
                 advanceASCII()
                 tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
+            case 0x7E where isLaxPartialAttributeJunk(tokens, tagStart: tagTokenStart):
+                advanceASCII()
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)

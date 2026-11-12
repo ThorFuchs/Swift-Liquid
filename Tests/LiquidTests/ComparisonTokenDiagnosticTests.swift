@@ -61,6 +61,13 @@ struct ComparisonTokenDiagnosticTests {
 
     @Test func comparisonsKeepModesAndByteOrigins() async throws {
         let engine = LiquidEngine()
+        for source in ["{% unless x === y %}{% endunless %}", "{% if x === y %}{% endif %}"] {
+            do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+            catch LiquidError.syntax(let message, let line, let column) {
+                #expect(message == "Unexpected character =")
+                #expect(line == 1 && column != nil)
+            }
+        }
         #expect(try await engine.render(template: "{% if 2 == 2 %}yes{% endif %}", syntaxMode: .strict2) == "yes")
         #expect(try await engine.render(template: "{{ '==' }}", syntaxMode: .strict2) == "==")
         for source in ["{{ = }}", "{{ === }}"] {

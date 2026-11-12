@@ -18,13 +18,16 @@ struct LaxOutputTailTests {
         #expect(try await engine.render(template: "{{ obj.name ! }}", context: ["obj": ["name": "ok"]]) == "ok")
         #expect(try await engine.render(template: "{{ value | upcase }}", context: ["value": "ok"]) == "OK")
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ ! }}", syntaxMode: .lax) }
-        for suffix in ["a", "1", "=", "<", ">"] {
+        for suffix in ["a", "1", "=", "<", ">", "!", "-"] {
             for source in ["{% assign x = false \(suffix) %}{{ x }}", "{% liquid assign x = false \(suffix)\n%}{{ x }}"] {
                 #expect(try await engine.render(template: source, syntaxMode: .lax) == "false", "\(source)")
                 for mode in [LiquidSyntaxMode.strict, .strict2] {
                     #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: mode) }
                 }
             }
+        }
+        for source in ["{% assign x = ! %}", "{% assign x = false ! true %}", "{% if true ! %}x{% endif %}"] {
+            #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: .lax) }
         }
     }
 

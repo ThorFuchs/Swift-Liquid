@@ -2011,6 +2011,228 @@
         "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
       ],
       "qualification": "Public parser regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Blank and empty literal comparison",
+      "scopeDecision": "The maintainer requested pinned Shopify behavior while retaining original fixtures and compatibility holds.",
+      "changes": [
+        "Compare two blank or empty predicate literals as unequal, preserving their ordinary predicate behavior against other values."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/NilComparisonTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Render-for scalar and nil behavior",
+      "scopeDecision": "The maintainer requested Shopify-compatible behavior while preserving exact registry identity, render isolation and existing holds.",
+      "changes": [
+        "Render a non-enumerable render-for input once, retain decorated inputs, and avoid overwriting a named alias argument for nil; keep array iteration and isolated scope unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Render-for enumerable values",
+      "scopeDecision": "The maintainer requested Ruby-compatible partial rendering with preserved registry and scope contracts.",
+      "changes": [
+        "Iterate ranges and ordered object entries for render-for, using the same sequence representations as ordinary for loops."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Counter visibility over host inputs",
+      "scopeDecision": "The maintainer requested the pinned Shopify scope behavior while preserving invocation ownership and isolated render visibility of original host inputs.",
+      "changes": [
+        "Give an initialized local counter precedence over a same-named host input, below explicit local bindings and assignments."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Tests/LiquidTests/PublicContractTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Inline comment right whitespace control",
+      "scopeDecision": "The maintainer requested Shopify-compatible inline comments while preserving pinned fixtures and parser modes.",
+      "changes": [
+        "Carry an inline comment's right-trim marker through its synthetic closing tag so the existing whitespace pass sees the following text."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/InlineCommentCompatibilityTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Range values in bracket lookup",
+      "scopeDecision": "The maintainer requested Ruby-compatible expression behavior while preserving fixture and system-value contracts.",
+      "changes": [
+        "Treat a range used as a bracket key as missing rather than stringifying it or interpreting it as an array slice."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax empty filter segments",
+      "scopeDecision": "The maintainer requested pinned Ruby compatibility while preserving strict parser modes and fixture metadata.",
+      "changes": [
+        "Ignore empty filter segments in lax parsing while preserving strict and strict2 rejection and original token diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax filter protocol regression",
+      "scopeDecision": "The maintainer requested Ruby lax parsing while preserving structured protocol errors and stale-template invalidation.",
+      "changes": [
+        "Keep the protocol's original invalidation probe in strict2 and add a separate default-lax positive probe for empty filter segments."
+      ],
+      "files": ["Scripts/check_liquid_spec_protocol.py"],
+      "qualification": "Protocol and pinned conformance remain subject to their recorded outcomes; no conformance or release claim is implied."
+    },
+    {
+      "area": "Lax assignment terminal punctuation",
+      "scopeDecision": "The maintainer requested Ruby-compatible lax behavior while preserving strict parser modes, pinned fixtures and source provenance.",
+      "changes": [
+        "Accept a whitespace-separated terminal exclamation mark or dash after a complete unfiltered lax assignment, including within liquid blocks."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Natural-sort and join composite coercion",
+      "scopeDecision": "The maintainer requested pinned Ruby standard-filter behavior without changing fixture or dependency contracts.",
+      "changes": [
+        "Use Ruby-style composite inspection for natural-sort keys and join separators on both filter execution paths; compare natural-sort numbers as strings and preserve nil ordering."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Include-for interrupt output and cleanup",
+      "scopeDecision": "The maintainer requested Shopify-compatible partial interrupts while preserving invocation-owned scope and registry behavior.",
+      "changes": [
+        "Carry prior iteration output when a break or continue escapes include-for, and restore the partial path and temporary alias on every exit."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Dynamic range bound diagnostics",
+      "scopeDecision": "The maintainer requested pinned Ruby error behavior while preserving range semantics and fixture expectations.",
+      "changes": [
+        "Present non-integral dynamic range bounds with Ruby's invalid-integer reason, preserving literal truncation and existing public error categories."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax partial attribute punctuation",
+      "scopeDecision": "The maintainer requested pinned Ruby lax parsing while preserving strict-mode rejection and exact registry selection.",
+      "changes": [
+        "Ignore unrecognized exclamation and tilde punctuation after a partial name in lax include/render attribute markup."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Dynamic include default binding alias",
+      "scopeDecision": "The maintainer requested Ruby-compatible dynamic partial bindings while preserving exact literal-first lookup and argument evaluation order.",
+      "changes": [
+        "Derive an implicit with-binding alias from the selected partial name after variable fallback, while evaluating binding expressions before lookup as before."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Conditional triple-equals diagnostics",
+      "scopeDecision": "The maintainer requested Shopify strict2 diagnostics while retaining original-byte provenance and earlier rejection order.",
+      "changes": [
+        "Present a source-validated triple-equals conditional operator as the pinned Ruby unexpected-character error without changing rewritten-source or longer-operator handling."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Unclosed control-block diagnostics",
+      "scopeDecision": "The maintainer requested stack-safe Shopify diagnostics while preserving source authority and earlier rejection behavior.",
+      "changes": [
+        "Retain each original control-block opening in the explicit parser frame and report its unclosed tag at end of input; leave rewritten-source fallback unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Include-for scalar and argument scope",
+      "scopeDecision": "The maintainer requested pinned Ruby partial behavior while preserving exact registry lookup and shared include state.",
+      "changes": [
+        "Render non-array include-for inputs once and apply named arguments in a temporary include scope, restoring that scope on every exit."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

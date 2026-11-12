@@ -294,7 +294,9 @@ extension Renderer {
             return left.scope === right.scope
         }
         if left is RuntimeSelf || right is RuntimeSelf { return false }
-        if let left = left as? LiquidSpecialValue, let right = right as? LiquidSpecialValue { return left == right }
+        // Ruby's blank and empty comparison literals are predicates, not
+        // values that compare equal to themselves or to each other.
+        if left is LiquidSpecialValue && right is LiquidSpecialValue { return false }
         if let special = left as? LiquidSpecialValue { return special == .blank ? isBlank(right) : isEmpty(right) }
         if let special = right as? LiquidSpecialValue { return special == .blank ? isBlank(left) : isEmpty(left) }
         if left is NSNull || right is NSNull { return left is NSNull && right is NSNull }
@@ -663,6 +665,12 @@ extension Renderer {
         return isEmpty(value)
     }
     
+    internal func joinSeparator(_ value: Any) throws -> String {
+        let value = systemPrimary(value)
+        if value is RuntimeObject || value is [String: Any] || value is [Any] { return try rubyInspect(value) }
+        return stringify(value)
+    }
+
     internal func joinArray(_ value: Any, separator: String) throws -> String {
         guard let array = value as? [Any] else { return try renderStringify(value) }
         // Flatten nested arrays before joining (Shopify behavior).
@@ -683,15 +691,15 @@ extension Renderer {
         return stringify(a) < stringify(b)
     }
 
-    internal func compareForSortNatural(_ a: Any, _ b: Any) -> Bool {
+    internal func compareForSortNatural(_ a: Any, _ b: Any) throws -> Bool {
         let a = systemPrimary(a); let b = systemPrimary(b)
         if a is NSNull { return false }
         if b is NSNull { return true }
-        if let na = numericValue(a), let nb = numericValue(b),
-           (a is Int || a is Double), (b is Int || b is Double) {
-            return na < nb
+        func sortString(_ value: Any) throws -> String {
+            if value is RuntimeObject || value is [String: Any] || value is [Any] { return try rubyInspect(value) }
+            return stringifyUnescaped(value)
         }
-        return stringify(a).lowercased() < stringify(b).lowercased()
+        return try sortString(a).lowercased() < sortString(b).lowercased()
     }
 
     internal func flattenArray(_ array: [Any]) -> [Any] {

@@ -677,11 +677,7 @@ extension Renderer {
 
         let isRender = withVars?["__render_isolated__"] != nil
         let hasForIteration = withVars?["_for"] != nil
-        let evaluatedVariables = try await evaluateIncludeBindings(
-            template: template,
-            with: withVars,
-            as: asVar
-        )
+        let bindings = try await evaluateIncludeBindings(with: withVars)
 
         var templateName = template.string
 
@@ -743,13 +739,45 @@ extension Renderer {
             }
         }
 
+        var evaluatedVariables = bindings.variables
+        if let value = bindings.withValue {
+            let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
+            evaluatedVariables[alias] = value
+        }
+
         // Handle {% render "template" for collection %} — iterate and render for each item
         if isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let collection = systemPrimary(try await evaluateExpression(forExpr))
-            guard let items = collection as? [Any] else {
-                return ""
-            }
+            let suppliedCollection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(suppliedCollection)
             let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
+            let items: [Any]?
+            if let array = collection as? [Any] { items = array }
+            else if let range = collection as? RuntimeRange { items = range.values }
+            else if let pairs = orderedDictPairs(collection) { items = pairs.map { [$0.key, $0.value] as [Any] } }
+            else { items = nil }
+            guard let items else {
+                // Ruby renders once for non-enumerable values. A nil value
+                // does not overwrite an explicit argument with the same name.
+                var itemVars = evaluatedVariables
+                if !(collection is NSNull) { itemVars[alias] = suppliedCollection }
+                let savedLiquidScope = try enterLiquidIsolatedScope()
+                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
+                let savedState = context.saveState()
+                context.isolateScope(with: itemVars)
+                templatePathStack.append(resolvedPath)
+                defer {
+                    _ = templatePathStack.popLast()
+                    context.restoreState(savedState)
+                }
+                let preparedAST = try await prepareASTForRendering(ast)
+                do {
+                    return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    return signal.partialOutput
+                }
+            }
             let itemCount = items.count
             let lastIndex = itemCount - 1
             let forloopName = "\(alias)-\(template.string)"
@@ -794,25 +822,35 @@ extension Renderer {
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
             try enterLiquidScope()
             defer { liquidLocalScopeDepth -= 1 }
-            let collection = systemPrimary(try await evaluateExpression(forExpr))
-            guard let items = collection as? [Any] else {
-                return ""
+            let suppliedCollection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(suppliedCollection)
+            let array = collection as? [Any]
+            let items = array ?? [suppliedCollection]
+            if !evaluatedVariables.isEmpty {
+                context.pushScope(evaluatedVariables)
             }
+            defer { if !evaluatedVariables.isEmpty { context.popScope() } }
             let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
             var output = ""
             output.reserveCapacity(items.count * 64)
             for item in items {
-                try budget.iterate()
+                if array != nil { try budget.iterate() }
                 try budget.output(output)
                 let snapshots = context.snapshotVariables(named: [alias])
                 context.setVariable(alias, value: item)
                 templatePathStack.append(resolvedPath)
-                let preparedAST = try await prepareASTForRendering(ast)
-                output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                    try await renderNode(preparedAST)
+                defer {
+                    _ = templatePathStack.popLast()
+                    context.restoreVariables(snapshots)
                 }
-                _ = templatePathStack.popLast()
-                context.restoreVariables(snapshots)
+                let preparedAST = try await prepareASTForRendering(ast)
+                do {
+                    output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    throw signal.carrying(output + signal.partialOutput)
+                }
             }
             return output
         }
@@ -874,12 +912,10 @@ extension Renderer {
     }
 
     internal func evaluateIncludeBindings(
-        template: InlineString,
-        with withVars: [String: LiquidExpression]?,
-        as asVar: InlineString?
-    ) async throws -> RuntimeVariables {
+        with withVars: [String: LiquidExpression]?
+    ) async throws -> (variables: RuntimeVariables, withValue: Any?) {
         guard let withVars else {
-            return [:]
+            return ([:], nil)
         }
 
         var evaluatedVariables: RuntimeVariables = [:]
@@ -894,12 +930,10 @@ extension Renderer {
             }
         }
 
-        if let withExpression = withVars["_with"] {
-            let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
-            evaluatedVariables[alias] = try await evaluateExpression(withExpression)
-        }
-
-        return evaluatedVariables
+        let withValue: Any?
+        if let withExpression = withVars["_with"] { withValue = try await evaluateExpression(withExpression) }
+        else { withValue = nil }
+        return (evaluatedVariables, withValue)
     }
 
     internal func defaultTemplateAlias(for templatePath: String) -> String {

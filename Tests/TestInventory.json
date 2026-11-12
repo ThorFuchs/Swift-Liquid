@@ -1,6 +1,18 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.PartialArgumentCompatibilityTests/includeForRendersScalarOnceAndScopesArguments()": null,
+    "LiquidTests.BlockAndPipeDiagnosticTests/unclosedControlBlocksRetainOriginalOpening()": null,
+    "LiquidTests.PartialArgumentCompatibilityTests/dynamicIncludeWithUsesResolvedNameAsDefaultAlias()": null,
+    "LiquidTests.PartialArgumentCompatibilityTests/laxPartialAttributesIgnoreUnrecognizedPunctuation()": null,
+    "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
+    "LiquidTests.PartialInterruptCompatibilityTests/includeForCarriesPriorOutputAndRestoresBindings()": null,
+    "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,
+    "LiquidTests.LaxFilterScanningTests/emptyFilterSegmentsAreLaxOnly()": null,
+    "LiquidTests.WhereAndLoopLookupTests/rangeBracketKeysDoNotBecomeStringsOrSlices()": null,
+    "LiquidTests.countersShadowHostInputsButRemainRenderLocal()": null,
+    "LiquidTests.PartialArgumentCompatibilityTests/renderForNonEnumerableValuesRendersOnce()": null,
+    "LiquidTests.NilComparisonTests/specialComparisonLiteralsRemainPredicates()": null,
     "LiquidTests.StandardFilterCoercionTests/invalidSliceArgumentsReportRubyIntegerError()": null,
     "LiquidTests.StandardFilterCoercionTests/arraySumUsesDecimalInputsBeforeConvertingBackToFloat()": null,
     "LiquidTests.ReconciledSystemCompatibilityTests/multilineAndNestedSystemSelectionKeepScope()": null,

@@ -4,6 +4,24 @@ import Testing
 
 @Suite("Partial interrupt boundaries")
 struct PartialInterruptCompatibilityTests {
+    @Test func includeForCarriesPriorOutputAndRestoresBindings() async throws {
+        let engine = LiquidEngine()
+        let context: LiquidObject = ["items": ["a", "b", "c"], "item": "outer"]
+        let source = "{% for outer in (1..2) %}{% include 'p' for items as item %}Z{% endfor %}|{{ item }}"
+        let cases = [("{% if item == 'b' %}{% break %}{% endif %}{{ item }}", "a|outer"),
+                     ("{{ item }}{% if item == 'b' %}{% continue %}{% endif %}", "abab|outer")]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (partial, expected) in cases {
+                let parsed = try LiquidTemplate(source, syntaxMode: mode)
+                let templates = ["p": try LiquidTemplate(partial, syntaxMode: mode)]
+                #expect(try await engine.render(parsed, context: context, templates: templates) == expected)
+                let result = try await engine.renderWithDiagnostics(parsed, context: context, templates: templates)
+                #expect(result.output == expected && result.diagnostics.isEmpty)
+                let registry = try LiquidTemplateRegistry([.init("p", .parsed(try LiquidTemplate(partial, syntaxMode: mode)))])
+                #expect(try await engine.render(parsed, context: context, registry: registry) == expected)
+            }
+        }
+    }
     @Test func renderContainsSignalsAndIncludePropagatesThem() async throws {
         let engine = LiquidEngine()
         let sources = [

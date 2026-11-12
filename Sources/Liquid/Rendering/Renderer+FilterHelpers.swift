@@ -301,16 +301,12 @@ extension Renderer {
         }()
 
         if let propertyName {
-            return array.sorted { a, b in
-                let aValue = getObjectProperty(a, key: propertyName)
-                let bValue = getObjectProperty(b, key: propertyName)
-                if aValue == nil && bValue == nil { return false }
-                if aValue == nil { return false }
-                if bValue == nil { return true }
-                return stringify(aValue!).lowercased() < stringify(bValue!).lowercased()
+            return try array.sorted { a, b in
+                try compareForSortNatural(getObjectProperty(a, key: propertyName) ?? NSNull(),
+                                          getObjectProperty(b, key: propertyName) ?? NSNull())
             }
         } else {
-            return array.sorted { compareForSortNatural($0, $1) }
+            return try array.sorted { try compareForSortNatural($0, $1) }
         }
     }
 

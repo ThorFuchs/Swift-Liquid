@@ -619,6 +619,7 @@ internal final class Parser {
         // including mixed nesting, so source depth does not consume the native stack.
         struct Frame {
             let kind: BlockStart
+            let opening: Token?
             var condition: LiquidExpression? = nil
             var location: RenderLocation? = nil
             var variable: InlineString? = nil
@@ -639,20 +640,21 @@ internal final class Parser {
         let entryDepth = parseDepth
         defer { parseDepth = entryDepth }
         func beginFrame(_ kind: BlockStart) throws -> Frame {
+            let opening = originalBlockOpening()
             if case .loop = kind {
                 let (variable, collection, params) = try parseForHeader()
-                return Frame(kind: kind, variable: variable, collection: collection, params: params)
+                return Frame(kind: kind, opening: opening, variable: variable, collection: collection, params: params)
             }
             if case .table = kind {
                 let (variable, collection, params) = try parseTableRowHeader()
-                return Frame(kind: kind, variable: variable, collection: collection, tableParams: params)
+                return Frame(kind: kind, opening: opening, variable: variable, collection: collection, tableParams: params)
             }
             if case .capture = kind {
-                return Frame(kind: kind, variable: try parseCaptureHeader())
+                return Frame(kind: kind, opening: opening, variable: try parseCaptureHeader())
             }
             if case .ifChanged = kind {
                 try consumeTagEnd()
-                return Frame(kind: kind)
+                return Frame(kind: kind, opening: opening)
             }
             if case .caseBlock = kind {
                 let expression = try parseCaseOperand()
@@ -663,12 +665,12 @@ internal final class Parser {
                     }
                 }
                 try consumeTagEnd()
-                return Frame(kind: kind, condition: expression)
+                return Frame(kind: kind, opening: opening, condition: expression)
             }
             let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
             let condition = try parseComplexExpression()
             try consumeTagEnd()
-            return Frame(kind: kind, condition: condition, location: location)
+            return Frame(kind: kind, opening: opening, condition: condition, location: location)
         }
         var frames = [try beginFrame(initial)]
         func finishElsif(_ index: Int) {
@@ -818,6 +820,19 @@ internal final class Parser {
                 }
             }
         }
+        if let frame = frames.last, let opening = frame.opening {
+            let tag: String
+            switch frame.kind {
+            case .conditional: tag = "if"
+            case .unless: tag = "unless"
+            case .loop: tag = "for"
+            case .table: tag = "tablerow"
+            case .capture: tag = "capture"
+            case .caseBlock: tag = "case"
+            case .ifChanged: tag = "ifchanged"
+            }
+            throw ParserError.unclosedShopifyBlock(tag, opening: opening)
+        }
         if frames.last?.kind == .ifChanged { throw ParserError.unclosedTag("ifchanged") }
         throw ParserError.unexpectedToken(currentToken)
     }
@@ -864,6 +879,12 @@ internal final class Parser {
 
     @inline(__always)
     private func parseComparisonContinuation(startingWith left: LiquidExpression) throws ->LiquidExpression {
+        if syntaxMode == .strict2, currentToken.type == .equals, nextTokenStorage.type == .equals,
+           nextTokenStorage.position == currentToken.position + 2, case .original = sourceProvenance,
+           let source, let start = stringIndex(in: source, utf8Offset: currentToken.position),
+           source[start...].hasPrefix("==="), !source[start...].hasPrefix("====") {
+            throw LiquidError.syntax(message: "Unexpected character =", line: nextTokenStorage.line + lineOffset, column: nextTokenStorage.column)
+        }
         if syntaxMode == .lax {
             let unknown: InlineString?
             if currentToken.type == .equals && !isOriginalComparison(currentToken) {
@@ -924,6 +945,13 @@ internal final class Parser {
 
         advance() // consume |
 
+        // Ruby's lax scanner ignores empty filter segments. Strict modes
+        // still reject the original pipe or end-of-string token.
+        if syntaxMode == .lax {
+            while currentTokenStorage.type == .filter { advance() }
+            if currentTokenStorage.type == .variableEnd || currentTokenStorage.type == .tagEnd { return expr }
+        }
+
         guard case .identifier(let firstFilterName) = currentTokenStorage.type else {
             throw identifierExpected(currentToken)
         }
@@ -946,6 +974,11 @@ internal final class Parser {
 
         repeat {
             advance() // consume |
+
+            if syntaxMode == .lax {
+                while currentTokenStorage.type == .filter { advance() }
+                if currentTokenStorage.type == .variableEnd || currentTokenStorage.type == .tagEnd { break }
+            }
 
             guard case .identifier(let filterName) = currentTokenStorage.type else {
                 throw identifierExpected(currentToken)

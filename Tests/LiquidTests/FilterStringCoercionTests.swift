@@ -4,6 +4,28 @@ import Testing
 
 @Suite("Shopify filter string coercion")
 struct FilterStringCoercionTests {
+    @Test func compositeSortAndJoinSeparatorUseRubyStringCoercion() async throws {
+        let engine = LiquidEngine()
+        let input: LiquidObject = [
+            "objects": [["foo": "bar"], ["foo": 123], ["foo": nil], ["foo": true], ["foo": ["foo", "bar"]]],
+            "values": [["key1": "value1"], ["key2": "value2"]], "glue": ["lol": "wut"],
+            "numbers": [9, 1111, 87]
+        ]
+        let cases = [
+            ("{{ objects | sort_natural }}", "{\"foo\"=>\"bar\"}{\"foo\"=>123}{\"foo\"=>[\"foo\", \"bar\"]}{\"foo\"=>nil}{\"foo\"=>true}"),
+            ("{{ values | join: glue }}", "{\"key1\"=>\"value1\"}{\"lol\"=>\"wut\"}{\"key2\"=>\"value2\"}"),
+            ("{{ numbers | sort_natural | join: ',' }}", "1111,87,9")
+        ]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (source, expected) in cases {
+                let parsed = try LiquidTemplate(source, syntaxMode: mode)
+                let actual = try await engine.render(parsed, context: input)
+                #expect(actual == expected, "\(source)")
+                let recovered = try await engine.renderWithDiagnostics(parsed, context: input)
+                #expect(recovered.output == expected && recovered.diagnostics.isEmpty, "\(source)")
+            }
+        }
+    }
     @Test func compositeInputsUseRubyInspectionAtPublicEntryPoints() async throws {
         let engine = LiquidEngine()
         let input: LiquidObject = ["a": ["foo", "bar"], "b": ["foo": "bar", "nested": ["a", nil, true]]]

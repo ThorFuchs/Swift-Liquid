@@ -50,8 +50,12 @@ An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+Within each scope, an initialized increment/decrement counter shadows a host
+input of the same name; an explicit Liquid assignment remains visible above it.
 Loop interrupts remain inside an isolated `render`; `include` shares the
 caller's interrupt flow. Output produced before an interrupt is retained.
+For `include ... for`, output from earlier partial iterations is retained too,
+and the temporary iteration binding is restored when the interrupt propagates.
 See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
 
 A case evaluates its current operand before each when value, in source order.
@@ -68,6 +72,7 @@ Unknown filters leave their input unchanged by default, as in open-source Liquid
 `LiquidEngine(strictFilters: true)` makes them errors. Rhoe extension filters are
 treated as unknown filters. Unknown tags are syntax errors. `LiquidSyntaxMode`
 selects lax, strict, or strict2 parsing; the fixture runner preserves these modes.
+Lax parsing ignores empty filter segments; strict and strict2 reject them.
 
 The 1.1 [custom-filter API](CustomFilters.md) lets a host explicitly
 provide additional names for one engine. Empty configuration preserves the 1.0
