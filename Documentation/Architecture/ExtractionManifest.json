@@ -1481,6 +1481,15 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Legacy dot-prefixed cycle lookup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving strict2, original source provenance and pinned fixtures.",
+      "changes": [
+        "Use the exact original digits of a dot-prefixed legacy cycle operand as a variable lookup, preserving leading zeros and strict2 rejection."
+      ],
+      "files": ["Sources/Liquid/Syntax/Parser.swift", "Tests/LiquidTests/CycleCompatibilityTests.swift"],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

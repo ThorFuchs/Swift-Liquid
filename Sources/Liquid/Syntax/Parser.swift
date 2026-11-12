@@ -2271,11 +2271,31 @@ internal final class Parser {
         }
     }
     
+    private func parseCycleOperand() throws -> LiquidExpression {
+        // Ruby's lax cycle parser treats a dot followed by digits as a
+        // variable lookup. Preserve its exact original spelling, including
+        // leading zeros, instead of converting it to a numeric literal.
+        if syntaxMode != .strict2, case .original = sourceProvenance,
+           currentToken.type == .dot, nextTokenStorage.position == currentToken.position + 1,
+           case .number(_, let isFloat) = nextTokenStorage.type, !isFloat,
+           let source, let start = stringIndex(in: source, utf8Offset: nextTokenStorage.position) {
+            try Task.checkCancellation()
+            let digits = source[start...].utf8.prefix { (48...57).contains($0) }
+            if !digits.isEmpty {
+                let name = InlineString(utf8: digits)
+                advance()
+                advance()
+                return .variable(name)
+            }
+        }
+        return try parsePrimaryExpression()
+    }
+
     private func parseCycleTag() throws ->ASTNode {
         var values = makeExpressionBuffer(initialCapacity: 4)
 
         // Parse first value — might be a group name followed by ':'
-        let firstExpr = try parsePrimaryExpression()
+        let firstExpr = try parseCycleOperand()
 
         // Check for named cycle: {% cycle name: val1, val2 %}
         var group: LiquidExpression? = nil
@@ -2283,7 +2303,7 @@ internal final class Parser {
             advance() // consume ':'
             group = firstExpr
             // Parse actual cycle values
-            values.append(try parsePrimaryExpression())
+            values.append(try parseCycleOperand())
         } else {
             values.append(firstExpr)
         }
@@ -2301,7 +2321,7 @@ internal final class Parser {
             guard currentToken.type == .comma else { break }
             advance()
             if currentToken.type == .tagEnd { break }
-            values.append(try parsePrimaryExpression())
+            values.append(try parseCycleOperand())
         }
 
         try consumeTagEnd()
