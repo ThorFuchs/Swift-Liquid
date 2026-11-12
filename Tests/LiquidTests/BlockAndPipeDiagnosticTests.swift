@@ -72,6 +72,10 @@ struct BlockAndPipeDiagnosticTests {
     @Test func validBlocksAndOtherModesStayBounded() async throws {
         let engine = LiquidEngine()
         #expect(try await engine.render(template: "{% raw %}{{ x }}{% endraw %}|{% comment %}hidden{% endcomment %}ok|{% doc %}note{% enddoc %}", syntaxMode: .strict2) == "{{ x }}|ok|")
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: "{% raw %} Foobar {% invalid {% {% endraw {% endraw %}", syntaxMode: mode) == " Foobar {% invalid {% {% endraw ")
+            #expect(try await engine.render(template: "{% raw %}a{% endrawx %}b{% endraw %}", syntaxMode: mode) == "a{% endrawx %}b")
+        }
         #expect(try await engine.render(template: "{% if true %}yes{% endif %}", syntaxMode: .strict2) == "yes")
         for mode in [LiquidSyntaxMode.lax, .strict] {
             do { _ = try LiquidTemplate("{% raw %}text", syntaxMode: mode); Issue.record("Expected rejection") }
