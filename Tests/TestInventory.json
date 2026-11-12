@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.InlineCommentCompatibilityTests/invalidContinuationsRetainMarkupLine()": null,
+    "LiquidTests.InlineCommentCompatibilityTests/blankLinesAndFirstMarkupLineAreAccepted()": null,
     "LiquidTests.StandardFilterCoercionTests/defaultAndSquishHandleCompositeInputs()": null,
     "LiquidTests.StandardFilterCoercionTests/scalarSumKeepsIntegerAndFloatIdentity()": null,
     "LiquidTests.LaxCaseMarkupTests/retainedLookupAndTrailingTextMatchReference()": null,

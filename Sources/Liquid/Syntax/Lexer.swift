@@ -729,6 +729,11 @@ internal final class Lexer {
         // If the first non-whitespace character is #, skip everything until %} or -%}
         // Each continuation line must also start with # (enforce leading hash)
         if byteIndex < bytes.count, bytes[byteIndex] == 0x23 { // 0x23 = '#'
+            _ = advance() // consume the tag name
+            // Ruby consumes whitespace after the tag name before establishing
+            // the first markup line. Blank continuation lines are allowed.
+            skipWhitespace()
+            let markupStart = Token(type: .comment, position: byteIndex, line: line, column: column)
             while byteIndex < bytes.count {
                 if bytes[byteIndex] == Self.dash,
                    byteIndex + 2 < bytes.count,
@@ -743,11 +748,8 @@ internal final class Lexer {
                 }
                 // Check for newline — next non-whitespace on new line must be #
                 if bytes[byteIndex] == 0x0A { // newline
-                    advanceASCII()
-                    // Skip leading whitespace on new line
-                    while byteIndex < bytes.count, bytes[byteIndex] == 0x20 || bytes[byteIndex] == 0x09 {
-                        advanceASCII()
-                    }
+                    _ = advance()
+                    skipWhitespace()
                     // Check for %} / -%} (end of tag)
                     if byteIndex < bytes.count {
                         if (bytes[byteIndex] == Self.percent && byteIndex + 1 < bytes.count && bytes[byteIndex + 1] == Self.closeBrace) ||
@@ -756,12 +758,15 @@ internal final class Lexer {
                         }
                         // Next non-ws character must be #
                         if bytes[byteIndex] != 0x23 {
+                            if case .original = sourceProvenance {
+                                throw LexerError.invalidInlineComment(opening: markupStart)
+                            }
                             throw LexerError.unexpectedCharacter(Character(UnicodeScalar(bytes[byteIndex])), position: byteIndex)
                         }
                     }
                     continue
                 }
-                advanceASCII()
+                _ = advance()
             }
             // Emit comment token so parser recognizes it
             tokens.append(Token(

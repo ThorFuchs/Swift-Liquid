@@ -35,6 +35,11 @@ trailing markup follows; in original source, contiguous `foo=bar` and `foo=>bar`
 lookup fragments follow Ruby's legacy lookup behavior. Strict2 keeps its full-markup
 validation.
 
+Inline `#` comments allow blank continuation lines. Once comment markup has
+started, each nonblank continuation line must begin with `#`; an invalid line
+produces a syntax error. The first markup line follows whitespace after the tag
+name, including any intervening newlines.
+
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,

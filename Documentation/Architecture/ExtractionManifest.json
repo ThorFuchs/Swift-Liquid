@@ -1431,6 +1431,24 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Inline comment continuation and original-source diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving pinned fixtures, parser modes, cancellation and source-origin boundaries.",
+      "changes": [
+        "Recognize Ruby's first inline-comment markup line and allow blank continuation lines; reject later unprefixed content.",
+        "Retain a typed inline-comment error and its original markup line, and advance line and scalar columns correctly through comment text."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/LiquidError.swift",
+        "Tests/LiquidTests/InlineCommentCompatibilityTests.swift",
+        "Tests/LiquidTests/DiagnosticOriginTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
