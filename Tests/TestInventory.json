@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.PartialArgumentCompatibilityTests/aliasesAndCommaSeparatedBindings()": null,
     "LiquidTests.FilterEdgeCompatibilityTests/numericIdentityAndSorting()": null,
     "LiquidTests.FilterEdgeCompatibilityTests/truncateWordsUsesRubyAsciiSeparators()": null,
     "LiquidTests.UnterminatedMarkupTests/originalDelimiterOwnsTheLocation()": null,

@@ -1524,6 +1524,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Partial argument separators and include-for aliases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving loader identity, binding evaluation, budgets, cancellation and existing holds.",
+      "changes": [
+        "Recognize include-for aliases and comma-separated named arguments after with/for bindings in include and render.",
+        "Preserve exact registry resolution and existing argument evaluation, with public regressions for both loader families."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

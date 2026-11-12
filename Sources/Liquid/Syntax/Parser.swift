@@ -2369,6 +2369,14 @@ internal final class Parser {
                 advance() // consume 'for'
                 let expr = try parseExpression()
                 variables["_for"] = expr
+                if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
+                    advance()
+                    guard case .identifier(let aliasName) = currentToken.type else {
+                        throw identifierExpected(currentToken)
+                    }
+                    alias = aliasName
+                    advance()
+                }
                 // Skip optional comma
                 if currentToken.type == .comma { advance() }
             } else if case .identifier(let varName) = currentToken.type {
@@ -2402,6 +2410,7 @@ internal final class Parser {
                     alias = aliasName
                     advance()
                 }
+                if currentToken.type == .comma { advance() }
             } else {
                 if let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
@@ -2477,6 +2486,7 @@ internal final class Parser {
                     alias = aliasName
                     advance()
                 }
+                if currentToken.type == .comma { advance() }
             } else if currentToken.type == .for {
                 advance()
                 let expr = try parsePrimaryExpression()
@@ -2489,6 +2499,7 @@ internal final class Parser {
                     alias = aliasName
                     advance()
                 }
+                if currentToken.type == .comma { advance() }
             } else {
                 if let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {

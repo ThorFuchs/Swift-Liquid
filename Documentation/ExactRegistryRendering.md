@@ -57,8 +57,9 @@ literal-first behavior.
 Shared include scope, isolated render scope, iteration/cycle/interrupt state and
 immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
-not filter pipelines, and include-for has its existing default alias; render-for
-supports its existing explicit alias. Exact registry dependency inspection is available in the local U3 checkpoint;
+not filter pipelines. Include-for and render-for support explicit aliases, and
+`with`/`for` bindings may be followed by comma-separated named arguments.
+Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 
 ## Successful-only metrics, errors and bounds
