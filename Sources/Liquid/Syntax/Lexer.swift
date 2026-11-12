@@ -875,11 +875,13 @@ internal final class Lexer {
                 advanceASCII()
                 advanceASCII()
                 context = .text
-                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol, trimRight: trimRight))
+                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol))
                 // Emit synthetic {% endcomment %} so the parser can treat it as a block comment
                 tokens.append(Token(type: .tagStart, position: endPos, line: endLn, column: endCol))
                 tokens.append(Token(type: .endcomment, position: endPos, line: endLn, column: endCol))
-                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol))
+                // Trimming runs over token neighbors, so the synthetic closing
+                // tag must carry the original delimiter's right-trim marker.
+                tokens.append(Token(type: .tagEnd, position: endPos, line: endLn, column: endCol, trimRight: trimRight))
             }
             return
         }

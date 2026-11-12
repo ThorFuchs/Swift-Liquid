@@ -35,9 +35,11 @@ struct InlineCommentCompatibilityTests {
     @Test func blankLinesAndFirstMarkupLineAreAccepted() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
-            for source in ["{% # ok\n\n# yes %}X", "{% #\nfoo %}X", "{% #\n\n# yes %}X", "{% # é\n # 😀 %}X"] {
+            for source in ["{% # ok\n\n# yes %}X", "{% #\nfoo %}X", "{% #\n\n# yes %}X", "{% # é\n # 😀 %}X", "{%-\n # comment\n\n # continued\n -%}\n\nX"] {
                 #expect(try await engine.render(template: source, syntaxMode: mode) == "X", "\(source)")
             }
+            #expect(try await engine.render(template: "A{% # comment %}\n X", syntaxMode: mode) == "A\n X")
+            #expect(try await engine.render(template: "A{% # comment -%}\n X", syntaxMode: mode) == "AX")
         }
         do { _ = try LiquidTemplate("{% # é\n # 😀 %}\n{{ x & }}", syntaxMode: .strict2); Issue.record("Expected invalid output") }
         catch LiquidError.syntax(_, let line, _) { #expect(line == 3) }

@@ -2065,6 +2065,18 @@
         "Documentation/Language.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Inline comment right whitespace control",
+      "scopeDecision": "The maintainer requested Shopify-compatible inline comments while preserving pinned fixtures and parser modes.",
+      "changes": [
+        "Carry an inline comment's right-trim marker through its synthetic closing tag so the existing whitespace pass sees the following text."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/InlineCommentCompatibilityTests.swift"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
