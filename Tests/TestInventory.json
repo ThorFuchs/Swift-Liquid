@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.WhereAndLoopLookupTests/whereSupportsStringsAndObjectInputs()": null,
+    "LiquidTests.WhereAndLoopLookupTests/dottedAndIndexedBoundsAreEvaluatedPerInvocation()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/renderContainsSignalsAndIncludePropagatesThem()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/renderForAndExactRegistryStayIsolated()": null,
     "LiquidTests.InlineCommentCompatibilityTests/invalidContinuationsRetainMarkupLine()": null,

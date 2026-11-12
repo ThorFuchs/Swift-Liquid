@@ -124,30 +124,33 @@ extension Renderer {
         // where filter: filters an array to elements where a property equals a value
         // Usage: {{ products | where: 'available', true }}
         // Usage: {{ products | where: 'title' }}  (truthy check)
-        guard let array = value as? [Any] else {
-            if value is NSNull { return value }
-            throw RenderError.typeError(expected: "array", actual: "\(type(of: value))", operation: "where")
-        }
+        let array: [Any]
+        if let items = value as? [Any] { array = items }
+        else if isDictLike(value) || value is String { array = [value] }
+        else if value is NSNull { return value }
+        else { throw RenderError.typeError(expected: "array", actual: "\(type(of: value))", operation: "where") }
         guard args.count >= 1 else { return value }
 
         let property = stringify(args[0])
-        // Treat nil/NSNull/empty second arg as undefined → truthy check
+        // Ruby treats nil as an omitted target, but an empty string is a target.
         let targetArg: Any? = args.count >= 2 ? args[1] : nil
-        let hasTarget = targetArg != nil && !(targetArg is NSNull) && !((targetArg as? String) == "")
-
-        if hasTarget {
-            return array.filter { item in
-                let itemValue = getObjectProperty(item, key: property)
-                return areValuesEqual(itemValue, targetArg)
+        let hasTarget = targetArg != nil && !(targetArg is NSNull)
+        var selected: [Any] = []
+        for item in array {
+            try Task.checkCancellation()
+            let itemValue: Any?
+            if let string = item as? String {
+                itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
+            } else {
+                itemValue = getObjectProperty(item, key: property)
             }
-        } else {
-            // Single-arg: keep items where property is truthy
-            return array.filter { item in
-                guard let propVal = getObjectProperty(item, key: property) else { return false }
-                if propVal is NSNull { return false }
-                return isTruthy(propVal)
+            if hasTarget {
+                if areValuesEqual(itemValue, targetArg) { selected.append(item) }
+            } else if let itemValue, !(itemValue is NSNull), isTruthy(itemValue) {
+                selected.append(item)
             }
         }
+        return selected
     }
     
     internal func mapFilter(_ value: Any, args: [Any]) throws -> Any {

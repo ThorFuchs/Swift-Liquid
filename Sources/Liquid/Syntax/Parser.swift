@@ -1747,6 +1747,12 @@ internal final class Parser {
     
     private func parseForTag() throws ->ASTNode {
         let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+        func isRuntimeLookup(_ expression: LiquidExpression) -> Bool {
+            switch expression {
+            case .variable, .access: return true
+            default: return false
+            }
+        }
         guard case .identifier(let variable) = currentToken.type else {
             throw identifierExpected(currentToken)
         }
@@ -1831,8 +1837,8 @@ internal final class Parser {
                         // Non-numeric string like 'foo' → error
                         throw ParserError.unexpectedToken(currentToken)
                     }
-                } else if case .variable = value {
-                    // Variable reference — store expression for runtime evaluation
+                } else if isRuntimeLookup(value) {
+                    // Retain variable/property/index expressions for runtime evaluation.
                     if paramName.equals("limit") { limitExpression = value }
                     else if paramName.equals("offset") { offsetExpression = value }
                 } else {

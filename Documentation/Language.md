@@ -22,9 +22,12 @@ Standard surface:
 time. Like Shopify's table-row tag, it coerces string attributes through their
 integer prefix and emits an empty row for an empty, non-nil collection. Its
 `col_last` indicates the configured last column, including in a partial row.
+`for` bounds may also read properties and indexed values at render time.
+
 In lax and strict modes, `cycle` uses a leading expression in a
 comma-separated fragment even if that fragment has trailing tokens. Strict2
 validates the full cycle markup.
+
 For an unfiltered output expression, lax mode also retains a complete leading
 expression when it is followed by one identifier, number, string or `=`, or by
 a whitespace-separated terminal `!`, `<`, `>` or `-`. Strict and strict2 continue
@@ -34,6 +37,9 @@ Lax and strict `case`/`when` operands retain their leading expression when
 trailing markup follows; in original source, contiguous `foo=bar` and `foo=>bar`
 lookup fragments follow Ruby's legacy lookup behavior. Strict2 keeps its full-markup
 validation.
+
+The `where` filter accepts a single object as well as an array; for string
+items, its property argument is a substring lookup, including an empty string.
 
 Inline `#` comments allow blank continuation lines. Once comment markup has
 started, each nonblank continuation line must begin with `#`; an invalid line

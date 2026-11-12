@@ -1465,6 +1465,22 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Where input coercion and dynamic loop bounds",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving fixture bytes, quotas, source inspection, cancellation and existing holds.",
+      "changes": [
+        "Allow where to inspect singleton objects and string substrings, preserving nil versus empty-string target semantics and cooperative cancellation.",
+        "Retain property and index expressions in for-loop bounds for per-invocation evaluation and AST inspection."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
