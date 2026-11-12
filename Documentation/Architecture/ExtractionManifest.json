@@ -1608,6 +1608,21 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Assignment precheck and empty output markup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving first-rejection order, source locations and whitespace behavior.",
+      "changes": [
+        "Present the original strict2 assignment precheck tokens at their rejection sites.",
+        "Accept blank output and preserve Shopify whitespace trimming for the shared dash in {{-}}."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/AssignmentAndEmptyOutputTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

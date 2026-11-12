@@ -540,6 +540,9 @@ internal final class Lexer {
         if trimLeft {
             advanceASCII() // consume -
         }
+        // Shopify treats the shared dash in `{{-}}` as both trim markers.
+        let sharedTrim = trimLeft && byteIndex + 1 < bytes.count
+            && bytes[byteIndex] == Self.closeBrace && bytes[byteIndex + 1] == Self.closeBrace
 
         context = .variable  // Enter variable context
         tokens.append(Token(
@@ -703,7 +706,7 @@ internal final class Lexer {
         }
 
         // Check for -}} trim marker before closing
-        var trimRight = false
+        var trimRight = sharedTrim
         if byteIndex < end, bytes[byteIndex] == Self.dash {
             trimRight = true
             advanceASCII() // consume -

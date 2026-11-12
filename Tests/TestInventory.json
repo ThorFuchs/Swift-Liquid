@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.AssignmentAndEmptyOutputTests/emptyOutputKeepsWhitespaceControls()": null,
+    "LiquidTests.AssignmentAndEmptyOutputTests/assignmentPrecheckPresentsOriginalToken()": null,
     "LiquidTests.LoopHeaderDiagnosticTests/missingInAndTrailingPipesUseReferenceDiagnostics()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/closingMarkupAndWhitespaceControl()": null,
     "LiquidTests.FilterArgumentBoundaryTests/emptyAndTrailingArgumentsFollowSyntaxMode()": null,

@@ -222,6 +222,10 @@ internal final class Parser {
     private func parseVariable() throws ->ASTNode {
         let line = currentToken.line + lineOffset
         advance() // consume {{
+        if currentTokenStorage.type == .variableEnd {
+            advance()
+            return .output(.literal(.null), location: .init(line: line, suppressErrorText: false))
+        }
         
         let expression = try parseExpression()
 
@@ -430,7 +434,11 @@ internal final class Parser {
         }
         let admittedName = try admittedAssignmentTarget(variableName)
         advance()
-        
+
+        if syntaxMode == .strict2, currentToken.type == .equals, isOriginalComparison(currentToken),
+           nextTokenStorage.type == .equals, !isOriginalComparison(nextTokenStorage) {
+            throw LiquidError.syntax(message: "Unexpected character =", line: currentToken.line + lineOffset, column: currentToken.column)
+        }
         guard currentToken.type == .equals else {
             if syntaxMode == .strict2, case .number = currentToken.type {
                 throw identifierExpected(currentToken)
@@ -438,6 +446,15 @@ internal final class Parser {
             if syntaxMode == .strict2, nextTokenStorage.type == .equals,
                !isOriginalComparison(nextTokenStorage) {
                 switch currentToken.type {
+                case .rightBracket, .leftBracket, .dash, .dot:
+                    let kind: String
+                    switch currentToken.type {
+                    case .rightBracket: kind = "close_square"
+                    case .leftBracket: kind = "open_square"
+                    case .dash: kind = "dash"
+                    default: kind = "dot"
+                    }
+                    throw LiquidError.syntax(message: "Expected id but found \(kind)", line: currentToken.line + lineOffset, column: currentToken.column)
                 case .rightParen, .colon, .comma, .leftParen, .filter, .question, .string:
                     throw ParserError.invalidAssignmentTargetAt(currentToken)
                 default: break
@@ -446,6 +463,10 @@ internal final class Parser {
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
+        if syntaxMode == .strict2, currentToken.type == .equals,
+           !isOriginalComparison(currentToken), nextTokenStorage.type == .tagEnd {
+            throw LiquidError.syntax(message: "Unexpected character =", line: currentToken.line + lineOffset, column: currentToken.column)
+        }
         
         let value = try parseExpression()
         let hasFilters: Bool
