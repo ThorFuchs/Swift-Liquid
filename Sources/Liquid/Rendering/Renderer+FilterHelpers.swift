@@ -325,6 +325,12 @@ extension Renderer {
             return number
         }
         var result: Any = 0
+        // Ruby Liquid converts Float inputs to decimal before summing and only
+        // converts back to Float once at the end. Keep the existing arithmetic
+        // path as a fallback when Foundation cannot represent an exact sum.
+        var decimalResult = Decimal.zero
+        var decimalExact = true
+        var hasFloat = false
         for item in flattenArray(array) {
             try budget.step()
             let target: Any
@@ -333,12 +339,34 @@ extension Renderer {
                 target = dictValue(item, forKey: property) ?? 0
             } else { target = item }
             let primary = systemPrimary(target)
-            if primary is Int || primary is Double { result = try add(result, primary) }
+            let number: Any?
+            if primary is Int || primary is Double { number = primary }
             else if let text = primary as? String {
-                if let integer = Int(text) { result = try add(result, integer) }
-                else if let number = Double(text) { result = try add(result, number) }
+                if let integer = Int(text) { number = integer }
+                else { number = Double(text) }
+            } else { number = nil }
+            guard let number else { continue }
+            result = try add(result, number)
+            if number is Double { hasFloat = true }
+            if decimalExact {
+                let text: String
+                if let integer = number as? Int { text = String(integer) }
+                else if let floating = number as? Double, floating.isFinite { text = String(floating) }
+                else { decimalExact = false; continue }
+                if var operand = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")) {
+                    if let floating = number as? Double, NSDecimalNumber(decimal: operand).doubleValue != floating {
+                        decimalExact = false
+                        continue
+                    }
+                    var previous = decimalResult
+                    var next = Decimal.zero
+                    if NSDecimalAdd(&next, &previous, &operand, .plain) == .noError {
+                        decimalResult = next
+                    } else { decimalExact = false }
+                } else { decimalExact = false }
             }
         }
+        if hasFloat && decimalExact { return NSDecimalNumber(decimal: decimalResult).doubleValue }
         return result
     }
     

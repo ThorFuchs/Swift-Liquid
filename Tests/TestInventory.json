@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.StandardFilterCoercionTests/arraySumUsesDecimalInputsBeforeConvertingBackToFloat()": null,
     "LiquidTests.ReconciledSystemCompatibilityTests/multilineAndNestedSystemSelectionKeepScope()": null,
     "LiquidTests.ReconciledSystemCompatibilityTests/systemSelectionAndLaxFilterScanningStayDistinct()": null,
     "LiquidTests.SystemRenderingTests/decoratedLoopParametersAndIncludeCollectionsUsePrimaryValues()": null,

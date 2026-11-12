@@ -1973,6 +1973,19 @@
         "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift"
       ],
       "qualification": "Source-bound checks and downstream review remain pending; conformance, performance, release and publication holds remain."
+    },
+    {
+      "area": "Decimal array sum compatibility",
+      "scopeDecision": "The maintainer requested further Shopify conformance while preserving fixtures, source histories and existing holds.",
+      "changes": [
+        "Accumulate representable floating array sums as decimals before returning a floating result, matching the pinned Ruby Liquid sum conversion; preserve integer overflow and use the existing arithmetic path where Foundation cannot represent the sum exactly."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public consumer regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

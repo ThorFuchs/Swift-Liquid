@@ -39,4 +39,24 @@ struct StandardFilterCoercionTests {
         }
         await #expect(throws: CancellationError.self) { try await task.value }
     }
+
+    @Test func arraySumUsesDecimalInputsBeforeConvertingBackToFloat() async throws {
+        let engine = LiquidEngine()
+        let cases: [(LiquidValue, String)] = [
+            ([0.1, 0.2, -0.3], "0.0"),
+            ([0.1, 0.2], "0.3"),
+            ([1, 2, 3], "6"),
+            ([1, 0.5, "0.25"], "1.75"),
+            ([[0.1], [0.2, -0.3]], "0.0")
+        ]
+        for (value, expected) in cases {
+            #expect(try await engine.render(template: "{{ x | sum }}", context: ["x": value], syntaxMode: .strict2) == expected)
+        }
+        #expect(try await engine.render(template: "{{ x | sum: 'price' }}", context: ["x": [["price": 0.1], ["price": 0.2], ["price": -0.3]]]) == "0.0")
+        let tiny = try await engine.render(template: "{{ x | sum }}", context: ["x": [1e-300]])
+        #expect(Double(tiny) == 1e-300)
+        await #expect(throws: LiquidError.self) {
+            try await engine.render(template: "{{ x | sum }}", context: ["x": [.integer(Int.max), 1]])
+        }
+    }
 }
