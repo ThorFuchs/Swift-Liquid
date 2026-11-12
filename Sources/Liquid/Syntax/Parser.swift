@@ -1632,7 +1632,7 @@ internal final class Parser {
     // operands even when '=' or '=>' separates their names. Restrict this
     // adaptation to original, byte-adjacent tokens; strict2 stays unchanged.
     private func parseCaseOperand() throws -> LiquidExpression {
-        let first = try parseExpression()
+        let first = try syntaxMode == .strict2 ? parsePrimaryExpression() : parseExpression()
         guard syntaxMode != .strict2, case .original = sourceProvenance,
               case .variable(let root) = first, current > 0,
               currentToken.type == .equals, !isOriginalComparison(currentToken),
@@ -1764,11 +1764,14 @@ internal final class Parser {
         advance()
         
         guard currentToken.type == .in else {
+            if syntaxMode == .strict2 {
+                throw LiquidError.syntax(message: "For loops require an 'in' clause", line: currentToken.line + lineOffset, column: currentToken.column)
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
         
-        let collection = try parseExpression()
+        let collection = try syntaxMode == .strict2 ? parsePrimaryExpression() : parseExpression()
         
         // Parse optional parameters
         var limit: Int? = nil
@@ -1931,11 +1934,14 @@ internal final class Parser {
         advance()
         
         guard currentToken.type == .in else {
+            if syntaxMode == .strict2 {
+                throw LiquidError.syntax(message: "For loops require an 'in' clause", line: currentToken.line + lineOffset, column: currentToken.column)
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
         
-        let collection = try parseExpression()
+        let collection = try syntaxMode == .strict2 ? parsePrimaryExpression() : parseExpression()
         
         // Parse optional parameters
         var cols: LiquidExpression? = nil

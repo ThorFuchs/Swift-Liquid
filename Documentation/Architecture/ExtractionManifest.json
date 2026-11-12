@@ -1594,6 +1594,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Strict loop and case header diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining first-rejection and syntax-mode boundaries.",
+      "changes": [
+        "Parse strict2 case and iteration headers as Shopify expressions rather than filter chains, preserving the original trailing-pipe rejection.",
+        "Present the pinned missing-in-clause error for strict2 loops."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LoopHeaderDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

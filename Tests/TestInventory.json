@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LoopHeaderDiagnosticTests/missingInAndTrailingPipesUseReferenceDiagnostics()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/closingMarkupAndWhitespaceControl()": null,
     "LiquidTests.FilterArgumentBoundaryTests/emptyAndTrailingArgumentsFollowSyntaxMode()": null,
     "LiquidTests.TableRowCompatibilityTests/attributeScanningMatchesShopifyModes()": null,
