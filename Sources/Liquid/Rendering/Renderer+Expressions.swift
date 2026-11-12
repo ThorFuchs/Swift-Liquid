@@ -348,10 +348,10 @@ extension Renderer {
         let startValue = try await evaluateExpression(start)
         let endValue = try await evaluateExpression(end)
         if startValue is Double, case .literal = start {} else if startValue is Double {
-            throw RenderError.custom("Range bounds from variables must be integers")
+            throw RenderError.custom("invalid integer")
         }
         if endValue is Double, case .literal = end {} else if endValue is Double {
-            throw RenderError.custom("Range bounds from variables must be integers")
+            throw RenderError.custom("invalid integer")
         }
         return try await evaluateRangeValues(startValue: startValue, endValue: endValue)
     }

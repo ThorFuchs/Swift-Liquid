@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Strict2 range expected-token diagnostics")
 struct RangeExpectedTokenTests {
+    @Test func dynamicFloatRangeBoundsUseRubyIntegerError() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for source in ["{{ (value..5) }}", "{{ (1..value) }}"] {
+                do {
+                    _ = try await engine.render(template: source, context: ["value": 2.5], syntaxMode: mode)
+                    Issue.record("Expected invalid integer")
+                } catch LiquidError.rendering(let message) { #expect(message == "invalid integer") }
+                let result = try await engine.renderWithDiagnostics(template: source, context: ["value": 2.5], syntaxMode: mode)
+                #expect(result.diagnostics.map(\.message) == ["invalid integer"])
+                #expect(result.output.contains("invalid integer"))
+            }
+            #expect(try await engine.render(template: "{{ (1.5..2.5) }}", syntaxMode: mode) == "1..2")
+        }
+    }
     @Test func pinnedRangeErrorsUseValidatedExpectedTokens() async throws {
         // Original templates from the pinned liquid-spec parser_errors corpus.
         let cases: [(String, String)] = [

@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/includeForCarriesPriorOutputAndRestoresBindings()": null,
     "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,
     "LiquidTests.LaxFilterScanningTests/emptyFilterSegmentsAreLaxOnly()": null,

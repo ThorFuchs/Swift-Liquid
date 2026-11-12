@@ -2154,6 +2154,19 @@
         "Documentation/Language.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Dynamic range bound diagnostics",
+      "scopeDecision": "The maintainer requested pinned Ruby error behavior while preserving range semantics and fixture expectations.",
+      "changes": [
+        "Present non-integral dynamic range bounds with Ruby's invalid-integer reason, preserving literal truncation and existing public error categories."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
