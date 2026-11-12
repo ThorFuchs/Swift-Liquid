@@ -2219,6 +2219,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Include-for scalar and argument scope",
+      "scopeDecision": "The maintainer requested pinned Ruby partial behavior while preserving exact registry lookup and shared include state.",
+      "changes": [
+        "Render non-array include-for inputs once and apply named arguments in a temporary include scope, restoring that scope on every exit."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

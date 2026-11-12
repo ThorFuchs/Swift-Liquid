@@ -4,6 +4,22 @@ import Testing
 
 @Suite("Partial argument syntax")
 struct PartialArgumentCompatibilityTests {
+    @Test func includeForRendersScalarOnceAndScopesArguments() async throws {
+        let engine = LiquidEngine()
+        let context: LiquidObject = ["product": ["title": "Widget"], "entry": "outer", "prefix": "host"]
+        let source = "{% include 'p' for product as entry, prefix: '>' %}|{{ entry }}|{{ prefix }}"
+        let partial = "{{ prefix }}[{{ entry.title }}]"
+        let registry = try LiquidTemplateRegistry([.init("p", .raw(partial))])
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, context: context, registry: registry, syntaxMode: mode) == ">[Widget]|outer|host")
+            #expect(try await engine.render(template: source, context: context, templates: ["p": partial], syntaxMode: mode) == ">[Widget]|outer|host")
+            let dynamic = "{% assign page = 'product' %}{% include page for product %}"
+            #expect(try await engine.render(template: dynamic, context: context, templates: ["product": "{{ product.title }}"], syntaxMode: mode) == "Widget")
+            #expect(try await engine.render(template: "{% include 'p' for missing as entry %}", registry: registry, syntaxMode: mode) == "[]")
+            let arrayContext: LiquidObject = ["items": [["title": "A"], ["title": "B"]]]
+            #expect(try await engine.render(template: "{% include 'p' for items as entry, prefix: '>' %}", context: arrayContext, registry: registry, syntaxMode: mode) == ">[A]>[B]")
+        }
+    }
     @Test func dynamicIncludeWithUsesResolvedNameAsDefaultAlias() async throws {
         let engine = LiquidEngine()
         let context: LiquidObject = ["tpl": "product", "featured": "Widget"]

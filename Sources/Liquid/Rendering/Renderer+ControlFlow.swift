@@ -822,15 +822,19 @@ extension Renderer {
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
             try enterLiquidScope()
             defer { liquidLocalScopeDepth -= 1 }
-            let collection = systemPrimary(try await evaluateExpression(forExpr))
-            guard let items = collection as? [Any] else {
-                return ""
+            let suppliedCollection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(suppliedCollection)
+            let array = collection as? [Any]
+            let items = array ?? [suppliedCollection]
+            if !evaluatedVariables.isEmpty {
+                context.pushScope(evaluatedVariables)
             }
+            defer { if !evaluatedVariables.isEmpty { context.popScope() } }
             let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
             var output = ""
             output.reserveCapacity(items.count * 64)
             for item in items {
-                try budget.iterate()
+                if array != nil { try budget.iterate() }
                 try budget.output(output)
                 let snapshots = context.snapshotVariables(named: [alias])
                 context.setVariable(alias, value: item)

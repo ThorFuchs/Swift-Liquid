@@ -64,6 +64,8 @@ not filter pipelines. Include-for and render-for support explicit aliases, and
 `with`/`for` bindings may be followed by comma-separated named arguments.
 For `render ... for`, arrays, ranges, and objects render once per element; a scalar
 renders once, and a nil value leaves any explicitly supplied alias argument intact.
+For `include ... for`, an array renders once per element; other inputs render once.
+Named arguments are scoped to the include, including when control flow propagates.
 Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 
