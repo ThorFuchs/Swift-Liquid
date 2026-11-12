@@ -240,6 +240,10 @@ internal final class Parser {
             default: break
             }
         }
+        if syntaxMode == .lax, hasFilters, currentToken.type == .rightParen,
+           nextTokenStorage.type == .variableEnd {
+            advance()
+        }
         
         guard currentTokenStorage.type == .variableEnd else {
             if let error = trailingTokenError(currentToken) { throw error }

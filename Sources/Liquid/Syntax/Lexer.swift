@@ -1243,6 +1243,16 @@ internal final class Lexer {
             advanceASCII()
         }
 
+        // In lax output markup a digit-leading word is a variable name,
+        // rather than a number followed by a separate identifier.
+        if syntaxMode == .lax, context == .variable, !negative, !hasDot,
+           !isAtEnd, current.isIdentifierStartByte {
+            while !isAtEnd && current.isIdentifierContinueByte { advance() }
+            let name = makeInlineString(from: start.position, to: byteIndex)
+            tokens.append(Token(type: .identifier(name), position: start.position, line: start.line, column: start.column))
+            return
+        }
+
         var number = hasDot ? integerPart + (fractionalPart / divisor) : integerPart
         if negative { number = -number }
         let spelling = String(decoding: bytes[start.position..<byteIndex], as: UTF8.self)

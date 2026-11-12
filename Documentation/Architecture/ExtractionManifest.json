@@ -1662,6 +1662,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax digit-leading identifiers and filter suffixes",
+      "scopeDecision": "The maintainer commissioned Shopify conformance with strict parser modes and pinned fixtures preserved.",
+      "changes": [
+        "Recognize digit-leading words in lax output markup and preserve Ruby lax handling of a terminal filter parenthesis."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxIdentifierFilterTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
