@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.NumericTagDiagnosticTests/pinnedNumbersPreserveTheExpectedToken()": null,
+    "LiquidTests.NumericTagDiagnosticTests/strictAliasWithoutBindingAndOtherModesStayBounded()": null,
     "LiquidTests.ZeroDivisionDiagnosticTests/divisionAndModuloRetainErrorAndRecoveryBoundaries()": null,
     "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroStillFailsAndCancellationRemainsTerminal()": null,
     "LiquidTests.NilComparisonTests/nilRelationalComparisonsAreFalseAcrossPolicies()": null,

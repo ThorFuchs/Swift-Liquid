@@ -411,6 +411,9 @@ internal final class Parser {
         advance()
         
         guard currentToken.type == .equals else {
+            if syntaxMode == .strict2, case .number = currentToken.type {
+                throw identifierExpected(currentToken)
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -2236,6 +2239,17 @@ internal final class Parser {
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
+        // Shopify's strict parser permits an alias even without `with` or `for`.
+        if syntaxMode == .strict2, case .identifier(let keyword) = currentToken.type,
+           keyword.equals("as") {
+            advance()
+            guard case .identifier(let aliasName) = currentToken.type else {
+                throw identifierExpected(currentToken)
+            }
+            alias = aliasName
+            advance()
+        }
+
         // Skip optional comma after template name
         if currentToken.type == .comma { advance() }
 
@@ -2280,6 +2294,8 @@ internal final class Parser {
                     advance()
                 }
             } else {
+                if syntaxMode == .strict2, case .number = currentToken.type,
+                   let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
                 }
@@ -2307,6 +2323,16 @@ internal final class Parser {
         var variables: [String: LiquidExpression] = [:]
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
+
+        if syntaxMode == .strict2, case .identifier(let keyword) = currentToken.type,
+           keyword.equals("as") {
+            advance()
+            guard case .identifier(let aliasName) = currentToken.type else {
+                throw identifierExpected(currentToken)
+            }
+            alias = aliasName
+            advance()
+        }
 
         // Skip optional comma after template name
         if currentToken.type == .comma { advance() }
@@ -2356,6 +2382,8 @@ internal final class Parser {
                     advance()
                 }
             } else {
+                if syntaxMode == .strict2, case .number = currentToken.type,
+                   let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
                 }

@@ -1281,6 +1281,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; full conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 numeric tag diagnostics and aliases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance batches without changing pinned fixtures, legacy parser modes or held release gates.",
+      "changes": [
+        "Recognize the existing Shopify strict2 as alias position before attributes, including without with or for, and report numeric alias and assignment-target failures using the existing typed reason.",
+        "Report trailing numeric input in include and render using the existing strict2 trailing-token reason; retain other modes and source locations."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/NumericTagDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are recorded externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
