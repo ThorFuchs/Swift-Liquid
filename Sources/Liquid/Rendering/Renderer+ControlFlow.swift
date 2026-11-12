@@ -748,7 +748,12 @@ extension Renderer {
             let suppliedCollection = try await evaluateExpression(forExpr)
             let collection = systemPrimary(suppliedCollection)
             let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
-            guard let items = collection as? [Any] else {
+            let items: [Any]?
+            if let array = collection as? [Any] { items = array }
+            else if let range = collection as? RuntimeRange { items = range.values }
+            else if let pairs = orderedDictPairs(collection) { items = pairs.map { [$0.key, $0.value] as [Any] } }
+            else { items = nil }
+            guard let items else {
                 // Ruby renders once for non-enumerable values. A nil value
                 // does not overwrite an explicit argument with the same name.
                 var itemVars = evaluatedVariables

@@ -2038,6 +2038,19 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Render-for enumerable values",
+      "scopeDecision": "The maintainer requested Ruby-compatible partial rendering with preserved registry and scope contracts.",
+      "changes": [
+        "Iterate ranges and ordered object entries for render-for, using the same sequence representations as ordinary for loops."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

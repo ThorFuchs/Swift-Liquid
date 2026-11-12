@@ -14,6 +14,7 @@ struct PartialArgumentCompatibilityTests {
             ("{% render 'p' for missing as item, item: value %}", ["value": "outer"], "outer:"),
             ("{% render 'p' for value as item %}", ["value": 12], "12:"),
             ("{% render 'p' for values as item %}", ["values": []], ""),
+            ("{% render 'p' for (1..2) as item %}", [:], "1:12:2"),
             ("{% render 'p' for values as item %}", ["values": ["a", "b"]], "a:1b:2")
         ]
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
@@ -24,6 +25,10 @@ struct PartialArgumentCompatibilityTests {
                 #expect(recovered.output == expected && recovered.diagnostics.isEmpty)
             }
         }
+        let objectPartial = "{{ item[0] }}={{ item[1] }};"
+        let objectRegistry = try LiquidTemplateRegistry([.init("p", .raw(objectPartial))])
+        let object = LiquidObject([.init("a", 1), .init("b", 2)])
+        #expect(try await engine.render(template: "{% render 'p' for values as item %}", context: ["values": .object(object)], registry: objectRegistry) == "a=1;b=2;")
         let scalarSource = "{% render 'p' for 'abc' as item %}"
         await #expect(throws: LiquidError.self) {
             try await LiquidEngine(limits: .init(outputBytes: 1)).render(template: scalarSource, registry: registry)
