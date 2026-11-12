@@ -145,9 +145,10 @@ struct R6ExpectedTokenTests {
         // The lexer still rejects first, before the parser presentation helper.
         do { _ = try LiquidTemplate("{{ x[0 & }}"); Issue.record("Expected lexical rejection") }
         catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected character & in \"{{ x[0 & }}\"") }
-        do { _ = try LiquidTemplate("{{ x. }}", syntaxMode: .strict2); Issue.record("Expected existing generic rejection") }
+        // The pinned Ruby reference presents the missing identifier at the same rejection point.
+        do { _ = try LiquidTemplate("{{ x. }}", syntaxMode: .strict2); Issue.record("Expected rejection") }
         catch LiquidError.syntax(let message, let line, let column) {
-            #expect(message == "Unexpected token: }}" && line == 1 && column == 7)
+            #expect(message == "Expected id but found end_of_string" && line == 1 && column == 7)
         }
         #expect(TokenType.rightBracket.description == "]" && TokenType.variableEnd.description == "}}")
     }

@@ -1821,6 +1821,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Trailing-dot authored regression alignment",
+      "scopeDecision": "The maintainer requires pinned Shopify fixture and reference authority while preserving R6 rejection locations and original case histories.",
+      "changes": [
+        "Align three supplementary authored assertions for {{ x. }} with the unchanged pinned Ruby expected identifier error, preserving line and column checks.",
+        "Retain the initial failed full native lane and preserve the original R6 case inventory."
+      ],
+      "files": [
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/LiquidTests/IdentifierStringDiagnosticTests.swift",
+        "Tests/LiquidTests/R6ExpectedTokenTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

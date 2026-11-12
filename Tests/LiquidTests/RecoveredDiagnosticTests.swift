@@ -64,7 +64,9 @@ struct RecoveredDiagnosticTests {
             "{{ x | x: x. }}", "{{ x | }}"], message: "Expected id but found end_of_string")
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
             do { _ = try LiquidTemplate("{{ x. }}", syntaxMode: mode); Issue.record("Expected rejection") }
-            catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: }}") }
+            catch LiquidError.syntax(let message, _, _) {
+                #expect(message == (mode == .strict2 ? "Expected id but found end_of_string" : "Unexpected token: }}"))
+            }
         }
     }
 
