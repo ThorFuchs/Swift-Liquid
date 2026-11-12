@@ -280,7 +280,7 @@ internal final class Lexer {
         let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
         guard let closing = remaining.range(of: #"\{%-?\s*enddoc\s*-?%\}"#, options: .regularExpression) else {
             if syntaxMode == .strict2, case .original = sourceProvenance,
-               remaining.range(of: #"\{%-?\s*doc(?:\s|%)"#, options: .regularExpression) != nil {
+               remaining.range(of: #"\{%-?\s*doc(?=\s|%)[^{}]*?%\}"#, options: .regularExpression) != nil {
                 throw LexerError.unclosedDelimiter("nested doc", position: byteIndex)
             }
             throw LexerError.unclosedDelimiter("doc", position: byteIndex)

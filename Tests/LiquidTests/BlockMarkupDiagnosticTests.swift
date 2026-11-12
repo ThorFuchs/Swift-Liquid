@@ -62,6 +62,11 @@ struct BlockMarkupDiagnosticTests {
             do { _ = try LiquidTemplate("{% doc %}{% doc %}{% enddoc %}", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unclosed delimiter 'nested doc'") }
         }
+        // A nested tag missing its own terminator is not a proven nested doc.
+        do { _ = try LiquidTemplate("{% doc %}{% doc ", syntaxMode: .strict2); Issue.record("Expected rejection") }
+        catch LiquidError.syntax(let message, let line, let column) {
+            #expect(message == "Unclosed delimiter 'doc'" && line == nil && column == nil)
+        }
         let source = "{% doc x %}{% enddoc %}"
         let error = #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: .strict2, limits: .init(sourceBytes: source.utf8.count - 1)) }
         if case .limitExceeded("sourceBytes")? = error {} else { Issue.record("Source admission must precede diagnostics") }
