@@ -1395,6 +1395,7 @@
         "Sources/Liquid/Syntax/Lexer.swift",
         "Sources/Liquid/Syntax/Parser.swift",
         "Tests/LiquidTests/LaxOutputTailTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
         "Tests/TestInventory.json",
         "Documentation/Language.md"
       ],
