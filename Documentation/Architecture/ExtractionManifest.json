@@ -1623,6 +1623,18 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Filter boundary first-rejection preservation",
+      "scopeDecision": "The maintainer requires pinned parser cases and original rejection order to be preserved.",
+      "changes": [
+        "Accept a filter pipe as an empty-argument boundary only when it begins a named filter; retain the pinned invalid-expression rejection for a dangling pipe."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

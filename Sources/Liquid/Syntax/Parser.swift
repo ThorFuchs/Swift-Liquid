@@ -883,7 +883,11 @@ internal final class Parser {
         var arguments: [LiquidExpression] = []
         var positions: [ScalarKey: Int] = [:]
         func atFilterEnd() -> Bool {
-            currentToken.type == .filter || currentToken.type == .variableEnd || currentToken.type == .tagEnd
+            if currentToken.type == .filter {
+                if case .identifier = nextTokenStorage.type { return true }
+                return false
+            }
+            return currentToken.type == .variableEnd || currentToken.type == .tagEnd
         }
         if syntaxMode != .strict && atFilterEnd() { return arguments }
         repeat {
