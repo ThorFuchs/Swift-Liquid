@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxNumericFragmentTests/dotsFollowReferenceWithoutChangingRanges()": null,
     "LiquidTests.LaxUnknownConditionTests/recoveryAndShortCircuitMatchRuby()": null,
     "LiquidTests.LaxFilterScanningTests/ignoredJunkAndTrailingQuoteMatchRuby()": null,
     "LiquidTests.LaxIdentifierFilterTests/numericWordsAndFilterTailFollowRuby()": null,

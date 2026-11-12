@@ -1709,6 +1709,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax numeric fragments and range scanning",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance while preserving strict modes, pinned fixtures and source bounds.",
+      "changes": [
+        "Recognize Ruby lax bare dot-number fragments and its three-dot parenthesized range behavior, keeping strict parser rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxNumericFragmentTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

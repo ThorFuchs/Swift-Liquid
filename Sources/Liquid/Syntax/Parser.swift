@@ -1000,6 +1000,9 @@ internal final class Parser {
             }
             advance() // consume ..
 
+            // Shopify's lax range scanner tolerates a third dot.
+            if syntaxMode == .lax, currentToken.type == .dot { advance() }
+
             let endExpr: LiquidExpression
             if case .number(let endValue, let endIsFloat) = currentToken.type {
                 endExpr = .literal(currentToken.exactInteger.map(Value.integer) ?? .number(endValue, isFloat: endIsFloat))

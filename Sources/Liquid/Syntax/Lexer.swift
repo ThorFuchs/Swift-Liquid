@@ -1272,6 +1272,17 @@ internal final class Lexer {
             advanceASCII()
         }
 
+        // Outside a parenthesized range, Ruby's lax numeric fragment treats
+        // a run of dots and digits as a float prefix (for example 1..3 → 1.0).
+        if syntaxMode == .lax, !hasDot, !isAtEnd, current == Self.dot, peek() == Self.dot,
+           tokens.last?.type != .leftParen {
+            while !isAtEnd && (current == Self.dot || current.isDigitByte) { advanceASCII() }
+            let value = negative ? -integerPart : integerPart
+            guard value.isFinite else { throw LexerError.invalidNumber("numeric fragment", position: start.position) }
+            tokens.append(Token(type: .number(value, isFloat: true), position: start.position, line: start.line, column: start.column))
+            return
+        }
+
         // In lax output markup a digit-leading word is a variable name,
         // rather than a number followed by a separate identifier.
         if syntaxMode == .lax, context == .variable, !negative, !hasDot,
