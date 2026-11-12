@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.WhereAndLoopLookupTests/rangeBracketKeysDoNotBecomeStringsOrSlices()": null,
     "LiquidTests.countersShadowHostInputsButRemainRenderLocal()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/renderForNonEnumerableValuesRendersOnce()": null,
     "LiquidTests.NilComparisonTests/specialComparisonLiteralsRemainPredicates()": null,

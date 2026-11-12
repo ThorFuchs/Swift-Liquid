@@ -4,6 +4,17 @@ import Testing
 
 @Suite("Where and loop lookup compatibility")
 struct WhereAndLoopLookupTests {
+    @Test func rangeBracketKeysDoNotBecomeStringsOrSlices() async throws {
+        let engine = LiquidEngine()
+        let source = "{{ object[(1..3)] }}|{{ values[(1..3)] }}|{{ object['1..3'] }}|{{ values[1] }}"
+        let context: LiquidObject = ["object": ["1..3": "range"], "values": [0, 1, 2, 3, 4]]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let parsed = try LiquidTemplate(source, syntaxMode: mode)
+            #expect(try await engine.render(parsed, context: context) == "||range|1")
+            let recovered = try await engine.renderWithDiagnostics(parsed, context: context)
+            #expect(recovered.output == "||range|1" && recovered.diagnostics.isEmpty)
+        }
+    }
     @Test func whereSupportsStringsAndObjectInputs() async throws {
         let engine = LiquidEngine()
         let context: LiquidObject = ["words": ["alpha", "beta", "gamma"], "obj": ["a": "ok"],

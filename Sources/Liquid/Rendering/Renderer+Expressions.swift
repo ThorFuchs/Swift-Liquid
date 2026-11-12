@@ -168,6 +168,9 @@ extension Renderer {
     
     internal func evaluateAccessValueWithKey(baseValue: Any, keyValue: Any) async throws -> Any {
         let keyValue = systemPrimary(keyValue)
+        // Ruby Liquid does not stringify a range into a hash key or use it
+        // as an array slice when it appears in bracket lookup.
+        if keyValue is RuntimeRange { return NSNull() }
         if let index = keyValue as? Int {
             return evaluateAccessValueWithIndex(baseValue: baseValue, index: index)
         }
