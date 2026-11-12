@@ -1864,6 +1864,103 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Closed system descriptor admission",
+      "scopeDecision": "Local independent preparation for the requested Content and Vapor handshake; no rich environment or source acceptance is claimed.",
+      "changes": [
+        "Add a finite checked Sendable descriptor carrier for the seven supplied field names, validate field kinds, duplicates, UTF-8 capacities and cancellation.",
+        "Keep type-name vocabulary and Content provenance at the host boundary; do not decide absent descriptor, policy identity or propagation."
+      ],
+      "qualification": "Public-only regression and external CI receipts qualify only this standalone carrier. Full rich environment, rendering, inspection, conformance, performance, merge and release remain pending."
+    },
+    {
+      "area": "System policy identity admission",
+      "scopeDecision": "Thor adopted bounded opaque exact-byte policy identity with a closed versioned context; generic construction does not establish Content provenance or placement.",
+      "changes": [
+        "Add checked Sendable role, opaque byte and context identity admission with finite capacities and cancellation.",
+        "Add public regression controls for exact byte identity, context distinction, boundaries and cancellation."
+      ],
+      "qualification": "Pending exact-source qualification. This component does not implement a rich environment, rendering, complete conformance, performance or release acceptance."
+    },
+    {
+      "area": "Resident system environment admission",
+      "scopeDecision": "Thor authorized closed bounded values and the three reviewed Content/Vapor handshake decisions.",
+      "changes": [
+        "Admit immutable recursive resident values, exact ordered names, qualified representation contexts and finite repeated-occurrence construction quotas.",
+        "Represent an unadmitted descriptor distinctly from an admitted empty descriptor; leave renderer and extension syntax for subsequent implementation.",
+        "Preserve standard Liquid, fixtures, root dependencies and Content issuance boundaries."
+      ],
+      "qualification": "Requires actual exact-source tests. This admission component alone does not implement or qualify rich rendering, syntax, propagation, Content issuance, performance or release."
+    },
+    {
+      "area": "Closed system environment rendering",
+      "scopeDecision": "Maintainer adopted the three bounded Content and Vapor handshake choices for isolated implementation.",
+      "changes": [
+        "Add an opt-in closed system syntax profile and exact-registry rendering with typed system property availability.",
+        "Retain child decorations on selection and recursively strip them at value extraction and custom filter boundaries.",
+        "Charge invocation-owned evaluation and context budgets and check partial profile compatibility before rendering.",
+        "Preserve standard mode, pinned fixtures, dependency-free core and host responsibility for provenance and placement."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidExtensionProfile.swift",
+        "Sources/Liquid/LiquidSystemError.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Sources/Liquid/Rendering",
+        "Sources/Liquid/Support",
+        "Sources/Liquid/Syntax",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/SystemEnvironment.md",
+        "Documentation/README.md"
+      ],
+      "qualification": "Actual source-bound test results and remaining limitations are recorded externally. No complete conformance, performance, downstream acceptance, merge or release is asserted."
+    },
+    {
+      "area": "System primary-value dispatch parity",
+      "scopeDecision": "Address the downstream handshake review while retaining all existing holds and selection semantics.",
+      "changes": [
+        "Dispatch decorated dynamic keys and built-in arguments by their primary values, preserving default fallback identity.",
+        "Compare, flatten and filter decorated children using their primary values while retaining selected child decorations.",
+        "Use primary values for dynamic partial names, include/render collections and loop limits or offsets while retaining exact lookup precedence and selected children.",
+        "Add public regressions for the three independently reproduced Vapor findings and related collection and metadata boundaries."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Record exact-source qualification and downstream review externally; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Rich system environment and conformance reconciliation",
+      "scopeDecision": "The maintainer commissioned reconciliation of the retained rich environment with the owner-selected conformance and stack-safe parser work, preserving exact registry and downstream holds.",
+      "changes": [
+        "Preserve both source histories and all retained adaptation records; integrate the closed system profile with syntax-mode-aware stack-safe parsing and original-byte diagnostics.",
+        "Reconcile system-primary value dispatch with current filters, rendering, selection, loop budgets, exact-name lookup, and host-input render isolation.",
+        "Add public cross-boundary tests for multiline liquid syntax, exact registry render scope, system selection and lax filter scanning."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Local source-bound qualification and downstream handshake remain pending; no complete conformance, performance, merge, publication or release approval is implied."
     }
   ]
 }

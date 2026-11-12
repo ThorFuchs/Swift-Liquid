@@ -44,6 +44,7 @@ internal final class Lexer {
     private let bytes: [UInt8]
     private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
+    private let extensionProfile: LiquidExtensionProfile
 
     private var byteIndex: Int = 0
     
@@ -58,10 +59,11 @@ internal final class Lexer {
     // MARK: - Initialization
     
     internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped,
-                  syntaxMode: LiquidSyntaxMode = .lax) {
+                  syntaxMode: LiquidSyntaxMode = .lax, extensionProfile: LiquidExtensionProfile = .standard) {
         self.bytes = Array(input.utf8)
         self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
+        self.extensionProfile = extensionProfile
     }
     
     // MARK: - Public Interface
@@ -678,6 +680,13 @@ internal final class Lexer {
                     try tokenizeString(&tokens, start: tokenStart, quote: byte)
                 }
 
+            case 0x24 where extensionProfile == .closedSystemV1 && tokens.last?.type == .dot && tokens.last!.position + 1 == tokenPosition:
+                advanceASCII()
+                let nameStart = byteIndex
+                while byteIndex < end, bytes[byteIndex].isIdentifierContinueByte { advanceASCII() }
+                guard byteIndex > nameStart else { throw LexerError.unexpectedCharacter("$", position: tokenPosition) }
+                tokens.append(Token(type: .identifier(InlineString(utf8: bytes[tokenPosition..<byteIndex])), position: tokenPosition, line: tokenLine, column: tokenColumn))
+
             case 0x24 where syntaxMode == .lax && context == .filter:
                 var probe = byteIndex
                 while probe < end && bytes[probe] == 0x24 { probe += 1 }
@@ -990,6 +999,18 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .rightBracket, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 
+            case 0x24: // A dollar-prefixed name is only admitted directly after a dot.
+                guard extensionProfile == .closedSystemV1,
+                      let previous = tokens.last, previous.type == .dot,
+                      previous.position + 1 == tokenPosition else {
+                    throw LexerError.unexpectedCharacter("$", position: tokenPosition)
+                }
+                advanceASCII()
+                let nameStart = byteIndex
+                while byteIndex < end, bytes[byteIndex].isIdentifierContinueByte { advanceASCII() }
+                guard byteIndex > nameStart else { throw LexerError.unexpectedCharacter("$", position: tokenPosition) }
+                tokens.append(Token(type: .identifier(InlineString(utf8: bytes[tokenPosition..<byteIndex])), position: tokenPosition, line: tokenLine, column: tokenColumn))
+
             case Self.doubleQuote, Self.singleQuote:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeString(&tokens, start: tokenStart, quote: byte)

@@ -24,6 +24,7 @@ internal final class Parser {
     private let source: String?
     private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
+    private let extensionProfile: LiquidExtensionProfile
     private let lineOffset: Int
     private let maxNestingDepth: Int
     private var parseDepth = 0
@@ -46,6 +47,7 @@ internal final class Parser {
         source: String? = nil,
         sourceProvenance: DiagnosticSourceProvenance = .unmapped,
         syntaxMode: LiquidSyntaxMode = .lax,
+        extensionProfile: LiquidExtensionProfile = .standard,
         maxNestingDepth: Int = 64,
         lineOffset: Int = 0
     ) {
@@ -53,6 +55,7 @@ internal final class Parser {
         self.source = source
         self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
+        self.extensionProfile = extensionProfile
         self.lineOffset = lineOffset
         self.maxNestingDepth = maxNestingDepth
         self.currentTokenStorage = tokens.first ?? Self.eofToken
@@ -1048,7 +1051,7 @@ internal final class Parser {
                         throw identifierExpected(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                 }
                 startExpr = expr
             } else {
@@ -1079,7 +1082,7 @@ internal final class Parser {
                         throw identifierExpected(currentToken)
                     }
                     advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
                 }
                 endExpr = expr
             } else {
@@ -1115,10 +1118,15 @@ internal final class Parser {
                 advance()
                 guard case .identifier(let prop) = currentToken.type else { throw identifierExpected(currentToken) }
                 advance()
-                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+                    expr = try propertyAccess(expr, property: prop)
             }
-            if allowBracketAccess, currentTokenStorage.type == .leftBracket {
-                expr = try parseBracketChain(startingWith: expr)
+            while true {
+                if currentTokenStorage.type == .dot, case .identifier(let property) = nextTokenStorage.type {
+                    advance(); advance()
+                    expr = try propertyAccess(expr, property: property)
+                } else if allowBracketAccess, currentTokenStorage.type == .leftBracket {
+                    expr = try parseBracketChain(startingWith: expr)
+                } else { break }
             }
             return expr
 
@@ -1189,7 +1197,7 @@ internal final class Parser {
                     var access: LiquidExpression = .access(expr: base, key: key)
                     while currentToken.type == .dot, case .identifier(let prop) = nextTokenStorage.type {
                         advance(); advance()
-                        access = .access(expr: access, key: .literal(.string(prop)), command: true)
+                        access = try propertyAccess(access, property: prop)
                     }
                     result = access
                 } else if syntaxMode == .lax, currentToken.type == .variableEnd,
@@ -1228,6 +1236,7 @@ internal final class Parser {
                 }
                 throw identifierExpected(nextTokenStorage)
             }
+            if property.string.utf8.first == 0x24 { break }
             advance()
             advance()
             components.append(property)
@@ -1265,13 +1274,30 @@ internal final class Parser {
 
             var expr: LiquidExpression = .variable(name)
             for property in components.dropFirst() {
-                expr = .access(expr: expr, key: .literal(.string(property)), command: true)
+                expr = try propertyAccess(expr, property: property)
             }
 
-            if allowBracketAccess, currentTokenStorage.type == .leftBracket {
-                expr = try parseBracketChain(startingWith: expr)
+            while true {
+                if currentTokenStorage.type == .dot, case .identifier(let property) = nextTokenStorage.type {
+                    advance(); advance()
+                    expr = try propertyAccess(expr, property: property)
+                } else if allowBracketAccess, currentTokenStorage.type == .leftBracket {
+                    expr = try parseBracketChain(startingWith: expr)
+                } else { break }
             }
             return expr
+    }
+
+    private func propertyAccess(_ expression: LiquidExpression, property: InlineString) throws -> LiquidExpression {
+        let name = property.string
+        guard name.utf8.first == 0x24 else {
+            return .access(expr: expression, key: .literal(.string(property)), command: true)
+        }
+        guard extensionProfile == .closedSystemV1,
+              let system = LiquidSystemProperty(rawValue: String(name.dropFirst())) else {
+            throw ParserError.unsupportedFeature("Unknown system property")
+        }
+        return .systemAccess(expr: expression, property: system)
     }
 
     private func literalExpression(for identifier: InlineString) -> LiquidExpression? {
@@ -2113,7 +2139,7 @@ internal final class Parser {
 
         let nestedTokens: [Token]
         do {
-            nestedTokens = try Lexer(rewrittenTemplate).tokenize()
+            nestedTokens = try Lexer(rewrittenTemplate, syntaxMode: syntaxMode, extensionProfile: extensionProfile).tokenize()
         } catch {
             throw ParserError.unsupportedFeature("Lexer error in liquid tag body: \(error)")
         }
@@ -2121,6 +2147,7 @@ internal final class Parser {
             consuming: nestedTokens,
             source: rewrittenTemplate,
             syntaxMode: syntaxMode,
+            extensionProfile: extensionProfile,
             maxNestingDepth: maxNestingDepth,
             lineOffset: lineOffset + markupLine - 1
         )

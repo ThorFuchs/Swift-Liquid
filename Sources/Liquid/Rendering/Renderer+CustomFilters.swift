@@ -3,7 +3,7 @@ import Foundation
 
 extension Renderer {
     internal func applyCustomFilter(_ filter: LiquidFilter, syntax: Filter, input: Any) async throws -> Any {
-        var incoming = FilterValueBridge(budget: budget)
+        var incoming = FilterValueBridge(budget: budget, allowSystemValues: systemContextEnabled)
         let value = try incoming.read(input)
         var arguments: [LiquidValue] = []
         for expression in syntax.arguments {
@@ -29,18 +29,22 @@ extension Renderer {
             throw error
         }
         try budget.step()
-        var outgoing = FilterValueBridge(budget: budget)
+        var outgoing = FilterValueBridge(budget: budget, allowSystemValues: systemContextEnabled)
         return try outgoing.write(result)
     }
 }
 
 // Each boundary has a byte capacity; value visits and evaluator work share the
 // invocation's cumulative budget. The untyped evaluator never crosses the callback.
-private struct FilterValueBridge {
+internal struct FilterValueBridge {
     let budget: RuntimeBudget
+    let allowSystemValues: Bool
     private var bytes = 0
 
-    init(budget: RuntimeBudget) { self.budget = budget }
+    init(budget: RuntimeBudget, allowSystemValues: Bool = false) {
+        self.budget = budget
+        self.allowSystemValues = allowSystemValues
+    }
 
     mutating func key(_ string: String) throws {
         let count = string.utf8.count
@@ -61,6 +65,11 @@ private struct FilterValueBridge {
             return .string(text)
         }
         switch value {
+        case let wrapped as SystemRuntimeValue where allowSystemValues:
+            return try read(wrapped.primary, depth: depth + 1)
+        case let html as SafeHTML where allowSystemValues:
+            try key(html.value)
+            return .string(html.value)
         case is NSNull: return .null
         case let value as Bool: return .bool(value)
         case let value as Int: return .integer(value)
