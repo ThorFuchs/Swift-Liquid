@@ -82,8 +82,15 @@ extension Renderer {
 
         case .binary(let left, let op, let right):
             let leftValue = try await evaluateExpressionFast(left)
+            if op == .and && !isTruthy(leftValue) { return false }
+            if op == .or && isTruthy(leftValue) { return true }
             let rightValue = try await evaluateExpressionFast(right)
             return try await evaluateBinaryValues(leftValue: leftValue, op: op, rightValue: rightValue)
+
+        case .unknownCondition(let left, let name, let right):
+            _ = try await evaluateExpressionFast(left)
+            _ = try await evaluateExpressionFast(right)
+            throw RenderError.custom("Unknown operator \(name.string)")
 
         case .unary(let op, let expr):
             let exprValue = try await evaluateExpressionFast(expr)

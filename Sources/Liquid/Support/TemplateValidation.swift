@@ -14,6 +14,7 @@ internal func validateTemplate(_ ast: ASTNode, limits: LiquidLimits) throws {
         let children: [LiquidExpression]
         switch expression {
         case .binary(let left, _, let right): children = [left, right]
+        case .unknownCondition(let left, _, let right): children = [left, right]
         case .unary(_, let value): children = [value]
         case .range(let start, let end): children = [start, end]
         case .filtered(let value, let filters):

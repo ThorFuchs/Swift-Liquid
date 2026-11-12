@@ -19,6 +19,9 @@ internal indirect enum LiquidExpression: Sendable, Equatable {
     // MARK: - Operations
     
     case binary(left: LiquidExpression, op: BinaryOp, right: LiquidExpression)
+
+    // Lax parsing defers unknown condition operators until evaluation.
+    case unknownCondition(left: LiquidExpression, name: InlineString, right: LiquidExpression)
     
     case unary(op: UnaryOp, expr: LiquidExpression)
     
@@ -348,6 +351,8 @@ extension LiquidExpression {
             return true
         case .binary(let left, _, let right):
             return left.containsVariables || right.containsVariables
+        case .unknownCondition(let left, _, let right):
+            return left.containsVariables || right.containsVariables
         case .unary(_, let expr):
             return expr.containsVariables
         case .range(let start, let end):
@@ -373,6 +378,8 @@ extension LiquidExpression {
         case .variable(let name):
             return [name.description]
         case .binary(let left, _, let right):
+            return left.referencedVariables.union(right.referencedVariables)
+        case .unknownCondition(let left, _, let right):
             return left.referencedVariables.union(right.referencedVariables)
         case .unary(_, let expr):
             return expr.referencedVariables
@@ -407,6 +414,8 @@ extension LiquidExpression {
         case .variable:
             return 1
         case .binary(let left, _, let right):
+            return left.complexityScore + right.complexityScore + 1
+        case .unknownCondition(let left, _, let right):
             return left.complexityScore + right.complexityScore + 1
         case .unary(_, let expr):
             return expr.complexityScore + 1
@@ -577,6 +586,8 @@ extension LiquidExpression: CustomStringConvertible {
             return name.description
         case .binary(let left, let op, let right):
             return "(\(left) \(op.rawValue) \(right))"
+        case .unknownCondition(let left, let name, let right):
+            return "(\(left) \(name) \(right))"
         case .unary(let op, let expr):
             return "\(op.rawValue)(\(expr))"
         case .range(let start, let end):

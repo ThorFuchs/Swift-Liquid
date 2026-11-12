@@ -798,6 +798,26 @@ internal final class Parser {
 
     @inline(__always)
     private func parseComparisonContinuation(startingWith left: LiquidExpression) throws ->LiquidExpression {
+        if syntaxMode == .lax {
+            let unknown: InlineString?
+            if currentToken.type == .equals && !isOriginalComparison(currentToken) {
+                unknown = InlineString("=")
+            } else if case .identifier(let name) = currentToken.type {
+                unknown = name
+            } else {
+                unknown = nil
+            }
+            if let unknown {
+                advance()
+                let right: LiquidExpression
+                if currentToken.type == .tagEnd || currentToken.type == .and || currentToken.type == .or {
+                    right = .literal(.null)
+                } else {
+                    right = try parseConditionOperand()
+                }
+                return .unknownCondition(left: left, name: unknown, right: right)
+            }
+        }
         // Check for comparison operators
         let op: BinaryOp?
         switch currentToken.type {

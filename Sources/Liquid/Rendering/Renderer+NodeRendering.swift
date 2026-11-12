@@ -442,6 +442,10 @@ extension Renderer {
             return expressionReferencesVariable(left, named: variableName)
                 || expressionReferencesVariable(right, named: variableName)
 
+        case .unknownCondition(let left, _, let right):
+            return expressionReferencesVariable(left, named: variableName)
+                || expressionReferencesVariable(right, named: variableName)
+
         case .unary(_, let expr):
             return expressionReferencesVariable(expr, named: variableName)
 

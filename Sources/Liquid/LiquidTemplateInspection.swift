@@ -55,6 +55,7 @@ internal func inspectTemplate(_ ast: ASTNode, limits: LiquidLimits) throws -> Li
         case .variable(let name): variables.insert(ScalarKey(name.string)); children = []
         case .literal: children = []
         case .binary(let left, _, let right): children = [left, right]
+        case .unknownCondition(let left, _, let right): children = [left, right]
         case .unary(_, let value): children = [value]
         case .range(let start, let end): children = [start, end]
         case .access(let value, let key, _): children = [value, key]

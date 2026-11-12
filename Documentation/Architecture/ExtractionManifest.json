@@ -1690,6 +1690,25 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax unknown conditions and short-circuit evaluation",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving parser modes, bounded execution and pinned fixtures.",
+      "changes": [
+        "Represent lax unknown operators in the existing expression tree and defer their error until evaluation, preserving inspection and validation traversal.",
+        "Short-circuit logical and/or evaluation and preserve existing diagnostic recovery and blank-block treatment."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Expression.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Support/TemplateValidation.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Tests/LiquidTests/LaxUnknownConditionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
