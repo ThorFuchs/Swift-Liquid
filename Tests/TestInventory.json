@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.BlockRecoveryCompatibilityTests/comparisonsPreserveReasonsAndBlankRecovery()": null,
+    "LiquidTests.BlockRecoveryCompatibilityTests/loopErrorsRespectModeLocationsAndBudgets()": null,
     "LiquidTests.TableRowCompatibilityTests/emptyAndCoercedAttributesMatchRuby()": null,
     "LiquidTests.TableRowCompatibilityTests/invalidAttributesQuotaAndCancellationRemainErrors()": null,
     "LiquidTests.NumericTagDiagnosticTests/pinnedNumbersPreserveTheExpectedToken()": null,

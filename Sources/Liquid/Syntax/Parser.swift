@@ -540,6 +540,7 @@ internal final class Parser {
     // MARK: - Control Flow Tag Parsing
     
     private func parseIfTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         let condition = try parseComplexExpression()
         try consumeTagEnd()
         
@@ -607,11 +608,13 @@ internal final class Parser {
             condition: condition,
             then: thenNodes,
             elsif: elsifBranches,
-            else: elseNodes
+            else: elseNodes,
+            location: blockLocation
         )
     }
     
     private func parseUnlessTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         let condition = try parseComplexExpression()
         try consumeTagEnd()
 
@@ -677,14 +680,16 @@ internal final class Parser {
                 condition: .unary(op: .not, expr: condition),
                 then: thenNodes,
                 elsif: elsifBranches,
-                else: elseNodes
+                else: elseNodes,
+                location: blockLocation
             )
         }
 
         return .unless(
             condition: condition,
             then: thenNodes,
-            else: elseNodes
+            else: elseNodes,
+            location: blockLocation
         )
     }
     
@@ -1668,6 +1673,7 @@ internal final class Parser {
     }
     
     private func parseForTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         guard case .identifier(let variable) = currentToken.type else {
             throw identifierExpected(currentToken)
         }
@@ -1769,7 +1775,7 @@ internal final class Parser {
             }
         }
 
-        let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression)
+        let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression, renderLocation: blockLocation)
         
         try consumeTagEnd()
         
@@ -2136,20 +2142,22 @@ internal final class Parser {
             return trimmed.isEmpty ? nil : node
         case .template(let nodes):
             return .template(normalizeLiquidBodyNodes(nodes))
-        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes):
+        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes, let location):
             return .if(
                 condition: condition,
                 then: normalizeLiquidBodyNodes(thenNodes),
                 elsif: elsifBranches.map { condition, branch in
                     (condition, normalizeLiquidBodyNodes(branch))
                 },
-                else: elseNodes.map(normalizeLiquidBodyNodes)
+                else: elseNodes.map(normalizeLiquidBodyNodes),
+                location: location
             )
-        case .unless(let condition, let thenNodes, let elseNodes):
+        case .unless(let condition, let thenNodes, let elseNodes, let location):
             return .unless(
                 condition: condition,
                 then: normalizeLiquidBodyNodes(thenNodes),
-                else: elseNodes.map(normalizeLiquidBodyNodes)
+                else: elseNodes.map(normalizeLiquidBodyNodes),
+                location: location
             )
         case .case(let value, let branches):
             return .case(value: value, branches: branches.map { branch in

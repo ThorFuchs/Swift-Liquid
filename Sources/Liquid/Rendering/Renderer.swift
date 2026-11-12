@@ -445,13 +445,13 @@ internal final class RenderingContext {
                 if !text.string.allSatisfy(\.isWhitespace) { return false }
             case .assign, .comment, .increment, .decrement, .capture:
                 continue
-            case .if(_, let thenNodes, let elsifBranches, let elseNodes):
+            case .if(_, let thenNodes, let elsifBranches, let elseNodes, _):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 for (_, branchNodes) in elsifBranches {
                     if !isStaticallyBlankBlock(branchNodes) { return false }
                 }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
-            case .unless(_, let thenNodes, let elseNodes):
+            case .unless(_, let thenNodes, let elseNodes, _):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
             case .case(_, let branches):

@@ -190,7 +190,7 @@ extension Renderer {
             else if let dblVal = offsetValue as? Double { offset = try checkedInteger(dblVal) }
             else if let strVal = offsetValue as? String, let intVal = Int(strVal) { offset = intVal }
             else if !(offsetValue is NSNull) {
-                throw RenderError.typeError(expected: "integer", actual: "\(type(of: offsetValue))", operation: "for offset")
+                throw RenderError.custom("invalid integer")
             }
         }
 
@@ -205,7 +205,7 @@ extension Renderer {
             else if let dblVal = limitValue as? Double { resolvedLimit = try checkedInteger(dblVal) }
             else if let strVal = limitValue as? String, let intVal = Int(strVal) { resolvedLimit = intVal }
             else if !(limitValue is NSNull) {
-                throw RenderError.typeError(expected: "integer", actual: "\(type(of: limitValue))", operation: "for limit")
+                throw RenderError.custom("invalid integer")
             }
         }
 

@@ -345,23 +345,28 @@ extension Renderer {
     }
 
     internal func isLess(_ left: Any, _ right: Any) throws -> Bool {
-        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) < 0
     }
 
     internal func isLessEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) <= 0
     }
 
     internal func isGreater(_ left: Any, _ right: Any) throws -> Bool {
-        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) > 0
     }
 
     internal func isGreaterEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) >= 0
+    }
+
+    private func hasOrdering(_ value: Any) -> Bool {
+        if value is Bool { return false }
+        return value is Int || value is Double || value is String
     }
 
     internal func compareValues(_ left: Any, _ right: Any) throws -> Int {
@@ -391,6 +396,12 @@ extension Renderer {
             throw RenderError.typeError(expected: "comparable types", actual: "nil vs \(type(of: left is NSNull ? right : left))", operation: "comparison")
         }
 
+        if leftIsNumeric, right is String {
+            throw RenderError.custom("comparison of \(left is Int ? "Integer" : "Float") with String failed")
+        }
+        if left is String, rightIsNumeric {
+            throw RenderError.custom("comparison of String with \(stringify(right)) failed")
+        }
         // Incompatible types — error (Shopify behavior)
         throw RenderError.typeError(expected: "comparable types", actual: "\(type(of: left)) vs \(type(of: right))", operation: "comparison")
     }

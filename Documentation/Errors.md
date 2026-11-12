@@ -37,6 +37,9 @@ constructs keep their existing context wrappers.
 In lax and strict modes an error inside `assign` is recorded while its rendered
 text is suppressed. Strict2 emits its error text. Output variables and `echo`
 emit error text; captures and explicit partials retain the same boundaries.
+For `if`, `unless` and `for`, recovered errors carry the block's source line.
+In lax and strict modes, statically blank blocks suppress the error text while
+retaining the diagnostic; strict2 emits it even for a blank block.
 Unknown filters with strict filtering record an error without emitting error
 text. Failed assignments leave the previous variable value intact.
 

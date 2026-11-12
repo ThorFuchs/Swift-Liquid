@@ -1327,6 +1327,26 @@
         "Tests/LiquidTests/NumericTagDiagnosticTests.swift"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify control-flow error recovery",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving parser modes, pinned fixtures, cancellation and existing holds.",
+      "changes": [
+        "Retain source lines and mode-specific blank-output policy on conditional and for-loop AST nodes, preserving typed diagnostic recovery.",
+        "Match Shopify's non-orderable comparison and numeric/string error behavior, and report invalid for-loop integer attributes."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/BlockRecoveryCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Errors.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
