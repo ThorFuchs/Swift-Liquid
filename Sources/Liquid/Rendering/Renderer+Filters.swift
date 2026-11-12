@@ -130,6 +130,7 @@ extension Renderer {
                 guard intVal != Int.min else { throw LiquidError.invalidValue("Integer overflow") }
                 return Swift.abs(intVal)
             }
+            if let double = value as? Double { return Swift.abs(double) }
             let a = abs(numericValue(value) ?? 0)
             return a == a.rounded(.towardZero) ? try checkedInteger(a) : a
         case .date:
@@ -461,6 +462,7 @@ extension Renderer {
                 guard intVal != Int.min else { throw LiquidError.invalidValue("Integer overflow") }
                 return Swift.abs(intVal)
             }
+            if let double = value as? Double { return Swift.abs(double) }
             let a = abs(numericValue(value) ?? 0)
             return a == a.rounded(.towardZero) ? try checkedInteger(a) : a
         }

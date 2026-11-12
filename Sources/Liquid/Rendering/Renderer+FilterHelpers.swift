@@ -21,11 +21,14 @@ extension Renderer {
     }
     
     internal func truncateWords(_ str: String, count: Int, ending: String) -> String {
-        // Split on any whitespace (space, tab, newline), normalize to single spaces
-        let words = str.split(omittingEmptySubsequences: true, whereSeparator: { $0.isWhitespace })
+        // Ruby String#split(" ") recognizes ASCII whitespace, not every
+        // Unicode whitespace scalar.
+        let words = str.unicodeScalars.split(omittingEmptySubsequences: true) {
+            [9, 10, 11, 12, 13, 32].contains($0.value)
+        }
         if words.count <= count { return str }
 
-        return words.prefix(count).joined(separator: " ") + ending
+        return words.prefix(count).map { String(String.UnicodeScalarView($0)) }.joined(separator: " ") + ending
     }
     
     internal func stripHTML(_ str: String) -> String {
@@ -265,7 +268,11 @@ extension Renderer {
                 if aValue == nil && bValue == nil { return false }
                 if aValue == nil { return false }
                 if bValue == nil { return true }
-                return stringify(aValue!) < stringify(bValue!)
+                let left = aValue!, right = bValue!
+                if let a = left as? Int, let b = right as? Int { return a < b }
+                if (left is Int || left is Double), (right is Int || right is Double),
+                   let a = numericValue(left), let b = numericValue(right) { return a < b }
+                return stringify(left) < stringify(right)
             }
         } else {
             // Check for incompatible mixed complex/primitive types

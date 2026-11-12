@@ -79,6 +79,9 @@ than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
+`truncatewords` recognizes Ruby's ASCII word separators; non-ASCII whitespace
+inside a word remains part of that word. Numeric sorting of object properties
+compares numeric values rather than their rendered strings.
 Keys and equality retain Unicode scalar spelling. Template output concatenates
 array elements and presents objects using Ruby-style inspection, including nested
 strings, arrays and null values. Case mapping uses the native

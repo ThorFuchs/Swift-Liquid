@@ -20,6 +20,9 @@ extension Renderer {
         }
         // Use Swift's default which gives shortest round-trip representation
         let full = String(num)
+        if let exponent = full.firstIndex(of: "e"), !full[..<exponent].contains(".") {
+            return String(full[..<exponent]) + ".0" + full[exponent...]
+        }
         // Detect floating-point noise: patterns like "7.8999999999999995" or "3.0000000000000004"
         // These have 16 significant digits and end with runs of 9s or 0s followed by small digits
         if full.count >= 16, let dotIndex = full.firstIndex(of: ".") {
@@ -695,6 +698,7 @@ extension Renderer {
     }
     
     internal func roundNumber(_ value: Any, precision: Int) -> Any {
+        if value is Bool { return 0 }
         let num: Double
         switch value {
         case let d as Double: num = d
@@ -711,6 +715,7 @@ extension Renderer {
 
     @inline(__always)
     internal func renderRoundedValueFast(_ value: Any, precision: Int) -> String {
+        if value is Bool { return "0" }
         switch value {
         case let num as Double:
             return stringifyRoundedDouble(roundedDouble(num, precision: precision))

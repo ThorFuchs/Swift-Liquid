@@ -1507,6 +1507,23 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard numeric and word-filter edge cases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving pinned fixtures, finite numeric limits, cancellation and existing holds.",
+      "changes": [
+        "Preserve floating-point identity for abs, render scientific values with Ruby-style mantissas, and coerce booleans to zero for round.",
+        "Compare numeric sort properties numerically and split truncatewords on Ruby's ASCII word separators."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/FilterEdgeCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
