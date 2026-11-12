@@ -63,13 +63,18 @@ class ProtocolTests(unittest.TestCase):
 
     def test_compile_error_is_structured_and_invalidates_previous_slot(self):
         old = self.peer.compile('old')['result']['template_id']
-        result = self.peer.compile('x\n{{ 1 | | upcase }}')['result']
+        result = self.peer.compile('x\n{{ 1 | | upcase }}', options={'error_mode': 'strict2'})['result']
         self.assertIsNone(result['template_id']); self.assertEqual(result['error']['type'], 'syntax_error')
         self.assertEqual(result['error']['line'], 2)
         self.assertEqual(self.peer.request('render', {'template_id': old})['error']['code'], -32602)
         new = self.peer.compile('new')['result']['template_id']
         self.assertNotEqual(new, old)
         self.assertEqual(self.peer.request('render', {'template_id': old})['error']['code'], -32602)
+
+    def test_default_lax_mode_accepts_empty_filter_segments(self):
+        template = self.peer.compile("{{ 'hello' || upcase }}")['result']['template_id']
+        result = self.peer.request('render', {'template_id': template})['result']
+        self.assertEqual(result, {'output': 'HELLO', 'errors': []})
 
     def test_raised_and_recovered_errors_are_distinct_outcomes(self):
         template = self.peer.compile('A{% assign x = items | reject: missing %}B')['result']['template_id']

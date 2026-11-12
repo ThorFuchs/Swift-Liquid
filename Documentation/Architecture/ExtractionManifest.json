@@ -2104,6 +2104,15 @@
         "Documentation/Language.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Lax filter protocol regression",
+      "scopeDecision": "The maintainer requested Ruby lax parsing while preserving structured protocol errors and stale-template invalidation.",
+      "changes": [
+        "Keep the protocol's original invalidation probe in strict2 and add a separate default-lax positive probe for empty filter segments."
+      ],
+      "files": ["Scripts/check_liquid_spec_protocol.py"],
+      "qualification": "Protocol and pinned conformance remain subject to their recorded outcomes; no conformance or release claim is implied."
     }
   ]
 }
