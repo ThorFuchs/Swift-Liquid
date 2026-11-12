@@ -1676,6 +1676,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Bounded lax filter scanning",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving strict parser behavior and pinned fixtures.",
+      "changes": [
+        "Recognize Ruby lax filter name punctuation and terminal unmatched quote boundaries without rewriting source bytes.",
+        "Retain strict parser rejection and tests for unterminated actual string arguments."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

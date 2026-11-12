@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxFilterScanningTests/ignoredJunkAndTrailingQuoteMatchRuby()": null,
     "LiquidTests.LaxIdentifierFilterTests/numericWordsAndFilterTailFollowRuby()": null,
     "LiquidTests.LaxIncompleteLookupTests/terminalBracketRecoveryMatchesRuby()": null,
     "LiquidTests.AssignmentAndEmptyOutputTests/emptyOutputKeepsWhitespaceControls()": null,

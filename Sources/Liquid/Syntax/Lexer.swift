@@ -652,8 +652,37 @@ internal final class Lexer {
                 tokens.append(Token(type: kind, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case Self.doubleQuote, Self.singleQuote:
-                let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
-                try tokenizeString(&tokens, start: tokenStart, quote: byte)
+                var probe = byteIndex + 1
+                while probe < end && bytes[probe].isWhitespaceByte { probe += 1 }
+                let atBoundary = probe < end && (bytes[probe] == Self.pipe ||
+                    (bytes[probe] == Self.closeBrace && probe + 1 < end && bytes[probe + 1] == Self.closeBrace))
+                var laterQuote = false
+                if atBoundary {
+                    var scan = probe
+                    while scan < end {
+                        if bytes[scan] == Self.closeBrace && scan + 1 < end && bytes[scan + 1] == Self.closeBrace { break }
+                        if bytes[scan] == byte { laterQuote = true; break }
+                        scan += 1
+                    }
+                }
+                if syntaxMode == .lax, context == .filter, atBoundary, !laterQuote, let previous = tokens.last, case .string = previous.type {
+                    advanceASCII() // unmatched trailing quote ignored by lax scanning
+                } else {
+                    let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
+                    try tokenizeString(&tokens, start: tokenStart, quote: byte)
+                }
+
+            case 0x24 where syntaxMode == .lax && context == .filter:
+                var probe = byteIndex
+                while probe < end && bytes[probe] == 0x24 { probe += 1 }
+                var boundary = probe
+                while boundary < end && bytes[boundary].isWhitespaceByte { boundary += 1 }
+                guard let previous = tokens.last, case .identifier = previous.type,
+                      boundary < end, bytes[boundary] == Self.colon || bytes[boundary] == Self.pipe ||
+                        (bytes[boundary] == Self.closeBrace && boundary + 1 < end && bytes[boundary + 1] == Self.closeBrace) else {
+                    throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
+                }
+                while byteIndex < probe { advanceASCII() }
 
             case let c where c.isDigitByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
