@@ -67,10 +67,11 @@ struct ComparisonTokenDiagnosticTests {
             do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: ==") }
         }
-        // These two unrelated pinned errors remain under their own syntax policy.
-        for source in ["{% raw == %}{% endraw %}", "{% doc == %}{% enddoc %}"] {
+        // Header errors use their own block-specific reason.
+        for (source, expected) in [("{% raw == %}{% endraw %}", "Syntax Error in 'raw'"),
+                                   ("{% doc == %}{% enddoc %}", "Syntax Error in 'doc'")] {
             do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
-            catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: ==") }
+            catch LiquidError.syntax(let message, _, _) { #expect(message.contains(expected)) }
         }
         for mode in [LiquidSyntaxMode.lax, .strict] {
             do { _ = try LiquidTemplate("{{ == }}", syntaxMode: mode); Issue.record("Expected rejection") }

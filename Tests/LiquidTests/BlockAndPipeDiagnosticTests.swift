@@ -65,11 +65,14 @@ struct BlockAndPipeDiagnosticTests {
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unclosed delimiter 'doc'") }
         }
         // Incomplete nested or argument-bearing doc boundaries remain unmapped.
-        for source in ["{% doc %}{% doc %}content", "{% doc %}123{% enddoc xyz %}"] {
-            do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
-            catch LiquidError.syntax(let message, let line, let column) {
-                #expect(message == "Unclosed delimiter 'doc'" && line == nil && column == nil)
-            }
+        let ambiguous = "{% doc %}123{% enddoc xyz %}"
+        do { _ = try LiquidTemplate(ambiguous, syntaxMode: .strict2); Issue.record("Expected rejection") }
+        catch LiquidError.syntax(let message, let line, let column) {
+            #expect(message == "Unclosed delimiter 'doc'" && line == nil && column == nil)
+        }
+        do { _ = try LiquidTemplate("{% doc %}{% doc %}content", syntaxMode: .strict2); Issue.record("Expected rejection") }
+        catch LiquidError.syntax(let message, _, _) {
+            #expect(message == "Syntax Error in 'doc' - Nested doc tags are not allowed")
         }
         let worker = Task { () async throws -> String in
             withUnsafeCurrentTask { $0?.cancel() }

@@ -297,6 +297,9 @@ internal final class Parser {
     @inline(__always)
     private func parseIdentifierTag(named name: InlineString) throws ->ASTNode {
         if name.equals("doc") {
+            if syntaxMode == .strict2, currentToken.type != .tagEnd, let opening = originalBlockOpening() {
+                throw ParserError.invalidBlockMarkup("doc", opening: opening)
+            }
             try consumeTagEnd(presentComparison: false)
             guard currentTagMatchesIdentifier("enddoc") else { throw ParserError.unclosedTag("doc") }
             advance(); advance(); try consumeTagEnd()
@@ -1970,6 +1973,9 @@ internal final class Parser {
         // Record position right after {% raw %} tag end
         let tagEndToken = currentToken
         let opening = originalBlockOpening()
+        if syntaxMode == .strict2, currentToken.type != .tagEnd, let opening {
+            throw ParserError.invalidBlockMarkup("raw", opening: opening)
+        }
         try consumeTagEnd(presentComparison: false)
 
         // If we have the original source, extract raw content verbatim

@@ -26,6 +26,9 @@ public enum LiquidError: Error, Sendable, CustomStringConvertible {
 
 internal func publicError(_ error: Error) -> Error {
     if let error = error as? LexerError {
+        if case .invalidDocNesting(let opening) = error {
+            return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
+        }
         if case .unclosedShopifyBlock(_, let opening) = error {
             return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
         }

@@ -1209,6 +1209,27 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 block markup and nested doc diagnostics",
+      "scopeDecision": "The maintainer commissioned additional pinned conformance batches while retaining fixture data, original source ownership, parser modes and existing holds.",
+      "changes": [
+        "Present Ruby's raw/doc header reason at existing parser rejections, and nested-doc reason at the existing lexer boundary, using original opening-token coordinates.",
+        "Preserve valid block behavior, other parser modes, source admission, cancellation and ambiguous non-nesting doc delimiters; lexical errors remain a separate batch.",
+        "Add public regressions for 26 pinned cases and update three earlier rejection-only controls to the now established Ruby reasons; retain their original inputs."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidError.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Independent matrix and source-bound checks are recorded externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
     }
   ]
 }

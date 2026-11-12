@@ -22,6 +22,7 @@ internal enum LexerError: Error, Sendable, Equatable {
     
     case unclosedDelimiter(String, position: Int)
     case unclosedShopifyBlock(String, opening: Token)
+    case invalidDocNesting(opening: Token)
     
     case unexpectedEndOfInput(position: Int)
 }
@@ -49,6 +50,8 @@ extension LexerError {
             return "Unclosed delimiter '\(delimiter)'"
         case .unclosedShopifyBlock(let tag, _):
             return "'\(tag)' tag was never closed"
+        case .invalidDocNesting:
+            return "Syntax Error in 'doc' - Nested doc tags are not allowed"
         case .unexpectedEndOfInput:
             return "Unexpected end of input"
         }
@@ -56,7 +59,7 @@ extension LexerError {
     
     internal var position: Int {
         switch self {
-        case .unclosedShopifyBlock(_, let opening): return opening.position
+        case .unclosedShopifyBlock(_, let opening), .invalidDocNesting(let opening): return opening.position
         case .unexpectedCharacter(_, let pos, _),
              .unterminatedString(let pos),
              .invalidNumber(_, let pos),
@@ -71,6 +74,8 @@ extension LexerError {
     internal var category: ErrorCategory {
         switch self {
         case .unexpectedCharacter, .invalidUTF8:
+            return .syntax
+        case .invalidDocNesting:
             return .syntax
         case .unterminatedString, .unclosedDelimiter, .unclosedShopifyBlock:
             return .unterminated
@@ -105,6 +110,8 @@ extension LexerError {
             return "Use a valid escape sequence or escape the backslash: \\\(char) or \\\\"
         case .invalidUTF8:
             return "Ensure the template file is saved with UTF-8 encoding"
+        case .invalidDocNesting:
+            return "Remove the nested doc tag"
         case .unclosedShopifyBlock(let tag, _):
             return "Add the closing delimiter for '\(tag)'"
         case .unclosedDelimiter(let delimiter, _):

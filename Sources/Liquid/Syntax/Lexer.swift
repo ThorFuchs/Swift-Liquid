@@ -81,6 +81,11 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                if syntaxMode == .strict2, case .unclosedDelimiter("nested doc", _) = error,
+                   case .original = sourceProvenance, firstToken < tokens.count,
+                   tokens[firstToken].type == .tagStart {
+                    throw LexerError.invalidDocNesting(opening: tokens[firstToken])
+                }
                 if syntaxMode == .strict2, case .unclosedDelimiter("doc", _) = error,
                    case .original = sourceProvenance, firstToken < tokens.count,
                    tokens[firstToken].type == .tagStart {
@@ -274,6 +279,10 @@ internal final class Lexer {
     private func skipDocBlock(_ tokens: inout [Token]) throws(LexerError) {
         let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
         guard let closing = remaining.range(of: #"\{%-?\s*enddoc\s*-?%\}"#, options: .regularExpression) else {
+            if syntaxMode == .strict2, case .original = sourceProvenance,
+               remaining.range(of: #"\{%-?\s*doc(?:\s|%)"#, options: .regularExpression) != nil {
+                throw LexerError.unclosedDelimiter("nested doc", position: byteIndex)
+            }
             throw LexerError.unclosedDelimiter("doc", position: byteIndex)
         }
         let body = remaining[..<closing.lowerBound]
