@@ -49,7 +49,9 @@ than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
-Keys and equality retain Unicode scalar spelling. Case mapping uses the native
+Keys and equality retain Unicode scalar spelling. Template output concatenates
+array elements and presents objects using Ruby-style inspection, including nested
+strings, arrays and null values. Case mapping uses the native
 Unicode implementation. Dates accept whole-second epochs, complete ISO and
 ordinal dates, English month names, RFC and asctime forms. Timezone-free input
 uses UTC; explicit offsets and

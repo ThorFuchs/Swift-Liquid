@@ -154,7 +154,7 @@ extension Renderer {
     internal func applyBuiltinFilterSingleArgument(kind: Filter.BuiltinKind, to value: Any, argument: Any) throws -> Any? {
         switch kind {
         case .join:
-            return joinArray(value, separator: stringify(argument))
+            return try joinArray(value, separator: stringify(argument))
         case .split:
             return applySplitFilter(value, separator: argument)
         case .append:
@@ -319,7 +319,7 @@ extension Renderer {
         }
         if filterName.equals("join") {
             let separator = args.isEmpty ? " " : stringify(args[0])
-            return joinArray(value, separator: separator)
+            return try joinArray(value, separator: separator)
         }
         if filterName.equals("split") {
             return applySplitFilter(value, separator: args.first ?? NSNull())

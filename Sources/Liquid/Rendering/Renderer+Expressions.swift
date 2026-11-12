@@ -20,20 +20,20 @@ extension Renderer {
     internal func renderExpressionFast(_ expression: LiquidExpression) async throws -> String {
         switch expression {
         case .literal(let value):
-            return stringify(try evaluateValue(value))
+            return try renderStringify(try evaluateValue(value))
         case .variable(let name):
-            return stringify(context.getVariable(name.string) ?? NSNull())
+            return try renderStringify(context.getVariable(name.string) ?? NSNull())
         case .access:
             if let path = expression.staticVariablePath {
-                return stringify(context.getVariable(path) ?? NSNull())
+                return try renderStringify(context.getVariable(path) ?? NSNull())
             }
-            return stringify(try await evaluateExpressionFast(expression))
+            return try renderStringify(try await evaluateExpressionFast(expression))
         case .filtered(let expr, let filters):
             let baseValue = try await evaluateFilteredBaseValueFast(expr)
             let renderedValue = try await evaluateFilteredValue(baseValue: baseValue, filters: filters)
-            return stringify(renderedValue)
+            return try renderStringify(renderedValue)
         default:
-            return stringify(try await evaluateExpressionFast(expression))
+            return try renderStringify(try await evaluateExpressionFast(expression))
         }
     }
 

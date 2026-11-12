@@ -82,7 +82,7 @@ extension Renderer {
         let output: String
         switch leaf {
         case .text(let text): output = text.string
-        case .variable(let name): output = stringify(context.getVariable(name.string) ?? NSNull())
+        case .variable(let name): output = try renderStringify(context.getVariable(name.string) ?? NSNull())
         }
         try budget.output(output)
         return output

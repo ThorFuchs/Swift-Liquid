@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.FilterStringCoercionTests/outputObjectsInspectNestedValuesAcrossRenderPaths()": null,
     "LiquidTests.BlockMarkupDiagnosticTests/pinnedMarkupAndNestingRejections()": null,
     "LiquidTests.BlockMarkupDiagnosticTests/validBlocksOtherModesAndAdmissionRemainStable()": null,
     "LiquidTests.BlockAndPipeDiagnosticTests/pinnedRejectionsRetainSourceAndReason()": null,

@@ -102,6 +102,28 @@ extension Renderer {
         }
     }
 
+    // Output arrays concatenate their elements, while a hash and its nested
+    // values use Ruby's inspected representation. Keep this separate from
+    // expression coercion and retain cancellation at composite boundaries.
+    internal func renderStringify(_ value: Any) throws -> String {
+        if value is RuntimeObject || value is [String: Any] || value is [Any] {
+            let result = try renderCompositeUnescaped(value)
+            return autoEscapeEnabled ? HTMLEscape.escape(result) : result
+        }
+        return stringify(value)
+    }
+
+    private func renderCompositeUnescaped(_ value: Any) throws -> String {
+        try Task.checkCancellation()
+        if let array = value as? [Any] {
+            var output = ""
+            for item in array { output += try renderCompositeUnescaped(item) }
+            return output
+        }
+        if value is RuntimeObject || value is [String: Any] { return try rubyInspect(value) }
+        return stringifyUnescaped(value)
+    }
+
     // Ruby Liquid inspects composite values when a string-oriented filter
     // coerces its input. Normal template output keeps its separate array rules.
     internal func rubyInspect(_ value: Any) throws -> String {
@@ -606,11 +628,14 @@ extension Renderer {
         return isEmpty(value)
     }
     
-    internal func joinArray(_ value: Any, separator: String) -> String {
-        guard let array = value as? [Any] else { return stringify(value) }
-        // Flatten nested arrays before joining (Shopify behavior)
+    internal func joinArray(_ value: Any, separator: String) throws -> String {
+        guard let array = value as? [Any] else { return try renderStringify(value) }
+        // Flatten nested arrays before joining (Shopify behavior).
         let flat = flattenArray(array)
-        return joinedStringifiedValues(flat, separator: separator, escapeElements: true)
+        var parts: [String] = []
+        parts.reserveCapacity(flat.count)
+        for item in flat { parts.append(try renderStringify(item)) }
+        return parts.joined(separator: separator)
     }
 
     internal func compareForSort(_ a: Any, _ b: Any) -> Bool {

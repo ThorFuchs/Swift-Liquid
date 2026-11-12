@@ -1230,6 +1230,27 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Independent matrix and source-bound checks are recorded externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed object output",
+      "scopeDecision": "The maintainer selected Shopify compatibility and commissioned the next mismatch batches while retaining fixture data, resource boundaries and existing holds.",
+      "changes": [
+        "Use the existing Ruby-style inspection for object output and object elements in joined or concatenated arrays while retaining Liquid's ordinary array concatenation.",
+        "Apply the same output conversion in immediate, general and optimized rendering paths, preserving per-invocation state, quotas and cancellation checkpoints.",
+        "Add public render-path, nested value, quota and cancellation regressions and update the prior authored object-output expectation without modifying any pinned fixture."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ImmediateTemplates.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/LiquidTests/InterpolationTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
     }
   ]
 }
