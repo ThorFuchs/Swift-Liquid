@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,
     "LiquidTests.LaxFilterScanningTests/emptyFilterSegmentsAreLaxOnly()": null,
     "LiquidTests.WhereAndLoopLookupTests/rangeBracketKeysDoNotBecomeStringsOrSlices()": null,
     "LiquidTests.countersShadowHostInputsButRemainRenderLocal()": null,

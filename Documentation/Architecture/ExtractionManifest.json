@@ -2125,6 +2125,21 @@
         "Tests/LiquidTests/LaxOutputTailTests.swift"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Natural-sort and join composite coercion",
+      "scopeDecision": "The maintainer requested pinned Ruby standard-filter behavior without changing fixture or dependency contracts.",
+      "changes": [
+        "Use Ruby-style composite inspection for natural-sort keys and join separators on both filter execution paths; compare natural-sort numbers as strings and preserve nil ordering."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
