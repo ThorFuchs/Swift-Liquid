@@ -1723,6 +1723,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Nil truncation input",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving public error recovery and pinned fixtures.",
+      "changes": [
+        "Return nil from truncate and truncatewords before coercing their length argument, matching the pinned Ruby implementation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/NilTruncationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

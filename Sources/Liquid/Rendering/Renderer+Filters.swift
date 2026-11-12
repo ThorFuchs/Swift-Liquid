@@ -381,6 +381,7 @@ extension Renderer {
             return HTMLEscape.escapeOnce(str)
         }
         if filterName.equals("truncate") {
+            if value is NSNull { return NSNull() }
             if let firstArg = args.first, firstArg is NSNull {
                 throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncate")
             }
@@ -394,6 +395,7 @@ extension Renderer {
             return truncateString(stringify(value, escape: false), length: length, ending: ending)
         }
         if filterName.equals("truncatewords") {
+            if value is NSNull { return NSNull() }
             if let firstArg = args.first, firstArg is NSNull {
                 throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncatewords")
             }
