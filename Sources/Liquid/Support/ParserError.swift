@@ -11,6 +11,18 @@ import Foundation
 
 internal enum ParserError: Error, Sendable, Equatable {
     case unexpectedToken(Token)
+
+    // Rejection of a comma where a primary expression is required.
+    case invalidCommaExpression(Token)
+    case invalidCloseRoundExpression(Token)
+    case invalidOperatorExpression(Token, kind: String, spelling: String)
+    case unexpectedTrailingIdentifier(Token)
+    case unexpectedTrailingToken(Token, kind: String)
+    case missingAttributeColonBeforeComma(Token)
+    case invalidExpressionAtMarkupEnd(Token)
+    case expectedIdentifierAtMarkupEnd(Token)
+    case expectedIdentifierBeforeNumber(Token)
+    case expectedIdentifierBeforeString(Token)
     
     case expectedToken(TokenType, got: TokenType, origin: DiagnosticOriginResolution? = nil)
     
@@ -29,6 +41,8 @@ internal enum ParserError: Error, Sendable, Equatable {
     case unsupportedFeature(String)
     
     case unclosedTag(String)
+    case unclosedShopifyBlock(String, opening: Token)
+    case invalidBlockMarkup(String, opening: Token)
     
     case invalidForLoopParameter
     
@@ -41,6 +55,7 @@ internal enum ParserError: Error, Sendable, Equatable {
     case nestingTooDeep(Int)
     
     case invalidAssignmentTarget
+    case invalidAssignmentTargetAt(Token)
     
     case duplicateParameter(String)
     
@@ -56,6 +71,26 @@ extension ParserError {
         switch self {
         case .unexpectedToken(let token):
             return "Unexpected token: \(token.type)"
+        case .invalidCommaExpression:
+            return "[:comma, \",\"] is not a valid expression"
+        case .invalidCloseRoundExpression:
+            return "[:close_round, \")\"] is not a valid expression"
+        case .invalidOperatorExpression(_, let kind, let spelling):
+            return "[:\(kind), \"\(spelling)\"] is not a valid expression"
+        case .unexpectedTrailingIdentifier:
+            return "Expected end_of_string but found id"
+        case .unexpectedTrailingToken(_, let kind):
+            return "Expected end_of_string but found \(kind)"
+        case .missingAttributeColonBeforeComma:
+            return "Expected colon but found comma"
+        case .invalidExpressionAtMarkupEnd:
+            return "[:end_of_string] is not a valid expression"
+        case .expectedIdentifierAtMarkupEnd:
+            return "Expected id but found end_of_string"
+        case .expectedIdentifierBeforeNumber:
+            return "Expected id but found number"
+        case .expectedIdentifierBeforeString:
+            return "Expected id but found string"
         case .expectedToken(let expected, let got, .resolved(let origin)?):
             guard let wanted = expectedTokenName(expected), let found = expectedTokenName(got) else {
                 return "Expected \(expected) but found \(got)"
@@ -82,6 +117,10 @@ extension ParserError {
             return "Unsupported feature: \(feature)"
         case .unclosedTag(let tag):
             return "Unclosed tag '\(tag)'"
+        case .unclosedShopifyBlock(let tag, _):
+            return "'\(tag)' tag was never closed"
+        case .invalidBlockMarkup(let tag, _):
+            return tag == "doc" ? "Syntax Error in 'doc' - Valid syntax: {% doc %}{% enddoc %}" : "Syntax Error in 'raw' - Valid syntax: raw"
         case .invalidForLoopParameter:
             return "Invalid for loop parameter"
         case .unknownForLoopParameter(let param):
@@ -92,8 +131,8 @@ extension ParserError {
             return "Malformed filter '\(filter)'"
         case .nestingTooDeep(let depth):
             return "Nesting too deep (\(depth) levels)"
-        case .invalidAssignmentTarget:
-            return "Invalid assignment target"
+        case .invalidAssignmentTarget, .invalidAssignmentTargetAt:
+            return "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"
         case .duplicateParameter(let param):
             return "Duplicate parameter '\(param)'"
         case .missingRequiredParameter(let param):
@@ -105,17 +144,18 @@ extension ParserError {
     
     internal var category: ParserErrorCategory {
         switch self {
-        case .unexpectedToken, .expectedToken, .expectedIdentifier, .expectedNumber, 
+        case .unexpectedToken, .invalidCommaExpression, .invalidCloseRoundExpression, .invalidOperatorExpression, .unexpectedTrailingIdentifier, .unexpectedTrailingToken,
+             .missingAttributeColonBeforeComma, .invalidExpressionAtMarkupEnd, .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedIdentifierBeforeString, .expectedToken, .expectedIdentifier, .expectedNumber,
              .expectedString, .expectedExpression, .expectedTestOperator:
             return .syntax
         case .unknownTag, .unknownForLoopParameter:
             return .unknown
         case .unsupportedFeature:
             return .semantic
-        case .unclosedTag:
+        case .unclosedTag, .unclosedShopifyBlock, .invalidBlockMarkup:
             return .structure
         case .invalidForLoopParameter, .invalidRange, .malformedFilter, 
-             .invalidAssignmentTarget, .invalidParameterValue:
+             .invalidAssignmentTarget, .invalidAssignmentTargetAt, .invalidParameterValue:
             return .semantic
         case .nestingTooDeep:
             return .limit
@@ -126,8 +166,11 @@ extension ParserError {
     
     internal var sourceLocation: SourceLocation? {
         switch self {
-        case .unexpectedToken(let token):
+        case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token), .unexpectedTrailingToken(let token, _),
+             .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token), .expectedIdentifierBeforeString(let token), .invalidAssignmentTargetAt(let token):
             return token.sourceLocation
+        case .unclosedShopifyBlock(_, let opening), .invalidBlockMarkup(_, let opening):
+            return opening.sourceLocation
         case .expectedToken(_, _, .resolved(let origin)?):
             return .init(position: origin.anchor, line: origin.position.line, column: origin.position.column)
         default:
@@ -150,6 +193,20 @@ extension ParserError {
             default:
                 return "Check the syntax around this token"
             }
+        case .invalidCommaExpression:
+            return "Provide an expression before or after the comma"
+        case .invalidCloseRoundExpression:
+            return "Provide an expression before the closing parenthesis"
+        case .invalidOperatorExpression:
+            return "Provide an expression in place of the operator"
+        case .unexpectedTrailingIdentifier, .unexpectedTrailingToken:
+            return "Remove the unexpected trailing token"
+        case .missingAttributeColonBeforeComma:
+            return "Add a colon after the attribute name"
+        case .invalidExpressionAtMarkupEnd:
+            return "Provide the missing expression"
+        case .expectedIdentifierAtMarkupEnd, .expectedIdentifierBeforeNumber, .expectedIdentifierBeforeString:
+            return "Provide the missing identifier"
         case .expectedToken(let expected, let got, _):
             switch expected {
             case .tagEnd:
@@ -175,7 +232,9 @@ extension ParserError {
             return checkTagNameSuggestion(for: tag)
         case .unsupportedFeature(let feature):
             return "Use only the actively supported 1.x syntax surface. \(feature)"
-        case .unclosedTag(let tag):
+        case .invalidBlockMarkup:
+            return "Remove arguments from the block tag"
+        case .unclosedTag(let tag), .unclosedShopifyBlock(let tag, _):
             return "Add {% end\(tag) %} to close the \(tag) block"
         case .invalidForLoopParameter:
             return "Use valid parameters: limit, offset, reversed, or if"
@@ -187,7 +246,7 @@ extension ParserError {
             return "Check the syntax for filter '\(filter)' and its arguments"
         case .nestingTooDeep:
             return "Reduce the nesting depth of your template structure"
-        case .invalidAssignmentTarget:
+        case .invalidAssignmentTarget, .invalidAssignmentTargetAt:
             return "Assign only to simple variable names"
         case .duplicateParameter(let param):
             return "Remove the duplicate '\(param)' parameter"

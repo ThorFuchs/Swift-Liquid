@@ -857,6 +857,514 @@
         "CHANGELOG.md"
       ],
       "qualification": "Exact-source checks and original failures belong to external receipts and PR CI. This authorship/coverage record asserts no unexecuted pass, independent-conformance repair, performance acceptance, PR23 decision, merge or release approval."
+    },
+    {
+      "area": "Local conformance control center",
+      "scopeDecision": "The maintainer requested the existing Shopify JSON-RPC conformance runner locally, with a plain HTML/CSS/vanilla JavaScript control center using the sibling MCP dashboard visual style. No global Shopify endpoint or hosted automation is needed.",
+      "changes": [
+        "Reuse the existing pinned five-suite public-API adapter and canonical ci.py liquid-spec lane without changing the engine, comparator, fixture population, missing-feature policy, resource limits or pins.",
+        "Add external output roots only for liquid-spec and console control checks; preserve existing lane defaults and historical artifacts.",
+        "Add a loopback-only standard-library Python control server, source/pin/tool admission, one owned run at a time, original evidence downloads and explicit failure/cancellation states.",
+        "Add source/receipt/hash/accounting checks and meaningful authentication, origin, failure-taxonomy and process-cancellation controls. Keep generated data, gems, screenshots and private records outside Git."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Scripts/check_conformance_console.py",
+        "Tools/ConformanceConsole/server.py",
+        "Tools/ConformanceConsole/web/index.html",
+        "Tools/ConformanceConsole/web/style.css",
+        "Tools/ConformanceConsole/web/app.js",
+        "Tools/ConformanceConsole/README.md",
+        "Documentation/ConformanceConsole.md",
+        "Documentation/README.md"
+      ],
+      "qualification": "Focused iterations and actual final-source conformance observations belong to external receipts. This authorship record asserts no unexecuted pass, complete conformance, performance clearance, hosted deployment or release acceptance. Preserve historical failures, exclusions and provenance limits."
+    },
+    {
+      "area": "Assignment target admission",
+      "scopeDecision": "Maintainer commissioned the twenty strict2 assignment false-acceptance fixes using existing R2 studies and public regressions, preserving golden fixtures and all holds.",
+      "changes": [
+        "Apply the pinned unanchored assignment signature precheck and strict2 identifier admission within the existing parser, with linear cancellable scanning.",
+        "Preserve the twenty original inputs; add separately attributed all-mode reference controls, public regressions and upstream MIT notice.",
+        "Preserve existing fixtures, root dependencies, public API, RHS parsing, quotas, recovery and historical failed independent observations."
+      ],
+      "qualification": "External exact-source receipts retain actual iterations and results. No full-conformance, performance, merge or release approval is asserted."
+    },
+    {
+      "area": "Split trailing-empty semantics reconstruction",
+      "scopeDecision": "Reconstruct the maintainer-commissioned split repair from recorded source after the original local branch and receipts were lost; preserve pinned fixtures and existing holds.",
+      "changes": [
+        "Remove trailing empty split fields for nonempty separators while retaining leading and interior fields.",
+        "Exercise pinned liquid-spec inputs and Ruby-verified edge cases through public source and parsed-template APIs."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SplitConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh receipts apply to the reconstructed source only; original branch history and source-bound evidence were lost. No complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 diagnostic family reconstruction",
+      "scopeDecision": "Reconstruct six maintainer-commissioned diagnostic groups from retained session evidence after loss of original local branches and receipts.",
+      "changes": [
+        "Present typed reasons for comma, trailing identifier, missing attribute colon, missing expression and missing identifier while preserving existing parser rejection and other language modes.",
+        "Present unmatched quotes only for strict2 markup with validated original source provenance and an earlier token; preserve unmapped and standalone cases.",
+        "Add separately attributed public regression cases and preserve pinned fixtures and the prior split repair."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommaDiagnosticTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Reconstructed source requires fresh qualification. Lost original branches and evidence cannot be recreated; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 closing parenthesis expression diagnostic",
+      "scopeDecision": "Maintainer requested the next largest diagnostic mismatch group while retaining pinned fixtures, separate branches, evidence and holds.",
+      "changes": [
+        "Present the pinned close_round reason for a closing parenthesis only when the existing strict2 parser rejects it as a primary expression; retain token location and rejection.",
+        "Exercise pinned source examples, all public entry points, other parser modes, trailing-token behavior and valid range syntax."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CloseRoundDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source results are retained separately; no full-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 hash in ordinary tag markup",
+      "scopeDecision": "Maintainer explicitly authorized Shopify-conformant inline-comment behavior while preserving fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Reject hash lexically within ordinary strict2 tag markup; retain standalone inline-comment tags, quoted hashes, lax behavior, and outer liquid-block comment tokenization.",
+        "Keep original source-frame validation and existing error handling; strict-mode per-tag behavior and rewritten liquid-body handling remain separate work.",
+        "Add public-entry-point regressions with independent comment and mode controls."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/InlineHashDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source qualification and case-level comparison remain external. No full-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 identifier-before-number diagnostics",
+      "scopeDecision": "Maintainer requested the next conformance group while retaining pinned fixtures, separate branches, evidence and holds.",
+      "changes": [
+        "When an existing strict2 identifier guard rejects a numeric token, present the Shopify identifier-before-number reason with the existing token location.",
+        "Cover original selected cases through public entry points and preserve numeric bracket access, other modes and the established trailing-dot exception.",
+        "Leave numeric assignment and numeric capture admission to separate source-aware compatibility work."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/IdentifierNumberDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source results remain external; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 unknown loop attribute diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance group while retaining fixture pins, branch isolation, evidence and existing holds.",
+      "changes": [
+        "At an already-rejected unknown for or tablerow attribute, present the pinned Shopify reason in strict2; preserve token position and the other parser modes.",
+        "Exercise public entry points, valid loop parameters, other parser modes and original plus supplementary attribute examples.",
+        "Keep earlier lexical rejection ordering and its differences as an explicit separate issue."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LoopAttributeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "External exact-source checks and independent results are required; no complete-conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 invalid expression operator diagnostics",
+      "scopeDecision": "Maintainer requested continued Shopify conformance groups with fixture pins, independent branches, evidence and holds preserved.",
+      "changes": [
+        "On existing strict2 primary-expression rejection, present pinned token-specific reasons for unambiguous punctuation and comparison tokens while retaining the original token and location.",
+        "Preserve the equals token ambiguity and earlier lexer error ordering for separate source-aware work; retain valid syntax and other parser modes.",
+        "Add public regressions and positive controls without modifying fixture inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ExpressionTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent results are required; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Shopify self scope proxy",
+      "scopeDecision": "Maintainer commissioned the next conformance mismatch group and full Shopify compatibility while preserving pinned fixtures, separate branches and existing holds.",
+      "changes": [
+        "Add an invocation-owned live self proxy resolving through the originating scope, with a weak edge to avoid self-reference cycles and a separate state object for each isolated render.",
+        "Preserve assignment, host input and counter precedence, nested render origin, explicit self shadowing and property access without exposing context internals.",
+        "Add public regressions across parser modes, nested rendering, mutable assignments, Unicode-safe lookup paths, and concurrent invocations."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SelfScopeConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Candidate requires fresh exact-source qualification and independent comparison; no conformance, performance, merge, release or downstream acceptance is asserted."
+    },
+    {
+      "area": "Shopify self proxy map",
+      "scopeDecision": "Complete the remaining selected self-scope conformance case while preserving fixture pins and existing holds.",
+      "changes": [
+        "Treat the internal self proxy as one map item and delegate property lookup to its originating invocation-owned scope.",
+        "Add public source/parsed regressions across parser modes and a context-privacy control."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/SelfScopeConformanceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Exact-source tests and independent evidence remain external; no full conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Composite values in string-oriented filters",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving pinned fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Coerce arrays and objects using Shopify Ruby-style inspected representations for the selected standard string filters, while retaining ordinary template-output array rendering.",
+        "Preserve exact scalar spelling, insertion order for runtime objects, nested values, bounded admitted input, cooperative cancellation and existing output admission.",
+        "Exercise public source and parsed APIs, parser modes, nested and escaped Unicode strings, output capacity and cancellation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh source-bound results and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 question and standalone dash tokenization",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving fixture pins, separate branches, retained evidence and existing holds.",
+      "changes": [
+        "Recognize question marks and nonnumeric standalone dashes in strict2 markup so the existing parser can determine the earlier syntax rejection, as in the pinned Shopify lexer.",
+        "Present typed primary-expression and trailing-token reasons while retaining lexically invalid later characters, existing non-strict2 behavior, negative numbers and trim markers.",
+        "Exercise original parser-error inputs across public entry points and supplementary lexical-order and mode controls without modifying fixtures."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/TokenType.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/Strict2PunctuationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound lane results and independent comparison are retained externally; no full conformance, performance, merge, release or downstream acceptance is asserted."
+    },
+    {
+      "area": "Strict2 trailing token diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving fixture pins, separate branches, evidence and existing holds.",
+      "changes": [
+        "Leave an opening parenthesis after a named expression unconsumed in strict2, allowing the existing end-of-markup check to reject it before constructing an unsupported function call.",
+        "Report typed unexpected trailing token reasons for unambiguous punctuation, identifiers, strings, numbers and comparisons; preserve ambiguous equals spelling for separate source-aware work.",
+        "Exercise pinned case inputs through public entry points and retain valid ranges, bracket access, other parser modes and the existing trailing-dot boundary."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/TrailingTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed trailing-token regression controls",
+      "scopeDecision": "Preserve the existing public rejection cases while aligning their strict2 message expectations with the pinned Ruby reference and the newly commissioned diagnostic behavior.",
+      "changes": [
+        "Keep both original authored test inputs, rejection assertions, other-mode controls and valid syntax controls; update only the two strict2 message assertions that contradicted the pinned Ruby reference.",
+        "Retain the failed prior native run and exact pinned-reference observations externally; no golden fixture or comparator changes."
+      ],
+      "files": [
+        "Tests/LiquidTests/CommaDiagnosticTests.swift",
+        "Tests/LiquidTests/CloseRoundDiagnosticTests.swift"
+      ],
+      "qualification": "The previous candidate failed native on the two retained assertions; the successor requires fresh exact-source qualification. No complete conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Strict2 range expected-token diagnostics",
+      "scopeDecision": "Maintainer commissioned the next Shopify conformance mismatch group while preserving pinned fixtures, separate branches, evidence and existing holds.",
+      "changes": [
+        "Reuse the existing typed expected-token and immutable original-byte origin pipeline at the existing range separator and closing-delimiter rejection guards in strict2.",
+        "Preserve the same parser rejection, other syntax modes, valid ranges, when presentation, partial-local source origins, source limits and cancellation.",
+        "Add public regressions from the pinned independent corpus and supplementary source-origin controls without changing fixtures or comparators."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent comparison are retained externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 identifier-before-string diagnostics",
+      "scopeDecision": "Maintainer commissioned the next conformance mismatch group while preserving fixture pins, separate branches, evidence and existing holds.",
+      "changes": [
+        "Present the Shopify identifier-before-string reason at an existing strict2 identifier guard without changing parser acceptance or token location.",
+        "Retain valid bracket and dot lookups, other modes, and the existing trailing-dot boundary; add public regressions based on pinned cases."
+      ],
+      "files": [
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/IdentifierStringDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Fresh exact-source checks and independent comparison remain external; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Recursive partial operational boundary controls",
+      "scopeDecision": "Maintainer commissioned investigation of the ten operational conformance cases while retaining fixture pins, source evidence, cancellation and existing resource limits.",
+      "changes": [
+        "Add public regression controls that finite recursion completes, cancellation propagates, and an explicitly small caller-selected nesting limit remains operational under raising and recovering render policies.",
+        "Retain exact ten-variant reproductions and independently measured default/maximum depth boundaries outside the source tree without treating them as successful conformance outcomes.",
+        "Do not alter the default, maximum, accounting, fixture inputs, comparator, error categorization or recovery policy."
+      ],
+      "files": [
+        "Tests/LiquidTests/RecursionOperationalEvidenceTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Ten independent operational failures remain unresolved. Any Shopify language-stack guard or capacity/accounting policy change requires its own source-bound design and qualification; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Shopify render scope and separate resource capacities",
+      "scopeDecision": "Maintainer selected Shopify-compatible defaults while preserving explicit caller-selected limits and finite syntax and value admission.",
+      "changes": [
+        "Track Shopify local and isolated scope frames per invocation, presenting scope overflow through existing render recovery.",
+        "Keep syntax and value nesting bounds intact, and give the standard profile a separate finite 384-frame rendering capacity. Explicit nestingDepth initialization or assignment continues to set both limits.",
+        "Add public regressions for include/render boundaries, recovery, explicit limits, deep host values, syntax and rendering limits without changing pinned inputs or independent conformance comparators.",
+        "Recognize the compiler's explicit get/set spelling for the one observed stored limits property in the published API check, retaining exact checks for other declarations and negative accessor regressions."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidLimits.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Documentation.docc/LimitsAndConcurrency.md",
+        "Tests/LiquidTests/RecursionOperationalEvidenceTests.swift",
+        "Tests/TestInventory.json",
+        "Scripts/documentation_catalog.py",
+        "Scripts/check_documentation_contract.py"
+      ],
+      "qualification": "Exact-source safety and independent conformance results remain separately recorded. Complete conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 comparison-token diagnostics",
+      "scopeDecision": "The maintainer commissioned the next pinned conformance mismatch batch while preserving modes, original rejection, fixtures, evidence and existing holds.",
+      "changes": [
+        "At existing strict2 rejection points, validate the original UTF-8 spelling of the shared equals token before presenting the Shopify comparison reason.",
+        "Keep single equals, longer ambiguous operators, unrelated raw/doc syntax errors, rewritten or unmapped bodies, other modes, valid comparisons, source limits and cancellation behavior on their existing paths.",
+        "Add public regressions for the 32 selected pinned inputs and supplementary original-byte, mode and neighboring-token controls without changing fixtures or conformance comparators."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent matrix comparisons are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 first-token unclosed quote diagnostics",
+      "scopeDecision": "The maintainer commissioned the next reference-backed mismatch batch while preserving pinned fixtures, source ownership, mode boundaries and existing holds.",
+      "changes": [
+        "Allow the existing source-origin validator to present an unterminated quote at the first markup position when the original delimiter and any tag header are established.",
+        "Preserve original rejection, strict and lax behavior, missing or ambiguous terminator fallback, rewritten liquid-body fallback, source admission and cancellation checkpoints.",
+        "Add public regressions from 27 pinned cases and source-boundary controls; update two older strict2-only expectations that contradicted the pinned Ruby reference while retaining their input and other-mode assertions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/UnclosedQuoteDiagnosticTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/LiquidTests/DiagnosticOriginTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent matrix comparisons are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 unclosed blocks and trailing-pipe diagnostics",
+      "scopeDecision": "The maintainer commissioned several reference-backed mismatch batches while preserving pinned fixtures, mode boundaries, source ownership and existing holds.",
+      "changes": [
+        "Present unclosed raw, comment and doc block reasons only at established strict2 rejections with original opening-token locations, including an unclosed raw inside comment; preserve ambiguous doc boundaries, unmapped and other-mode behavior.",
+        "Present the existing trailing-pipe rejection in condition operands and partial tag argument parsing with the Ruby token reason, without changing acceptance.",
+        "Retain all pinned inputs and comparators; add public regressions for 26 pinned variants, valid blocks, other modes and cancellation."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidError.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are recorded externally; full conformance, performance, merge, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 block markup and nested doc diagnostics",
+      "scopeDecision": "The maintainer commissioned additional pinned conformance batches while retaining fixture data, original source ownership, parser modes and existing holds.",
+      "changes": [
+        "Present Ruby's raw/doc header reason at existing parser rejections, and nested-doc reason at the existing lexer boundary, using original opening-token coordinates.",
+        "Preserve valid block behavior, other parser modes, source admission, cancellation and ambiguous non-nesting doc delimiters; lexical errors remain a separate batch.",
+        "Add public regressions for 26 pinned cases and update three earlier rejection-only controls to the now established Ruby reasons; retain their original inputs."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidError.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/LiquidTests/ComparisonTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Independent matrix and source-bound checks are recorded externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed object output",
+      "scopeDecision": "The maintainer selected Shopify compatibility and commissioned the next mismatch batches while retaining fixture data, resource boundaries and existing holds.",
+      "changes": [
+        "Use the existing Ruby-style inspection for object output and object elements in joined or concatenated arrays while retaining Liquid's ordinary array concatenation.",
+        "Apply the same output conversion in immediate, general and optimized rendering paths, preserving per-invocation state, quotas and cancellation checkpoints.",
+        "Add public render-path, nested value, quota and cancellation regressions and update the prior authored object-output expectation without modifying any pinned fixture."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ImmediateTemplates.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/FilterStringCoercionTests.swift",
+        "Tests/LiquidTests/InterpolationTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed nil ordering",
+      "scopeDecision": "The maintainer commissioned additional reference-backed conformance batches while retaining pinned fixtures, independent comparison and existing holds.",
+      "changes": [
+        "Return false for relational operators when either operand is nil, matching pinned Ruby Liquid without changing equality or coercing nil to zero.",
+        "Cover both operand orders, all relational operators, modes and public rendering policies, plus quotas and cancellation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/NilComparisonTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are recorded externally; full conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed zero-division reason",
+      "scopeDecision": "The maintainer commissioned further Shopify mismatch batches while preserving pinned fixtures, finite-number policy and existing holds.",
+      "changes": [
+        "Represent the existing division/modulo-by-zero failure with a typed arithmetic reason whose public text matches Ruby Liquid.",
+        "Preserve raising and recovery boundaries, partial origins, cancellation and finite-number rejection; add public regression cases."
+      ],
+      "files": [
+        "Sources/Liquid/Support/RenderError.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/ZeroDivisionDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; full conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Strict2 numeric tag diagnostics and aliases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance batches without changing pinned fixtures, legacy parser modes or held release gates.",
+      "changes": [
+        "Recognize the existing Shopify strict2 as alias position before attributes, including without with or for, and report numeric alias and assignment-target failures using the existing typed reason.",
+        "Report trailing numeric input in include and render using the existing strict2 trailing-token reason; retain other modes and source locations."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/NumericTagDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are recorded externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify table-row attribute evaluation",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches, preserving pinned fixtures, resource limits and existing holds.",
+      "changes": [
+        "Retain table-row attribute expressions in the AST and evaluate them per render using Shopify integer coercion and iteration rules.",
+        "Preserve empty-row markup and exact column-last behavior; include attribute variables in AST inspection and retain cancellation and output budgets."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/TableRowCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Strict2 output comparisons and partial tag diagnostics",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while retaining source provenance, parser modes and pinned fixtures.",
+      "changes": [
+        "Tokenize strict2 comparison operators in output markup so the existing parser reports its original first rejection, preserving lax and strict lexer behavior.",
+        "Report invalid include and render trailing tokens through the existing strict2 typed trailing-token diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/Strict2PunctuationTests.swift",
+        "Tests/LiquidTests/NumericTagDiagnosticTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify control-flow error recovery",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving parser modes, pinned fixtures, cancellation and existing holds.",
+      "changes": [
+        "Retain source lines and mode-specific blank-output policy on conditional and for-loop AST nodes, preserving typed diagnostic recovery.",
+        "Match Shopify's non-orderable comparison and numeric/string error behavior, and report invalid for-loop integer attributes."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/BlockRecoveryCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Errors.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Cycle fragment and assignment precheck compatibility",
+      "scopeDecision": "The maintainer commissioned further Shopify mismatch batches while preserving original fixtures, modes, cancellation, resource budgets and existing holds.",
+      "changes": [
+        "Apply Ruby's lax and strict cycle fragment handling while retaining strict2 validation and bounded cancellation checks.",
+        "Present established strict2 assignment precheck failures with original token locations and typed reasons without admitting rejected inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/ParserError.swift",
+        "Tests/LiquidTests/CycleCompatibilityTests.swift",
+        "Tests/LiquidTests/AssignmentPrecheckCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md",
+        "Documentation/AssignmentTargets.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

@@ -23,7 +23,7 @@ struct InterpolationTests {
             (.null, "", 1),
             (.array([.string("A"), .integer(2), .bool(false), .null, .string("é")]), "A2falseé", 6),
             (.array([.array([.string("A"), .string("B")])]), "AB", 4),
-            (.object(["b": "B", "a": "A"]), "{\"b\"=>B, \"a\"=>A}", 3),
+            (.object(["b": "B", "a": "A"]), "{\"b\"=>\"B\", \"a\"=>\"A\"}", 3),
         ]
         for sample in cases {
             let context: LiquidObject = ["value": sample.value]

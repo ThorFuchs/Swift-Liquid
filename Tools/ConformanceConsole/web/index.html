@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Liquid Conformance</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<body>
+<div class="shell">
+<nav class="sidebar" aria-label="Run history"><div class="brand"><strong>Liquid</strong><span>Conformance</span></div><h2 class="nav-current"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 3 14 9-14 9Z"/></svg>Runs</h2><div id="history"><p class="muted">No runs yet</p></div><button class="settings" data-settings>Settings</button><p class="local-workspace">Local workspace</p></nav>
+<main>
+ <section class="workspace">
+  <div class="heading"><div><h1>Conformance</h1><p class="subtitle">Shopify liquid-spec · pinned core profile</p></div><div class="actions"><button id="run" class="primary" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 3 14 9-14 9Z"/></svg>Run suite</button><button id="check">Check setup</button><button id="cancel" hidden>Stop run</button></div></div>
+  <p id="source" class="source">Check setup to verify the current source.</p>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+  <section class="metrics" aria-label="Qualified case outcomes"><h2 id="snapshot">No run selected</h2><div><strong id="matched">—</strong><span>Matched</span></div><div><strong id="mismatched">—</strong><span>Mismatched</span></div><div><strong id="operational">—</strong><span>Operational</span></div><div><strong id="excluded">—</strong><span>Excluded</span></div></section>
+  <p id="progress" class="muted" aria-live="polite">Run the five pinned functional suites to produce a complete case report.</p>
+  <div class="tabs" role="tablist" aria-label="Run views"><button role="tab" aria-selected="true" data-tab="cases">Cases</button><button role="tab" aria-selected="false" data-tab="log">Run log</button><button role="tab" aria-selected="false" data-tab="evidence">Evidence</button></div>
+  <section id="cases" role="tabpanel">
+   <div class="filters"><label class="search"><span class="sr-only">Search cases</span><input id="search" type="search" placeholder="Search cases"></label><label><span class="sr-only">Outcome</span><select id="outcome"><option value="">All outcomes</option><option value="matched">Matched</option><option value="mismatched">Mismatched</option><option value="operational-error">Operational</option><option value="domain-divergence">Domain divergence</option><option value="excluded">Excluded</option></select></label><label><span class="sr-only">Suite</span><select id="suite"><option value="">All suites</option></select></label></div>
+   <div class="table-wrap"><table><thead><tr><th>Case</th><th>Suite</th><th>Mode</th><th>Outcome</th></tr></thead><tbody id="rows"></tbody></table><p id="empty" class="empty">Choose a run to explore its case results.</p></div>
+   <div class="pagination"><span id="page-info" class="muted"></span><button id="previous" disabled>Previous</button><button id="next" disabled>Next</button></div>
+  </section>
+  <section id="log" role="tabpanel" hidden><h2 class="sr-only">Run log</h2><pre id="log-body">Choose a run to inspect its retained log.</pre><p class="muted">Latest 64 KiB shown. The complete log is available in Evidence.</p></section>
+  <section id="evidence" role="tabpanel" hidden><h2>Retained evidence</h2><p>Every run has its own directory. Download original receipts, the complete matrix, and raw observations.</p><div id="downloads"></div><pre id="run-info">Choose a run to inspect its source and command.</pre></section>
+ </section>
+ <section class="setup"><div class="setup-heading"><h2>Local setup checks</h2><button data-settings>Configure paths</button></div><dl id="checks"><div><dt>Swift 6.4+</dt><dd>Check required</dd></div><div><dt>Ruby 4.0.1</dt><dd>Check required</dd></div><div><dt>Pinned liquid-spec</dt><dd>Check required</dd></div><div><dt>Pinned Ruby Liquid</dt><dd>Check required</dd></div></dl><p class="footnote">Functional checks only · No performance measurements</p></section>
+</main>
+<aside class="inspector"><h2>Case details</h2><div id="detail" class="detail-empty">Select a case to compare expected and actual behavior.</div></aside>
+</div>
+<dialog id="settings"><form id="settings-form"><div class="dialog-heading"><h2>Local setup</h2><button type="button" id="close-settings" aria-label="Close settings">Close</button></div><p>Use clean upstream checkouts at the existing pins. These paths stay on this computer.</p><label>liquid-spec checkout<input name="specPath" required autocomplete="off" spellcheck="false"></label><label>Ruby Liquid checkout<input name="referencePath" required autocomplete="off" spellcheck="false"></label><label>Ruby 4.0.1 executable<input name="rubyPath" required autocomplete="off" spellcheck="false"></label><label>GEM_PATH<input name="gemPath" autocomplete="off" spellcheck="false"></label><p class="muted">Missing gems are reported, never installed automatically. See Tools/ConformanceConsole/README.md for setup.</p><button type="submit" class="primary">Save and check</button></form></dialog>
+</body></html>

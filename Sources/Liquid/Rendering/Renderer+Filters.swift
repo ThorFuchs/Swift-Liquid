@@ -10,6 +10,15 @@
 import Foundation
 
 extension Renderer {
+    // These pinned Shopify filters coerce their input with Liquid::Utils.to_s.
+    private static let inspectingStringFilters: Set<String> = [
+        "upcase", "downcase", "capitalize", "strip", "lstrip", "rstrip",
+        "escape", "escape_once", "url_encode", "url_decode", "base64_encode",
+        "base64_url_safe_encode", "truncate", "truncatewords", "split", "strip_html",
+        "strip_newlines", "newline_to_br", "replace", "replace_first", "replace_last",
+        "remove", "remove_first", "remove_last", "append", "prepend"
+    ]
+
     // MARK: - Filter Application
     
     internal func applyFilter(_ filter: Filter, to value: Any, isChained: Bool = false, chainPosition: Int = 0) async throws -> Any {
@@ -40,6 +49,9 @@ extension Renderer {
                let result = range.commandValue(for: filter.name.string) { return result }
             let arrayFilters: Set<String> = ["join", "first", "last", "size", "sort", "sort_natural", "reverse", "map", "where", "reject", "find", "find_index", "has", "sum", "uniq", "compact", "concat"]
             value = arrayFilters.contains(filter.name.string) ? range.values : range.description
+        } else if Self.inspectingStringFilters.contains(filter.name.string),
+                  input is [Any] || isDictLike(input) {
+            value = try rubyInspect(input)
         } else { value = input }
 
         // Handle default filter with allow_false named argument
@@ -142,7 +154,7 @@ extension Renderer {
     internal func applyBuiltinFilterSingleArgument(kind: Filter.BuiltinKind, to value: Any, argument: Any) throws -> Any? {
         switch kind {
         case .join:
-            return joinArray(value, separator: stringify(argument))
+            return try joinArray(value, separator: stringify(argument))
         case .split:
             return applySplitFilter(value, separator: argument)
         case .append:
@@ -307,7 +319,7 @@ extension Renderer {
         }
         if filterName.equals("join") {
             let separator = args.isEmpty ? " " : stringify(args[0])
-            return joinArray(value, separator: separator)
+            return try joinArray(value, separator: separator)
         }
         if filterName.equals("split") {
             return applySplitFilter(value, separator: args.first ?? NSNull())

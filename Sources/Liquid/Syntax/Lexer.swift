@@ -43,6 +43,7 @@ internal final class Lexer {
 
     private let bytes: [UInt8]
     private let sourceProvenance: DiagnosticSourceProvenance
+    private let syntaxMode: LiquidSyntaxMode
 
     private var byteIndex: Int = 0
     
@@ -56,9 +57,11 @@ internal final class Lexer {
     
     // MARK: - Initialization
     
-    internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped) {
+    internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped,
+                  syntaxMode: LiquidSyntaxMode = .lax) {
         self.bytes = Array(input.utf8)
         self.sourceProvenance = sourceProvenance
+        self.syntaxMode = syntaxMode
     }
     
     // MARK: - Public Interface
@@ -78,6 +81,40 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                if syntaxMode == .strict2, case .unclosedDelimiter("nested doc", _) = error,
+                   case .original = sourceProvenance, firstToken < tokens.count,
+                   tokens[firstToken].type == .tagStart {
+                    throw LexerError.invalidDocNesting(opening: tokens[firstToken])
+                }
+                if syntaxMode == .strict2, case .unclosedDelimiter("doc", _) = error,
+                   case .original = sourceProvenance, firstToken < tokens.count,
+                   tokens[firstToken].type == .tagStart {
+                    // An unrecognized nested/opening or closing doc tag is an
+                    // ambiguous grammar case, not an established missing close.
+                    try Task.checkCancellation()
+                    let body = String(decoding: bytes[byteIndex...], as: UTF8.self)
+                    let ambiguous = body.range(of: #"\{%-?\s*(?:doc|enddoc)(?:\s|%|-)"#, options: .regularExpression) != nil
+                    try Task.checkCancellation()
+                    if !ambiguous { throw LexerError.unclosedShopifyBlock("doc", opening: tokens[firstToken]) }
+                }
+                // Only present an unmatched quote when its original markup frame is validated.
+                if syntaxMode == .strict2, case .unterminatedString(let offset) = error,
+                   offset >= 0, offset < bytes.count,
+                   bytes[offset] == Self.singleQuote || bytes[offset] == Self.doubleQuote,
+                   case .original(let identity) = sourceProvenance {
+                    let frameTokens = tokens[firstToken...]
+                    // The opening delimiter (and a tag header where present)
+                    // suffices; diagnosticOrigin validates the complete frame.
+                    let minimum = frameTokens.first?.type == .variableStart ? 1 : 2
+                    if frameTokens.count >= minimum {
+                        let character = Character(UnicodeScalar(bytes[offset]))
+                        let origin = try diagnosticOrigin(character, at: offset, start: start.position,
+                                                          tokens: frameTokens, identity: identity)
+                        if case .resolved = origin {
+                            throw LexerError.unexpectedCharacter(character, position: offset, origin: origin)
+                        }
+                    }
+                }
                 guard case .unexpectedCharacter(let character, let offset, _) = error else { throw error }
                 let origin: DiagnosticOriginResolution
                 switch sourceProvenance {
@@ -242,6 +279,10 @@ internal final class Lexer {
     private func skipDocBlock(_ tokens: inout [Token]) throws(LexerError) {
         let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
         guard let closing = remaining.range(of: #"\{%-?\s*enddoc\s*-?%\}"#, options: .regularExpression) else {
+            if syntaxMode == .strict2, case .original = sourceProvenance,
+               remaining.range(of: #"\{%-?\s*doc(?=\s|%)[^{}]*?%\}"#, options: .regularExpression) != nil {
+                throw LexerError.unclosedDelimiter("nested doc", position: byteIndex)
+            }
             throw LexerError.unclosedDelimiter("doc", position: byteIndex)
         }
         let body = remaining[..<closing.lowerBound]
@@ -327,6 +368,7 @@ internal final class Lexer {
                         advance()
                     }
                     // Now scan for {% endraw %}
+                    var foundEndRaw = false
                     while byteIndex < end {
                         if bytes[byteIndex] == Self.openBrace, byteIndex + 1 < end, bytes[byteIndex + 1] == Self.percent {
                             let probe = byteIndex + 2
@@ -338,6 +380,7 @@ internal final class Lexer {
                                bytes[p] == 0x65, bytes[p+1] == 0x6E, bytes[p+2] == 0x64,
                                bytes[p+3] == 0x72, bytes[p+4] == 0x61, bytes[p+5] == 0x77 {
                                 // Found endraw — skip past the closing %}
+                                foundEndRaw = true
                                 byteIndex = p + 6
                                 while byteIndex < end {
                                     if bytes[byteIndex] == Self.percent, byteIndex + 1 < end, bytes[byteIndex + 1] == Self.closeBrace {
@@ -351,6 +394,10 @@ internal final class Lexer {
                             }
                         }
                         advance()
+                    }
+                    if !foundEndRaw, syntaxMode == .strict2, case .original = sourceProvenance {
+                        let opening = Token(type: .tagStart, position: tagStartPos, line: tagStartLine, column: tagStartCol)
+                        throw LexerError.unclosedShopifyBlock("raw", opening: opening)
                     }
                     continue // Don't fall through to the "skip to %}" below
                 }
@@ -541,6 +588,22 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .equals, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
+            // Strict2 recognizes comparison tokens in output markup before
+            // rejecting them in the expression grammar. This preserves an
+            // earlier parser error, such as a doubled filter-argument comma.
+            case Self.exclamation where syntaxMode == .strict2 && nextByte == Self.equals:
+                advanceASCII()
+                advanceASCII()
+                tokens.append(Token(type: .notEquals, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
+            case let operatorByte where syntaxMode == .strict2 && (operatorByte == Self.lessThan || operatorByte == Self.greaterThan):
+                let less = byte == Self.lessThan
+                advanceASCII()
+                let hasEquals = nextByte == Self.equals
+                if hasEquals { advanceASCII() }
+                let kind: TokenType = less ? (hasEquals ? .lessThanOrEqual : .lessThan) : (hasEquals ? .greaterThanOrEqual : .greaterThan)
+                tokens.append(Token(type: kind, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
             case Self.doubleQuote, Self.singleQuote:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeString(&tokens, start: tokenStart, quote: byte)
@@ -571,9 +634,16 @@ internal final class Lexer {
                     } else {
                         throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                     }
+                } else if syntaxMode == .strict2 {
+                    advanceASCII()
+                    tokens.append(Token(type: .dash, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 } else {
                     throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                 }
+
+            case 0x3F where syntaxMode == .strict2:
+                advanceASCII()
+                tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
@@ -607,6 +677,7 @@ internal final class Lexer {
     }
     
     private func tokenizeTag(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
+        let tagTokenStart = tokens.count
         advanceASCII() // consume {
         advanceASCII() // consume %
 
@@ -856,16 +927,29 @@ internal final class Lexer {
                     } else {
                         throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                     }
+                } else if syntaxMode == .strict2 {
+                    advanceASCII()
+                    tokens.append(Token(type: .dash, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 } else {
-                    // Bare `-` not followed by digit or `%}` — invalid in Liquid
                     throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
                 }
+
+            case 0x3F where syntaxMode == .strict2:
+                advanceASCII()
+                tokens.append(Token(type: .question, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case let c where c.isIdentifierStartByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeIdentifier(&tokens, start: tokenStart)
 
-            case 0x23: // '#' — inline comment inside tag, skip to end of line
+            case 0x23:
+                // A standalone comment is handled at the tag header above. A liquid
+                // block still needs its line comments retained for the body parser.
+                // Other strict2 markup must reject the hash as a lexical error.
+                let liquidBody = tokens.count > tagTokenStart + 1 && tokens[tagTokenStart + 1].type == .liquid
+                if syntaxMode == .strict2 && !liquidBody {
+                    throw LexerError.unexpectedCharacter("#", position: byteIndex)
+                }
                 while byteIndex < bytes.count {
                     let b = bytes[byteIndex]
                     if b == 0x0A /* \n */ { break } // stop at newline

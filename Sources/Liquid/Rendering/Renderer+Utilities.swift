@@ -66,6 +66,7 @@ extension Renderer {
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
         switch value {
+        case is RuntimeSelf: return "Liquid::SelfDrop"
         case is LiquidSpecialValue: return ""
         case let range as RuntimeRange: return range.description
         case let str as String:
@@ -99,6 +100,101 @@ extension Renderer {
         default:
             return String(describing: value)
         }
+    }
+
+    // Output arrays concatenate their elements, while a hash and its nested
+    // values use Ruby's inspected representation. Keep this separate from
+    // expression coercion and retain cancellation at composite boundaries.
+    internal func renderStringify(_ value: Any) throws -> String {
+        if value is RuntimeObject || value is [String: Any] || value is [Any] {
+            let result = try renderCompositeUnescaped(value)
+            return autoEscapeEnabled ? HTMLEscape.escape(result) : result
+        }
+        return stringify(value)
+    }
+
+    private func renderCompositeUnescaped(_ value: Any) throws -> String {
+        try Task.checkCancellation()
+        if let array = value as? [Any] {
+            var output = ""
+            for item in array { output += try renderCompositeUnescaped(item) }
+            return output
+        }
+        if value is RuntimeObject || value is [String: Any] { return try rubyInspect(value) }
+        return stringifyUnescaped(value)
+    }
+
+    // Ruby Liquid inspects composite values when a string-oriented filter
+    // coerces its input. Normal template output keeps its separate array rules.
+    internal func rubyInspect(_ value: Any) throws -> String {
+        try Task.checkCancellation()
+        if let string = value as? String { return try rubyInspectedString(string) }
+        if let string = value as? InlineString { return try rubyInspectedString(string.string) }
+        if value is NSNull { return "nil" }
+        if let array = value as? [Any] {
+            var parts: [String] = []
+            parts.reserveCapacity(array.count)
+            for item in array { parts.append(try rubyInspect(item)) }
+            return "[" + parts.joined(separator: ", ") + "]"
+        }
+        if let object = value as? RuntimeObject {
+            var parts: [String] = []
+            parts.reserveCapacity(object.count)
+            for (key, item) in object {
+                parts.append(try rubyInspectedString(key) + "=>" + rubyInspect(item))
+            }
+            return "{" + parts.joined(separator: ", ") + "}"
+        }
+        if let object = value as? [String: Any] {
+            var parts: [String] = []
+            parts.reserveCapacity(object.count)
+            for key in object.keys.sorted() {
+                guard let item = object[key] else { continue }
+                parts.append(try rubyInspectedString(key) + "=>" + rubyInspect(item))
+            }
+            return "{" + parts.joined(separator: ", ") + "}"
+        }
+        return stringifyUnescaped(value)
+    }
+
+    private func rubyInspectedString(_ string: String) throws -> String {
+        var result = "\""
+        let scalars = string.unicodeScalars
+        var position = scalars.startIndex
+        var count = 0
+        while position < scalars.endIndex {
+            if count & 255 == 0 { try Task.checkCancellation() }
+            let scalar = scalars[position]
+            let next = scalars.index(after: position)
+            switch scalar.value {
+            case 0x22: result += "\\\""
+            case 0x5c: result += "\\\\"
+            case 0x07: result += "\\a"
+            case 0x08: result += "\\b"
+            case 0x09: result += "\\t"
+            case 0x0a: result += "\\n"
+            case 0x0b: result += "\\v"
+            case 0x0c: result += "\\f"
+            case 0x0d: result += "\\r"
+            case 0x1b: result += "\\e"
+            case 0x23 where next < scalars.endIndex && [0x7b, 0x24, 0x40].contains(scalars[next].value):
+                result += "\\#"
+            default:
+                switch scalar.properties.generalCategory {
+                case .control, .format, .lineSeparator, .paragraphSeparator:
+                    if scalar.value <= 0xffff {
+                        result += String(format: "\\u%04X", scalar.value)
+                    } else {
+                        result += String(format: "\\u{%X}", scalar.value)
+                    }
+                default: result.unicodeScalars.append(scalar)
+                }
+            }
+            position = next
+            count += 1
+        }
+        result += "\""
+        return result
     }
 
     internal func joinedStringifiedValues(_ array: [Any], separator: String, escapeElements: Bool) -> String {
@@ -183,6 +279,10 @@ extension Renderer {
     }
     
     internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+        if let left = left as? RuntimeSelf, let right = right as? RuntimeSelf {
+            return left.scope === right.scope
+        }
+        if left is RuntimeSelf || right is RuntimeSelf { return false }
         if let left = left as? LiquidSpecialValue, let right = right as? LiquidSpecialValue { return left == right }
         if let special = left as? LiquidSpecialValue { return special == .blank ? isBlank(right) : isEmpty(right) }
         if let special = right as? LiquidSpecialValue { return special == .blank ? isBlank(left) : isEmpty(left) }
@@ -245,23 +345,28 @@ extension Renderer {
     }
 
     internal func isLess(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) < 0
     }
 
     internal func isLessEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) <= 0
     }
 
     internal func isGreater(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) > 0
     }
 
     internal func isGreaterEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if !hasOrdering(left) || !hasOrdering(right) { return false }
         return try compareValues(left, right) >= 0
+    }
+
+    private func hasOrdering(_ value: Any) -> Bool {
+        if value is Bool { return false }
+        return value is Int || value is Double || value is String
     }
 
     internal func compareValues(_ left: Any, _ right: Any) throws -> Int {
@@ -291,6 +396,12 @@ extension Renderer {
             throw RenderError.typeError(expected: "comparable types", actual: "nil vs \(type(of: left is NSNull ? right : left))", operation: "comparison")
         }
 
+        if leftIsNumeric, right is String {
+            throw RenderError.custom("comparison of \(left is Int ? "Integer" : "Float") with String failed")
+        }
+        if left is String, rightIsNumeric {
+            throw RenderError.custom("comparison of String with \(stringify(right)) failed")
+        }
         // Incompatible types — error (Shopify behavior)
         throw RenderError.typeError(expected: "comparable types", actual: "\(type(of: left)) vs \(type(of: right))", operation: "comparison")
     }
@@ -388,7 +499,7 @@ extension Renderer {
     internal func divide(_ left: Any, _ right: Any) throws -> Any {
         // Integer division when both operands are integers (Shopify behavior: 5/3=1)
         if let l = left as? Int, let r = right as? Int {
-            guard r != 0 else { throw RenderError.arithmeticError("Division by zero") }
+            guard r != 0 else { throw RenderError.divisionByZero() }
             guard !(l == Int.min && r == -1) else { throw LiquidError.invalidValue("Integer overflow") }
             let quotient = l / r
             let remainder = l % r
@@ -399,7 +510,7 @@ extension Renderer {
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
         guard r != 0 else {
-            throw RenderError.arithmeticError("Division by zero")
+            throw RenderError.divisionByZero()
         }
         let result = l / r
         // If neither input was a float, return Int (string coercion case)
@@ -411,7 +522,7 @@ extension Renderer {
 
     internal func modulo(_ left: Any, _ right: Any) throws -> Any {
         if let l = left as? Int, let r = right as? Int {
-            guard r != 0 else { throw RenderError.arithmeticError("Division by zero") }
+            guard r != 0 else { throw RenderError.divisionByZero() }
             if l == Int.min && r == -1 { return 0 }
             let remainder = l % r
             return remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
@@ -420,7 +531,7 @@ extension Renderer {
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
         guard r != 0 else {
-            throw RenderError.arithmeticError("Division by zero")
+            throw RenderError.divisionByZero()
         }
         let remainder = l.truncatingRemainder(dividingBy: r)
         let result = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
@@ -446,9 +557,10 @@ extension Renderer {
             let parts = str.split(omittingEmptySubsequences: true, whereSeparator: { $0.isWhitespace })
             return parts.map { String($0) } as [Any]
         }
-        // Standard split — preserve empty parts if any non-empty parts exist
-        let parts = str.components(separatedBy: sep)
-        return parts.contains(where: { !$0.isEmpty }) ? parts : [Any]()
+        // Ruby removes trailing empty fields while retaining leading and interior fields.
+        var parts = str.components(separatedBy: sep)
+        while parts.last?.isEmpty == true { parts.removeLast() }
+        return parts
     }
 
     internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
@@ -527,11 +639,14 @@ extension Renderer {
         return isEmpty(value)
     }
     
-    internal func joinArray(_ value: Any, separator: String) -> String {
-        guard let array = value as? [Any] else { return stringify(value) }
-        // Flatten nested arrays before joining (Shopify behavior)
+    internal func joinArray(_ value: Any, separator: String) throws -> String {
+        guard let array = value as? [Any] else { return try renderStringify(value) }
+        // Flatten nested arrays before joining (Shopify behavior).
         let flat = flattenArray(array)
-        return joinedStringifiedValues(flat, separator: separator, escapeElements: true)
+        var parts: [String] = []
+        parts.reserveCapacity(flat.count)
+        for item in flat { parts.append(try renderStringify(item)) }
+        return parts.joined(separator: separator)
     }
 
     internal func compareForSort(_ a: Any, _ b: Any) -> Bool {

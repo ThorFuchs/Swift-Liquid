@@ -139,7 +139,7 @@ extension Renderer {
             "col": colIndex + 1,
             "col0": colIndex,
             "col_first": colIndex == 0,
-            "col_last": colIndex == columnCount - 1 || index == lastIndex,
+            "col_last": colIndex == columnCount - 1,
             "first": index == 0,
             "last": index == lastIndex,
             "index": index + 1,
@@ -190,7 +190,7 @@ extension Renderer {
             else if let dblVal = offsetValue as? Double { offset = try checkedInteger(dblVal) }
             else if let strVal = offsetValue as? String, let intVal = Int(strVal) { offset = intVal }
             else if !(offsetValue is NSNull) {
-                throw RenderError.typeError(expected: "integer", actual: "\(type(of: offsetValue))", operation: "for offset")
+                throw RenderError.custom("invalid integer")
             }
         }
 
@@ -205,7 +205,7 @@ extension Renderer {
             else if let dblVal = limitValue as? Double { resolvedLimit = try checkedInteger(dblVal) }
             else if let strVal = limitValue as? String, let intVal = Int(strVal) { resolvedLimit = intVal }
             else if !(limitValue is NSNull) {
-                throw RenderError.typeError(expected: "integer", actual: "\(type(of: limitValue))", operation: "for limit")
+                throw RenderError.custom("invalid integer")
             }
         }
 
@@ -238,6 +238,8 @@ extension Renderer {
             }
         }
 
+        try enterLiquidScope()
+        defer { liquidLocalScopeDepth -= 1 }
         let itemCount = items.count
         let lastIndex = itemCount - 1
         let itemCountInt = itemCount
@@ -369,6 +371,35 @@ extension Renderer {
 
     internal func renderTableRow(variable: InlineString, collection: LiquidExpression, body: [ASTNode], params: TableRowParams) async throws -> String {
         let collectionValue = try await evaluateExpression(collection)
+        if collectionValue is NSNull || (collectionValue as? Bool) == false { return "" }
+
+        func tableInteger(_ expression: LiquidExpression) async throws -> Int {
+            let value = try await evaluateExpression(expression)
+            if value is NSNull { return 0 }
+            if value is Bool { throw RenderError.custom("invalid integer") }
+            if let string = value as? String {
+                // Ruby String#to_i consumes an optional sign and decimal prefix.
+                let bytes = Array(string.utf8)
+                var index = 0
+                while index < bytes.count && (bytes[index] == 32 || (9...13).contains(bytes[index])) { index += 1 }
+                let start = index
+                if index < bytes.count && (bytes[index] == 43 || bytes[index] == 45) { index += 1 }
+                let firstDigit = index
+                while index < bytes.count && (48...57).contains(bytes[index]) {
+                    if index & 1023 == 0 { try Task.checkCancellation() }
+                    index += 1
+                }
+                guard index > firstDigit else { return 0 }
+                guard let number = Int(String(decoding: bytes[start..<index], as: UTF8.self)) else {
+                    throw LiquidError.invalidValue("Table row integer is outside the supported range")
+                }
+                return number
+            }
+            if let number = integerValue(value) { return number }
+            throw RenderError.custom("invalid integer")
+        }
+        let offset: Int? = if let expression = params.offset { try await tableInteger(expression) } else { nil }
+        let limit: Int? = if let expression = params.limit { try await tableInteger(expression) } else { nil }
         
         // Convert collection to array
         var items: [Any] = []
@@ -381,23 +412,25 @@ extension Renderer {
         } else if let str = collectionValue as? String {
             // Shopify Liquid: non-empty strings iterate as a single item
             items = str.isEmpty ? [] : [str]
-        } else {
-            // Empty collection
-            return ""
-        }
+        } else { items = [] }
         
         // Apply offset
-        if let offset = params.offset, offset > 0 {
+        if !(collectionValue is String), let offset, offset > 0 {
             items = Array(items.dropFirst(offset))
         }
         
         // Apply limit
-        if let limit = params.limit, limit > 0 {
-            items = Array(items.prefix(limit))
+        if !(collectionValue is String), let limit {
+            items = Array(items.prefix(max(0, limit)))
         }
-        
+        let declaredColumns: Int? = if let expression = params.cols { try await tableInteger(expression) } else { nil }
+        guard !items.isEmpty else { return "<tr class=\"row1\">\n</tr>\n" }
+        try enterLiquidScope()
+        defer { liquidLocalScopeDepth -= 1 }
+
         // Get column count (default to items.count if not specified)
-        let columnCount = params.cols ?? items.count
+        let requestedColumns = declaredColumns ?? items.count
+        let columnCount = requestedColumns > 0 ? requestedColumns : Int.max
         let itemCount = items.count
         let lastIndex = itemCount - 1
 
@@ -736,6 +769,8 @@ extension Renderer {
                 // don't use it as parentloop.
                 itemVars["forloop"] = forloop
                 itemVars["__render_forloop__"] = true  // Flag for parentloop suppression
+                let savedLiquidScope = try enterLiquidIsolatedScope()
+                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
@@ -753,6 +788,8 @@ extension Renderer {
 
         // Handle {% include "template" for collection %} (non-render mode)
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
+            try enterLiquidScope()
+            defer { liquidLocalScopeDepth -= 1 }
             let collection = try await evaluateExpression(forExpr)
             guard let items = collection as? [Any] else {
                 return ""
@@ -777,6 +814,8 @@ extension Renderer {
         }
 
         if isRender {
+            let savedLiquidScope = try enterLiquidIsolatedScope()
+            defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
             let savedState = context.saveState()
             context.isolateScope(with: evaluatedVariables)
             templatePathStack.append(resolvedPath)
@@ -789,6 +828,8 @@ extension Renderer {
                 try await renderNode(preparedAST)
             }
         } else {
+            try enterLiquidScope()
+            defer { liquidLocalScopeDepth -= 1 }
             // Push keyword args in a scope so they're protected from assigns
             // (assigns use setRootVariable which writes to root, keyword args shadow them)
             if !evaluatedVariables.isEmpty {

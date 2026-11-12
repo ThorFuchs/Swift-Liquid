@@ -18,6 +18,14 @@ Standard surface:
 | Utility tags | raw, comment, inline comment, doc, echo, liquid, ifchanged |
 | Filters | Standard string, HTML, URL, Base64, numeric, date, and array filters, including squish and remove_last |
 
+`tablerow` evaluates its `cols`, `offset` and `limit` expressions at render
+time. Like Shopify's table-row tag, it coerces string attributes through their
+integer prefix and emits an empty row for an empty, non-nil collection. Its
+`col_last` indicates the configured last column, including in a partial row.
+In lax and strict modes, `cycle` uses a leading expression in a
+comma-separated fragment even if that fragment has trailing tokens. Strict2
+validates the full cycle markup.
+
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
@@ -49,7 +57,9 @@ than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
-Keys and equality retain Unicode scalar spelling. Case mapping uses the native
+Keys and equality retain Unicode scalar spelling. Template output concatenates
+array elements and presents objects using Ruby-style inspection, including nested
+strings, arrays and null values. Case mapping uses the native
 Unicode implementation. Dates accept whole-second epochs, complete ISO and
 ordinal dates, English month names, RFC and asctime forms. Timezone-free input
 uses UTC; explicit offsets and
@@ -63,6 +73,9 @@ Finite limits can reject an otherwise valid template. The raising render API thr
 cancellation remains `CancellationError`. Explicit diagnostic rendering can
 recover Liquid runtime errors while retaining every diagnostic; see
 [errors and recovery](Errors.md).
+Relational comparisons involving `nil` return false, while equality and
+inequality retain their usual Liquid behavior.
+
 These limits are policy, not language invalidity. They do not certify a process
 sandbox, wall-clock deadline, or memory ceiling.
 

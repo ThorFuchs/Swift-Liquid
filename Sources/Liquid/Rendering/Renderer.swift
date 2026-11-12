@@ -70,6 +70,28 @@ internal final class Renderer {
     internal var diagnostics: [LiquidDiagnostic] = []
     internal var lastIfChanged: String?
     internal var context: RenderingContext
+    // Ruby Liquid counts local scopes separately from isolated render contexts.
+    internal var liquidBaseScopeDepth = 0
+    internal var liquidLocalScopeDepth = 1
+
+    internal func enterLiquidScope() throws {
+        try Task.checkCancellation()
+        guard liquidBaseScopeDepth + liquidLocalScopeDepth < 100 else {
+            throw RenderError.custom("Nesting too deep")
+        }
+        liquidLocalScopeDepth += 1
+    }
+
+    internal func enterLiquidIsolatedScope() throws -> (Int, Int) {
+        try Task.checkCancellation()
+        guard liquidBaseScopeDepth + liquidLocalScopeDepth <= 100 else {
+            throw RenderError.custom("Nesting too deep")
+        }
+        let saved = (liquidBaseScopeDepth, liquidLocalScopeDepth)
+        liquidBaseScopeDepth += 1
+        liquidLocalScopeDepth = 1
+        return saved
+    }
 
     internal let configuration: RendererConfiguration
 
@@ -139,6 +161,34 @@ internal final class Renderer {
 
 // MARK: - Rendering Context
 
+// A self value is a live, invocation-owned view of its originating render scope.
+// The weak edge avoids a cycle when the template stores self in that same scope.
+internal final class RuntimeSelfScope {
+    var hostInputs: RuntimeVariables = [:]
+    var variables: RuntimeVariables = [:]
+    var scopes: [RuntimeVariables] = []
+    var currentScope: RuntimeVariables?
+    var counters: [String: Int] = [:]
+
+    func lookup(_ name: String) -> Any? {
+        if let value = currentScope?[name] { return value }
+        for scope in scopes.reversed() {
+            if let value = scope[name] { return value }
+        }
+        if let value = variables[name] { return value }
+        if let value = hostInputs[name], !(name == "self" && value is NSNull) { return value }
+        if let value = counters[name] { return value }
+        if name == "self" { return RuntimeSelf(scope: self) }
+        return nil
+    }
+}
+
+internal final class RuntimeSelf {
+    weak var scope: RuntimeSelfScope?
+    init(scope: RuntimeSelfScope) { self.scope = scope }
+    func lookup(_ name: String) -> Any? { scope?.lookup(name) }
+}
+
 internal final class RenderingContext {
     internal struct VariableSnapshot {
         let name: String
@@ -162,13 +212,14 @@ internal final class RenderingContext {
 
     // Admitted once at render entry, then shared read-only by every partial.
     // Liquid assignments remain in separate invocation-owned scope overlays.
-    private var hostInputs: RuntimeVariables = [:]
-    private var variables: RuntimeVariables = [:]
-    private var scopes: [RuntimeVariables] = []
-    private var currentScope: RuntimeVariables?
+    private var selfScope = RuntimeSelfScope()
+    private var hostInputs: RuntimeVariables { get { selfScope.hostInputs } set { selfScope.hostInputs = newValue } }
+    private var variables: RuntimeVariables { get { selfScope.variables } set { selfScope.variables = newValue } }
+    private var scopes: [RuntimeVariables] { get { selfScope.scopes } set { selfScope.scopes = newValue } }
+    private var currentScope: RuntimeVariables? { get { selfScope.currentScope } set { selfScope.currentScope = newValue } }
     private var variablePathCache: [ScalarKey: CachedVariablePath] = [:]
     private var loopDepth: Int = 0
-    private var counters: [String: Int] = [:]
+    private var counters: [String: Int] { get { selfScope.counters } set { selfScope.counters = newValue } }
     private var cycleCounters: [ObjectIdentifier: Int] = [:]
     
     
@@ -200,6 +251,9 @@ internal final class RenderingContext {
                 value = lookupValue(named: path.baseName)
             case 1:
                 if let baseValue = lookupValue(named: path.baseName) {
+                    if baseValue is RuntimeSelf {
+                        value = resolve(path.components[0], from: baseValue)
+                    } else {
                     switch path.components[0] {
                     case .size:
                         value = runtimeSizeProperty(baseValue)
@@ -264,6 +318,7 @@ internal final class RenderingContext {
                         } else {
                             value = resolve(path.components[0], from: baseValue)
                         }
+                    }
                     }
                 } else {
                     value = nil
@@ -390,13 +445,13 @@ internal final class RenderingContext {
                 if !text.string.allSatisfy(\.isWhitespace) { return false }
             case .assign, .comment, .increment, .decrement, .capture:
                 continue
-            case .if(_, let thenNodes, let elsifBranches, let elseNodes):
+            case .if(_, let thenNodes, let elsifBranches, let elseNodes, _):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 for (_, branchNodes) in elsifBranches {
                     if !isStaticallyBlankBlock(branchNodes) { return false }
                 }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
-            case .unless(_, let thenNodes, let elseNodes):
+            case .unless(_, let thenNodes, let elseNodes, _):
                 if !isStaticallyBlankBlock(thenNodes) { return false }
                 if let elseNodes, !isStaticallyBlankBlock(elseNodes) { return false }
             case .case(_, let branches):
@@ -420,47 +475,30 @@ internal final class RenderingContext {
 
 
     struct SavedState {
-        let variables: RuntimeVariables
-        let scopes: [RuntimeVariables]
-        let currentScope: RuntimeVariables?
-        let counters: [String: Int]
+        let selfScope: RuntimeSelfScope
         let cycleCounters: [ObjectIdentifier: Int]
         let loopDepth: Int
     }
 
     func saveState() -> SavedState {
-        SavedState(
-            variables: variables,
-            scopes: scopes,
-            currentScope: currentScope,
-            counters: counters,
-            cycleCounters: cycleCounters,
-            loopDepth: loopDepth
-        )
+        SavedState(selfScope: selfScope, cycleCounters: cycleCounters, loopDepth: loopDepth)
     }
 
     func restoreState(_ state: SavedState) {
-        variables = state.variables
-        scopes = state.scopes
-        currentScope = state.currentScope
-        counters = state.counters
+        selfScope = state.selfScope
         cycleCounters = state.cycleCounters
         loopDepth = state.loopDepth
     }
 
     func isolateScope(with bindings: RuntimeVariables) {
-        // A fresh local overlay keeps original host roots visible without
-        // copying them into each nested render or admitting them again.
+        let next = RuntimeSelfScope()
+        next.hostInputs = hostInputs
+        next.variables = bindings
+        selfScope = next
         loopDepth = 0
-        variables = [:]
-        scopes.removeAll(keepingCapacity: true)
-        currentScope = nil
-        counters.removeAll(keepingCapacity: true)
         cycleCounters.removeAll(keepingCapacity: true)
-        for (key, value) in bindings {
-            variables[key] = value
-        }
     }
+
 
 
 
@@ -475,29 +513,7 @@ internal final class RenderingContext {
     func getLiteralVariable(_ name: String) -> Any? { lookupValue(named: name) }
 
     private func lookupValue(named name: String) -> Any? {
-        // Check current scope first
-        if let currentScope,
-           let value = currentScope[name] {
-            return value
-        }
-        // Check parent scopes (for nested loop variables like forloop/parentloop)
-        for scope in scopes.reversed() {
-            if let value = scope[name] {
-                return value
-            }
-        }
-        // Check normal variables first, then fall back to counter namespace
-        if let value = variables[name] {
-            return value
-        }
-        if let value = hostInputs[name] {
-            return value
-        }
-        // Fall back to increment/decrement counter namespace
-        if let counter = counters[name] {
-            return counter
-        }
-        return nil
+        selfScope.lookup(name)
     }
 
 
@@ -568,6 +584,15 @@ internal final class RenderingContext {
     }
 
     private func resolve(_ component: PathComponent, from value: Any) -> Any? {
+        if let selfValue = value as? RuntimeSelf {
+            switch component {
+            case .size: return selfValue.lookup("size")
+            case .first: return selfValue.lookup("first")
+            case .last: return selfValue.lookup("last")
+            case .index(let index): return selfValue.lookup(String(index))
+            case .key(let key): return selfValue.lookup(key)
+            }
+        }
         switch component {
         case .size:
             return runtimeSizeProperty(value)

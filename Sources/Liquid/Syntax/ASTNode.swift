@@ -9,8 +9,8 @@ internal indirect enum ASTNode: Sendable {
     case template([ASTNode])
     case text(InlineString)
     case output(LiquidExpression, location: RenderLocation? = nil)
-    case `if`(condition: LiquidExpression, then: [ASTNode], elsif: [(LiquidExpression, [ASTNode])], else: [ASTNode]?)
-    case unless(condition: LiquidExpression, then: [ASTNode], else: [ASTNode]?)
+    case `if`(condition: LiquidExpression, then: [ASTNode], elsif: [(LiquidExpression, [ASTNode])], else: [ASTNode]?, location: RenderLocation? = nil)
+    case unless(condition: LiquidExpression, then: [ASTNode], else: [ASTNode]?, location: RenderLocation? = nil)
     case `case`(value: LiquidExpression, branches: [CaseBranch])
     case `for`(variable: InlineString, in: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams)
     case tablerow(variable: InlineString, in: LiquidExpression, body: [ASTNode], params: TableRowParams)
@@ -31,8 +31,8 @@ internal indirect enum ASTNode: Sendable {
     var children: [ASTNode] {
         switch self {
         case .template(let nodes), .liquid(let nodes), .ifchanged(let nodes): return nodes
-        case .if(_, let body, let branches, let fallback): return body + branches.flatMap { $0.1 } + (fallback ?? [])
-        case .unless(_, let body, let fallback): return body + (fallback ?? [])
+        case .if(_, let body, let branches, let fallback, _): return body + branches.flatMap { $0.1 } + (fallback ?? [])
+        case .unless(_, let body, let fallback, _): return body + (fallback ?? [])
         case .case(_, let branches): return branches.flatMap(\.body)
         case .for(_, _, let body, let fallback, _): return body + (fallback ?? [])
         case .tablerow(_, _, let body, _), .capture(_, let body): return body
@@ -43,11 +43,11 @@ internal indirect enum ASTNode: Sendable {
     var expressions: [LiquidExpression] {
         switch self {
         case .output(let value, _), .echo(let value, _), .assign(_, let value, _): return [value]
-        case .if(let condition, _, let branches, _): return [condition] + branches.map { $0.0 }
-        case .unless(let condition, _, _): return [condition]
+        case .if(let condition, _, let branches, _, _): return [condition] + branches.map { $0.0 }
+        case .unless(let condition, _, _, _): return [condition]
         case .case(let value, let branches): return [value] + branches.compactMap(\.expression)
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
-        case .tablerow(_, let value, _, _): return [value]
+        case .tablerow(_, let value, _, let params): return [value] + [params.cols, params.limit, params.offset].compactMap { $0 }
         case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
         case .include(_, let reference, let values, _): return [reference] + (values.map { Array($0.values) } ?? [])
         default: return []
@@ -73,6 +73,7 @@ internal enum CaseBranch: Sendable {
 }
 
 internal struct ForParams: Sendable, Equatable {
+    internal let renderLocation: RenderLocation?
     internal let limit: Int?
 
     internal let offset: Int?
@@ -101,8 +102,10 @@ internal struct ForParams: Sendable, Equatable {
         condition: LiquidExpression? = nil,
         recursive: Bool = false,
         limitExpression: LiquidExpression? = nil,
-        offsetExpression: LiquidExpression? = nil
+        offsetExpression: LiquidExpression? = nil,
+        renderLocation: RenderLocation? = nil
     ) {
+        self.renderLocation = renderLocation
         self.limit = limit
         self.offset = offset
         self.offsetContinue = offsetContinue
@@ -125,8 +128,10 @@ internal struct ForParams: Sendable, Equatable {
         limitExpression: LiquidExpression? = nil,
         offsetExpression: LiquidExpression? = nil,
         staticBodySegment: InlineString? = nil,
-        renderPlan: LoopBodyRenderPlan? = nil
+        renderPlan: LoopBodyRenderPlan? = nil,
+        renderLocation: RenderLocation? = nil
     ) {
+        self.renderLocation = renderLocation
         self.limit = limit
         self.offset = offset
         self.offsetContinue = offsetContinue
@@ -141,17 +146,17 @@ internal struct ForParams: Sendable, Equatable {
 }
 
 internal struct TableRowParams: Sendable, Equatable {
-    internal let cols: Int?
+    internal let cols: LiquidExpression?
     
-    internal let limit: Int?
+    internal let limit: LiquidExpression?
     
-    internal let offset: Int?
+    internal let offset: LiquidExpression?
 
     internal let staticBodySegment: InlineString?
 
     internal let renderPlan: LoopBodyRenderPlan?
 
-    internal init(cols: Int? = nil, limit: Int? = nil, offset: Int? = nil) {
+    internal init(cols: LiquidExpression? = nil, limit: LiquidExpression? = nil, offset: LiquidExpression? = nil) {
         self.cols = cols
         self.limit = limit
         self.offset = offset
@@ -160,9 +165,9 @@ internal struct TableRowParams: Sendable, Equatable {
     }
 
     internal init(
-        cols: Int? = nil,
-        limit: Int? = nil,
-        offset: Int? = nil,
+        cols: LiquidExpression? = nil,
+        limit: LiquidExpression? = nil,
+        offset: LiquidExpression? = nil,
         staticBodySegment: InlineString? = nil,
         renderPlan: LoopBodyRenderPlan? = nil
     ) {
@@ -199,7 +204,7 @@ internal enum LoopBodyRenderPlan: Sendable, Equatable {
 }
 
 
-internal struct RenderLocation: Sendable {
+internal struct RenderLocation: Sendable, Equatable {
     let line: Int
     let suppressErrorText: Bool
 }
@@ -207,7 +212,8 @@ internal struct RenderLocation: Sendable {
 extension ASTNode {
     var renderLocation: RenderLocation? {
         switch self {
-        case .output(_, let location), .echo(_, let location), .assign(_, _, let location): return location
+        case .output(_, let location), .echo(_, let location), .assign(_, _, let location), .if(_, _, _, _, let location), .unless(_, _, _, let location): return location
+        case .for(_, _, _, _, let params): return params.renderLocation
         default: return nil
         }
     }

@@ -125,8 +125,13 @@ struct DiagnosticOriginTests {
         for source in ["{{ 'unterminated }}", "{% liquid\n echo x &\n%}"] {
             do { _ = try LiquidTemplate(source, syntaxMode: mode); Issue.record("Expected syntax error") }
             catch LiquidError.syntax(let message, let line, let column) {
-                #expect(line == nil && column == nil)
-                #expect(message == (source.hasPrefix("{%") ? "Unexpected character '&'" : "Unterminated string literal"))
+                if mode == .strict2 && source.hasPrefix("{{") {
+                    #expect(message == "Unexpected character ' in \"{{ 'unterminated }}\"")
+                    #expect(line == 1 && column == 1)
+                } else {
+                    #expect(line == nil && column == nil)
+                    #expect(message == (source.hasPrefix("{%") ? "Unexpected character '&'" : "Unterminated string literal"))
+                }
             }
         }
     }

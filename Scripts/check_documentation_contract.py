@@ -51,6 +51,25 @@ class DocumentationContractTests(unittest.TestCase):
         duplicate = copy.deepcopy(baseline); duplicate['declarations'] *= 2
         with self.assertRaises(ValueError): verify_public_baseline([symbol()], duplicate)
 
+    def test_observed_stored_limit_requires_the_exact_public_accessors(self):
+        ident = 's:6Liquid0A6LimitsV12nestingDepthSivp'
+        baseline = {'release': '1.3.0', 'commit': 'published', 'declarations': [
+            {'identifier': ident, 'path': ['LiquidLimits', 'nestingDepth'], 'declaration': 'var nestingDepth: Int'}]}
+        item = symbol(); item['identifier']['precise'] = ident
+        for declaration, accepted in [
+            ('var nestingDepth: Int', True),
+            ('var nestingDepth: Int { get set }', True),
+            ('var nestingDepth: Int { get }', False),
+            ('var nestingDepth: String { get set }', False),
+            ('var other: Int { get set }', False),
+        ]:
+            item['declarationFragments'][0]['spelling'] = declaration
+            self.assertEqual(not verify_public_baseline([item], baseline)['errors'], accepted)
+        item['identifier']['precise'] = 'another-property'
+        baseline['declarations'][0]['identifier'] = 'another-property'
+        item['declarationFragments'][0]['spelling'] = 'var nestingDepth: Int { get set }'
+        self.assertTrue(verify_public_baseline([item], baseline)['errors'])
+
     def test_readme_examples_retain_scopes_and_expected_output(self):
         text = '```swift\n.package(url: "example", from: "1.0.0")\n```\n```swift\n.product(name: "Liquid")\n```\n```swift\nimport Liquid\nprint(42) // 42\n```'
         source, count, expected = readme_examples(text)

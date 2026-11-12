@@ -226,6 +226,7 @@ internal final class Parser {
         let expression = try parseExpression()
         
         guard currentTokenStorage.type == .variableEnd else {
+            if let error = trailingTokenError(currentToken) { throw error }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance() // consume }}
@@ -296,7 +297,10 @@ internal final class Parser {
     @inline(__always)
     private func parseIdentifierTag(named name: InlineString) throws ->ASTNode {
         if name.equals("doc") {
-            try consumeTagEnd()
+            if syntaxMode == .strict2, currentToken.type != .tagEnd, let opening = originalBlockOpening() {
+                throw ParserError.invalidBlockMarkup("doc", opening: opening)
+            }
+            try consumeTagEnd(presentComparison: false)
             guard currentTagMatchesIdentifier("enddoc") else { throw ParserError.unclosedTag("doc") }
             advance(); advance(); try consumeTagEnd()
             return .comment
@@ -387,13 +391,22 @@ internal final class Parser {
     private func parseAssignTag() throws ->ASTNode {
         let line = currentToken.line + lineOffset
         if syntaxMode == .strict2 {
-            if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true { throw ParserError.expectedIdentifier }
-            if case .number = currentToken.type { throw ParserError.expectedIdentifier }
+            if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true {
+                if name.string.utf8.allSatisfy({ (48...57).contains($0) }) {
+                    throw ParserError.expectedIdentifierBeforeNumber(currentToken)
+                }
+                throw ParserError.expectedIdentifier
+            }
+            if case .number = currentToken.type { throw identifierExpected(currentToken) }
+            if currentToken.type == .equals { throw ParserError.invalidAssignmentTargetAt(currentToken) }
         }
         let variableName: InlineString
         if case .identifier(let name) = currentToken.type {
             // Trailing '?' is not allowed in assignment targets (Shopify behavior)
             if name.string.hasSuffix("?") {
+                if syntaxMode == .strict2 && name.string == "?" {
+                    throw ParserError.invalidAssignmentTargetAt(currentToken)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             variableName = name
@@ -403,9 +416,21 @@ internal final class Parser {
         } else {
             throw ParserError.unexpectedToken(currentToken)
         }
+        let admittedName = try admittedAssignmentTarget(variableName)
         advance()
         
         guard currentToken.type == .equals else {
+            if syntaxMode == .strict2, case .number = currentToken.type {
+                throw identifierExpected(currentToken)
+            }
+            if syntaxMode == .strict2, nextTokenStorage.type == .equals,
+               !isOriginalComparison(nextTokenStorage) {
+                switch currentToken.type {
+                case .rightParen, .colon, .comma, .leftParen, .filter, .question, .string:
+                    throw ParserError.invalidAssignmentTargetAt(currentToken)
+                default: break
+                }
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -413,9 +438,50 @@ internal final class Parser {
         let value = try parseExpression()
         try consumeTagEnd()
         
-        return .assign(variable: variableName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
+        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
     }
     
+    /// Pinned Assign::Syntax is unanchored: only its final matching signature
+    /// before `=` becomes the target. Match that small precheck in linear time;
+    /// do not rewrite source bytes or relax the expression parser.
+    private func admittedAssignmentTarget(_ raw: InlineString) throws -> InlineString {
+        let bytes = Array(raw.string.utf8)
+        func signatureByte(_ byte: UInt8) -> Bool {
+            (65...90).contains(byte) || (97...122).contains(byte) ||
+                (48...57).contains(byte) || byte == 95 || byte == 45 ||
+                byte == 46 || byte == 91 || byte == 93
+        }
+        // VariableSignature is \(?[\w\-\.\[\]]\)?; Ruby's \w is ASCII.
+        // Reverse matching has no regex backtracking, even for hostile targets.
+        var start = bytes.count
+        var steps = 0
+        while start > 0 {
+            if steps & 255 == 0 { try Task.checkCancellation() }
+            steps += 1
+            var cursor = start
+            if bytes[cursor - 1] == 41 { cursor -= 1 }
+            guard cursor > 0, signatureByte(bytes[cursor - 1]) else { break }
+            cursor -= 1
+            if cursor > 0, bytes[cursor - 1] == 40 { cursor -= 1 }
+            start = cursor
+        }
+        guard start < bytes.count else { throw ParserError.invalidAssignmentTarget }
+        if syntaxMode == .strict2 {
+            let first = bytes[start]
+            guard (65...90).contains(first) || (97...122).contains(first) || first == 95 else {
+                throw ParserError.expectedIdentifier
+            }
+            for index in start..<bytes.count {
+                if index & 255 == 0 { try Task.checkCancellation() }
+                let byte = bytes[index]
+                guard signatureByte(byte), byte != 46, byte != 91, byte != 93 else {
+                    throw ParserError.invalidAssignmentTarget
+                }
+            }
+        }
+        return InlineString(utf8: bytes[start...])
+    }
+
     private func parseEchoTag() throws ->ASTNode {
         let line = currentToken.line + lineOffset
         // Empty echo: {% echo %} outputs nothing
@@ -429,7 +495,15 @@ internal final class Parser {
         return .echo(expression: expression, location: .init(line: line, suppressErrorText: false))
     }
     
+    // Called immediately after the parser consumes an original tag header.
+    private func originalBlockOpening() -> Token? {
+        guard case .original = sourceProvenance, current >= 2,
+              tokens[current - 2].type == .tagStart else { return nil }
+        return tokens[current - 2]
+    }
+
     private func parseCommentTag() throws ->ASTNode {
+        let opening = originalBlockOpening()
         try consumeTagEnd()
 
         // Track nesting depth for nested comment blocks
@@ -456,6 +530,7 @@ internal final class Parser {
 
         // Consume final endcomment
         guard currentTagMatches(.endcomment, identifier: "endcomment") else {
+            if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("comment", opening: opening) }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance() // consume {%
@@ -482,6 +557,7 @@ internal final class Parser {
     // MARK: - Control Flow Tag Parsing
     
     private func parseIfTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         let condition = try parseComplexExpression()
         try consumeTagEnd()
         
@@ -549,11 +625,13 @@ internal final class Parser {
             condition: condition,
             then: thenNodes,
             elsif: elsifBranches,
-            else: elseNodes
+            else: elseNodes,
+            location: blockLocation
         )
     }
     
     private func parseUnlessTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         let condition = try parseComplexExpression()
         try consumeTagEnd()
 
@@ -619,14 +697,16 @@ internal final class Parser {
                 condition: .unary(op: .not, expr: condition),
                 then: thenNodes,
                 elsif: elsifBranches,
-                else: elseNodes
+                else: elseNodes,
+                location: blockLocation
             )
         }
 
         return .unless(
             condition: condition,
             then: thenNodes,
-            else: elseNodes
+            else: elseNodes,
+            location: blockLocation
         )
     }
     
@@ -635,6 +715,7 @@ internal final class Parser {
     private func parseConditionOperand() throws -> LiquidExpression {
         let value = try parsePrimaryExpression()
         if currentToken.type == .filter {
+            if syntaxMode == .strict2 { throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe") }
             guard syntaxMode == .lax else { throw ParserError.unexpectedToken(currentToken) }
             while !isAtEnd && currentToken.type != .tagEnd { advance() }
         }
@@ -712,7 +793,7 @@ internal final class Parser {
         advance() // consume |
 
         guard case .identifier(let firstFilterName) = currentTokenStorage.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
 
@@ -735,7 +816,7 @@ internal final class Parser {
             advance() // consume |
 
             guard case .identifier(let filterName) = currentTokenStorage.type else {
-                throw ParserError.unexpectedToken(currentToken)
+                throw identifierExpected(currentToken)
             }
             advance()
 
@@ -830,7 +911,7 @@ internal final class Parser {
                 while currentToken.type == .dot {
                     advance() // consume .
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -841,6 +922,9 @@ internal final class Parser {
             }
 
             guard currentToken.type == .range else {
+                if syntaxMode == .strict2, currentToken.type == .comma {
+                    throw ParserError.expectedToken(.range, got: currentToken.type)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             advance() // consume ..
@@ -855,17 +939,23 @@ internal final class Parser {
                 while currentToken.type == .dot {
                     advance()
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
                 }
                 endExpr = expr
             } else {
+                if syntaxMode == .strict2, currentToken.type == .rightParen {
+                    throw ParserError.invalidCloseRoundExpression(currentToken)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
 
             guard currentToken.type == .rightParen else {
+                if syntaxMode == .strict2, currentToken.type == .tagEnd || currentToken.type == .variableEnd {
+                    throw ParserError.expectedToken(.rightParen, got: currentToken.type)
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
             advance() // consume )
@@ -910,7 +1000,7 @@ internal final class Parser {
             while currentTokenStorage.type == .dot {
                 advance()
                 guard case .identifier(let prop) = currentToken.type else {
-                    throw ParserError.unexpectedToken(currentToken)
+                    throw identifierExpected(currentToken)
                 }
                 advance()
                 expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -940,7 +1030,7 @@ internal final class Parser {
                 while currentTokenStorage.type == .dot {
                     advance()
                     guard case .identifier(let prop) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     advance()
                     expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
@@ -949,7 +1039,36 @@ internal final class Parser {
             }
             return expr
 
+        case .comma where syntaxMode == .strict2:
+            throw ParserError.invalidCommaExpression(currentToken)
+        case .rightParen where syntaxMode == .strict2:
+            throw ParserError.invalidCloseRoundExpression(currentToken)
+        case .tagEnd where syntaxMode == .strict2, .variableEnd where syntaxMode == .strict2:
+            throw ParserError.invalidExpressionAtMarkupEnd(currentToken)
         default:
+            if syntaxMode == .strict2 {
+                let reason: (String, String)?
+                switch currentToken.type {
+                case .rightBracket: reason = ("close_square", "]")
+                case .colon: reason = ("colon", ":")
+                case .equals where isOriginalComparison(currentToken): reason = ("comparison", "==")
+                case .notEquals: reason = ("comparison", "!=")
+                case .lessThan: reason = ("comparison", "<")
+                case .greaterThan: reason = ("comparison", ">")
+                case .lessThanOrEqual: reason = ("comparison", "<=")
+                case .greaterThanOrEqual: reason = ("comparison", ">=")
+                case .contains: reason = ("comparison", "contains")
+                case .dot: reason = ("dot", ".")
+                case .range: reason = ("dotdot", "..")
+                case .filter: reason = ("pipe", "|")
+                case .question: reason = ("question", "?")
+                case .dash: reason = ("dash", "-")
+                default: reason = nil
+                }
+                if let (kind, spelling) = reason {
+                    throw ParserError.invalidOperatorExpression(currentToken, kind: kind, spelling: spelling)
+                }
+            }
             throw ParserError.unexpectedToken(currentToken)
         }
     }
@@ -962,7 +1081,11 @@ internal final class Parser {
 
         while currentTokenStorage.type == .dot {
             guard case .identifier(let property) = nextTokenStorage.type else {
-                throw ParserError.unexpectedToken(nextTokenStorage)
+                if current >= 2, tokens[current - 2].type == .variableStart,
+                   nextTokenStorage.type == .variableEnd {
+                    throw ParserError.unexpectedToken(nextTokenStorage)
+                }
+                throw identifierExpected(nextTokenStorage)
             }
             advance()
             advance()
@@ -1032,7 +1155,7 @@ internal final class Parser {
 
             let components = try collectQualifiedIdentifierComponents(startingWith: name)
 
-            if currentTokenStorage.type == .leftParen {
+            if currentTokenStorage.type == .leftParen, syntaxMode != .strict2 {
                 advance()
                 let arguments = try parseCallArguments()
                 guard currentToken.type == .rightParen else {
@@ -1244,9 +1367,64 @@ internal final class Parser {
         nextTokenStorage = (current + 1) < tokens.count ? tokens[current + 1] : Self.eofToken
     }
     
+    private func identifierExpected(_ token: Token) -> ParserError {
+        if syntaxMode == .strict2, case .number = token.type {
+            return .expectedIdentifierBeforeNumber(token)
+        }
+        if syntaxMode == .strict2, case .string = token.type {
+            return .expectedIdentifierBeforeString(token)
+        }
+        if syntaxMode == .strict2, token.type == .tagEnd || token.type == .variableEnd {
+            return .expectedIdentifierAtMarkupEnd(token)
+        }
+        return .unexpectedToken(token)
+    }
+
+    // The lexer represents '=' and '==' with the same token. Only assign the
+    // comparison reason after checking the original, immutable UTF-8 source.
+    // Rewritten `liquid` bodies and ambiguous longer operators stay unmapped.
+    private func isOriginalComparison(_ token: Token) -> Bool {
+        guard token.type == .equals, case .original = sourceProvenance,
+              let source, let start = stringIndex(in: source, utf8Offset: token.position) else { return false }
+        let remaining = source[start...]
+        return remaining.hasPrefix("==") && !remaining.hasPrefix("===")
+    }
+
+    private func trailingTokenError(_ token: Token) -> ParserError? {
+        guard syntaxMode == .strict2 else { return nil }
+        let kind: String
+        switch token.type {
+        case .identifier: return .unexpectedTrailingIdentifier(token)
+        case .number: kind = "number"
+        case .string: kind = "string"
+        case .question: kind = "question"
+        case .dash: kind = "dash"
+        case .leftParen: kind = "open_round"
+        case .rightParen: kind = "close_round"
+        case .leftBracket: kind = "open_square"
+        case .rightBracket: kind = "close_square"
+        case .colon: kind = "colon"
+        case .comma: kind = "comma"
+        case .dot: kind = "dot"
+        case .range: kind = "dotdot"
+        case .filter: kind = "pipe"
+        case .notEquals, .lessThan, .greaterThan, .lessThanOrEqual, .greaterThanOrEqual, .contains:
+            kind = "comparison"
+        case .equals where isOriginalComparison(token): kind = "comparison"
+        // Single '=' and rewritten or otherwise unmapped tokens keep their
+        // original rejection: their spelling has not been established.
+        default: return nil
+        }
+        return .unexpectedTrailingToken(token, kind: kind)
+    }
+
     @inline(__always)
-    private func consumeTagEnd() throws {
+    private func consumeTagEnd(presentComparison: Bool = true) throws {
         guard currentTokenStorage.type == .tagEnd else {
+            if !presentComparison, currentToken.type == .equals {
+                throw ParserError.unexpectedToken(currentToken)
+            }
+            if let error = trailingTokenError(currentToken) { throw error }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -1512,8 +1690,9 @@ internal final class Parser {
     }
     
     private func parseForTag() throws ->ASTNode {
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         guard case .identifier(let variable) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         
@@ -1548,6 +1727,7 @@ internal final class Parser {
             guard paramName.equals("limit")
                     || paramName.equals("offset")
                     || paramName.equals("reversed") else {
+                if syntaxMode == .strict2 { throw invalidAttribute() }
                 break
             }
 
@@ -1612,7 +1792,7 @@ internal final class Parser {
             }
         }
 
-        let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression)
+        let params = ForParams(limit: limit, offset: offset, offsetContinue: offsetContinue, reversed: reversed, limitExpression: limitExpression, offsetExpression: offsetExpression, renderLocation: blockLocation)
         
         try consumeTagEnd()
         
@@ -1679,7 +1859,7 @@ internal final class Parser {
     
     private func parseTableRowTag() throws ->ASTNode {
         guard case .identifier(let variable) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         
@@ -1691,14 +1871,20 @@ internal final class Parser {
         let collection = try parseExpression()
         
         // Parse optional parameters
-        var cols: Int? = nil
-        var limit: Int? = nil
-        var offset: Int? = nil
+        var cols: LiquidExpression? = nil
+        var limit: LiquidExpression? = nil
+        var offset: LiquidExpression? = nil
         
         while let paramName = peekIdentifierName() {
             guard paramName.equals("cols")
                     || paramName.equals("limit")
                     || paramName.equals("offset") else {
+                if syntaxMode == .strict2 {
+                    throw LiquidError.syntax(
+                        message: "Invalid attribute '\(paramName.string)' in tablerow loop. Valid attributes are cols, limit, offset, and range",
+                        line: currentToken.line + lineOffset, column: currentToken.column
+                    )
+                }
                 break
             }
 
@@ -1711,21 +1897,9 @@ internal final class Parser {
             
             let value = try parsePrimaryExpression()
 
-            if case .literal(let literal) = value, let num = literal.parameterInteger {
-                if paramName.equals("cols") {
-                    cols = Int(num)
-                } else if paramName.equals("limit") {
-                    limit = Int(num)
-                } else if paramName.equals("offset") {
-                    offset = Int(num)
-                }
-            } else if case .literal(.string(let str)) = value {
-                if let intVal = Int(str.string) {
-                    if paramName.equals("cols") { cols = intVal }
-                    else if paramName.equals("limit") { limit = intVal }
-                    else if paramName.equals("offset") { offset = intVal }
-                }
-            }
+            if paramName.equals("cols") { cols = value }
+            else if paramName.equals("limit") { limit = value }
+            else if paramName.equals("offset") { offset = value }
         }
 
         let params = TableRowParams(cols: cols, limit: limit, offset: offset)
@@ -1756,7 +1930,7 @@ internal final class Parser {
             // Digit-only variable names: {% capture 123 %}
             variable = InlineString(String(Int(num)))
         } else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -1779,7 +1953,7 @@ internal final class Parser {
     
     private func parseIncrementTag() throws ->ASTNode {
         guard case .identifier(let counter) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -1789,7 +1963,7 @@ internal final class Parser {
     
     private func parseDecrementTag() throws ->ASTNode {
         guard case .identifier(let counter) = currentToken.type else {
-            throw ParserError.unexpectedToken(currentToken)
+            throw identifierExpected(currentToken)
         }
         advance()
         try consumeTagEnd()
@@ -1812,7 +1986,11 @@ internal final class Parser {
     private func parseRawTag() throws ->ASTNode {
         // Record position right after {% raw %} tag end
         let tagEndToken = currentToken
-        try consumeTagEnd()
+        let opening = originalBlockOpening()
+        if syntaxMode == .strict2, currentToken.type != .tagEnd, let opening {
+            throw ParserError.invalidBlockMarkup("raw", opening: opening)
+        }
+        try consumeTagEnd(presentComparison: false)
 
         // If we have the original source, extract raw content verbatim
         if let source {
@@ -1824,6 +2002,7 @@ internal final class Parser {
             }
 
             guard currentTagMatches(.endraw, identifier: "endraw") else {
+                if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("raw", opening: opening) }
                 throw ParserError.unexpectedToken(currentToken)
             }
 
@@ -1863,6 +2042,7 @@ internal final class Parser {
         }
 
         guard currentTagMatches(.endraw, identifier: "endraw") else {
+            if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("raw", opening: opening) }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -1979,20 +2159,22 @@ internal final class Parser {
             return trimmed.isEmpty ? nil : node
         case .template(let nodes):
             return .template(normalizeLiquidBodyNodes(nodes))
-        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes):
+        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes, let location):
             return .if(
                 condition: condition,
                 then: normalizeLiquidBodyNodes(thenNodes),
                 elsif: elsifBranches.map { condition, branch in
                     (condition, normalizeLiquidBodyNodes(branch))
                 },
-                else: elseNodes.map(normalizeLiquidBodyNodes)
+                else: elseNodes.map(normalizeLiquidBodyNodes),
+                location: location
             )
-        case .unless(let condition, let thenNodes, let elseNodes):
+        case .unless(let condition, let thenNodes, let elseNodes, let location):
             return .unless(
                 condition: condition,
                 then: normalizeLiquidBodyNodes(thenNodes),
-                else: elseNodes.map(normalizeLiquidBodyNodes)
+                else: elseNodes.map(normalizeLiquidBodyNodes),
+                location: location
             )
         case .case(let value, let branches):
             return .case(value: value, branches: branches.map { branch in
@@ -2044,9 +2226,19 @@ internal final class Parser {
             values.append(firstExpr)
         }
 
-        // Parse remaining values
-        while currentToken.type == .comma {
-            advance() // consume comma
+        // Ruby's lax cycle parser takes the first expression in each
+        // comma-separated fragment and ignores a trailing fragment suffix.
+        // Strict2 instead validates the full token stream.
+        while true {
+            if syntaxMode != .strict2 {
+                while !isAtEnd && currentToken.type != .comma && currentToken.type != .tagEnd {
+                    try Task.checkCancellation()
+                    advance()
+                }
+            }
+            guard currentToken.type == .comma else { break }
+            advance()
+            if currentToken.type == .tagEnd { break }
             values.append(try parsePrimaryExpression())
         }
 
@@ -2070,6 +2262,17 @@ internal final class Parser {
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
+        // Shopify's strict parser permits an alias even without `with` or `for`.
+        if syntaxMode == .strict2, case .identifier(let keyword) = currentToken.type,
+           keyword.equals("as") {
+            advance()
+            guard case .identifier(let aliasName) = currentToken.type else {
+                throw identifierExpected(currentToken)
+            }
+            alias = aliasName
+            advance()
+        }
+
         // Skip optional comma after template name
         if currentToken.type == .comma { advance() }
 
@@ -2086,6 +2289,9 @@ internal final class Parser {
                 advance()
 
                 guard currentToken.type == .colon else {
+                    if syntaxMode == .strict2, currentToken.type == .comma {
+                        throw ParserError.missingAttributeColonBeforeComma(currentToken)
+                    }
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
@@ -2105,12 +2311,19 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()
                 }
             } else {
+                if let error = trailingTokenError(currentToken) { throw error }
+                if syntaxMode == .strict2, isOriginalComparison(currentToken) {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
+                }
+                if syntaxMode == .strict2, currentToken.type == .filter {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe")
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
         }
@@ -2133,6 +2346,16 @@ internal final class Parser {
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
+        if syntaxMode == .strict2, case .identifier(let keyword) = currentToken.type,
+           keyword.equals("as") {
+            advance()
+            guard case .identifier(let aliasName) = currentToken.type else {
+                throw identifierExpected(currentToken)
+            }
+            alias = aliasName
+            advance()
+        }
+
         // Skip optional comma after template name
         if currentToken.type == .comma { advance() }
 
@@ -2142,6 +2365,9 @@ internal final class Parser {
                 advance()
                 
                 guard currentToken.type == .colon else {
+                    if syntaxMode == .strict2, currentToken.type == .comma {
+                        throw ParserError.missingAttributeColonBeforeComma(currentToken)
+                    }
                     throw ParserError.unexpectedToken(currentToken)
                 }
                 advance()
@@ -2160,7 +2386,7 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()
@@ -2172,12 +2398,19 @@ internal final class Parser {
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
-                        throw ParserError.unexpectedToken(currentToken)
+                        throw identifierExpected(currentToken)
                     }
                     alias = aliasName
                     advance()
                 }
             } else {
+                if let error = trailingTokenError(currentToken) { throw error }
+                if syntaxMode == .strict2, isOriginalComparison(currentToken) {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
+                }
+                if syntaxMode == .strict2, currentToken.type == .filter {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe")
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
         }

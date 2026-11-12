@@ -25,7 +25,14 @@ extension Renderer {
             let location = node.renderLocation
             let message = error.message
             diagnostics.append(.init(message: message, line: location?.line, templateName: currentTemplatePath))
-            if location?.suppressErrorText == true { return "" }
+            if location?.suppressErrorText == true {
+                switch node {
+                case .if, .unless, .for:
+                    if RenderingContext.isStaticallyBlankBlock([node]) { return "" }
+                default:
+                    return ""
+                }
+            }
             if case .undefinedFilter = error { return "" }
             let prefix = location.map { "Liquid error (\(currentTemplatePath.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
             let output = prefix + message
@@ -60,10 +67,10 @@ extension Renderer {
         case .comment:
             return ""
 
-        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes):
+        case .if(let condition, let thenNodes, let elsifBranches, let elseNodes, _):
             return try await renderIf(condition: condition, then: thenNodes, elsif: elsifBranches, else: elseNodes)
 
-        case .unless(let condition, let thenNodes, let elseNodes):
+        case .unless(let condition, let thenNodes, let elseNodes, _):
             return try await renderUnless(condition: condition, then: thenNodes, else: elseNodes)
 
         case .case(let value, let branches):
@@ -317,14 +324,14 @@ extension Renderer {
 
         switch expression {
         case .literal(let value):
-            appendStringifiedUnescapedValueFast(try evaluateValue(value), to: &output)
+            try appendStringifiedUnescapedValueFast(try evaluateValue(value), to: &output)
 
         case .variable(let name):
-            appendStringifiedUnescapedValueFast(context.getVariable(name.string) ?? NSNull(), to: &output)
+            try appendStringifiedUnescapedValueFast(context.getVariable(name.string) ?? NSNull(), to: &output)
 
         case .access:
             if let path = expression.staticVariablePath {
-                appendStringifiedUnescapedValueFast(context.getVariable(path) ?? NSNull(), to: &output)
+                try appendStringifiedUnescapedValueFast(context.getVariable(path) ?? NSNull(), to: &output)
             } else {
                 output.append(try await renderExpressionFast(expression))
             }
@@ -338,7 +345,7 @@ extension Renderer {
     }
 
     @inline(__always)
-    internal func appendStringifiedUnescapedValueFast(_ value: Any, to output: inout String) {
+    internal func appendStringifiedUnescapedValueFast(_ value: Any, to output: inout String) throws {
         switch value {
         case let str as String:
             output.append(str)
@@ -360,8 +367,8 @@ extension Renderer {
             )
         case is NSNull:
             return
-        case let array as [Any]:
-            output.append(joinedStringifiedValues(array, separator: "", escapeElements: false))
+        case is [Any], is RuntimeObject, is [String: Any]:
+            output.append(try renderStringify(value))
         default:
             output.append(String(describing: value))
         }

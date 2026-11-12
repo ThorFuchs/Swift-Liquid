@@ -224,6 +224,10 @@ its failed gate does not expand the released qualification claim. Storefront obj
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
 
+The [local conformance console](Documentation/ConformanceConsole.md) runs this
+pinned JSON-RPC track through a browser control center and retains the original
+case verdicts, exclusions, diagnostics and source-bound evidence.
+
 The independent [Golden Liquid test suite](https://github.com/jg-rp/golden-liquid),
 maintained by James Prior, contributes all **1,098 cases** from a
 [pinned revision](https://github.com/jg-rp/golden-liquid/tree/65c2f76ea64ef20647c295b000df5fcd9fc471cd).
