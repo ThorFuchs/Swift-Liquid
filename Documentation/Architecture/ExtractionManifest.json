@@ -1780,6 +1780,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Comment opening markup and unclosed body",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving comment nesting and source locations.",
+      "changes": [
+        "Consume ignored comment opening markup and identify an unclosed comment when unterminated output markup consumes its closing tag."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

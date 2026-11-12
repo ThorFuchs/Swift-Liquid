@@ -16,4 +16,18 @@ struct CommentDelimiterCompatibilityTests {
             #expect(throws: LiquidError.self) { try LiquidTemplate("{% comment %}x{% endcomment", syntaxMode: mode) }
         }
     }
+
+    @Test func openingMarkupAndUnclosedBodyMatchRuby() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: "a{% comment extra %}hidden{% endcomment %}b", syntaxMode: mode) == "ab")
+        }
+        for source in ["{% comment extra %}hello", "{% comment %}this is {{{ not }}} valid{{ liquid{% endcomment %}"] {
+            do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+            catch LiquidError.syntax(let message, let line, _) {
+                #expect(message.contains("'comment' tag was never closed"), "\(source): \(message)")
+                #expect(line == 1)
+            }
+        }
+    }
 }

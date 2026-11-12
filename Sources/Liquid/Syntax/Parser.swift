@@ -558,6 +558,7 @@ internal final class Parser {
 
     private func parseCommentTag() throws ->ASTNode {
         let opening = originalBlockOpening()
+        while !isAtEnd && currentToken.type != .tagEnd { advance() }
         try consumeTagEnd()
 
         // Track nesting depth for nested comment blocks

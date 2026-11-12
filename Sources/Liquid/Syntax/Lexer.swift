@@ -270,6 +270,7 @@ internal final class Lexer {
                 try tokenizeVariable(&tokens, start: startPosition)
                 return
             } else if peek() == Self.percent {
+                let openingIndex = tokens.count
                 try tokenizeTag(&tokens, start: startPosition)
                 if tokens.count >= 2, case .identifier(let name) = tokens[tokens.count - 2].type,
                    name.equals("doc") {
@@ -277,8 +278,8 @@ internal final class Lexer {
                 }
                 // After tokenizing a comment tag, skip to endcomment
                 // (avoids lexer errors from invalid syntax inside comments)
-                if tokens.count >= 2,
-                   tokens[tokens.count - 2].type == .comment {
+                if tokens.count > openingIndex + 1,
+                   tokens[openingIndex + 1].type == .comment {
                     try skipCommentBlock(&tokens)
                 }
                 // After tokenizing a raw tag, skip to endraw
@@ -331,6 +332,10 @@ internal final class Lexer {
                 let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
                 guard let close = remaining.range(of: "}}"),
                       remaining.range(of: "endcomment").map({ close.lowerBound < $0.lowerBound }) ?? true else {
+                    if syntaxMode == .strict2, case .original = sourceProvenance,
+                       let opening = tokens.last(where: { $0.type == .tagStart }) {
+                        throw LexerError.unclosedShopifyBlock("comment", opening: opening)
+                    }
                     throw LexerError.unclosedDelimiter("{{", position: byteIndex)
                 }
             }
