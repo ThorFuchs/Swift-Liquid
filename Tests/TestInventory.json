@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.TableRowCompatibilityTests/emptyAndCoercedAttributesMatchRuby()": null,
+    "LiquidTests.TableRowCompatibilityTests/invalidAttributesQuotaAndCancellationRemainErrors()": null,
     "LiquidTests.NumericTagDiagnosticTests/pinnedNumbersPreserveTheExpectedToken()": null,
     "LiquidTests.NumericTagDiagnosticTests/strictAliasWithoutBindingAndOtherModesStayBounded()": null,
     "LiquidTests.ZeroDivisionDiagnosticTests/divisionAndModuloRetainErrorAndRecoveryBoundaries()": null,

@@ -18,6 +18,11 @@ Standard surface:
 | Utility tags | raw, comment, inline comment, doc, echo, liquid, ifchanged |
 | Filters | Standard string, HTML, URL, Base64, numeric, date, and array filters, including squish and remove_last |
 
+`tablerow` evaluates its `cols`, `offset` and `limit` expressions at render
+time. Like Shopify's table-row tag, it coerces string attributes through their
+integer prefix and emits an empty row for an empty, non-nil collection. Its
+`col_last` indicates the configured last column, including in a partial row.
+
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,

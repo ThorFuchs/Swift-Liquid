@@ -1295,6 +1295,23 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are recorded externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify table-row attribute evaluation",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches, preserving pinned fixtures, resource limits and existing holds.",
+      "changes": [
+        "Retain table-row attribute expressions in the AST and evaluate them per render using Shopify integer coercion and iteration rules.",
+        "Preserve empty-row markup and exact column-last behavior; include attribute variables in AST inspection and retain cancellation and output budgets."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/TableRowCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

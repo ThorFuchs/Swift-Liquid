@@ -47,7 +47,7 @@ internal indirect enum ASTNode: Sendable {
         case .unless(let condition, _, _): return [condition]
         case .case(let value, let branches): return [value] + branches.compactMap(\.expression)
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
-        case .tablerow(_, let value, _, _): return [value]
+        case .tablerow(_, let value, _, let params): return [value] + [params.cols, params.limit, params.offset].compactMap { $0 }
         case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
         case .include(_, let reference, let values, _): return [reference] + (values.map { Array($0.values) } ?? [])
         default: return []
@@ -141,17 +141,17 @@ internal struct ForParams: Sendable, Equatable {
 }
 
 internal struct TableRowParams: Sendable, Equatable {
-    internal let cols: Int?
+    internal let cols: LiquidExpression?
     
-    internal let limit: Int?
+    internal let limit: LiquidExpression?
     
-    internal let offset: Int?
+    internal let offset: LiquidExpression?
 
     internal let staticBodySegment: InlineString?
 
     internal let renderPlan: LoopBodyRenderPlan?
 
-    internal init(cols: Int? = nil, limit: Int? = nil, offset: Int? = nil) {
+    internal init(cols: LiquidExpression? = nil, limit: LiquidExpression? = nil, offset: LiquidExpression? = nil) {
         self.cols = cols
         self.limit = limit
         self.offset = offset
@@ -160,9 +160,9 @@ internal struct TableRowParams: Sendable, Equatable {
     }
 
     internal init(
-        cols: Int? = nil,
-        limit: Int? = nil,
-        offset: Int? = nil,
+        cols: LiquidExpression? = nil,
+        limit: LiquidExpression? = nil,
+        offset: LiquidExpression? = nil,
         staticBodySegment: InlineString? = nil,
         renderPlan: LoopBodyRenderPlan? = nil
     ) {

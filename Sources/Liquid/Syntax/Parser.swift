@@ -1848,9 +1848,9 @@ internal final class Parser {
         let collection = try parseExpression()
         
         // Parse optional parameters
-        var cols: Int? = nil
-        var limit: Int? = nil
-        var offset: Int? = nil
+        var cols: LiquidExpression? = nil
+        var limit: LiquidExpression? = nil
+        var offset: LiquidExpression? = nil
         
         while let paramName = peekIdentifierName() {
             guard paramName.equals("cols")
@@ -1874,21 +1874,9 @@ internal final class Parser {
             
             let value = try parsePrimaryExpression()
 
-            if case .literal(let literal) = value, let num = literal.parameterInteger {
-                if paramName.equals("cols") {
-                    cols = Int(num)
-                } else if paramName.equals("limit") {
-                    limit = Int(num)
-                } else if paramName.equals("offset") {
-                    offset = Int(num)
-                }
-            } else if case .literal(.string(let str)) = value {
-                if let intVal = Int(str.string) {
-                    if paramName.equals("cols") { cols = intVal }
-                    else if paramName.equals("limit") { limit = intVal }
-                    else if paramName.equals("offset") { offset = intVal }
-                }
-            }
+            if paramName.equals("cols") { cols = value }
+            else if paramName.equals("limit") { limit = value }
+            else if paramName.equals("offset") { offset = value }
         }
 
         let params = TableRowParams(cols: cols, limit: limit, offset: offset)
