@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.DocDelimiterCompatibilityTests/closingMarkupIsIgnoredButNamesStayDistinct()": null,
+    "LiquidTests.DocDelimiterCompatibilityTests/sourceLimitsAndCancellationRemainTerminal()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/aliasesAndCommaSeparatedBindings()": null,
     "LiquidTests.FilterEdgeCompatibilityTests/numericIdentityAndSorting()": null,
     "LiquidTests.FilterEdgeCompatibilityTests/truncateWordsUsesRubyAsciiSeparators()": null,

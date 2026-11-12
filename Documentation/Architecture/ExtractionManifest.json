@@ -1539,6 +1539,21 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Documentation block closing markup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving pinned fixtures, exact tag-name boundaries, source limits and cancellation.",
+      "changes": [
+        "Recognize enddoc by its exact tag name and allow ignored closing markup, retaining nested-block and unclosed-block rejection.",
+        "Update the previous conservative authored rejection control after verifying Ruby accepts the same original source."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/DocDelimiterCompatibilityTests.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

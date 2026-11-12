@@ -297,7 +297,9 @@ internal final class Lexer {
 
     private func skipDocBlock(_ tokens: inout [Token]) throws(LexerError) {
         let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
-        guard let closing = remaining.range(of: #"\{%-?\s*enddoc\s*-?%\}"#, options: .regularExpression) else {
+        // Ruby recognizes the closing tag by name and ignores its markup.
+        // Keep the name boundary so `enddocExtra` does not close the block.
+        guard let closing = remaining.range(of: #"\{%-?\s*enddoc(?=\s|%|-%)(?s:.*?)%\}"#, options: .regularExpression) else {
             if syntaxMode == .strict2, case .original = sourceProvenance,
                remaining.range(of: #"\{%-?\s*doc(?=\s|%)[^{}]*?%\}"#, options: .regularExpression) != nil {
                 throw LexerError.unclosedDelimiter("nested doc", position: byteIndex)

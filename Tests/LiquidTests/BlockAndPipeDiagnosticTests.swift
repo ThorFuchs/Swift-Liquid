@@ -64,12 +64,9 @@ struct BlockAndPipeDiagnosticTests {
             do { _ = try LiquidTemplate("{% doc %}text", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unclosed delimiter 'doc'") }
         }
-        // Incomplete nested or argument-bearing doc boundaries remain unmapped.
-        let ambiguous = "{% doc %}123{% enddoc xyz %}"
-        do { _ = try LiquidTemplate(ambiguous, syntaxMode: .strict2); Issue.record("Expected rejection") }
-        catch LiquidError.syntax(let message, let line, let column) {
-            #expect(message == "Unclosed delimiter 'doc'" && line == nil && column == nil)
-        }
+        // Ruby accepts markup on the closing doc tag, while an incomplete
+        // nested doc boundary still receives its established rejection.
+        #expect(try await engine.render(template: "{% doc %}123{% enddoc xyz %}ok", syntaxMode: .strict2) == "ok")
         do { _ = try LiquidTemplate("{% doc %}{% doc %}content", syntaxMode: .strict2); Issue.record("Expected rejection") }
         catch LiquidError.syntax(let message, _, _) {
             #expect(message == "Syntax Error in 'doc' - Nested doc tags are not allowed")
