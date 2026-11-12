@@ -833,12 +833,18 @@ extension Renderer {
                 let snapshots = context.snapshotVariables(named: [alias])
                 context.setVariable(alias, value: item)
                 templatePathStack.append(resolvedPath)
-                let preparedAST = try await prepareASTForRendering(ast)
-                output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                    try await renderNode(preparedAST)
+                defer {
+                    _ = templatePathStack.popLast()
+                    context.restoreVariables(snapshots)
                 }
-                _ = templatePathStack.popLast()
-                context.restoreVariables(snapshots)
+                let preparedAST = try await prepareASTForRendering(ast)
+                do {
+                    output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    throw signal.carrying(output + signal.partialOutput)
+                }
             }
             return output
         }

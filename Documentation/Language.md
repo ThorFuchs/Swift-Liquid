@@ -54,6 +54,8 @@ Within each scope, an initialized increment/decrement counter shadows a host
 input of the same name; an explicit Liquid assignment remains visible above it.
 Loop interrupts remain inside an isolated `render`; `include` shares the
 caller's interrupt flow. Output produced before an interrupt is retained.
+For `include ... for`, output from earlier partial iterations is retained too,
+and the temporary iteration binding is restored when the interrupt propagates.
 See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
 
 A case evaluates its current operand before each when value, in source order.

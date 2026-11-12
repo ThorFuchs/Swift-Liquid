@@ -2140,6 +2140,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Include-for interrupt output and cleanup",
+      "scopeDecision": "The maintainer requested Shopify-compatible partial interrupts while preserving invocation-owned scope and registry behavior.",
+      "changes": [
+        "Carry prior iteration output when a break or continue escapes include-for, and restore the partial path and temporary alias on every exit."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
