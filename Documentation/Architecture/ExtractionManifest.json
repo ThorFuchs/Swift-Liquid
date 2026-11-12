@@ -2239,7 +2239,8 @@
       "scopeDecision": "The maintainer chose full Shopify behavior ahead of downstream adoption, accepting the change from the previous nested-include behavior while retaining exact registry identity and original host input visibility.",
       "changes": [
         "Reject include in isolated render subtrees with a typed recoverable runtime reason and the original include line and selected partial name.",
-        "Represent render identity in the AST instead of a user-collidable synthetic argument; retain exact-registry graph and nested render coverage."
+        "Represent render identity in the AST instead of a user-collidable synthetic argument; retain exact-registry graph and nested render coverage.",
+        "Keep the external exact-registry consumer example valid under the same nested-render restriction."
       ],
       "files": [
         "Sources/Liquid/Syntax/ASTNode.swift",
@@ -2252,6 +2253,7 @@
         "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
         "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
         "Tests/LiquidTests/ExactRegistryDependencyInspectionTests.swift",
+        "Examples/ExactRegistryConsumer/Sources/LiquidExactRegistryConsumer/main.swift",
         "Tests/TestInventory.json",
         "Documentation/Language.md",
         "Documentation/ExactRegistryRendering.md"
