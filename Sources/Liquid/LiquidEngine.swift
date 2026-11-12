@@ -367,11 +367,48 @@ public struct LiquidEngine: Sendable {
             recovering: recovering, measurement: measurement)
     }
 
+    /// Renders a parsed extended template with an admitted resident environment.
+    /// The root and parsed entries must have the same syntax and extension profiles;
+    /// raw registry entries use the root profiles. The registry remains exact.
+    /// Admission does not certify Content provenance or an output placement.
+    /// - Parameters:
+    ///   - template: Parsed root with the closed system profile.
+    ///   - environment: Admitted resident values for this invocation.
+    ///   - registry: Explicit exact-name partials with matching profiles.
+    /// - Returns: Complete rendered output.
+    /// - Throws: Profile, availability, runtime, quota or cancellation errors.
+    public func render(_ template: LiquidTemplate, environment: LiquidSystemEnvironment,
+                       registry: LiquidTemplateRegistry) async throws -> String {
+        try Task.checkCancellation()
+        guard template.extensionProfile == .closedSystemV1 else { throw LiquidSystemError.incompatibleProfile }
+        let prepared = try prepareExact(.parsed(template), registry: registry, syntaxMode: template.syntaxMode,
+                                        measuring: false, extensionProfile: .closedSystemV1)
+        let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
+                                recoveryEnabled: false, referenceTime: referenceTime ?? Date(),
+                                filters: filters, systemContextEnabled: true)
+        guard environment.entries.count <= renderer.budget.remainingValues else {
+            throw LiquidError.limitExceeded("contextValues")
+        }
+        var roots: [(String, Any)] = []
+        roots.reserveCapacity(environment.entries.count)
+        for entry in environment.entries {
+            try renderer.budget.step()
+            roots.append((entry.name, try renderer.systemRuntime(entry.value)))
+        }
+        renderer.setTemplateLoader(.exact(prepared.templates))
+        do {
+            let result = try await renderer.render(prepared.root, with: RuntimeVariables(roots))
+            try renderer.budget.output(result)
+            return result
+        } catch { throw publicError(error) }
+    }
+
     // One invocation-owned bundle for rendering and dependency inspection. Graph
     // admission is optional so the established U2 order/timing stays unchanged.
     internal func prepareExact(_ root: LiquidTemplateRegistry.Content, registry: LiquidTemplateRegistry,
                                syntaxMode: LiquidSyntaxMode, measuring: Bool,
-                               analysisLimits: LiquidDependencyLimits? = nil) throws -> ExactTemplateBundle {
+                               analysisLimits: LiquidDependencyLimits? = nil,
+                               extensionProfile: LiquidExtensionProfile? = nil) throws -> ExactTemplateBundle {
         try Task.checkCancellation()
         try limits.validate()
         if let analysisLimits {
@@ -402,7 +439,17 @@ public struct LiquidEngine: Sendable {
             try admitExactSource(entry.content, remaining: &remaining)
         }
         let sourceBytes = limits.sourceBytes - remaining
-        var preparation = ExactTemplatePreparation(limits: limits, syntaxMode: syntaxMode, measuring: measuring)
+        if let profile = extensionProfile {
+            func checkProfile(_ content: LiquidTemplateRegistry.Content) throws {
+                if case .parsed(let template) = content,
+                   (template.extensionProfile != profile || template.syntaxMode != syntaxMode) {
+                    throw LiquidSystemError.incompatibleProfile
+                }
+            }
+            try checkProfile(root)
+            for entry in registry.entries { try Task.checkCancellation(); try checkProfile(entry.content) }
+        }
+        var preparation = ExactTemplatePreparation(limits: limits, syntaxMode: syntaxMode, measuring: measuring, extensionProfile: extensionProfile)
         let template = try preparation.prepare(root)
         let asts = try preparation.prepareEntries(registry.entries)
         // Raw constructors already validate their ASTs. Retained parsed inputs
@@ -472,7 +519,14 @@ internal struct ExactTemplatePreparation {
     let limits: LiquidLimits
     let syntaxMode: LiquidSyntaxMode
     let measuring: Bool
+    let extensionProfile: LiquidExtensionProfile?
     private(set) var parseDuration: Duration?
+
+    init(limits: LiquidLimits, syntaxMode: LiquidSyntaxMode, measuring: Bool,
+         extensionProfile: LiquidExtensionProfile? = nil) {
+        self.limits = limits; self.syntaxMode = syntaxMode; self.measuring = measuring
+        self.extensionProfile = extensionProfile
+    }
 
     mutating func prepare(_ content: LiquidTemplateRegistry.Content) throws -> ASTNode {
         try Task.checkCancellation()
@@ -480,7 +534,12 @@ internal struct ExactTemplatePreparation {
         case .parsed(let value): return value.ast
         case .raw(let source):
             let start = measuring ? ContinuousClock().now : nil
-            let value = try LiquidTemplate(source, syntaxMode: syntaxMode, limits: limits)
+            let value: LiquidTemplate
+            if let extensionProfile {
+                value = try LiquidTemplate(source, syntaxMode: syntaxMode, extensionProfile: extensionProfile, limits: limits)
+            } else {
+                value = try LiquidTemplate(source, syntaxMode: syntaxMode, limits: limits)
+            }
             if let start {
                 let elapsed = start.duration(to: ContinuousClock().now)
                 parseDuration = parseDuration.map { $0 + elapsed } ?? elapsed

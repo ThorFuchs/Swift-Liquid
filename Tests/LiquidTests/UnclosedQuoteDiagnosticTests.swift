@@ -65,7 +65,8 @@ struct UnclosedQuoteDiagnosticTests {
         #expect(try await engine.render(template: "{{ '}}' }}", syntaxMode: .strict2) == "}}")
         do { _ = try LiquidTemplate("{{ 'unterminated", syntaxMode: .strict2); Issue.record("Expected rejection") }
         catch LiquidError.syntax(let message, let line, let column) {
-            #expect(message == "Unterminated string literal" && line == nil && column == nil)
+            #expect(message.contains("Variable '{{' was not properly terminated"))
+            #expect(line == 1 && column == 1)
         }
         do { _ = try LiquidTemplate("{% liquid\n echo 'unterminated\n%}", syntaxMode: .strict2); Issue.record("Expected rejection") }
         catch LiquidError.syntax(let message, let line, let column) {

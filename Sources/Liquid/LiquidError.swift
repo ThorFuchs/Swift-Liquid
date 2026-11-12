@@ -29,6 +29,12 @@ internal func publicError(_ error: Error) -> Error {
         if case .invalidDocNesting(let opening) = error {
             return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
         }
+        if case .invalidInlineComment(let opening) = error {
+            return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
+        }
+        if case .unclosedMarkup(_, let opening) = error {
+            return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
+        }
         if case .unclosedShopifyBlock(_, let opening) = error {
             return LiquidError.syntax(message: error.message, line: opening.line, column: opening.column)
         }

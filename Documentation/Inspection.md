@@ -49,7 +49,8 @@ values when names are repeated. It does not scan ignored source tokens.
 For example, `{{ user['name'] }}` reads `user`; `{{ user[key] }}` reads `user` and
 `key`. `{% assign local = input %}{{ local }}` reports `input` and `local`.
 `{% include 'card' %}` reports a literal name, while `{% include card %}` reports
-the `card` variable and a dynamic reference. Dynamic `render` names remain invalid
+the `card` variable and a dynamic reference. Property and index expressions in
+include names are dynamic references too. Dynamic `render` names remain invalid
 under the existing language contract.
 
 ## Work and errors

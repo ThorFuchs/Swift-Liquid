@@ -106,7 +106,14 @@ extension Renderer {
         case .liquid(let nodes):
             return try await renderTemplate(nodes)
 
-        case .include(let template, _, let withVars, let asVar):
+        case .include(let template, let reference, let withVars, let asVar):
+            if case .access = reference {
+                let value = try await evaluateExpression(reference)
+                guard let name = value as? String else {
+                    throw RenderError.templateNotFound(stringify(value))
+                }
+                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, allowContextFallback: false)
+            }
             return try await renderInclude(template: template, with: withVars, as: asVar)
 
         }
@@ -133,8 +140,9 @@ extension Renderer {
             do { output.append(try await renderNode(node)) }
             catch let signal as LoopControlSignal {
                 output.append(signal.partialOutput)
-                if context.isInsideLoop { throw signal.carrying(output) }
-                return output
+                // The root renderer or an isolated render boundary consumes
+                // this signal; intermediate blocks must preserve it.
+                throw signal.carrying(output)
             }
         }
 
@@ -162,14 +170,16 @@ extension Renderer {
             if staticCapacityHint > 0 {
                 output.reserveCapacity(staticCapacityHint)
             }
-            try await appendRenderedSimpleNodePairFast(nodes[0], nodes[1], to: &output)
+            do { try await appendRenderedSimpleNodePairFast(nodes[0], nodes[1], to: &output) }
+            catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
             return output
         case 3:
             var output = String()
             if staticCapacityHint > 0 {
                 output.reserveCapacity(staticCapacityHint)
             }
-            try await appendRenderedSimpleNodeTripleFast(nodes[0], nodes[1], nodes[2], to: &output)
+            do { try await appendRenderedSimpleNodeTripleFast(nodes[0], nodes[1], nodes[2], to: &output) }
+            catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
             return output
         default:
             break
@@ -180,7 +190,8 @@ extension Renderer {
             output.reserveCapacity(staticCapacityHint)
         }
 
-        try await appendRenderedSimpleNodeListFast(nodes, to: &output)
+        do { try await appendRenderedSimpleNodeListFast(nodes, to: &output) }
+        catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
         return output
     }
 
@@ -330,7 +341,7 @@ extension Renderer {
             try appendStringifiedUnescapedValueFast(context.getVariable(name.string) ?? NSNull(), to: &output)
 
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 try appendStringifiedUnescapedValueFast(context.getVariable(path) ?? NSNull(), to: &output)
             } else {
                 output.append(try await renderExpressionFast(expression))
@@ -346,6 +357,7 @@ extension Renderer {
 
     @inline(__always)
     internal func appendStringifiedUnescapedValueFast(_ value: Any, to output: inout String) throws {
+        let value = systemPrimary(value)
         switch value {
         case let str as String:
             output.append(str)
@@ -431,6 +443,10 @@ extension Renderer {
             return expressionReferencesVariable(left, named: variableName)
                 || expressionReferencesVariable(right, named: variableName)
 
+        case .unknownCondition(let left, _, let right):
+            return expressionReferencesVariable(left, named: variableName)
+                || expressionReferencesVariable(right, named: variableName)
+
         case .unary(_, let expr):
             return expressionReferencesVariable(expr, named: variableName)
 
@@ -458,6 +474,9 @@ extension Renderer {
         case .access(let expr, let key, _):
             return expressionReferencesVariable(expr, named: variableName)
                 || expressionReferencesVariable(key, named: variableName)
+
+        case .systemAccess(let expr, _):
+            return expressionReferencesVariable(expr, named: variableName)
 
         case .call(_, let arguments):
             for argument in arguments where expressionReferencesVariable(argument.value, named: variableName) {

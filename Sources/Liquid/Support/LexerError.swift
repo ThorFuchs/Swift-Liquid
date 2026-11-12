@@ -23,6 +23,8 @@ internal enum LexerError: Error, Sendable, Equatable {
     case unclosedDelimiter(String, position: Int)
     case unclosedShopifyBlock(String, opening: Token)
     case invalidDocNesting(opening: Token)
+    case invalidInlineComment(opening: Token)
+    case unclosedMarkup(variable: Bool, opening: Token)
     
     case unexpectedEndOfInput(position: Int)
 }
@@ -52,6 +54,10 @@ extension LexerError {
             return "'\(tag)' tag was never closed"
         case .invalidDocNesting:
             return "Syntax Error in 'doc' - Nested doc tags are not allowed"
+        case .invalidInlineComment:
+            return "Syntax error in tag '#' - Each line of comments must be prefixed by the '#' character"
+        case .unclosedMarkup(let variable, _):
+            return variable ? "Variable '{{' was not properly terminated with regexp: /\\}\\}/" : "Tag '{%' was not properly terminated with regexp: /\\%\\}/"
         case .unexpectedEndOfInput:
             return "Unexpected end of input"
         }
@@ -59,7 +65,7 @@ extension LexerError {
     
     internal var position: Int {
         switch self {
-        case .unclosedShopifyBlock(_, let opening), .invalidDocNesting(let opening): return opening.position
+        case .unclosedShopifyBlock(_, let opening), .invalidDocNesting(let opening), .invalidInlineComment(let opening), .unclosedMarkup(_, let opening): return opening.position
         case .unexpectedCharacter(_, let pos, _),
              .unterminatedString(let pos),
              .invalidNumber(_, let pos),
@@ -75,9 +81,9 @@ extension LexerError {
         switch self {
         case .unexpectedCharacter, .invalidUTF8:
             return .syntax
-        case .invalidDocNesting:
+        case .invalidDocNesting, .invalidInlineComment:
             return .syntax
-        case .unterminatedString, .unclosedDelimiter, .unclosedShopifyBlock:
+        case .unterminatedString, .unclosedDelimiter, .unclosedShopifyBlock, .unclosedMarkup:
             return .unterminated
         case .invalidNumber, .invalidEscapeSequence:
             return .malformed
@@ -112,6 +118,10 @@ extension LexerError {
             return "Ensure the template file is saved with UTF-8 encoding"
         case .invalidDocNesting:
             return "Remove the nested doc tag"
+        case .invalidInlineComment:
+            return "Prefix each continuation line with '#'"
+        case .unclosedMarkup(let variable, _):
+            return variable ? "Add '}}' to close the variable" : "Add '%}' to close the tag"
         case .unclosedShopifyBlock(let tag, _):
             return "Add the closing delimiter for '\(tag)'"
         case .unclosedDelimiter(let delimiter, _):

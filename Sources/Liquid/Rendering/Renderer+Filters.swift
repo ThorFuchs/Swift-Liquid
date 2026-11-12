@@ -16,7 +16,7 @@ extension Renderer {
         "escape", "escape_once", "url_encode", "url_decode", "base64_encode",
         "base64_url_safe_encode", "truncate", "truncatewords", "split", "strip_html",
         "strip_newlines", "newline_to_br", "replace", "replace_first", "replace_last",
-        "remove", "remove_first", "remove_last", "append", "prepend"
+        "remove", "remove_first", "remove_last", "append", "prepend", "squish"
     ]
 
     // MARK: - Filter Application
@@ -43,28 +43,36 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if let wrapped = input as? SystemRuntimeValue, filter.name.equals("default"), !filter.arguments.isEmpty {
+            let fallback = try await evaluateFilterArgumentFast(filter.arguments[0])
+            if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value,
+               systemPrimary(try await evaluateExpression(allow)) as? Bool == true {
+                return wrapped.primary is NSNull || (wrapped.primary as? String)?.isEmpty == true ? fallback : input
+            }
+            return isNilOrEmpty(wrapped.primary) ? fallback : input
+        }
         let value: Any
-        if let range = input as? RuntimeRange {
+        let primary = systemPrimary(input)
+        if let range = primary as? RuntimeRange {
             if filter.arguments.isEmpty, filter.namedArguments.isEmpty,
                let result = range.commandValue(for: filter.name.string) { return result }
             let arrayFilters: Set<String> = ["join", "first", "last", "size", "sort", "sort_natural", "reverse", "map", "where", "reject", "find", "find_index", "has", "sum", "uniq", "compact", "concat"]
             value = arrayFilters.contains(filter.name.string) ? range.values : range.description
         } else if Self.inspectingStringFilters.contains(filter.name.string),
-                  input is [Any] || isDictLike(input) {
-            value = try rubyInspect(input)
-        } else { value = input }
+                  primary is [Any] || isDictLike(primary) {
+            value = try rubyInspect(primary)
+        } else { value = primary }
 
         // Handle default filter with allow_false named argument
         if filter.name.equals("default"), !filter.namedArguments.isEmpty {
             let defaultValue = filter.arguments.isEmpty ? "" : try await evaluateFilterArgumentFast(filter.arguments[0])
             if let allowFalseExpr = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
-                let allowFalse = try await evaluateExpression(allowFalseExpr)
+                let allowFalse = systemPrimary(try await evaluateExpression(allowFalseExpr))
                 if allowFalse as? Bool == true {
-                    // With allow_false: only use default for nil/empty, NOT for false
-                    if value is NSNull || (value as? String)?.isEmpty == true {
-                        return defaultValue
-                    }
-                    return value
+                    // Preserve false while still treating all empty containers
+                    // as empty, as in Shopify's default filter.
+                    if let boolean = value as? Bool, !boolean { return value }
+                    return isNilOrEmpty(value) ? defaultValue : value
                 }
             }
             return isNilOrEmpty(value) ? defaultValue : value
@@ -82,7 +90,8 @@ extension Renderer {
             if let literalArgument = filter.singleLiteralIntegerArgument {
                 argument = literalArgument
             } else {
-                argument = try await evaluateFilterArgumentFast(filter.arguments[0])
+                let evaluated = try await evaluateFilterArgumentFast(filter.arguments[0])
+                argument = filter.name.equals("default") ? evaluated : systemPrimary(evaluated)
             }
             if let builtinKind = filter.builtinKind,
                let result = try applyBuiltinFilterSingleArgument(kind: builtinKind, to: value, argument: argument) {
@@ -90,7 +99,8 @@ extension Renderer {
             }
             return try await applyFilterInternal(filterName: filter.name, to: value, args: [argument])
         default:
-            let args = try await evaluateFilterArgumentsFast(filter.arguments)
+            let evaluated = try await evaluateFilterArgumentsFast(filter.arguments)
+            let args = filter.name.equals("default") ? evaluated : evaluated.map { systemPrimary($0) }
             return try await applyFilterInternal(filterName: filter.name, to: value, args: args)
         }
     }
@@ -131,6 +141,7 @@ extension Renderer {
                 guard intVal != Int.min else { throw LiquidError.invalidValue("Integer overflow") }
                 return Swift.abs(intVal)
             }
+            if let double = value as? Double { return Swift.abs(double) }
             let a = abs(numericValue(value) ?? 0)
             return a == a.rounded(.towardZero) ? try checkedInteger(a) : a
         case .date:
@@ -210,7 +221,7 @@ extension Renderer {
         case .variable(let name):
             return context.getVariable(name.string) ?? NSNull()
         case .access:
-            if let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)
@@ -286,6 +297,9 @@ extension Renderer {
     internal func validateFilterArgs(_ filterName: InlineString, args: [Any]) throws {
         guard let (minArgs, maxArgs) = Self.filterArgCounts[filterName.string] else { return }
         if args.count < minArgs {
+            if filterName.equals("split"), args.isEmpty {
+                throw RenderError.custom("wrong number of arguments (given 1, expected 2)")
+            }
             throw RenderError.undefinedFilter("\(filterName.string): expected at least \(minArgs) argument(s), got \(args.count)")
         }
         if args.count > maxArgs {
@@ -381,6 +395,7 @@ extension Renderer {
             return HTMLEscape.escapeOnce(str)
         }
         if filterName.equals("truncate") {
+            if value is NSNull { return NSNull() }
             if let firstArg = args.first, firstArg is NSNull {
                 throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncate")
             }
@@ -394,6 +409,7 @@ extension Renderer {
             return truncateString(stringify(value, escape: false), length: length, ending: ending)
         }
         if filterName.equals("truncatewords") {
+            if value is NSNull { return NSNull() }
             if let firstArg = args.first, firstArg is NSNull {
                 throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncatewords")
             }
@@ -462,6 +478,7 @@ extension Renderer {
                 guard intVal != Int.min else { throw LiquidError.invalidValue("Integer overflow") }
                 return Swift.abs(intVal)
             }
+            if let double = value as? Double { return Swift.abs(double) }
             let a = abs(numericValue(value) ?? 0)
             return a == a.rounded(.towardZero) ? try checkedInteger(a) : a
         }
@@ -494,8 +511,9 @@ extension Renderer {
             else if value is NSNull { left = [] }
             else if let s = value as? String, s.isEmpty { left = [] }
             else { left = [value] }
-            guard let right = args.first as? [Any] else {
-                throw RenderError.typeError(expected: "array", actual: "\(type(of: args.first ?? NSNull()))", operation: "concat")
+            let rightArgument = systemPrimary(args.first ?? NSNull())
+            guard let right = rightArgument as? [Any] else {
+                throw RenderError.typeError(expected: "array", actual: "\(type(of: rightArgument))", operation: "concat")
             }
             return left + right
         }
@@ -718,11 +736,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // Array of strings: substring matching
                     for item in array {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return item }
                             } else {
@@ -776,11 +794,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // String array: substring matching
                     for (index, item) in array.enumerated() {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return index }
                             } else {
@@ -859,10 +877,10 @@ extension Renderer {
                         return false
                     }
                     // Arrays with non-string/non-dict elements → return nil or throw
-                    let hasNonStringNonDict = array.contains { !($0 is String) && !isDictLike($0) && !($0 is NSNull) }
+                    let hasNonStringNonDict = array.contains { !(systemPrimary($0) is String) && !isDictLike($0) && !(systemPrimary($0) is NSNull) }
                     if hasNonStringNonDict {
                         // Pure int arrays → throw; mixed arrays → return nil
-                        let allInts = array.allSatisfy { $0 is Int }
+                        let allInts = array.allSatisfy { systemPrimary($0) is Int }
                         if allInts {
                             throw RenderError.typeError(expected: "string or hash", actual: "int array", operation: "has")
                         }
@@ -870,7 +888,7 @@ extension Renderer {
                     }
                     // String array: substring matching
                     for item in array {
-                        if let str = item as? String, str.contains(property) { return true }
+                        if let str = systemPrimary(item) as? String, str.contains(property) { return true }
                     }
                     return false
                 } else {
@@ -894,7 +912,7 @@ extension Renderer {
                 for item in items {
                     try budget.step()
                     if isDictLike(item) { continue } // A missing hash key selects nil.
-                    if item is String || item is Int {
+                    if systemPrimary(item) is String || systemPrimary(item) is Int {
                         throw RenderError.custom("cannot select the property ''")
                     }
                     // Ruby stops the entire selection on the first value without
@@ -949,16 +967,16 @@ extension Renderer {
                 // For string arrays, do substring matching
                 if let searchStr = property {
                     // If array has non-string items (nil, bool, int), throw or return empty
-                    let hasNonString = array.contains { !($0 is String) }
+                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
                     if hasNonString {
-                        if array.contains(where: { $0 is Int }) {
+                        if array.contains(where: { systemPrimary($0) is Int }) {
                             throw RenderError.typeError(expected: "string or hash", actual: "Int", operation: "reject")
                         }
                         return [Any]()
                     }
                     var result: [Any] = []
                     for item in array {
-                        if let str = item as? String {
+                        if let str = systemPrimary(item) as? String {
                             if !str.contains(searchStr) { result.append(item) }
                         } else {
                             result.append(item)

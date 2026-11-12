@@ -101,15 +101,14 @@ struct DiagnosticOriginTests {
         } catch let error as LexerError {
             guard case .unexpectedCharacter("&", _, .unmapped(.incompleteOrAmbiguousConstruct)?) = error else { throw error }
         }
-        // The existing inline-comment branch constructs a Character from a byte.
-        // Preserve that reason rather than silently replacing it with the source scalar.
+        // Original comment markup owns the verified inline-comment diagnostic;
+        // the invalid continuation need not be decoded from a single UTF-8 byte.
         do {
             _ = try Lexer("{% # ok\n 😀 %}", sourceProvenance: .original(.anonymous)).tokenize()
             Issue.record("Expected inline-comment rejection")
         } catch let error as LexerError {
-            guard case .unexpectedCharacter(let character, _, .unmapped(let gap)?) = error else { throw error }
-            #expect(gap == .incompleteOrAmbiguousConstruct)
-            #expect(character != "😀")
+            guard case .invalidInlineComment(let opening) = error else { throw error }
+            #expect(opening.line == 1)
         }
         // Invalid headers must not stringify a huge numeric token through Int.
         do {

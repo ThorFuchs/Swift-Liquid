@@ -154,7 +154,7 @@ extension Renderer {
     // MARK: - For Loop Rendering
 
     internal func renderFor(variable: InlineString, collection: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams) async throws -> String {
-        let collectionValue = try await evaluateExpression(collection)
+        let collectionValue = systemPrimary(try await evaluateExpression(collection))
         let forloopName = "\(variable.string)-\(expressionToPath(collection))"
 
         // Build collection key for offset:continue tracking
@@ -185,7 +185,7 @@ extension Renderer {
             offset = paramOffset
         } else if let offsetExpr = params.offsetExpression {
             // Runtime evaluation of offset expression (e.g., limit: my_var)
-            let offsetValue = try await evaluateExpression(offsetExpr)
+            let offsetValue = systemPrimary(try await evaluateExpression(offsetExpr))
             if let intVal = offsetValue as? Int { offset = intVal }
             else if let dblVal = offsetValue as? Double { offset = try checkedInteger(dblVal) }
             else if let strVal = offsetValue as? String, let intVal = Int(strVal) { offset = intVal }
@@ -200,7 +200,7 @@ extension Renderer {
         // Determine limit (static or from expression)
         var resolvedLimit = params.limit
         if resolvedLimit == nil, let limitExpr = params.limitExpression {
-            let limitValue = try await evaluateExpression(limitExpr)
+            let limitValue = systemPrimary(try await evaluateExpression(limitExpr))
             if let intVal = limitValue as? Int { resolvedLimit = intVal }
             else if let dblVal = limitValue as? Double { resolvedLimit = try checkedInteger(dblVal) }
             else if let strVal = limitValue as? String, let intVal = Int(strVal) { resolvedLimit = intVal }
@@ -370,11 +370,11 @@ extension Renderer {
     }
 
     internal func renderTableRow(variable: InlineString, collection: LiquidExpression, body: [ASTNode], params: TableRowParams) async throws -> String {
-        let collectionValue = try await evaluateExpression(collection)
+        let collectionValue = systemPrimary(try await evaluateExpression(collection))
         if collectionValue is NSNull || (collectionValue as? Bool) == false { return "" }
 
         func tableInteger(_ expression: LiquidExpression) async throws -> Int {
-            let value = try await evaluateExpression(expression)
+            let value = systemPrimary(try await evaluateExpression(expression))
             if value is NSNull { return 0 }
             if value is Bool { throw RenderError.custom("invalid integer") }
             if let string = value as? String {
@@ -595,7 +595,7 @@ extension Renderer {
     
     internal func renderCapture(variable: InlineString, body: [ASTNode]) async throws -> String {
         let capturedOutput = try await renderNodeListFast(body)
-        context.setVariable(variable.string, value: capturedOutput)
+        context.setRootVariable(variable.string, value: capturedOutput)
         return "" // Capture produces no output
     }
     
@@ -667,7 +667,7 @@ extension Renderer {
         return result
     }
     
-    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?) async throws -> String {
+    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?, allowContextFallback: Bool = true) async throws -> String {
         guard let templateLoader else {
             throw RenderError.includeError(
                 template.string,
@@ -695,7 +695,7 @@ extension Renderer {
             let selected: PreparedExactTemplates.Selected
             if let literal = try prepared.select(templateName) {
                 selected = literal
-            } else if let variableName = context.getVariable(templateName) as? String {
+            } else if allowContextFallback, let variableName = context.getVariable(templateName).map({ systemPrimary($0) }) as? String {
                 templateName = variableName
                 guard let fallback = try prepared.select(templateName) else {
                     throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
@@ -719,7 +719,7 @@ extension Renderer {
                 )
             } catch {
                 // If literal name fails, try resolving as a variable reference
-                if let variableValue = context.getVariable(templateName) as? String {
+                if allowContextFallback, let variableValue = context.getVariable(templateName).map({ systemPrimary($0) }) as? String {
                     templateName = variableValue
                     do {
                         resolvedPath = try templateLoader.resolvedTemplatePath(
@@ -745,7 +745,7 @@ extension Renderer {
 
         // Handle {% render "template" for collection %} — iterate and render for each item
         if isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let collection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(try await evaluateExpression(forExpr))
             guard let items = collection as? [Any] else {
                 return ""
             }
@@ -779,8 +779,12 @@ extension Renderer {
                     context.restoreState(savedState)
                 }
                 let preparedAST = try await prepareASTForRendering(ast)
-                output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                    try await renderNode(preparedAST)
+                do {
+                    output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    output += signal.partialOutput
                 }
             }
             return output
@@ -790,7 +794,7 @@ extension Renderer {
         if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
             try enterLiquidScope()
             defer { liquidLocalScopeDepth -= 1 }
-            let collection = try await evaluateExpression(forExpr)
+            let collection = systemPrimary(try await evaluateExpression(forExpr))
             guard let items = collection as? [Any] else {
                 return ""
             }
@@ -824,8 +828,12 @@ extension Renderer {
                 context.restoreState(savedState)
             }
             let preparedAST = try await prepareASTForRendering(ast)
-            return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                try await renderNode(preparedAST)
+            do {
+                return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                    try await renderNode(preparedAST)
+                }
+            } catch let signal as LoopControlSignal {
+                return signal.partialOutput
             }
         } else {
             try enterLiquidScope()

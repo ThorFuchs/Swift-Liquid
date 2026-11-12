@@ -20,6 +20,9 @@ extension Renderer {
         }
         // Use Swift's default which gives shortest round-trip representation
         let full = String(num)
+        if let exponent = full.firstIndex(of: "e"), !full[..<exponent].contains(".") {
+            return String(full[..<exponent]) + ".0" + full[exponent...]
+        }
         // Detect floating-point noise: patterns like "7.8999999999999995" or "3.0000000000000004"
         // These have 16 significant digits and end with runs of 9s or 0s followed by small digits
         if full.count >= 16, let dotIndex = full.firstIndex(of: ".") {
@@ -40,6 +43,7 @@ extension Renderer {
     }
 
     internal func stringify(_ value: Any, escape: Bool? = nil) -> String {
+        let value = systemPrimary(value)
         if let escape {
             let stringValue = stringifyUnescapedPreservingSafeHTML(value)
             return escape ? HTMLEscape.escape(stringValue) : stringValue
@@ -57,6 +61,7 @@ extension Renderer {
 
     @inline(__always)
     internal func stringifyUnescapedPreservingSafeHTML(_ value: Any) -> String {
+        let value = systemPrimary(value)
         if let safeHTML = value as? SafeHTML {
             return safeHTML.value
         }
@@ -65,6 +70,7 @@ extension Renderer {
 
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
+        let value = systemPrimary(value)
         switch value {
         case is RuntimeSelf: return "Liquid::SelfDrop"
         case is LiquidSpecialValue: return ""
@@ -225,6 +231,7 @@ extension Renderer {
 
     @inline(__always)
     internal func integerValue(_ value: Any) -> Int? {
+        let value = systemPrimary(value)
         switch value {
         case let int as Int:
             return int
@@ -247,6 +254,7 @@ extension Renderer {
 
     @inline(__always)
     internal func numericValue(_ value: Any) -> Double? {
+        let value = systemPrimary(value)
         switch value {
         case let double as Double:
             return double
@@ -268,6 +276,7 @@ extension Renderer {
     }
     
     internal func isTruthy(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case let bool as Bool:
             return bool
@@ -279,6 +288,8 @@ extension Renderer {
     }
     
     internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+        let left = systemPrimary(left)
+        let right = systemPrimary(right)
         if let left = left as? RuntimeSelf, let right = right as? RuntimeSelf {
             return left.scope === right.scope
         }
@@ -370,6 +381,7 @@ extension Renderer {
     }
 
     internal func compareValues(_ left: Any, _ right: Any) throws -> Int {
+        let left = systemPrimary(left); let right = systemPrimary(right)
         if let left = left as? Int, let right = right as? Int {
             return left == right ? 0 : (left < right ? -1 : 1)
         }
@@ -408,6 +420,7 @@ extension Renderer {
     
     @inline(__always)
     internal func isFloatLike(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         if value is Double { return true }
         if let str = value as? String { return str.contains(".") && Double(str)?.isFinite == true }
         if let inline = value as? InlineString { return inline.string.contains(".") && Double(inline.string)?.isFinite == true }
@@ -418,6 +431,7 @@ extension Renderer {
 
     @inline(__always)
     internal func orderedDictPairs(_ value: Any) -> [(key: String, value: Any)]? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered.map { (key: $0.key, value: $0.value) }
         }
@@ -429,6 +443,7 @@ extension Renderer {
 
     @inline(__always)
     internal func dictValue(_ value: Any, forKey key: String) -> Any? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered[key]
         }
@@ -440,11 +455,13 @@ extension Renderer {
 
     @inline(__always)
     internal func isDictLike(_ value: Any) -> Bool {
-        value is [String: Any] || value is RuntimeObject
+        let value = systemPrimary(value)
+        return value is [String: Any] || value is RuntimeObject
     }
 
     @inline(__always)
     internal func dictCount(_ value: Any) -> Int? {
+        let value = systemPrimary(value)
         if let ordered = value as? RuntimeObject {
             return ordered.count
         }
@@ -564,6 +581,7 @@ extension Renderer {
     }
 
     internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
+        let haystack = systemPrimary(haystack); let needle = systemPrimary(needle)
         // Shopify: contains with false/nil/undefined needle always returns false
         if needle is Bool || needle is NSNull { return false }
         if let s = needle as? String, s.isEmpty { return false }  // undefined var
@@ -578,11 +596,13 @@ extension Renderer {
     }
     
     internal func getSize(_ value: Any) -> Int {
-        runtimeValueSize(value) ?? dictCount(value) ?? 0
+        let value = systemPrimary(value)
+        return runtimeValueSize(value) ?? dictCount(value) ?? 0
     }
     
 
     internal func getFirst(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let string = value as? String { return string.unicodeScalars.first.map(String.init) ?? "" }
         if let array = value as? [Any], !array.isEmpty {
             return array[0]
@@ -594,6 +614,7 @@ extension Renderer {
     }
 
     internal func getLast(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let string = value as? String { return string.unicodeScalars.last.map(String.init) ?? "" }
         if let array = value as? [Any], !array.isEmpty {
             return array[array.count - 1]
@@ -602,6 +623,7 @@ extension Renderer {
     }
     
     internal func isNilOrEmpty(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case is NSNull:
             return true
@@ -623,6 +645,7 @@ extension Renderer {
     }
     
     internal func isEmpty(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         switch value {
         case let string as String: return string.isEmpty
         case let array as [Any]: return array.isEmpty
@@ -633,6 +656,7 @@ extension Renderer {
     }
     
     internal func isBlank(_ value: Any) -> Bool {
+        let value = systemPrimary(value)
         if let boolean = value as? Bool { return !boolean }
         if value is NSNull { return true }
         if let string = value as? String { return string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -650,6 +674,7 @@ extension Renderer {
     }
 
     internal func compareForSort(_ a: Any, _ b: Any) -> Bool {
+        let a = systemPrimary(a); let b = systemPrimary(b)
         // If both are numeric, compare numerically
         if let na = numericValue(a), let nb = numericValue(b),
            (a is Int || a is Double), (b is Int || b is Double) {
@@ -659,6 +684,7 @@ extension Renderer {
     }
 
     internal func compareForSortNatural(_ a: Any, _ b: Any) -> Bool {
+        let a = systemPrimary(a); let b = systemPrimary(b)
         if a is NSNull { return false }
         if b is NSNull { return true }
         if let na = numericValue(a), let nb = numericValue(b),
@@ -671,7 +697,7 @@ extension Renderer {
     internal func flattenArray(_ array: [Any]) -> [Any] {
         var result: [Any] = []
         for item in array {
-            if let nested = item as? [Any] {
+            if let nested = systemPrimary(item) as? [Any] {
                 result.append(contentsOf: flattenArray(nested))
             } else {
                 result.append(item)
@@ -681,6 +707,7 @@ extension Renderer {
     }
     
     internal func reverseValue(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let array = value as? [Any] {
             return Array(array.reversed())
         }
@@ -688,6 +715,7 @@ extension Renderer {
     }
     
     internal func sortValue(_ value: Any) -> Any {
+        let value = systemPrimary(value)
         if let array = value as? [Any] {
             return array.sorted { compareForSort($0, $1) }
         }
@@ -695,6 +723,7 @@ extension Renderer {
     }
     
     internal func roundNumber(_ value: Any, precision: Int) -> Any {
+        if value is Bool { return 0 }
         let num: Double
         switch value {
         case let d as Double: num = d
@@ -711,6 +740,7 @@ extension Renderer {
 
     @inline(__always)
     internal func renderRoundedValueFast(_ value: Any, precision: Int) -> String {
+        if value is Bool { return "0" }
         switch value {
         case let num as Double:
             return stringifyRoundedDouble(roundedDouble(num, precision: precision))
@@ -772,6 +802,7 @@ extension Renderer {
     }
     
     internal func getProperty(from object: Any, key: String) -> Any? {
+        let object = systemPrimary(object)
         // This is a simplified implementation
         // In a full implementation, you'd use Mirror or KVC
         if let val = dictValue(object, forKey: key) { return val }

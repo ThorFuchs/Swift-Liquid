@@ -50,11 +50,16 @@ Canonical siblings remain distinct throughout nested include/render.
 Include preserves literal-first lookup and existing binding evaluation order.
 Only a genuine missing literal candidate permits a context-string retry through
 the same resolver. Overlong names, cancellation and unexpected errors propagate.
+For an include whose name is a property or index expression, the expression is
+evaluated to a string and that exact name is resolved once; it does not receive
+the separate context-variable fallback. Existing simple-name lookup retains its
+literal-first behavior.
 Shared include scope, isolated render scope, iteration/cycle/interrupt state and
 immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
-not filter pipelines, and include-for has its existing default alias; render-for
-supports its existing explicit alias. No syntax is added to broaden these forms. Exact registry dependency inspection is available in the local U3 checkpoint;
+not filter pipelines. Include-for and render-for support explicit aliases, and
+`with`/`for` bindings may be followed by comma-separated named arguments.
+Exact registry dependency inspection is available in the local U3 checkpoint;
 the CLI and Vapor still use their existing APIs.
 
 ## Successful-only metrics, errors and bounds

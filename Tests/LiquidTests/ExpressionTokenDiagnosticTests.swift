@@ -16,7 +16,9 @@ struct ExpressionTokenDiagnosticTests {
         let engine = LiquidEngine()
         for (token, kind, spelling) in cases {
             let source = "{% assign x = x | x : \(token) %}"
-            let expected = "[:\(kind), \"\(spelling)\"] is not a valid expression"
+            // The current pinned case and Ruby reference parse a pipe as the
+            // next filter boundary, then reject the missing filter name.
+            let expected = token == "|" ? "Expected id but found end_of_string" : "[:\(kind), \"\(spelling)\"] is not a valid expression"
             for entry in 0..<4 {
                 do {
                     switch entry {

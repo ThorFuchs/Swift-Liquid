@@ -30,10 +30,9 @@ struct RecoveredDiagnosticTests {
                          "{% decrement x extra %}", "{% echo x extra %}", "{% increment x extra %}",
                          "{% if x and x x == [0] %}{% endif %}", "{{ x extra }}"],
                         message: "Expected end_of_string but found id")
-        for mode in [LiquidSyntaxMode.lax, .strict] {
-            do { _ = try LiquidTemplate("{{ x extra }}", syntaxMode: mode); Issue.record("Expected rejection") }
-            catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: identifier(extra)") }
-        }
+        do { _ = try LiquidTemplate("{{ x extra }}", syntaxMode: .strict); Issue.record("Expected rejection") }
+        catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: identifier(extra)") }
+        #expect(try await LiquidEngine().render(template: "{{ x extra }}", context: ["x": "value"], syntaxMode: .lax) == "value")
     }
 
     @Test func partialAttributeCommaKeepsItsRejection() async throws {
@@ -65,7 +64,9 @@ struct RecoveredDiagnosticTests {
             "{{ x | x: x. }}", "{{ x | }}"], message: "Expected id but found end_of_string")
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
             do { _ = try LiquidTemplate("{{ x. }}", syntaxMode: mode); Issue.record("Expected rejection") }
-            catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: }}") }
+            catch LiquidError.syntax(let message, _, _) {
+                #expect(message == (mode == .strict2 ? "Expected id but found end_of_string" : "Unexpected token: }}"))
+            }
         }
     }
 

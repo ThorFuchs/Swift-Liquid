@@ -19,6 +19,9 @@ internal indirect enum LiquidExpression: Sendable, Equatable {
     // MARK: - Operations
     
     case binary(left: LiquidExpression, op: BinaryOp, right: LiquidExpression)
+
+    // Lax parsing defers unknown condition operators until evaluation.
+    case unknownCondition(left: LiquidExpression, name: InlineString, right: LiquidExpression)
     
     case unary(op: UnaryOp, expr: LiquidExpression)
     
@@ -33,6 +36,8 @@ internal indirect enum LiquidExpression: Sendable, Equatable {
     // MARK: - Collection Access
     
     case access(expr: LiquidExpression, key: LiquidExpression, command: Bool = false)
+
+    case systemAccess(expr: LiquidExpression, property: LiquidSystemProperty)
     
     case call(name: InlineString, arguments: [CallArgument])
 }
@@ -348,6 +353,8 @@ extension LiquidExpression {
             return true
         case .binary(let left, _, let right):
             return left.containsVariables || right.containsVariables
+        case .unknownCondition(let left, _, let right):
+            return left.containsVariables || right.containsVariables
         case .unary(_, let expr):
             return expr.containsVariables
         case .range(let start, let end):
@@ -361,6 +368,8 @@ extension LiquidExpression {
             return expr.containsVariables
         case .access(let expr, let key, _):
             return expr.containsVariables || key.containsVariables
+        case .systemAccess(let expr, _):
+            return expr.containsVariables
         case .call(_, let arguments):
             return arguments.contains { $0.containsVariables }
         }
@@ -373,6 +382,8 @@ extension LiquidExpression {
         case .variable(let name):
             return [name.description]
         case .binary(let left, _, let right):
+            return left.referencedVariables.union(right.referencedVariables)
+        case .unknownCondition(let left, _, let right):
             return left.referencedVariables.union(right.referencedVariables)
         case .unary(_, let expr):
             return expr.referencedVariables
@@ -393,6 +404,8 @@ extension LiquidExpression {
             return expr.referencedVariables
         case .access(let expr, let key, _):
             return expr.referencedVariables.union(key.referencedVariables)
+        case .systemAccess(let expr, _):
+            return expr.referencedVariables
         case .call(_, let arguments):
             return arguments.reduce(into: Set<String>()) { result, arg in
                 result.formUnion(arg.referencedVariables)
@@ -407,6 +420,8 @@ extension LiquidExpression {
         case .variable:
             return 1
         case .binary(let left, _, let right):
+            return left.complexityScore + right.complexityScore + 1
+        case .unknownCondition(let left, _, let right):
             return left.complexityScore + right.complexityScore + 1
         case .unary(_, let expr):
             return expr.complexityScore + 1
@@ -423,6 +438,8 @@ extension LiquidExpression {
             return expr.complexityScore + 1
         case .access(let expr, let key, _):
             return expr.complexityScore + key.complexityScore + 1
+        case .systemAccess(let expr, _):
+            return expr.complexityScore + 1
         case .call(_, let arguments):
             return arguments.reduce(1) { $0 + $1.complexityScore }
         }
@@ -575,8 +592,12 @@ extension LiquidExpression: CustomStringConvertible {
             return value.description
         case .variable(let name):
             return name.description
+        case .systemAccess(let base, let property):
+            return "\(base).$\(property.rawValue)"
         case .binary(let left, let op, let right):
             return "(\(left) \(op.rawValue) \(right))"
+        case .unknownCondition(let left, let name, let right):
+            return "(\(left) \(name) \(right))"
         case .unary(let op, let expr):
             return "\(op.rawValue)(\(expr))"
         case .range(let start, let end):

@@ -26,6 +26,12 @@ struct CycleCompatibilityTests {
             #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: .strict2) }
         }
         #expect(try await engine.render(template: "{% cycle 'a', %}", syntaxMode: .strict2) == "a")
+        for mode in [LiquidSyntaxMode.lax, .strict] {
+            #expect(try await engine.render(template: "{% assign 5 = 'b' %}{% cycle .5, .4 %}", syntaxMode: mode) == "b")
+            #expect(try await engine.render(template: "{% cycle .5: 'a', 'b' %}", syntaxMode: mode) == "a")
+            #expect(try await engine.render(template: "{% cycle .05 %}", context: ["05": "zero-five"], syntaxMode: mode) == "zero-five")
+        }
+        #expect(throws: LiquidError.self) { try LiquidTemplate("{% cycle .5: 'a', 'b' %}", syntaxMode: .strict2) }
     }
 
     @Test func quotaAndCancellationRemainTerminal() async throws {

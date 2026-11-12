@@ -1365,6 +1365,614 @@
         "Documentation/AssignmentTargets.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Computed include property and index names",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance while retaining the exact-registry simple-name lookup contract, source quotas, cancellation and existing holds.",
+      "changes": [
+        "Admit property and index expressions as include names and evaluate them before resolving a template, retaining AST inspection and one invocation-owned budget.",
+        "Resolve the computed string exactly once without context fallback; preserve literal-first and simple-variable fallback behavior for previously admitted include forms."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/DynamicIncludeAccessTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md",
+        "Documentation/Inspection.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax output terminal suffix handling",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while retaining strict parser modes, original fixture bytes, cancellation and resource bounds.",
+      "changes": [
+        "In unfiltered lax output, retain a complete leading expression for a bounded class of terminal suffixes using the existing lexer and parser.",
+        "Keep strict and strict2 rejection, filtered-markup boundaries, output quotas and cancellation covered by public regressions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift",
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Legacy case operands and lax assignment suffixes",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving strict2, original source provenance, pinned fixtures, cancellation and existing holds.",
+      "changes": [
+        "Match bounded original-byte legacy case and when lookup fragments and trailing markup in lax and strict modes without changing strict2 parsing.",
+        "Retain a complete unfiltered lax assignment value for a single terminal token, including inside liquid blocks; preserve strict-mode rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxCaseMarkupTests.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard-filter composite and scalar coercion",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving pinned fixtures, finite numeric bounds, cancellation and existing holds.",
+      "changes": [
+        "Use Ruby-style composite inspection for squish and preserve empty arrays and objects under default with allow_false.",
+        "Preserve integer zero for nonnumeric scalar sums and floating-point identity for scalar floating inputs."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Inline comment continuation and original-source diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving pinned fixtures, parser modes, cancellation and source-origin boundaries.",
+      "changes": [
+        "Recognize Ruby's first inline-comment markup line and allow blank continuation lines; reject later unprefixed content.",
+        "Retain a typed inline-comment error and its original markup line, and advance line and scalar columns correctly through comment text."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/LiquidError.swift",
+        "Tests/LiquidTests/InlineCommentCompatibilityTests.swift",
+        "Tests/LiquidTests/DiagnosticOriginTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Render and include interrupt boundaries",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving invocation-owned state, cancellation, resource budgets, exact registry identity and existing holds.",
+      "changes": [
+        "Propagate loop interrupts through intermediate node lists with their partial output until consumed by a loop or top-level render.",
+        "Contain interrupts at isolated render boundaries, including render-for, while retaining include propagation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Where input coercion and dynamic loop bounds",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving fixture bytes, quotas, source inspection, cancellation and existing holds.",
+      "changes": [
+        "Allow where to inspect singleton objects and string substrings, preserving nil versus empty-string target semantics and cooperative cancellation.",
+        "Retain property and index expressions in for-loop bounds for per-invocation evaluation and AST inspection."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Legacy dot-prefixed cycle lookup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving strict2, original source provenance and pinned fixtures.",
+      "changes": [
+        "Use the exact original digits of a dot-prefixed legacy cycle operand as a variable lookup, preserving leading zeros and strict2 rejection."
+      ],
+      "files": ["Sources/Liquid/Syntax/Parser.swift", "Tests/LiquidTests/CycleCompatibilityTests.swift"],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Original-source unterminated markup diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance work while preserving original-source authority, strict modes, pinned fixtures, cancellation and source limits.",
+      "changes": [
+        "Report an unterminated outer tag or output delimiter only after verifying no matching terminator exists in the original bytes, retaining the original opening line and column.",
+        "Preserve existing quote diagnostics when an outer terminator is present and leave rewritten or unmapped source on its existing path."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Support/LexerError.swift",
+        "Sources/Liquid/LiquidError.swift",
+        "Tests/LiquidTests/UnterminatedMarkupTests.swift",
+        "Tests/LiquidTests/UnclosedQuoteDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard numeric and word-filter edge cases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving pinned fixtures, finite numeric limits, cancellation and existing holds.",
+      "changes": [
+        "Preserve floating-point identity for abs, render scientific values with Ruby-style mantissas, and coerce booleans to zero for round.",
+        "Compare numeric sort properties numerically and split truncatewords on Ruby's ASCII word separators."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/FilterEdgeCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Partial argument separators and include-for aliases",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving loader identity, binding evaluation, budgets, cancellation and existing holds.",
+      "changes": [
+        "Recognize include-for aliases and comma-separated named arguments after with/for bindings in include and render.",
+        "Preserve exact registry resolution and existing argument evaluation, with public regressions for both loader families."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Documentation block closing markup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance improvements while preserving pinned fixtures, exact tag-name boundaries, source limits and cancellation.",
+      "changes": [
+        "Recognize enddoc by its exact tag name and allow ignored closing markup, retaining nested-block and unclosed-block rejection.",
+        "Update the previous conservative authored rejection control after verifying Ruby accepts the same original source."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/DocDelimiterCompatibilityTests.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify table row attribute parsing",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining syntax modes, fixtures and resource controls.",
+      "changes": [
+        "Scan ignored markup and recognized attributes in lax and strict table rows; support strict2 comma separators and the accepted but unused range attribute.",
+        "Preserve strict2 rejection of unknown attributes and public rendering boundaries."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/TableRowCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Filter argument boundary compatibility",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving syntax mode distinctions and pinned cases.",
+      "changes": [
+        "Accept empty filter argument lists and terminal commas in lax and strict2 modes while preserving strict-mode rejection and invalid interior comma diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Comment closing-tag compatibility",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving nested comments, source limits and whitespace control.",
+      "changes": [
+        "Consume ignored closing markup through its actual delimiter while preserving exact tag-name boundaries and right whitespace trimming."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Strict loop and case header diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining first-rejection and syntax-mode boundaries.",
+      "changes": [
+        "Parse strict2 case and iteration headers as Shopify expressions rather than filter chains, preserving the original trailing-pipe rejection.",
+        "Present the pinned missing-in-clause error for strict2 loops."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LoopHeaderDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Assignment precheck and empty output markup",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving first-rejection order, source locations and whitespace behavior.",
+      "changes": [
+        "Present the original strict2 assignment precheck tokens at their rejection sites.",
+        "Accept blank output and preserve Shopify whitespace trimming for the shared dash in {{-}}."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/AssignmentAndEmptyOutputTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Filter boundary first-rejection preservation",
+      "scopeDecision": "The maintainer requires pinned parser cases and original rejection order to be preserved.",
+      "changes": [
+        "Accept a filter pipe as an empty-argument boundary only when it begins a named filter; retain the pinned invalid-expression rejection for a dangling pipe."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Correction of dangling-pipe diagnostic expectation",
+      "scopeDecision": "The maintainer authorized Shopify compatibility while preserving the pinned fixture and reference; the prior authored test disagreed with both.",
+      "changes": [
+        "Correct the authored regression to the current pinned case and pinned Ruby behavior: a dangling filter pipe rejects the missing filter identifier.",
+        "Supersede the preceding dangling-pipe adaptation; preserve the failed native evidence and leave all fixture bytes unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ExpressionTokenDiagnosticTests.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax incomplete root lookup",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance with pinned fixtures, strict modes and resource limits preserved.",
+      "changes": [
+        "Preserve Ruby lax terminal incomplete root-lookup behavior without creating additional indirection, while keeping strict modes unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxIncompleteLookupTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax digit-leading identifiers and filter suffixes",
+      "scopeDecision": "The maintainer commissioned Shopify conformance with strict parser modes and pinned fixtures preserved.",
+      "changes": [
+        "Recognize digit-leading words in lax output markup and preserve Ruby lax handling of a terminal filter parenthesis."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxIdentifierFilterTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Bounded lax filter scanning",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving strict parser behavior and pinned fixtures.",
+      "changes": [
+        "Recognize Ruby lax filter name punctuation and terminal unmatched quote boundaries without rewriting source bytes.",
+        "Retain strict parser rejection and tests for unterminated actual string arguments."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax unknown conditions and short-circuit evaluation",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving parser modes, bounded execution and pinned fixtures.",
+      "changes": [
+        "Represent lax unknown operators in the existing expression tree and defer their error until evaluation, preserving inspection and validation traversal.",
+        "Short-circuit logical and/or evaluation and preserve existing diagnostic recovery and blank-block treatment."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Expression.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Support/TemplateValidation.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Tests/LiquidTests/LaxUnknownConditionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Lax numeric fragments and range scanning",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance while preserving strict modes, pinned fixtures and source bounds.",
+      "changes": [
+        "Recognize Ruby lax bare dot-number fragments and its three-dot parenthesized range behavior, keeping strict parser rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxNumericFragmentTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Nil truncation input",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving public error recovery and pinned fixtures.",
+      "changes": [
+        "Return nil from truncate and truncatewords before coercing their length argument, matching the pinned Ruby implementation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/NilTruncationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Tag boundary and trailing lookup diagnostics",
+      "scopeDecision": "The maintainer commissioned Shopify conformance and preservation of pinned fixtures and first-rejection locations.",
+      "changes": [
+        "Report Shopify errors for numeric strict capture names, unexpected block tags, missing cycle values and incomplete partial arguments.",
+        "Correct authored trailing-dot expectations to the unchanged pinned fixtures and Ruby reference."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/TagBoundaryDiagnosticTests.swift",
+        "Tests/LiquidTests/IdentifierNumberDiagnosticTests.swift",
+        "Tests/LiquidTests/TrailingTokenDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "String inputs to map",
+      "scopeDecision": "The maintainer commissioned Shopify core conformance while retaining dependency-free and safe host value access.",
+      "changes": [
+        "Wrap scalar strings for map and use Ruby-compatible string-key substring selection without exposing arbitrary host methods."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/MapStringCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Capture assignment scope and lax names",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving separate render isolation and exact registry behavior.",
+      "changes": [
+        "Write capture results to the current render root so they persist after loop scopes, preserving isolated render state.",
+        "Accept the reference lax and strict quoted-name capture behavior while retaining strict2 rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CaptureScopeCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Comment opening markup and unclosed body",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving comment nesting and source locations.",
+      "changes": [
+        "Consume ignored comment opening markup and identify an unclosed comment when unterminated output markup consumes its closing tag."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Preserve inline comment boundaries",
+      "scopeDecision": "The maintainer requires preservation of existing qualified behavior while closing Shopify compatibility gaps.",
+      "changes": [
+        "Distinguish synthetic inline-comment tokens from opening block-comment tokens; retain the initial failed independent comparison and its seven regressions."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard filter error and HTML boundaries",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining existing fixture and error recovery contracts.",
+      "changes": [
+        "Report the Ruby arity error for missing split arguments and reject incompatible primitive sort comparisons.",
+        "Match Shopify strip_html block and tag scanning semantics."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterBoundaryTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Trailing-dot authored regression alignment",
+      "scopeDecision": "The maintainer requires pinned Shopify fixture and reference authority while preserving R6 rejection locations and original case histories.",
+      "changes": [
+        "Align three supplementary authored assertions for {{ x. }} with the unchanged pinned Ruby expected identifier error, preserving line and column checks.",
+        "Retain the initial failed full native lane and preserve the original R6 case inventory."
+      ],
+      "files": [
+        "Tests/LiquidTests/RecoveredDiagnosticTests.swift",
+        "Tests/LiquidTests/IdentifierStringDiagnosticTests.swift",
+        "Tests/LiquidTests/R6ExpectedTokenTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Stack-safe template parsing",
+      "scopeDecision": "The maintainer commissioned stack-safe deep template parsing while preserving the configured depth limit, conformance fixtures, diagnostics and cancellation.",
+      "changes": [
+        "Parse nested if, unless, for, tablerow, capture, case and ifchanged blocks using explicit frames and the original header parsers.",
+        "Parse nested bracket accesses with an explicit stack; reject unsupported call syntax at its language boundary rather than recursively constructing an unadmitted expression.",
+        "Retain logical nesting checks, cancellation and source-bound public tests through the supported explicit limit."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/DeepParserStackTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Stack-safe multiline liquid normalization",
+      "scopeDecision": "The maintainer commissioned stack-safe deep template parsing while preserving multiline liquid behavior and resource limits.",
+      "changes": [
+        "Normalize rewritten liquid-tag AST bodies with an explicit postorder work stack, preserving whitespace filtering and branch order.",
+        "Check cancellation while traversing and cover valid, over-limit and mixed multiline blocks."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/DeepParserStackTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Closed system descriptor admission",
+      "scopeDecision": "Local independent preparation for the requested Content and Vapor handshake; no rich environment or source acceptance is claimed.",
+      "changes": [
+        "Add a finite checked Sendable descriptor carrier for the seven supplied field names, validate field kinds, duplicates, UTF-8 capacities and cancellation.",
+        "Keep type-name vocabulary and Content provenance at the host boundary; do not decide absent descriptor, policy identity or propagation."
+      ],
+      "qualification": "Public-only regression and external CI receipts qualify only this standalone carrier. Full rich environment, rendering, inspection, conformance, performance, merge and release remain pending."
+    },
+    {
+      "area": "System policy identity admission",
+      "scopeDecision": "Thor adopted bounded opaque exact-byte policy identity with a closed versioned context; generic construction does not establish Content provenance or placement.",
+      "changes": [
+        "Add checked Sendable role, opaque byte and context identity admission with finite capacities and cancellation.",
+        "Add public regression controls for exact byte identity, context distinction, boundaries and cancellation."
+      ],
+      "qualification": "Pending exact-source qualification. This component does not implement a rich environment, rendering, complete conformance, performance or release acceptance."
+    },
+    {
+      "area": "Resident system environment admission",
+      "scopeDecision": "Thor authorized closed bounded values and the three reviewed Content/Vapor handshake decisions.",
+      "changes": [
+        "Admit immutable recursive resident values, exact ordered names, qualified representation contexts and finite repeated-occurrence construction quotas.",
+        "Represent an unadmitted descriptor distinctly from an admitted empty descriptor; leave renderer and extension syntax for subsequent implementation.",
+        "Preserve standard Liquid, fixtures, root dependencies and Content issuance boundaries."
+      ],
+      "qualification": "Requires actual exact-source tests. This admission component alone does not implement or qualify rich rendering, syntax, propagation, Content issuance, performance or release."
+    },
+    {
+      "area": "Closed system environment rendering",
+      "scopeDecision": "Maintainer adopted the three bounded Content and Vapor handshake choices for isolated implementation.",
+      "changes": [
+        "Add an opt-in closed system syntax profile and exact-registry rendering with typed system property availability.",
+        "Retain child decorations on selection and recursively strip them at value extraction and custom filter boundaries.",
+        "Charge invocation-owned evaluation and context budgets and check partial profile compatibility before rendering.",
+        "Preserve standard mode, pinned fixtures, dependency-free core and host responsibility for provenance and placement."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidExtensionProfile.swift",
+        "Sources/Liquid/LiquidSystemError.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidDependencyInspection.swift",
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Sources/Liquid/Rendering",
+        "Sources/Liquid/Support",
+        "Sources/Liquid/Syntax",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/SystemEnvironment.md",
+        "Documentation/README.md"
+      ],
+      "qualification": "Actual source-bound test results and remaining limitations are recorded externally. No complete conformance, performance, downstream acceptance, merge or release is asserted."
+    },
+    {
+      "area": "System primary-value dispatch parity",
+      "scopeDecision": "Address the downstream handshake review while retaining all existing holds and selection semantics.",
+      "changes": [
+        "Dispatch decorated dynamic keys and built-in arguments by their primary values, preserving default fallback identity.",
+        "Compare, flatten and filter decorated children using their primary values while retaining selected child decorations.",
+        "Use primary values for dynamic partial names, include/render collections and loop limits or offsets while retaining exact lookup precedence and selected children.",
+        "Add public regressions for the three independently reproduced Vapor findings and related collection and metadata boundaries."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/SystemRenderingTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Record exact-source qualification and downstream review externally; no conformance, performance, merge or release acceptance is asserted."
+    },
+    {
+      "area": "Rich system environment and conformance reconciliation",
+      "scopeDecision": "The maintainer commissioned reconciliation of the retained rich environment with the owner-selected conformance and stack-safe parser work, preserving exact registry and downstream holds.",
+      "changes": [
+        "Preserve both source histories and all retained adaptation records; integrate the closed system profile with syntax-mode-aware stack-safe parsing and original-byte diagnostics.",
+        "Reconcile system-primary value dispatch with current filters, rendering, selection, loop budgets, exact-name lookup, and host-input render isolation.",
+        "Add public cross-boundary tests for multiline liquid syntax, exact registry render scope, system selection and lax filter scanning."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidTemplate.swift",
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Local source-bound qualification and downstream handshake remain pending; no complete conformance, performance, merge, publication or release approval is implied."
+    },
+    {
+      "area": "Decorated string selection during reconciliation",
+      "scopeDecision": "The maintainer requires the closed system selection contract while preserving Shopify where behavior.",
+      "changes": [
+        "Apply substring selection to a decorated string primary value while retaining the selected wrapper and its descriptor."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift"
+      ],
+      "qualification": "Source-bound checks and downstream review remain pending; conformance, performance, release and publication holds remain."
     }
   ]
 }

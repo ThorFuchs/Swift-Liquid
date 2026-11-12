@@ -22,14 +22,36 @@ Standard surface:
 time. Like Shopify's table-row tag, it coerces string attributes through their
 integer prefix and emits an empty row for an empty, non-nil collection. Its
 `col_last` indicates the configured last column, including in a partial row.
+`for` bounds may also read properties and indexed values at render time.
+
 In lax and strict modes, `cycle` uses a leading expression in a
 comma-separated fragment even if that fragment has trailing tokens. Strict2
 validates the full cycle markup.
+
+For an unfiltered output expression, lax mode also retains a complete leading
+expression when it is followed by one identifier, number, string or `=`, or by
+a whitespace-separated terminal `!`, `<`, `>` or `-`. Strict and strict2 continue
+to reject that markup.
+The same bounded single-token rule applies to unfiltered lax assignment values.
+Lax and strict `case`/`when` operands retain their leading expression when
+trailing markup follows; in original source, contiguous `foo=bar` and `foo=>bar`
+lookup fragments follow Ruby's legacy lookup behavior. Strict2 keeps its full-markup
+validation.
+
+The `where` filter accepts a single object as well as an array; for string
+items, its property argument is a substring lookup, including an empty string.
+
+Inline `#` comments allow blank continuation lines. Once comment markup has
+started, each nonblank continuation line must begin with `#`; an invalid line
+produces a syntax error. The first markup line follows whitespace after the tag
+name, including any intervening newlines.
 
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+Loop interrupts remain inside an isolated `render`; `include` shares the
+caller's interrupt flow. Output produced before an interrupt is retained.
 See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
 
 A case evaluates its current operand before each when value, in source order.
@@ -57,6 +79,9 @@ than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
+`truncatewords` recognizes Ruby's ASCII word separators; non-ASCII whitespace
+inside a word remains part of that word. Numeric sorting of object properties
+compares numeric values rather than their rendered strings.
 Keys and equality retain Unicode scalar spelling. Template output concatenates
 array elements and presents objects using Ruby-style inspection, including nested
 strings, arrays and null values. Case mapping uses the native

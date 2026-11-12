@@ -44,6 +44,7 @@ internal final class Lexer {
     private let bytes: [UInt8]
     private let sourceProvenance: DiagnosticSourceProvenance
     private let syntaxMode: LiquidSyntaxMode
+    private let extensionProfile: LiquidExtensionProfile
 
     private var byteIndex: Int = 0
     
@@ -58,10 +59,11 @@ internal final class Lexer {
     // MARK: - Initialization
     
     internal init(_ input: String, sourceProvenance: DiagnosticSourceProvenance = .unmapped,
-                  syntaxMode: LiquidSyntaxMode = .lax) {
+                  syntaxMode: LiquidSyntaxMode = .lax, extensionProfile: LiquidExtensionProfile = .standard) {
         self.bytes = Array(input.utf8)
         self.sourceProvenance = sourceProvenance
         self.syntaxMode = syntaxMode
+        self.extensionProfile = extensionProfile
     }
     
     // MARK: - Public Interface
@@ -81,6 +83,25 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                // Ruby tokenizes the outer delimiter before interpreting
+                // quotes. Present an unclosed construct only when the
+                // original bytes contain no matching outer terminator.
+                if case .unterminatedString = error, case .original = sourceProvenance,
+                   firstToken < tokens.count {
+                    let opening = tokens[firstToken]
+                    let variable = opening.type == .variableStart
+                    if variable || opening.type == .tagStart {
+                        let first: UInt8 = variable ? Self.closeBrace : Self.percent
+                        var index = opening.position + 2
+                        var found = false
+                        while index + 1 < bytes.count {
+                            if index & 255 == 0 { try Task.checkCancellation() }
+                            if bytes[index] == first && bytes[index + 1] == Self.closeBrace { found = true; break }
+                            index += 1
+                        }
+                        if !found { throw LexerError.unclosedMarkup(variable: variable, opening: opening) }
+                    }
+                }
                 if syntaxMode == .strict2, case .unclosedDelimiter("nested doc", _) = error,
                    case .original = sourceProvenance, firstToken < tokens.count,
                    tokens[firstToken].type == .tagStart {
@@ -251,6 +272,7 @@ internal final class Lexer {
                 try tokenizeVariable(&tokens, start: startPosition)
                 return
             } else if peek() == Self.percent {
+                let openingIndex = tokens.count
                 try tokenizeTag(&tokens, start: startPosition)
                 if tokens.count >= 2, case .identifier(let name) = tokens[tokens.count - 2].type,
                    name.equals("doc") {
@@ -258,8 +280,9 @@ internal final class Lexer {
                 }
                 // After tokenizing a comment tag, skip to endcomment
                 // (avoids lexer errors from invalid syntax inside comments)
-                if tokens.count >= 2,
-                   tokens[tokens.count - 2].type == .comment {
+                if tokens.count > openingIndex + 1,
+                   tokens[openingIndex + 1].type == .comment,
+                   tokens[openingIndex + 1].position != startPosition.position {
                     try skipCommentBlock(&tokens)
                 }
                 // After tokenizing a raw tag, skip to endraw
@@ -278,7 +301,9 @@ internal final class Lexer {
 
     private func skipDocBlock(_ tokens: inout [Token]) throws(LexerError) {
         let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
-        guard let closing = remaining.range(of: #"\{%-?\s*enddoc\s*-?%\}"#, options: .regularExpression) else {
+        // Ruby recognizes the closing tag by name and ignores its markup.
+        // Keep the name boundary so `enddocExtra` does not close the block.
+        guard let closing = remaining.range(of: #"\{%-?\s*enddoc(?=\s|%|-%)(?s:.*?)%\}"#, options: .regularExpression) else {
             if syntaxMode == .strict2, case .original = sourceProvenance,
                remaining.range(of: #"\{%-?\s*doc(?=\s|%)[^{}]*?%\}"#, options: .regularExpression) != nil {
                 throw LexerError.unclosedDelimiter("nested doc", position: byteIndex)
@@ -310,6 +335,10 @@ internal final class Lexer {
                 let remaining = String(decoding: bytes[byteIndex...], as: UTF8.self)
                 guard let close = remaining.range(of: "}}"),
                       remaining.range(of: "endcomment").map({ close.lowerBound < $0.lowerBound }) ?? true else {
+                    if syntaxMode == .strict2, case .original = sourceProvenance,
+                       let opening = tokens.last(where: { $0.type == .tagStart }) {
+                        throw LexerError.unclosedShopifyBlock("comment", opening: opening)
+                    }
                     throw LexerError.unclosedDelimiter("{{", position: byteIndex)
                 }
             }
@@ -340,16 +369,17 @@ internal final class Lexer {
                 if wordLen == 10, word.elementsEqual("endcomment".utf8) {
                     depth -= 1
                     if depth == 0 {
-                        // Emit tagStart, endcomment, tagEnd
+                        // Ruby ignores closing-tag markup, but the complete tag
+                        // still has to end at an actual %} delimiter.
+                        while byteIndex + 1 < end && !(bytes[byteIndex] == Self.percent && bytes[byteIndex + 1] == Self.closeBrace) {
+                            advance()
+                        }
+                        guard byteIndex + 1 < end else { return }
+                        let trimRight = byteIndex > wordStart && bytes[byteIndex - 1] == Self.dash
+                        advanceASCII() // %
+                        advanceASCII() // }
                         tokens.append(Token(type: .tagStart, position: tagStartPos, line: tagStartLine, column: tagStartCol))
                         tokens.append(Token(type: .endcomment, position: tagStartPos, line: tagStartLine, column: tagStartCol))
-                        skipWhitespace()
-                        // Skip optional trim marker before %}
-                        let trimRight = byteIndex < end && bytes[byteIndex] == Self.dash
-                        if trimRight { advanceASCII() }
-                        // Skip %}
-                        if byteIndex < end, bytes[byteIndex] == Self.percent { advanceASCII() }
-                        if byteIndex < end, bytes[byteIndex] == Self.closeBrace { advanceASCII() }
                         tokens.append(Token(type: .tagEnd, position: tagStartPos, line: tagStartLine, column: tagStartCol, trimRight: trimRight))
                         context = .text
                         return
@@ -491,6 +521,24 @@ internal final class Lexer {
         }
     }
 
+    // The lax Ruby variable parser may keep a complete leading expression
+    // when a single, whitespace-separated punctuation suffix precedes `}}`.
+    // Keep filtered and ambiguous markup on the existing lexer path.
+    private func isLaxTerminalOutputSuffix(_ tokens: [Token], at offset: Int) -> Bool {
+        guard offset > 0, bytes[offset - 1].isWhitespaceByte,
+              let opening = tokens.lastIndex(where: { $0.type == .variableStart }),
+              opening + 1 < tokens.count,
+              !tokens[(opening + 1)...].contains(where: { $0.type == .filter }),
+              let last = tokens.last else { return false }
+        switch last.type {
+        case .identifier, .number, .string, .rightBracket, .rightParen: break
+        default: return false
+        }
+        var next = offset + 1
+        while next < bytes.count && bytes[next].isWhitespaceByte { next += 1 }
+        return next + 1 < bytes.count && bytes[next] == Self.closeBrace && bytes[next + 1] == Self.closeBrace
+    }
+
     private func tokenizeVariable(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
         advanceASCII() // consume first {
         advanceASCII() // consume second {
@@ -500,6 +548,9 @@ internal final class Lexer {
         if trimLeft {
             advanceASCII() // consume -
         }
+        // Shopify treats the shared dash in `{{-}}` as both trim markers.
+        let sharedTrim = trimLeft && byteIndex + 1 < bytes.count
+            && bytes[byteIndex] == Self.closeBrace && bytes[byteIndex + 1] == Self.closeBrace
 
         context = .variable  // Enter variable context
         tokens.append(Token(
@@ -588,6 +639,10 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .equals, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
+            case let suffix where syntaxMode == .lax && (suffix == Self.exclamation || suffix == Self.lessThan || suffix == Self.greaterThan)
+                && isLaxTerminalOutputSuffix(tokens, at: tokenPosition):
+                advanceASCII()
+
             // Strict2 recognizes comparison tokens in output markup before
             // rejecting them in the expression grammar. This preserves an
             // earlier parser error, such as a doubled filter-argument comma.
@@ -605,14 +660,54 @@ internal final class Lexer {
                 tokens.append(Token(type: kind, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
             case Self.doubleQuote, Self.singleQuote:
-                let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
-                try tokenizeString(&tokens, start: tokenStart, quote: byte)
+                var probe = byteIndex + 1
+                while probe < end && bytes[probe].isWhitespaceByte { probe += 1 }
+                let atBoundary = probe < end && (bytes[probe] == Self.pipe ||
+                    (bytes[probe] == Self.closeBrace && probe + 1 < end && bytes[probe + 1] == Self.closeBrace))
+                var laterQuote = false
+                if atBoundary {
+                    var scan = probe
+                    while scan < end {
+                        if bytes[scan] == Self.closeBrace && scan + 1 < end && bytes[scan + 1] == Self.closeBrace { break }
+                        if bytes[scan] == byte { laterQuote = true; break }
+                        scan += 1
+                    }
+                }
+                if syntaxMode == .lax, context == .filter, atBoundary, !laterQuote, let previous = tokens.last, case .string = previous.type {
+                    advanceASCII() // unmatched trailing quote ignored by lax scanning
+                } else {
+                    let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
+                    try tokenizeString(&tokens, start: tokenStart, quote: byte)
+                }
+
+            case 0x24 where extensionProfile == .closedSystemV1 && tokens.last?.type == .dot && tokens.last!.position + 1 == tokenPosition:
+                advanceASCII()
+                let nameStart = byteIndex
+                while byteIndex < end, bytes[byteIndex].isIdentifierContinueByte { advanceASCII() }
+                guard byteIndex > nameStart else { throw LexerError.unexpectedCharacter("$", position: tokenPosition) }
+                tokens.append(Token(type: .identifier(InlineString(utf8: bytes[tokenPosition..<byteIndex])), position: tokenPosition, line: tokenLine, column: tokenColumn))
+
+            case 0x24 where syntaxMode == .lax && context == .filter:
+                var probe = byteIndex
+                while probe < end && bytes[probe] == 0x24 { probe += 1 }
+                var boundary = probe
+                while boundary < end && bytes[boundary].isWhitespaceByte { boundary += 1 }
+                guard let previous = tokens.last, case .identifier = previous.type,
+                      boundary < end, bytes[boundary] == Self.colon || bytes[boundary] == Self.pipe ||
+                        (bytes[boundary] == Self.closeBrace && boundary + 1 < end && bytes[boundary + 1] == Self.closeBrace) else {
+                    throw LexerError.unexpectedCharacter(currentCharacter, position: byteIndex)
+                }
+                while byteIndex < probe { advanceASCII() }
 
             case let c where c.isDigitByte:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeNumber(&tokens, start: tokenStart)
 
             case Self.dash:
+                if syntaxMode == .lax && isLaxTerminalOutputSuffix(tokens, at: tokenPosition) {
+                    advanceASCII()
+                    break
+                }
                 // Check if this is a negative number literal (-5, -3.14)
                 // vs a trim marker (-%}) — look ahead for digit
                 let nextIdx = byteIndex + 1
@@ -655,7 +750,7 @@ internal final class Lexer {
         }
 
         // Check for -}} trim marker before closing
-        var trimRight = false
+        var trimRight = sharedTrim
         if byteIndex < end, bytes[byteIndex] == Self.dash {
             trimRight = true
             advanceASCII() // consume -
@@ -703,6 +798,11 @@ internal final class Lexer {
         // If the first non-whitespace character is #, skip everything until %} or -%}
         // Each continuation line must also start with # (enforce leading hash)
         if byteIndex < bytes.count, bytes[byteIndex] == 0x23 { // 0x23 = '#'
+            _ = advance() // consume the tag name
+            // Ruby consumes whitespace after the tag name before establishing
+            // the first markup line. Blank continuation lines are allowed.
+            skipWhitespace()
+            let markupStart = Token(type: .comment, position: byteIndex, line: line, column: column)
             while byteIndex < bytes.count {
                 if bytes[byteIndex] == Self.dash,
                    byteIndex + 2 < bytes.count,
@@ -717,11 +817,8 @@ internal final class Lexer {
                 }
                 // Check for newline — next non-whitespace on new line must be #
                 if bytes[byteIndex] == 0x0A { // newline
-                    advanceASCII()
-                    // Skip leading whitespace on new line
-                    while byteIndex < bytes.count, bytes[byteIndex] == 0x20 || bytes[byteIndex] == 0x09 {
-                        advanceASCII()
-                    }
+                    _ = advance()
+                    skipWhitespace()
                     // Check for %} / -%} (end of tag)
                     if byteIndex < bytes.count {
                         if (bytes[byteIndex] == Self.percent && byteIndex + 1 < bytes.count && bytes[byteIndex + 1] == Self.closeBrace) ||
@@ -730,12 +827,15 @@ internal final class Lexer {
                         }
                         // Next non-ws character must be #
                         if bytes[byteIndex] != 0x23 {
+                            if case .original = sourceProvenance {
+                                throw LexerError.invalidInlineComment(opening: markupStart)
+                            }
                             throw LexerError.unexpectedCharacter(Character(UnicodeScalar(bytes[byteIndex])), position: byteIndex)
                         }
                     }
                     continue
                 }
-                advanceASCII()
+                _ = advance()
             }
             // Emit comment token so parser recognizes it
             tokens.append(Token(
@@ -899,6 +999,18 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .rightBracket, position: tokenPosition, line: tokenLine, column: tokenColumn))
                 
+            case 0x24: // A dollar-prefixed name is only admitted directly after a dot.
+                guard extensionProfile == .closedSystemV1,
+                      let previous = tokens.last, previous.type == .dot,
+                      previous.position + 1 == tokenPosition else {
+                    throw LexerError.unexpectedCharacter("$", position: tokenPosition)
+                }
+                advanceASCII()
+                let nameStart = byteIndex
+                while byteIndex < end, bytes[byteIndex].isIdentifierContinueByte { advanceASCII() }
+                guard byteIndex > nameStart else { throw LexerError.unexpectedCharacter("$", position: tokenPosition) }
+                tokens.append(Token(type: .identifier(InlineString(utf8: bytes[tokenPosition..<byteIndex])), position: tokenPosition, line: tokenLine, column: tokenColumn))
+
             case Self.doubleQuote, Self.singleQuote:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeString(&tokens, start: tokenStart, quote: byte)
@@ -1185,6 +1297,27 @@ internal final class Lexer {
 
             hasDot = true
             advanceASCII()
+        }
+
+        // Outside a parenthesized range, Ruby's lax numeric fragment treats
+        // a run of dots and digits as a float prefix (for example 1..3 → 1.0).
+        if syntaxMode == .lax, !hasDot, !isAtEnd, current == Self.dot, peek() == Self.dot,
+           tokens.last?.type != .leftParen {
+            while !isAtEnd && (current == Self.dot || current.isDigitByte) { advanceASCII() }
+            let value = negative ? -integerPart : integerPart
+            guard value.isFinite else { throw LexerError.invalidNumber("numeric fragment", position: start.position) }
+            tokens.append(Token(type: .number(value, isFloat: true), position: start.position, line: start.line, column: start.column))
+            return
+        }
+
+        // In lax output markup a digit-leading word is a variable name,
+        // rather than a number followed by a separate identifier.
+        if syntaxMode == .lax, context == .variable, !negative, !hasDot,
+           !isAtEnd, current.isIdentifierStartByte {
+            while !isAtEnd && current.isIdentifierContinueByte { advance() }
+            let name = makeInlineString(from: start.position, to: byteIndex)
+            tokens.append(Token(type: .identifier(name), position: start.position, line: start.line, column: start.column))
+            return
         }
 
         var number = hasDot ? integerPart + (fractionalPart / divisor) : integerPart

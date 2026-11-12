@@ -21,29 +21,23 @@ extension Renderer {
     }
     
     internal func truncateWords(_ str: String, count: Int, ending: String) -> String {
-        // Split on any whitespace (space, tab, newline), normalize to single spaces
-        let words = str.split(omittingEmptySubsequences: true, whereSeparator: { $0.isWhitespace })
+        // Ruby String#split(" ") recognizes ASCII whitespace, not every
+        // Unicode whitespace scalar.
+        let words = str.unicodeScalars.split(omittingEmptySubsequences: true) {
+            [9, 10, 11, 12, 13, 32].contains($0.value)
+        }
         if words.count <= count { return str }
 
-        return words.prefix(count).joined(separator: " ") + ending
+        return words.prefix(count).map { String(String.UnicodeScalarView($0)) }.joined(separator: " ") + ending
     }
     
     internal func stripHTML(_ str: String) -> String {
         var result = str
-        // First strip <script>...</script> and <style>...</style> blocks entirely
-        for tag in ["script", "style"] {
-            let blockPattern = "<\(tag)[^>]*>.*?</\(tag)>"
-            if let regex = try? NSRegularExpression(pattern: blockPattern, options: [.caseInsensitive, .dotMatchesLineSeparators]) {
-                result = regex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
-            }
+        // Shopify applies one case-sensitive block expression before removing tags.
+        if let blocks = try? NSRegularExpression(pattern: "<script.*?</script>|<!--.*?-->|<style.*?</style>", options: .dotMatchesLineSeparators) {
+            result = blocks.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
         }
-        // Then strip HTML comments
-        if let commentRegex = try? NSRegularExpression(pattern: "<!--.*?-->", options: .dotMatchesLineSeparators) {
-            result = commentRegex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
-        }
-        // Then strip remaining tags
-        let tagPattern = "<[^>]+>"
-        guard let regex = try? NSRegularExpression(pattern: tagPattern, options: .caseInsensitive) else {
+        guard let regex = try? NSRegularExpression(pattern: "<.*?>", options: .dotMatchesLineSeparators) else {
             return result
         }
         return regex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
@@ -79,12 +73,12 @@ extension Renderer {
             return array.filter { item in
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
-                return !(val is NSNull)
+                return !(systemPrimary(val) is NSNull)
             }
         }
 
         return array.compactMap { item -> Any? in
-            if item is NSNull { return nil }
+            if systemPrimary(item) is NSNull { return nil }
             return item
         }
     }
@@ -124,30 +118,33 @@ extension Renderer {
         // where filter: filters an array to elements where a property equals a value
         // Usage: {{ products | where: 'available', true }}
         // Usage: {{ products | where: 'title' }}  (truthy check)
-        guard let array = value as? [Any] else {
-            if value is NSNull { return value }
-            throw RenderError.typeError(expected: "array", actual: "\(type(of: value))", operation: "where")
-        }
+        let array: [Any]
+        if let items = value as? [Any] { array = items }
+        else if isDictLike(value) || value is String { array = [value] }
+        else if value is NSNull { return value }
+        else { throw RenderError.typeError(expected: "array", actual: "\(type(of: value))", operation: "where") }
         guard args.count >= 1 else { return value }
 
         let property = stringify(args[0])
-        // Treat nil/NSNull/empty second arg as undefined → truthy check
+        // Ruby treats nil as an omitted target, but an empty string is a target.
         let targetArg: Any? = args.count >= 2 ? args[1] : nil
-        let hasTarget = targetArg != nil && !(targetArg is NSNull) && !((targetArg as? String) == "")
-
-        if hasTarget {
-            return array.filter { item in
-                let itemValue = getObjectProperty(item, key: property)
-                return areValuesEqual(itemValue, targetArg)
+        let hasTarget = targetArg != nil && !(targetArg is NSNull)
+        var selected: [Any] = []
+        for item in array {
+            try Task.checkCancellation()
+            let itemValue: Any?
+            if let string = systemPrimary(item) as? String {
+                itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
+            } else {
+                itemValue = getObjectProperty(item, key: property)
             }
-        } else {
-            // Single-arg: keep items where property is truthy
-            return array.filter { item in
-                guard let propVal = getObjectProperty(item, key: property) else { return false }
-                if propVal is NSNull { return false }
-                return isTruthy(propVal)
+            if hasTarget {
+                if areValuesEqual(itemValue, targetArg) { selected.append(item) }
+            } else if let itemValue, !(itemValue is NSNull), isTruthy(itemValue) {
+                selected.append(item)
             }
         }
+        return selected
     }
     
     internal func mapFilter(_ value: Any, args: [Any]) throws -> Any {
@@ -158,10 +155,10 @@ extension Renderer {
         if let arr = value as? [Any] {
             // Flatten nested arrays (Shopify behavior)
             array = arr.flatMap { item -> [Any] in
-                if let nested = item as? [Any] { return nested }
+                if let nested = systemPrimary(item) as? [Any] { return nested }
                 return [item]
             }
-        } else if isDictLike(value) || value is RuntimeSelf {
+        } else if isDictLike(value) || value is RuntimeSelf || value is String {
             array = [value]
         } else if value is NSNull {
             return [Any]()
@@ -179,12 +176,14 @@ extension Renderer {
                 result.append(selfValue.lookup(propertyName) ?? NSNull())
             } else if isDictLike(item) {
                 result.append(dictValue(item, forKey: propertyName) as Any? ?? NSNull())
-            } else if item is [Any] {
+            } else if systemPrimary(item) is [Any] {
                 // Empty arrays or nested arrays are not objects
                 throw RenderError.typeError(expected: "hash", actual: "array", operation: "map")
-            } else if item is NSNull {
+            } else if systemPrimary(item) is NSNull {
                 result.append(NSNull())
-            } else if item is Int || item is Double || item is Bool || item is String {
+            } else if let string = systemPrimary(item) as? String {
+                result.append(string.range(of: propertyName, options: .literal) == nil ? NSNull() : propertyName as Any)
+            } else if systemPrimary(item) is Int || systemPrimary(item) is Double || systemPrimary(item) is Bool {
                 throw RenderError.typeError(expected: "hash", actual: "\(type(of: item))", operation: "map")
             } else {
                 result.append(getObjectProperty(item, key: propertyName) ?? NSNull())
@@ -194,6 +193,7 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
+        let object = systemPrimary(object)
         // Handle different object types
         if let val = dictValue(object, forKey: key) { return val }
         else if isDictLike(object) { return nil }
@@ -211,6 +211,7 @@ extension Renderer {
     }
     
     internal func areValuesEqual(_ a: Any?, _ b: Any?) -> Bool {
+        let a = a.map { systemPrimary($0) }; let b = b.map { systemPrimary($0) }
         // Handle nil/NSNull — treat Swift nil and NSNull as equivalent
         let aIsNil = a == nil || a is NSNull
         let bIsNil = b == nil || b is NSNull
@@ -262,12 +263,26 @@ extension Renderer {
                 if aValue == nil && bValue == nil { return false }
                 if aValue == nil { return false }
                 if bValue == nil { return true }
-                return stringify(aValue!) < stringify(bValue!)
+                let left = aValue!, right = bValue!
+                if let a = left as? Int, let b = right as? Int { return a < b }
+                if (left is Int || left is Double), (right is Int || right is Double),
+                   let a = numericValue(left), let b = numericValue(right) { return a < b }
+                return stringify(left) < stringify(right)
             }
         } else {
+            var primitiveKinds = Set<Int>()
+            var booleans = Set<Bool>()
+            for item in array {
+                if let boolean = item as? Bool { primitiveKinds.insert(2); booleans.insert(boolean) }
+                else if item is String { primitiveKinds.insert(1) }
+                else if item is Int || item is Double { primitiveKinds.insert(0) }
+            }
+            if primitiveKinds.count > 1 || booleans.count > 1 {
+                throw RenderError.custom("cannot sort values of incompatible types")
+            }
             // Check for incompatible mixed complex/primitive types
-            let hasComplex = array.contains { isDictLike($0) || $0 is [Any] }
-            let hasPrimitive = array.contains { $0 is String || $0 is Int || $0 is Double || $0 is Bool }
+            let hasComplex = array.contains { isDictLike($0) || systemPrimary($0) is [Any] }
+            let hasPrimitive = array.contains { let v = systemPrimary($0); return v is String || v is Int || v is Double || v is Bool }
             if hasComplex && hasPrimitive {
                 throw RenderError.typeError(expected: "homogeneous array", actual: "mixed complex/primitive types", operation: "sort")
             }
@@ -302,7 +317,12 @@ extension Renderer {
     internal func sumValues(_ value: Any, property: String? = nil) throws -> Any {
         guard let array = value as? [Any] else {
             if let integer = value as? Int { return integer }
-            return numericValue(value) ?? 0
+            guard let number = numericValue(value) else { return 0 }
+            if let string = value as? String {
+                if let integer = Int(string) { return integer }
+                if !string.contains(".") || Double(string) == nil { return try checkedInteger(number) }
+            }
+            return number
         }
         var result: Any = 0
         for item in flattenArray(array) {
@@ -312,8 +332,9 @@ extension Renderer {
                 guard isDictLike(item) else { throw RenderError.typeError(expected: "hash", actual: "value", operation: "sum") }
                 target = dictValue(item, forKey: property) ?? 0
             } else { target = item }
-            if target is Int || target is Double { result = try add(result, target) }
-            else if let text = target as? String {
+            let primary = systemPrimary(target)
+            if primary is Int || primary is Double { result = try add(result, primary) }
+            else if let text = primary as? String {
                 if let integer = Int(text) { result = try add(result, integer) }
                 else if let number = Double(text) { result = try add(result, number) }
             }
