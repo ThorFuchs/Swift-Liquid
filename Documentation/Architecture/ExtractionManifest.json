@@ -1973,6 +1973,44 @@
         "Tests/LiquidTests/ReconciledSystemCompatibilityTests.swift"
       ],
       "qualification": "Source-bound checks and downstream review remain pending; conformance, performance, release and publication holds remain."
+    },
+    {
+      "area": "Decimal array sum compatibility",
+      "scopeDecision": "The maintainer requested further Shopify conformance while preserving fixtures, source histories and existing holds.",
+      "changes": [
+        "Accumulate representable floating array sums as decimals before returning a floating result, matching the pinned Ruby Liquid sum conversion; preserve integer overflow and use the existing arithmetic path where Foundation cannot represent the sum exactly."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public consumer regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Slice integer diagnostics",
+      "scopeDecision": "The maintainer requested Shopify-compatible diagnostics without changing pinned fixtures or recovery and compatibility holds.",
+      "changes": [
+        "Report the pinned Ruby invalid-integer reason for invalid slice offsets and lengths while retaining existing public error categories and nil length behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public consumer regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Raw and doc opening markup diagnostics",
+      "scopeDecision": "The maintainer requested Shopify-compatible parser diagnostics while preserving original-byte source authority and other parser modes.",
+      "changes": [
+        "Present validated strict2 lexical failures in raw and doc opening markup as the existing block-markup syntax error."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
+      ],
+      "qualification": "Public parser regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }

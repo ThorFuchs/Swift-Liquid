@@ -581,26 +581,26 @@ extension Renderer {
             guard let firstArg = args.first else { return value }
             // Float arguments are errors in Shopify Liquid
             if firstArg is Double || isFloatLike(firstArg) {
-                throw RenderError.typeError(expected: "integer", actual: "float", operation: "slice")
+                throw RenderError.custom("invalid integer")
             }
             if firstArg is NSNull {
-                throw RenderError.typeError(expected: "integer", actual: "nil", operation: "slice")
+                throw RenderError.custom("invalid integer")
             }
             guard let rawOffset = integerValue(firstArg) else {
-                throw RenderError.typeError(expected: "integer", actual: "\(type(of: firstArg))", operation: "slice")
+                throw RenderError.custom("invalid integer")
             }
             // Second arg: NSNull/undefined → default to 1; float → error
             var length = 1
             if args.count > 1 {
                 let secondArg = args[1]
                 if secondArg is Double || isFloatLike(secondArg) {
-                    throw RenderError.typeError(expected: "integer", actual: "float", operation: "slice")
+                    throw RenderError.custom("invalid integer")
                 }
                 if secondArg is NSNull {
                     // NSNull → default to 1
                 } else {
                     guard let secondLength = integerValue(secondArg) else {
-                        throw RenderError.typeError(expected: "integer", actual: "\(type(of: secondArg))", operation: "slice")
+                        throw RenderError.custom("invalid integer")
                     }
                     length = secondLength
                 }
