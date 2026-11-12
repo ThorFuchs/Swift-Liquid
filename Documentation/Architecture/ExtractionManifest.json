@@ -1400,6 +1400,22 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Legacy case operands and lax assignment suffixes",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while preserving strict2, original source provenance, pinned fixtures, cancellation and existing holds.",
+      "changes": [
+        "Match bounded original-byte legacy case and when lookup fragments and trailing markup in lax and strict modes without changing strict2 parsing.",
+        "Retain a complete unfiltered lax assignment value for a single terminal token, including inside liquid blocks; preserve strict-mode rejection."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LaxCaseMarkupTests.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

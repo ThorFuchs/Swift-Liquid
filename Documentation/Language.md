@@ -29,6 +29,11 @@ For an unfiltered output expression, lax mode also retains a complete leading
 expression when it is followed by one identifier, number, string or `=`, or by
 a whitespace-separated terminal `!`, `<`, `>` or `-`. Strict and strict2 continue
 to reject that markup.
+The same bounded single-token rule applies to unfiltered lax assignment values.
+Lax and strict `case`/`when` operands retain their leading expression when
+trailing markup follows; in original source, contiguous `foo=bar` and `foo=>bar`
+lookup fragments follow Ruby's legacy lookup behavior. Strict2 keeps its full-markup
+validation.
 
 An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop

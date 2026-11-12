@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxCaseMarkupTests/retainedLookupAndTrailingTextMatchReference()": null,
+    "LiquidTests.LaxCaseMarkupTests/limitsAndCancellationStayTerminal()": null,
     "LiquidTests.LaxOutputTailTests/completeLeadingExpressionSurvivesTerminalSuffix()": null,
     "LiquidTests.LaxOutputTailTests/boundsAndCancellationRemainTerminal()": null,
     "LiquidTests.DynamicIncludeAccessTests/accessNamesResolveAgainstBothTemplateLoaders()": null,

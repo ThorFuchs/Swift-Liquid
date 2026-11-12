@@ -448,6 +448,15 @@ internal final class Parser {
         advance()
         
         let value = try parseExpression()
+        let hasFilters: Bool
+        if case .filtered = value { hasFilters = true } else { hasFilters = false }
+        if syntaxMode == .lax, !hasFilters, nextTokenStorage.type == .tagEnd {
+            switch currentToken.type {
+            case .identifier, .number, .string, .equals, .lessThan, .greaterThan:
+                advance()
+            default: break
+            }
+        }
         try consumeTagEnd()
         
         return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
@@ -1613,9 +1622,38 @@ internal final class Parser {
     }
     
     // MARK: - Complex Tag Parsing (Stubs)
+
+    // Ruby's lax VariableLookup reads contiguous lookup fragments in case
+    // operands even when '=' or '=>' separates their names. Restrict this
+    // adaptation to original, byte-adjacent tokens; strict2 stays unchanged.
+    private func parseCaseOperand() throws -> LiquidExpression {
+        let first = try parseExpression()
+        guard syntaxMode != .strict2, case .original = sourceProvenance,
+              case .variable(let root) = first, current > 0,
+              currentToken.type == .equals, !isOriginalComparison(currentToken),
+              currentToken.position == tokens[current - 1].position + root.string.utf8.count else { return first }
+        let equalsPosition = currentToken.position
+        var propertyIndex = current + 1
+        if propertyIndex < tokens.count, tokens[propertyIndex].type == .greaterThan,
+           tokens[propertyIndex].position == equalsPosition + 1 {
+            propertyIndex += 1
+        }
+        let expectedPosition = equalsPosition + (propertyIndex == current + 2 ? 2 : 1)
+        guard propertyIndex < tokens.count,
+              tokens[propertyIndex].position == expectedPosition,
+              case .identifier(let property) = tokens[propertyIndex].type else { return first }
+        while current <= propertyIndex { advance() }
+        return .access(expr: first, key: .literal(.string(property)), command: true)
+    }
     
     private func parseCaseTag() throws ->ASTNode {
-        let expression = try parseExpression()
+        let expression = try parseCaseOperand()
+        if syntaxMode != .strict2 {
+            while !isAtEnd && currentToken.type != .tagEnd {
+                try Task.checkCancellation()
+                advance()
+            }
+        }
         try consumeTagEnd()
         
         var branches: [CaseBranch] = []
@@ -1661,7 +1699,7 @@ internal final class Parser {
         try consumeTagKeyword(.when, identifier: "when")
 
         var whenValues = makeExpressionBuffer()
-        whenValues.append(try parseExpression())
+        whenValues.append(try parseCaseOperand())
 
         // Parse comma/or/and separated values
         // 'and' in when expressions invalidates the entire when clause (Shopify behavior)
@@ -1669,13 +1707,19 @@ internal final class Parser {
         while currentToken.type == .comma || currentToken.type == .or || currentToken.type == .and {
             if currentToken.type == .and { hasInvalidAnd = true }
             advance()
-            whenValues.append(try parseExpression())
+            whenValues.append(try parseCaseOperand())
         }
         if hasInvalidAnd {
             if syntaxMode == .strict2 { throw ParserError.invalidParameterValue("when", expected: "comma or or") }
             whenValues.removeAll()
         }
 
+        if syntaxMode != .strict2 {
+            while !isAtEnd && currentToken.type != .tagEnd {
+                try Task.checkCancellation()
+                advance()
+            }
+        }
         try consumeTagEnd()
 
         var whenNodes = makeNodeBuffer()
