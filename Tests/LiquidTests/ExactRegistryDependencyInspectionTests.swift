@@ -76,7 +76,7 @@ struct ExactRegistryDependencyInspectionTests {
     func firstLiteralParityAcrossEightRuntimeFamilies(mode: LiquidSyntaxMode) async throws {
         let registry = try GraphRegistry([.init("é", .raw("A{% include 'e\u{301}' %}")),
             .init("e\u{301}", .parsed(LiquidTemplate("B{% render 'K' %}", syntaxMode: mode))),
-            .init("K", .raw("C{% include 'K' %}")), .init("K", .raw("D"))])
+            .init("K", .raw("C{% render 'K' %}")), .init("K", .raw("D"))])
         let engine = LiquidEngine(), root = "{% include 'é' %}"
         let graph = try engine.inspectDependencies(template: root, registry: registry, syntaxMode: mode)
         #expect(try engine.inspectDependencies(LiquidTemplate(root, syntaxMode: mode), registry: registry, syntaxMode: mode) == graph)

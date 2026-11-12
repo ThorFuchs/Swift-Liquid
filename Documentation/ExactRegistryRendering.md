@@ -62,6 +62,8 @@ immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,
 not filter pipelines. Include-for and render-for support explicit aliases, and
 `with`/`for` bindings may be followed by comma-separated named arguments.
+Shopify's render isolation disallows `include` within a render subtree; nested
+`render` remains available and uses the same exact registry lookup.
 For `render ... for`, arrays, ranges, and objects render once per element; a scalar
 renders once, and a nil value leaves any explicitly supplied alias argument intact.
 For `include ... for`, an array renders once per element; other inputs render once.

@@ -40,7 +40,7 @@ internal func inspectTemplate(_ ast: ASTNode, limits: LiquidLimits) throws -> Li
     while let (node, depth) = nodes.popLast() {
         try Task.checkCancellation()
         guard depth < limits.nestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
-        if case .include(_, let reference, _, _) = node {
+        if case .include(_, let reference, _, _, _, _) = node {
             if case .literal(.string(let name)) = reference { partials.insert(ScalarKey(name.string)) }
             else { dynamic = true }
         }

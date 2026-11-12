@@ -73,6 +73,7 @@ internal final class Renderer {
     // Ruby Liquid counts local scopes separately from isolated render contexts.
     internal var liquidBaseScopeDepth = 0
     internal var liquidLocalScopeDepth = 1
+    internal var isolatedRenderDepth = 0
 
     internal func enterLiquidScope() throws {
         try Task.checkCancellation()

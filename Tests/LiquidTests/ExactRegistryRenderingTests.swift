@@ -50,7 +50,7 @@ struct ExactRegistryRenderingTests {
         let registry = try ExactRegistry([
             .init("é", .raw("A{% include 'e\u{301}' %}")),
             .init("e\u{301}", .parsed(LiquidTemplate("B{% render 'K' %}", syntaxMode: mode))),
-            .init("K", .raw("C{% include 'K' %}")), .init("K", .raw("D"))])
+            .init("K", .raw("C{% render 'K' %}")), .init("K", .raw("D"))])
         let source = "{% include 'é' %}|{% render 'e\u{301}' %}|{% include 'K' %}|{% render 'K' %}"
         for root in try roots(source, mode: mode) {
             for family in 0..<4 {

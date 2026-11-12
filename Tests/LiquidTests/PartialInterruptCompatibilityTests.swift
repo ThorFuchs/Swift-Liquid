@@ -4,6 +4,34 @@ import Testing
 
 @Suite("Partial interrupt boundaries")
 struct PartialInterruptCompatibilityTests {
+    @Test func renderDisallowsIncludeInItsIsolatedSubtree() async throws {
+        let engine = LiquidEngine()
+        let reason = "include usage is not allowed in this context"
+        let source = "{% render 'p' %}|{% include 'ok' %}"
+        let partial = "P\n{% include 'ok' %}\nQ"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let parsed = try LiquidTemplate(source, syntaxMode: mode)
+            let templates = ["p": try LiquidTemplate(partial, syntaxMode: mode), "ok": try LiquidTemplate("OK", syntaxMode: mode)]
+            do { _ = try await engine.render(parsed, templates: templates); Issue.record("Expected forbidden include") }
+            catch LiquidError.rendering(let message) { #expect(message == reason) }
+            let recovered = try await engine.renderWithDiagnostics(parsed, templates: templates)
+            #expect(recovered.output == "P\nLiquid error (p line 2): \(reason)\nQ|OK")
+            #expect(recovered.diagnostics.count == 1)
+            #expect(recovered.diagnostics.first?.message == reason)
+            #expect(recovered.diagnostics.first?.line == 2 && recovered.diagnostics.first?.templateName == "p")
+            let registry = try LiquidTemplateRegistry([.init("p", .raw(partial)), .init("ok", .raw("OK"))])
+            #expect(try await engine.renderWithDiagnostics(template: source, registry: registry, syntaxMode: mode).output == recovered.output)
+            let nested = ["p": "{% render 'inner' %}", "inner": "{% include 'ok' %}", "ok": "OK"]
+            let nestedResult = try await engine.renderWithDiagnostics(template: "{% render 'p' %}", templates: nested, syntaxMode: mode)
+            #expect(nestedResult.diagnostics.first?.templateName == "inner")
+            #expect(nestedResult.diagnostics.first?.message == reason)
+            let markerSource = "{% render 'p' %}"
+            let markerTemplates = ["p": "{% include 'ok', __render_isolated__: true %}", "ok": "bad"]
+            let markerResult = try await engine.renderWithDiagnostics(template: markerSource, templates: markerTemplates, syntaxMode: mode)
+            #expect(markerResult.diagnostics.first?.message == reason)
+            #expect(try await engine.render(template: "{% include 'ok', __render_isolated__: true %}", templates: ["ok": "{{ __render_isolated__ }}"], syntaxMode: mode) == "true")
+        }
+    }
     @Test func includeForCarriesPriorOutputAndRestoresBindings() async throws {
         let engine = LiquidEngine()
         let context: LiquidObject = ["items": ["a", "b", "c"], "item": "outer"]

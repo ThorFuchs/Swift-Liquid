@@ -22,7 +22,10 @@ extension Renderer {
         } catch let error as RenderError {
             guard recoveryEnabled, error.renderErrorCategory != .resource,
                   error.renderErrorCategory != .security else { throw error }
-            let location = node.renderLocation
+            let location: RenderLocation?
+            if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
+                location = includeLocation
+            } else { location = node.renderLocation }
             let message = error.message
             diagnostics.append(.init(message: message, line: location?.line, templateName: currentTemplatePath))
             if location?.suppressErrorText == true {
@@ -106,15 +109,18 @@ extension Renderer {
         case .liquid(let nodes):
             return try await renderTemplate(nodes)
 
-        case .include(let template, let reference, let withVars, let asVar):
+        case .include(let template, let reference, let withVars, let asVar, let isRender, _):
+            if isolatedRenderDepth > 0, !isRender {
+                throw RenderError.includeDisabled()
+            }
             if case .access = reference {
                 let value = try await evaluateExpression(reference)
                 guard let name = value as? String else {
                     throw RenderError.templateNotFound(stringify(value))
                 }
-                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, allowContextFallback: false)
+                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: isRender, allowContextFallback: false)
             }
-            return try await renderInclude(template: template, with: withVars, as: asVar)
+            return try await renderInclude(template: template, with: withVars, as: asVar, isRender: isRender)
 
         }
     }

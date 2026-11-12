@@ -2233,6 +2233,30 @@
         "Documentation/ExactRegistryRendering.md"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Shopify include restriction inside render",
+      "scopeDecision": "The maintainer chose full Shopify behavior ahead of downstream adoption, accepting the change from the previous nested-include behavior while retaining exact registry identity and original host input visibility.",
+      "changes": [
+        "Reject include in isolated render subtrees with a typed recoverable runtime reason and the original include line and selected partial name.",
+        "Represent render identity in the AST instead of a user-collidable synthetic argument; retain exact-registry graph and nested render coverage."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/LiquidTemplateInspection.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Support/RenderError.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/LiquidTests/ExactRegistryRenderingTests.swift",
+        "Tests/LiquidTests/ExactRegistryDependencyInspectionTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes. Downstream review, performance and release holds remain."
     }
   ]
 }

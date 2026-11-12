@@ -2386,6 +2386,7 @@ internal final class Parser {
     }
     
     private func parseIncludeTag() throws ->ASTNode {
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
@@ -2484,10 +2485,11 @@ internal final class Parser {
         }
 
         try consumeTagEnd()
-        return .include(template: templateStr, reference: templateName, with: variables.isEmpty ? nil : variables, as: alias)
+        return .include(template: templateStr, reference: templateName, with: variables.isEmpty ? nil : variables, as: alias, location: location)
     }
     
     private func parseRenderTag() throws ->ASTNode {
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
         // Similar to include but with isolated scope
         if syntaxMode == .strict2, currentToken.type == .tagEnd {
             throw LiquidError.syntax(message: "Expected string but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
@@ -2579,11 +2581,7 @@ internal final class Parser {
         }
         
         try consumeTagEnd()
-        // The render tag doesn't exist in the current AST, use include with isolated scope marker.
-        var renderVars = variables
-        renderVars["__render_isolated__"] = .literal(.boolean(true))
-        
-        return .include(template: templateStr, reference: templateName, with: renderVars, as: alias)
+        return .include(template: templateStr, reference: templateName, with: variables.isEmpty ? nil : variables, as: alias, isRender: true, location: location)
     }
     
 

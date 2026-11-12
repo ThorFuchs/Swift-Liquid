@@ -19,7 +19,7 @@ internal indirect enum ASTNode: Sendable {
     case capture(variable: InlineString, body: [ASTNode])
     case increment(name: InlineString)
     case decrement(name: InlineString)
-    case include(template: InlineString, reference: LiquidExpression, with: [String: LiquidExpression]?, as: InlineString?)
+    case include(template: InlineString, reference: LiquidExpression, with: [String: LiquidExpression]?, as: InlineString?, isRender: Bool = false, location: RenderLocation? = nil)
     case comment
     case raw(InlineString)
     case liquid(body: [ASTNode])
@@ -49,7 +49,7 @@ internal indirect enum ASTNode: Sendable {
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
         case .tablerow(_, let value, _, let params): return [value] + [params.cols, params.limit, params.offset].compactMap { $0 }
         case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
-        case .include(_, let reference, let values, _): return [reference] + (values.map { Array($0.values) } ?? [])
+        case .include(_, let reference, let values, _, _, _): return [reference] + (values.map { Array($0.values) } ?? [])
         default: return []
         }
     }
