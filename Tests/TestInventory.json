@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.StandardFilterBoundaryTests/splitAritySortAndHTMLMatchReference()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/openingMarkupAndUnclosedBodyMatchRuby()": null,
     "LiquidTests.CaptureScopeCompatibilityTests/captureWritesRootButRenderRemainsIsolated()": null,
     "LiquidTests.MapStringCompatibilityTests/stringPropertiesUseSubstringLookupNotReflection()": null,

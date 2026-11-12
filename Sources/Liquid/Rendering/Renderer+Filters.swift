@@ -286,6 +286,9 @@ extension Renderer {
     internal func validateFilterArgs(_ filterName: InlineString, args: [Any]) throws {
         guard let (minArgs, maxArgs) = Self.filterArgCounts[filterName.string] else { return }
         if args.count < minArgs {
+            if filterName.equals("split"), args.isEmpty {
+                throw RenderError.custom("wrong number of arguments (given 1, expected 2)")
+            }
             throw RenderError.undefinedFilter("\(filterName.string): expected at least \(minArgs) argument(s), got \(args.count)")
         }
         if args.count > maxArgs {

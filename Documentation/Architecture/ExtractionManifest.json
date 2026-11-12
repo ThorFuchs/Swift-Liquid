@@ -1806,6 +1806,21 @@
         "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Standard filter error and HTML boundaries",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining existing fixture and error recovery contracts.",
+      "changes": [
+        "Report the Ruby arity error for missing split arguments and reject incompatible primitive sort comparisons.",
+        "Match Shopify strip_html block and tag scanning semantics."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/StandardFilterBoundaryTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

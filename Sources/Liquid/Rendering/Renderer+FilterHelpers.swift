@@ -33,20 +33,11 @@ extension Renderer {
     
     internal func stripHTML(_ str: String) -> String {
         var result = str
-        // First strip <script>...</script> and <style>...</style> blocks entirely
-        for tag in ["script", "style"] {
-            let blockPattern = "<\(tag)[^>]*>.*?</\(tag)>"
-            if let regex = try? NSRegularExpression(pattern: blockPattern, options: [.caseInsensitive, .dotMatchesLineSeparators]) {
-                result = regex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
-            }
+        // Shopify applies one case-sensitive block expression before removing tags.
+        if let blocks = try? NSRegularExpression(pattern: "<script.*?</script>|<!--.*?-->|<style.*?</style>", options: .dotMatchesLineSeparators) {
+            result = blocks.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
         }
-        // Then strip HTML comments
-        if let commentRegex = try? NSRegularExpression(pattern: "<!--.*?-->", options: .dotMatchesLineSeparators) {
-            result = commentRegex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
-        }
-        // Then strip remaining tags
-        let tagPattern = "<[^>]+>"
-        guard let regex = try? NSRegularExpression(pattern: tagPattern, options: .caseInsensitive) else {
+        guard let regex = try? NSRegularExpression(pattern: "<.*?>", options: .dotMatchesLineSeparators) else {
             return result
         }
         return regex.stringByReplacingMatches(in: result, range: NSRange(location: 0, length: result.utf16.count), withTemplate: "")
@@ -277,6 +268,16 @@ extension Renderer {
                 return stringify(left) < stringify(right)
             }
         } else {
+            var primitiveKinds = Set<Int>()
+            var booleans = Set<Bool>()
+            for item in array {
+                if let boolean = item as? Bool { primitiveKinds.insert(2); booleans.insert(boolean) }
+                else if item is String { primitiveKinds.insert(1) }
+                else if item is Int || item is Double { primitiveKinds.insert(0) }
+            }
+            if primitiveKinds.count > 1 || booleans.count > 1 {
+                throw RenderError.custom("cannot sort values of incompatible types")
+            }
             // Check for incompatible mixed complex/primitive types
             let hasComplex = array.contains { isDictLike($0) || $0 is [Any] }
             let hasPrimitive = array.contains { $0 is String || $0 is Int || $0 is Double || $0 is Bool }
