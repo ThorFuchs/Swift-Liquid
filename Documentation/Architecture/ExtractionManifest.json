@@ -1554,6 +1554,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Shopify table row attribute parsing",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while retaining syntax modes, fixtures and resource controls.",
+      "changes": [
+        "Scan ignored markup and recognized attributes in lax and strict table rows; support strict2 comma separators and the accepted but unused range attribute.",
+        "Preserve strict2 rejection of unknown attributes and public rendering boundaries."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/TableRowCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

@@ -1937,17 +1937,30 @@ internal final class Parser {
         var limit: LiquidExpression? = nil
         var offset: LiquidExpression? = nil
         
-        while let paramName = peekIdentifierName() {
+        if currentToken.type == .comma { advance() }
+        while currentToken.type != .tagEnd && !isAtEnd {
+            guard let paramName = peekIdentifierName() else {
+                if syntaxMode == .strict2 { break }
+                advance()
+                continue
+            }
             guard paramName.equals("cols")
                     || paramName.equals("limit")
-                    || paramName.equals("offset") else {
+                    || paramName.equals("offset")
+                    || paramName.equals("range") else {
                 if syntaxMode == .strict2 {
                     throw LiquidError.syntax(
                         message: "Invalid attribute '\(paramName.string)' in tablerow loop. Valid attributes are cols, limit, offset, and range",
                         line: currentToken.line + lineOffset, column: currentToken.column
                     )
                 }
-                break
+                advance()
+                continue
+            }
+
+            if syntaxMode != .strict2 && nextTokenStorage.type != .colon {
+                advance()
+                continue
             }
 
             advance() // consume parameter name
@@ -1962,6 +1975,8 @@ internal final class Parser {
             if paramName.equals("cols") { cols = value }
             else if paramName.equals("limit") { limit = value }
             else if paramName.equals("offset") { offset = value }
+            // Ruby accepts `range` as an attribute but does not use it when rendering.
+            if currentToken.type == .comma { advance() }
         }
 
         let params = TableRowParams(cols: cols, limit: limit, offset: offset)

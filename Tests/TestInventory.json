@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.TableRowCompatibilityTests/attributeScanningMatchesShopifyModes()": null,
     "LiquidTests.DocDelimiterCompatibilityTests/closingMarkupIsIgnoredButNamesStayDistinct()": null,
     "LiquidTests.DocDelimiterCompatibilityTests/sourceLimitsAndCancellationRemainTerminal()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/aliasesAndCommaSeparatedBindings()": null,
