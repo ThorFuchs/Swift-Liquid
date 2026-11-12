@@ -334,12 +334,7 @@ internal final class Parser {
             return .comment
         }
         if name.equals("ifchanged") {
-            try consumeTagEnd()
-            var nodes: [ASTNode] = []
-            while !isAtEnd && !currentTagMatchesIdentifier("endifchanged") { nodes.append(try parseNode()) }
-            guard !isAtEnd else { throw ParserError.unclosedTag("ifchanged") }
-            advance(); advance(); try consumeTagEnd()
-            return .ifchanged(nodes)
+            return try parseNestedBlocks(initial: .ifChanged)
         }
 
         if name.equals("if") {
@@ -611,160 +606,219 @@ internal final class Parser {
     
     // MARK: - Control Flow Tag Parsing
     
-    private func parseIfTag() throws ->ASTNode {
-        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
-        let condition = try parseComplexExpression()
-        try consumeTagEnd()
-        
-        var thenNodes = makeNodeBuffer()
-        var elsifBranches: [(LiquidExpression, [ASTNode])] = []
-        var elseNodes: [ASTNode]? = nil
-        
-        // Parse then branch
-        while !isAtEnd && !isElsifOrElseOrEndif() {
-            thenNodes.append(try parseNode())
-        }
-        
-        // Parse elsif branches
-        while !isAtEnd && currentTagMatches(.elsif, identifier: "elsif") {
-            advance() // consume {%
-            try consumeTagKeyword(.elsif, identifier: "elsif")
-            
-            let elsifCondition = try parseComplexExpression()
-            try consumeTagEnd()
-            
-            var elsifNodes = makeNodeBuffer()
-            while !isAtEnd && !isElsifOrElseOrEndif() {
-                elsifNodes.append(try parseNode())
-            }
-            
-            elsifBranches.append((elsifCondition, elsifNodes))
-        }
-        
-        // Parse else branch if present
-        if !isAtEnd && currentTagMatches(.else, identifier: "else") {
-            advance() // consume {%
-            try consumeTagKeyword(.else, identifier: "else")
-            // Shopify Liquid ignores expressions on else tags (e.g., {% else nonsense %})
-            while currentToken.type != .tagEnd && !isAtEnd { advance() }
-            try consumeTagEnd()
+    private enum BlockStart { case conditional, unless, loop, table, capture, caseBlock, ifChanged }
 
-            var elseNodesList = makeNodeBuffer()
-            while !isAtEnd && !isElsifOrElseOrEndif() {
-                elseNodesList.append(try parseNode())
-            }
-            elseNodes = elseNodesList
+    private func parseIfTag() throws ->ASTNode { try parseNestedBlocks(initial: .conditional) }
+    private func parseUnlessTag() throws ->ASTNode { try parseNestedBlocks(initial: .unless) }
+
+    private func parseNestedBlocks(initial: BlockStart) throws -> ASTNode {
+        // Conditional and loop nesting is represented by explicit frames,
+        // including mixed nesting, so source depth does not consume the native stack.
+        struct Frame {
+            let kind: BlockStart
+            var condition: LiquidExpression? = nil
+            var location: RenderLocation? = nil
+            var variable: InlineString? = nil
+            var collection: LiquidExpression? = nil
+            var params: ForParams? = nil
+            var tableParams: TableRowParams? = nil
+            var caseBranches: [CaseBranch] = []
+            var caseValues: [LiquidExpression] = []
+            var casePhase = 0 // 0: before a branch, 1: when, 2: else
+            var thenNodes: [ASTNode] = []
+            var elsifBranches: [(LiquidExpression, [ASTNode])] = []
+            var elseNodes: [ASTNode]? = nil
+            var activeElsif: LiquidExpression? = nil
+            var activeElsifNodes: [ASTNode] = []
+            var inDiscardedBranch = false
         }
 
-        // Shopify Liquid silently ignores extra elsif/else blocks after the first else
-        while !isAtEnd && (currentTagMatches(.elsif, identifier: "elsif") || currentTagMatches(.else, identifier: "else")) {
-            advance() // consume {%
-            advance() // consume elsif/else keyword
-            while currentToken.type != .tagEnd && !isAtEnd { advance() }
+        let entryDepth = parseDepth
+        defer { parseDepth = entryDepth }
+        func beginFrame(_ kind: BlockStart) throws -> Frame {
+            if case .loop = kind {
+                let (variable, collection, params) = try parseForHeader()
+                return Frame(kind: kind, variable: variable, collection: collection, params: params)
+            }
+            if case .table = kind {
+                let (variable, collection, params) = try parseTableRowHeader()
+                return Frame(kind: kind, variable: variable, collection: collection, tableParams: params)
+            }
+            if case .capture = kind {
+                return Frame(kind: kind, variable: try parseCaptureHeader())
+            }
+            if case .ifChanged = kind {
+                try consumeTagEnd()
+                return Frame(kind: kind)
+            }
+            if case .caseBlock = kind {
+                let expression = try parseCaseOperand()
+                if syntaxMode != .strict2 {
+                    while !isAtEnd && currentToken.type != .tagEnd {
+                        try Task.checkCancellation()
+                        advance()
+                    }
+                }
+                try consumeTagEnd()
+                return Frame(kind: kind, condition: expression)
+            }
+            let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+            let condition = try parseComplexExpression()
             try consumeTagEnd()
-            // Skip body nodes until next elsif/else/endif
-            while !isAtEnd && !isElsifOrElseOrEndif() {
-                _ = try parseNode()
+            return Frame(kind: kind, condition: condition, location: location)
+        }
+        var frames = [try beginFrame(initial)]
+        func finishElsif(_ index: Int) {
+            if let condition = frames[index].activeElsif {
+                frames[index].elsifBranches.append((condition, frames[index].activeElsifNodes))
+                frames[index].activeElsif = nil
+                frames[index].activeElsifNodes = []
             }
         }
-
-        // Consume endif
-        guard currentTagMatches(.endif, identifier: "endif") else {
-            throw ParserError.unexpectedToken(currentToken) // Missing endif
+        func append(_ node: ASTNode, to index: Int) {
+            if frames[index].inDiscardedBranch { return }
+            if frames[index].kind == .caseBlock {
+                frames[index].thenNodes.append(node)
+                return
+            }
+            if frames[index].elseNodes != nil { frames[index].elseNodes!.append(node) }
+            else if frames[index].activeElsif != nil { frames[index].activeElsifNodes.append(node) }
+            else { frames[index].thenNodes.append(node) }
         }
-        advance() // consume {%
-        try consumeTagKeyword(.endif, identifier: "endif")
-        try consumeTagEnd()
-        
-        return .if(
-            condition: condition,
-            then: thenNodes,
-            elsif: elsifBranches,
-            else: elseNodes,
-            location: blockLocation
-        )
+        func finishCaseBranch(_ index: Int) {
+            if frames[index].casePhase == 1 {
+                for value in frames[index].caseValues {
+                    frames[index].caseBranches.append(.when(value, frames[index].thenNodes))
+                }
+            } else if frames[index].casePhase == 2 {
+                frames[index].caseBranches.append(.otherwise(frames[index].thenNodes))
+            }
+            frames[index].thenNodes = []
+            frames[index].caseValues = []
+            frames[index].casePhase = 0
+        }
+
+        while !isAtEnd {
+            try Task.checkCancellation()
+            let index = frames.count - 1
+            let nested: (BlockStart, TokenType, StaticString)?
+            if frames[index].kind == .caseBlock && frames[index].casePhase == 0 { nested = nil }
+            else if currentTagMatches(.if, identifier: "if") { nested = (.conditional, .if, "if") }
+            else if currentTagMatches(.unless, identifier: "unless") { nested = (.unless, .unless, "unless") }
+            else if currentTagMatches(.for, identifier: "for") { nested = (.loop, .for, "for") }
+            else if currentTagMatches(.tablerow, identifier: "tablerow") { nested = (.table, .tablerow, "tablerow") }
+            else if currentTagMatches(.capture, identifier: "capture") { nested = (.capture, .capture, "capture") }
+            else if currentTagMatches(.case, identifier: "case") { nested = (.caseBlock, .case, "case") }
+            else if currentTagMatchesIdentifier("ifchanged") { nested = (.ifChanged, .identifier(InlineString("ifchanged")), "ifchanged") }
+            else { nested = nil }
+            if let (kind, keyword, spelling) = nested {
+                guard parseDepth < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+                parseDepth += 1
+                advance()
+                try consumeTagKeyword(keyword, identifier: spelling)
+                frames.append(try beginFrame(kind))
+                continue
+            }
+            if frames[index].kind == .caseBlock && currentTagMatches(.when, identifier: "when") {
+                finishCaseBranch(index)
+                frames[index].caseValues = try parseCaseWhenHeader()
+                frames[index].casePhase = 1
+            } else if frames[index].kind == .caseBlock && currentTagMatches(.else, identifier: "else") {
+                finishCaseBranch(index)
+                advance()
+                try consumeTagKeyword(.else, identifier: "else")
+                try consumeTagEnd()
+                frames[index].casePhase = 2
+            } else if currentTagMatches(.elsif, identifier: "elsif"),
+               frames[index].kind == .conditional || frames[index].kind == .unless {
+                advance()
+                try consumeTagKeyword(.elsif, identifier: "elsif")
+                if frames[index].elseNodes != nil || frames[index].inDiscardedBranch {
+                    frames[index].inDiscardedBranch = true
+                    while currentToken.type != .tagEnd && !isAtEnd { advance() }
+                    try consumeTagEnd()
+                } else {
+                    finishElsif(index)
+                    frames[index].activeElsif = try parseComplexExpression()
+                    try consumeTagEnd()
+                }
+            } else if currentTagMatches(.else, identifier: "else"),
+                      frames[index].kind == .conditional || frames[index].kind == .unless || frames[index].kind == .loop {
+                if frames[index].kind == .loop && frames[index].elseNodes != nil {
+                    _ = try parseNode() // Preserve the original unexpected-tag rejection.
+                    continue
+                }
+                advance()
+                try consumeTagKeyword(.else, identifier: "else")
+                if frames[index].kind != .loop {
+                    while currentToken.type != .tagEnd && !isAtEnd { advance() }
+                }
+                try consumeTagEnd()
+                if frames[index].elseNodes != nil || frames[index].inDiscardedBranch {
+                    frames[index].inDiscardedBranch = true
+                } else {
+                    finishElsif(index)
+                    frames[index].elseNodes = []
+                }
+            } else {
+                let end: (TokenType, StaticString)
+                switch frames[index].kind {
+                case .conditional: end = (.endif, "endif")
+                case .unless: end = (.endunless, "endunless")
+                case .loop: end = (.endfor, "endfor")
+                case .table: end = (.endtablerow, "endtablerow")
+                case .capture: end = (.endcapture, "endcapture")
+                case .caseBlock: end = (.endcase, "endcase")
+                case .ifChanged: end = (.identifier(InlineString("endifchanged")), "endifchanged")
+                }
+                if currentTagMatches(end.0, identifier: end.1) {
+                    finishElsif(index)
+                    if frames[index].kind == .caseBlock { finishCaseBranch(index) }
+                    advance()
+                    try consumeTagKeyword(end.0, identifier: end.1)
+                    try consumeTagEnd()
+                    let frame = frames.removeLast()
+                    let node: ASTNode
+                    switch frame.kind {
+                    case .conditional:
+                        node = .if(condition: frame.condition!, then: frame.thenNodes, elsif: frame.elsifBranches, else: frame.elseNodes, location: frame.location!)
+                    case .unless:
+                        if frame.elsifBranches.isEmpty {
+                            node = .unless(condition: frame.condition!, then: frame.thenNodes, else: frame.elseNodes, location: frame.location!)
+                        } else {
+                            node = .if(condition: .unary(op: .not, expr: frame.condition!), then: frame.thenNodes, elsif: frame.elsifBranches, else: frame.elseNodes, location: frame.location!)
+                        }
+                    case .loop:
+                        node = .for(variable: frame.variable!, in: frame.collection!, body: frame.thenNodes, empty: frame.elseNodes, params: frame.params!)
+                    case .table:
+                        node = .tablerow(variable: frame.variable!, in: frame.collection!, body: frame.thenNodes, params: frame.tableParams!)
+                    case .capture:
+                        node = .capture(variable: frame.variable!, body: frame.thenNodes)
+                    case .caseBlock:
+                        node = .case(value: frame.condition!, branches: frame.caseBranches)
+                    case .ifChanged:
+                        node = .ifchanged(frame.thenNodes)
+                    }
+                    if frames.isEmpty { return node }
+                    parseDepth -= 1
+                    append(node, to: frames.count - 1)
+                } else {
+                    if frames[index].kind == .caseBlock && frames[index].casePhase == 0 {
+                        if currentTagMatches(.elsif, identifier: "elsif") {
+                            throw LiquidError.syntax(message: "Unknown tag 'elsif'", line: nextTokenStorage.line + lineOffset, column: nextTokenStorage.column)
+                        }
+                        advance()
+                        continue
+                    }
+                    let node = try parseNode()
+                    append(node, to: index)
+                }
+            }
+        }
+        if frames.last?.kind == .ifChanged { throw ParserError.unclosedTag("ifchanged") }
+        throw ParserError.unexpectedToken(currentToken)
     }
-    
-    private func parseUnlessTag() throws ->ASTNode {
-        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
-        let condition = try parseComplexExpression()
-        try consumeTagEnd()
 
-        var thenNodes = makeNodeBuffer()
-        var elsifBranches: [(LiquidExpression, [ASTNode])] = []
-        var elseNodes: [ASTNode]? = nil
-
-        // Parse then branch (unless body)
-        while !isAtEnd && !isElseOrEndunless() {
-            thenNodes.append(try parseNode())
-        }
-
-        // Parse elsif branches
-        while !isAtEnd && currentTagMatches(.elsif, identifier: "elsif") {
-            advance() // consume {%
-            try consumeTagKeyword(.elsif, identifier: "elsif")
-            let elsifCondition = try parseComplexExpression()
-            try consumeTagEnd()
-
-            var elsifNodes = makeNodeBuffer()
-            while !isAtEnd && !isElseOrEndunless() {
-                elsifNodes.append(try parseNode())
-            }
-            elsifBranches.append((elsifCondition, elsifNodes))
-        }
-
-        // Parse else branch if present
-        if !isAtEnd && currentTagMatches(.else, identifier: "else") {
-            advance() // consume {%
-            try consumeTagKeyword(.else, identifier: "else")
-            while currentToken.type != .tagEnd && !isAtEnd { advance() }
-            try consumeTagEnd()
-
-            var elseNodesList = makeNodeBuffer()
-            while !isAtEnd && !isElseOrEndunless() {
-                elseNodesList.append(try parseNode())
-            }
-            elseNodes = elseNodesList
-        }
-
-        // Silently ignore extra elsif/else blocks after the first else
-        while !isAtEnd && (currentTagMatches(.elsif, identifier: "elsif") || currentTagMatches(.else, identifier: "else")) {
-            advance()
-            advance()
-            while currentToken.type != .tagEnd && !isAtEnd { advance() }
-            try consumeTagEnd()
-            while !isAtEnd && !isElseOrEndunless() {
-                _ = try parseNode()
-            }
-        }
-
-        // Consume endunless
-        guard currentTagMatches(.endunless, identifier: "endunless") else {
-            throw ParserError.unexpectedToken(currentToken)
-        }
-        advance()
-        try consumeTagKeyword(.endunless, identifier: "endunless")
-        try consumeTagEnd()
-
-        // If there are elsif branches, convert to if(NOT condition) structure
-        if !elsifBranches.isEmpty {
-            return .if(
-                condition: .unary(op: .not, expr: condition),
-                then: thenNodes,
-                elsif: elsifBranches,
-                else: elseNodes,
-                location: blockLocation
-            )
-        }
-
-        return .unless(
-            condition: condition,
-            then: thenNodes,
-            else: elseNodes,
-            location: blockLocation
-        )
-    }
-    
     // MARK: - LiquidExpression Parsing
     
     private func parseConditionOperand() throws -> LiquidExpression {
@@ -942,15 +996,15 @@ internal final class Parser {
     }
 
     @inline(__always)
-    private func parsePrimaryExpression() throws ->LiquidExpression {
+    private func parsePrimaryExpression(allowBracketAccess: Bool = true) throws ->LiquidExpression {
         guard parseDepth < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
         parseDepth += 1
         defer { parseDepth -= 1 }
         switch currentToken.type {
         case .empty:
-            return try parseNamedPrimary(InlineString("empty"))
+            return try parseNamedPrimary(InlineString("empty"), allowBracketAccess: allowBracketAccess)
         case .identifier(let name):
-            return try parseNamedPrimary(name)
+            return try parseNamedPrimary(name, allowBracketAccess: allowBracketAccess)
 
         case .string(let value):
             advance()
@@ -1046,58 +1100,10 @@ internal final class Parser {
             return .range(start: startExpr, end: endExpr)
             
         case .leftBracket:
-            // Shopify strict2 requires an explicit receiver for bracket access.
-            // Older parser modes retain their indirect root lookup semantics.
             if syntaxMode == .strict2 {
-                throw LiquidError.syntax(
-                    message: "Bare bracket access is not allowed. Use self['...'] instead",
-                    line: currentToken.line + lineOffset,
-                    column: currentToken.column
-                )
+                throw LiquidError.syntax(message: "Bare bracket access is not allowed. Use self['...'] instead", line: currentToken.line + lineOffset, column: currentToken.column)
             }
-            // Top-level bracket access: {{ [something] }} or {{ ["key"] }}
-            // This is an indirect variable lookup: look up the bracket contents,
-            // then use the result to look up in the root context
-            advance() // consume [
-            let keyExpr = try parsePrimaryExpression()
-            guard currentToken.type == .rightBracket else {
-                // Ruby's lax root lookup consumes an incomplete terminal
-                // bracket as the lookup it already found, without inventing
-                // another indirect lookup for nested brackets.
-                if syntaxMode == .lax, currentToken.type == .variableEnd {
-                    if case .literal(.string) = keyExpr {
-                        return .access(expr: .variable(InlineString("")), key: keyExpr)
-                    }
-                    return keyExpr
-                }
-                throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
-            }
-            advance() // consume ]
-
-            // Build as access on a special "root" sentinel,
-            // but since Liquid treats [x] as context[context[x]],
-            // we model it as a variable access with the key expression
-            var expr: LiquidExpression = .access(expr: .variable(InlineString("")), key: keyExpr)
-
-            // Handle chained bracket/dot access after: [x][0], [x].prop
-            while currentTokenStorage.type == .leftBracket {
-                advance()
-                let nextKey = try parsePrimaryExpression()
-                guard currentToken.type == .rightBracket else {
-                    throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
-                }
-                advance()
-                expr = .access(expr: expr, key: nextKey)
-            }
-            while currentTokenStorage.type == .dot {
-                advance()
-                guard case .identifier(let prop) = currentToken.type else {
-                    throw identifierExpected(currentToken)
-                }
-                advance()
-                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
-            }
-            return expr
+            return try parseBracketChain(startingWith: .variable(InlineString("")))
 
         // Allow reserved words as variable names in expression context
         case .include, .for, .if, .elsif, .else, .unless, .case, .when,
@@ -1105,29 +1111,14 @@ internal final class Parser {
             let name = InlineString(currentToken.type.keywordString ?? "")
             advance()
             var expr: LiquidExpression = .variable(name)
-            // Handle dot access chains: include.menu
-            var hasMoreAccess = true
-            while hasMoreAccess {
-                hasMoreAccess = false
-                while currentTokenStorage.type == .leftBracket {
-                    advance()
-                    let keyExpr = try parsePrimaryExpression()
-                    guard currentToken.type == .rightBracket else {
-                        throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
-                    }
-                    advance()
-                    expr = .access(expr: expr, key: keyExpr)
-                    hasMoreAccess = true
-                }
-                while currentTokenStorage.type == .dot {
-                    advance()
-                    guard case .identifier(let prop) = currentToken.type else {
-                        throw identifierExpected(currentToken)
-                    }
-                    advance()
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
-                    hasMoreAccess = true
-                }
+            while currentTokenStorage.type == .dot {
+                advance()
+                guard case .identifier(let prop) = currentToken.type else { throw identifierExpected(currentToken) }
+                advance()
+                expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
+            }
+            if allowBracketAccess, currentTokenStorage.type == .leftBracket {
+                expr = try parseBracketChain(startingWith: expr)
             }
             return expr
 
@@ -1165,6 +1156,64 @@ internal final class Parser {
         }
     }
 
+    private func parseBracketChain(startingWith initial: LiquidExpression) throws -> LiquidExpression {
+        let entryDepth = parseDepth
+        defer { parseDepth = entryDepth }
+        var base = initial
+        var parents: [LiquidExpression] = []
+        while true {
+            try Task.checkCancellation()
+            advance() // [
+            if currentToken.type == .leftBracket {
+                if syntaxMode == .strict2 {
+                    throw LiquidError.syntax(message: "Bare bracket access is not allowed. Use self['...'] instead", line: currentToken.line + lineOffset, column: currentToken.column)
+                }
+                guard parseDepth < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+                parseDepth += 1
+                parents.append(base)
+                base = .variable(InlineString(""))
+                continue
+            }
+            var key = try parsePrimaryExpression(allowBracketAccess: false)
+            if currentToken.type == .leftBracket {
+                guard parseDepth < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+                parseDepth += 1
+                parents.append(base)
+                base = key
+                continue
+            }
+            while true {
+                let result: LiquidExpression
+                if currentToken.type == .rightBracket {
+                    advance()
+                    var access: LiquidExpression = .access(expr: base, key: key)
+                    while currentToken.type == .dot, case .identifier(let prop) = nextTokenStorage.type {
+                        advance(); advance()
+                        access = .access(expr: access, key: .literal(.string(prop)), command: true)
+                    }
+                    result = access
+                } else if syntaxMode == .lax, currentToken.type == .variableEnd,
+                          case .variable(let name) = base, name.string.isEmpty {
+                    if case .literal(.string) = key { result = .access(expr: base, key: key) }
+                    else { result = key }
+                } else {
+                    throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
+                }
+                if currentToken.type == .leftBracket {
+                    base = result
+                    break
+                }
+                if let parent = parents.popLast() {
+                    parseDepth -= 1
+                    base = parent
+                    key = result
+                    continue
+                }
+                return result
+            }
+        }
+    }
+
     private func collectQualifiedIdentifierComponents(
         startingWith first: InlineString
     ) throws ->[InlineString] {
@@ -1196,48 +1245,8 @@ internal final class Parser {
         return InlineString(components.map(\.string).joined(separator: "."))
     }
 
-    private func parseCallArguments() throws ->[CallArgument] {
-        guard currentToken.type != .rightParen else {
-            return []
-        }
-
-        var arguments: [CallArgument] = []
-        arguments.reserveCapacity(2)
-        var seenLabels = Set<String>()
-
-        while currentToken.type != .rightParen {
-            if case .identifier(let label) = currentToken.type,
-               nextTokenStorage.type == .colon {
-                if !seenLabels.insert(label.string).inserted {
-                    throw ParserError.duplicateParameter(label.string)
-                }
-                advance()
-                advance()
-                arguments.append(CallArgument(label: label, value: try parseExpression()))
-            } else {
-                arguments.append(CallArgument(value: try parseExpression()))
-            }
-
-            guard currentToken.type == .comma || currentToken.type == .rightParen else {
-                throw ParserError.unexpectedToken(currentToken)
-            }
-
-            if currentToken.type == .comma {
-                advance()
-            }
-        }
-
-        return arguments
-    }
-
-
-
-
-
-
-
     @inline(__always)
-    private func parseNamedPrimary(_ name: InlineString) throws -> LiquidExpression {
+    private func parseNamedPrimary(_ name: InlineString, allowBracketAccess: Bool = true) throws -> LiquidExpression {
             advance()
 
             if currentTokenStorage.type != .dot, currentTokenStorage.type != .leftBracket,
@@ -1248,16 +1257,10 @@ internal final class Parser {
             let components = try collectQualifiedIdentifierComponents(startingWith: name)
 
             if currentTokenStorage.type == .leftParen, syntaxMode != .strict2 {
-                advance()
-                let arguments = try parseCallArguments()
-                guard currentToken.type == .rightParen else {
-                    throw ParserError.expectedToken(.rightParen, got: currentToken.type)
-                }
-                advance()
-                return .call(
-                    name: InlineString(components.map(\.string).joined(separator: ".")),
-                    arguments: arguments
-                )
+                // Calls are outside the admitted Shopify language. Reject at
+                // the boundary instead of recursively parsing an expression
+                // that template validation would reject unconditionally.
+                throw LiquidError.syntax(message: "Expression is outside standard Liquid", line: nil, column: nil)
             }
 
             var expr: LiquidExpression = .variable(name)
@@ -1265,30 +1268,9 @@ internal final class Parser {
                 expr = .access(expr: expr, key: .literal(.string(property)), command: true)
             }
 
-            // Handle bracket and dot access chains: items[0], items["key"].prop, items[0][1]
-            var hasMoreAccess = true
-            while hasMoreAccess {
-                hasMoreAccess = false
-                while currentTokenStorage.type == .leftBracket {
-                    advance() // consume [
-                    let keyExpr = try parsePrimaryExpression()
-                    guard currentToken.type == .rightBracket else {
-                        throw ParserError.expectedToken(.rightBracket, got: currentToken.type)
-                    }
-                    advance() // consume ]
-                    expr = .access(expr: expr, key: keyExpr)
-                    hasMoreAccess = true
-                }
-                // Handle dot access after brackets: items[0].title
-                while currentTokenStorage.type == .dot {
-                    guard case .identifier(let prop) = nextTokenStorage.type else { break }
-                    advance() // consume .
-                    advance() // consume identifier
-                    expr = .access(expr: expr, key: .literal(.string(prop)), command: true)
-                    hasMoreAccess = true
-                }
+            if allowBracketAccess, currentTokenStorage.type == .leftBracket {
+                expr = try parseBracketChain(startingWith: expr)
             }
-
             return expr
     }
 
@@ -1718,56 +1700,10 @@ internal final class Parser {
     }
     
     private func parseCaseTag() throws ->ASTNode {
-        let expression = try parseCaseOperand()
-        if syntaxMode != .strict2 {
-            while !isAtEnd && currentToken.type != .tagEnd {
-                try Task.checkCancellation()
-                advance()
-            }
-        }
-        try consumeTagEnd()
-        
-        var branches: [CaseBranch] = []
-        branches.reserveCapacity(4)
-        
-        // Parse all branches: when, else, and mixed when/else blocks
-        // Skip whitespace before first branch
-        while !isAtEnd && currentToken.type != .tagStart {
-            advance()
-        }
-
-        while !isAtEnd && !currentTagMatches(.endcase, identifier: "endcase") {
-            if currentTagMatches(.when, identifier: "when") {
-                try parseCaseWhenBranch(into: &branches)
-            } else if currentTagMatches(.else, identifier: "else") {
-                advance() // consume {%
-                try consumeTagKeyword(.else, identifier: "else")
-                try consumeTagEnd()
-
-                var elseNodes = makeNodeBuffer()
-                while !isAtEnd && !isWhenOrElseOrEndcase() {
-                    elseNodes.append(try parseNode())
-                }
-                branches.append(.otherwise(elseNodes))
-            } else if currentTagMatches(.elsif, identifier: "elsif") {
-                throw LiquidError.syntax(message: "Unknown tag 'elsif'", line: nextTokenStorage.line + lineOffset, column: nextTokenStorage.column)
-            } else {
-                // Skip whitespace/text between branches
-                advance()
-            }
-        }
-
-        guard currentTagMatches(.endcase, identifier: "endcase") else {
-            throw ParserError.unexpectedToken(currentToken)
-        }
-        advance() // consume {%
-        try consumeTagKeyword(.endcase, identifier: "endcase")
-        try consumeTagEnd()
-
-        return .case(value: expression, branches: branches)
+        try parseNestedBlocks(initial: .caseBlock)
     }
-    
-    private func parseCaseWhenBranch(into branches: inout [CaseBranch]) throws {
+
+    private func parseCaseWhenHeader() throws -> [LiquidExpression] {
         advance() // consume {%
         try consumeTagKeyword(.when, identifier: "when")
 
@@ -1795,13 +1731,7 @@ internal final class Parser {
         }
         try consumeTagEnd()
 
-        var whenNodes = makeNodeBuffer()
-        while !isAtEnd && !isWhenOrElseOrEndcase() {
-            whenNodes.append(try parseNode())
-        }
-        for value in whenValues {
-            branches.append(.when(value, whenNodes))
-        }
+        return whenValues
     }
 
     @inline(__always)
@@ -1818,7 +1748,7 @@ internal final class Parser {
         currentTagMatches(.endcase, identifier: "endcase")
     }
     
-    private func parseForTag() throws ->ASTNode {
+    private func parseForHeader() throws -> (InlineString, LiquidExpression, ForParams) {
         let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
         func isRuntimeLookup(_ expression: LiquidExpression) -> Bool {
             switch expression {
@@ -1934,44 +1864,13 @@ internal final class Parser {
         
         try consumeTagEnd()
         
-        // Parse loop body
-        var body = makeNodeBuffer()
-        
-        while !isAtEnd && !isEmptyOrEndfor() {
-            body.append(try parseNode())
-        }
-        
-        // Parse empty/else branch if present (for empty collections)
-        // Supports both {% empty %} and {% else %} (Shopify-compatible)
-        var emptyBranch: [ASTNode]? = nil
-        if !isAtEnd && currentTagMatches(.else, identifier: "else") {
-            let isElseForm = currentTagMatches(.else, identifier: "else")
-            advance() // consume {%
-            if isElseForm {
-                try consumeTagKeyword(.else, identifier: "else")
-            } else {
-                try consumeTagKeyword(.empty, identifier: "empty")
-            }
-            try consumeTagEnd()
-            
-            var emptyNodes = makeNodeBuffer()
-            while !isAtEnd && !isEndfor() {
-                emptyNodes.append(try parseNode())
-            }
-            emptyBranch = emptyNodes
-        }
-        
-        // Consume endfor
-        guard currentTagMatches(.endfor, identifier: "endfor") else {
-            throw ParserError.unexpectedToken(currentToken)
-        }
-        advance() // consume {%
-        try consumeTagKeyword(.endfor, identifier: "endfor")
-        try consumeTagEnd()
-        
-        return .for(variable: variable, in: collection, body: body, empty: emptyBranch, params: params)
+        return (variable, collection, params)
     }
-    
+
+    private func parseForTag() throws ->ASTNode {
+        try parseNestedBlocks(initial: .loop)
+    }
+
     @inline(__always)
     private func isEmptyOrEndfor() -> Bool {
         currentTagMatches(.else, identifier: "else") || currentTagMatches(.endfor, identifier: "endfor")
@@ -1995,7 +1894,7 @@ internal final class Parser {
         currentTagMatches(.endtablerow, identifier: "endtablerow")
     }
     
-    private func parseTableRowTag() throws ->ASTNode {
+    private func parseTableRowHeader() throws -> (InlineString, LiquidExpression, TableRowParams) {
         guard case .identifier(let variable) = currentToken.type else {
             throw identifierExpected(currentToken)
         }
@@ -2061,24 +1960,14 @@ internal final class Parser {
         let params = TableRowParams(cols: cols, limit: limit, offset: offset)
         try consumeTagEnd()
         
-        // Parse tablerow body
-        var body = makeNodeBuffer()
-        while !isAtEnd && !isEndtablerow() {
-            body.append(try parseNode())
-        }
-        
-        // Consume endtablerow
-        guard currentTagMatches(.endtablerow, identifier: "endtablerow") else {
-            throw ParserError.unexpectedToken(currentToken)
-        }
-        advance() // consume {%
-        try consumeTagKeyword(.endtablerow, identifier: "endtablerow")
-        try consumeTagEnd()
-        
-        return .tablerow(variable: variable, in: collection, body: body, params: params)
+        return (variable, collection, params)
     }
-    
-    private func parseCaptureTag() throws ->ASTNode {
+
+    private func parseTableRowTag() throws ->ASTNode {
+        try parseNestedBlocks(initial: .table)
+    }
+
+    private func parseCaptureHeader() throws -> InlineString {
         let variable: InlineString
         if case .identifier(let name) = currentToken.type {
             variable = name
@@ -2095,22 +1984,13 @@ internal final class Parser {
         advance()
         try consumeTagEnd()
         
-        var body = makeNodeBuffer()
-        while !isAtEnd && !currentTagMatches(.endcapture, identifier: "endcapture") {
-            body.append(try parseNode())
-        }
-        
-        // Consume endcapture
-        guard currentTagMatches(.endcapture, identifier: "endcapture") else {
-            throw ParserError.unexpectedToken(currentToken)
-        }
-        advance() // consume {%
-        try consumeTagKeyword(.endcapture, identifier: "endcapture")
-        try consumeTagEnd()
-        
-        return .capture(variable: variable, body: body)
+        return variable
     }
-    
+
+    private func parseCaptureTag() throws ->ASTNode {
+        try parseNestedBlocks(initial: .capture)
+    }
+
     private func parseIncrementTag() throws ->ASTNode {
         guard case .identifier(let counter) = currentToken.type else {
             throw identifierExpected(currentToken)

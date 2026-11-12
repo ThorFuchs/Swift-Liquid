@@ -1835,6 +1835,21 @@
         "Tests/LiquidTests/R6ExpectedTokenTests.swift"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Stack-safe template parsing",
+      "scopeDecision": "The maintainer commissioned stack-safe deep template parsing while preserving the configured depth limit, conformance fixtures, diagnostics and cancellation.",
+      "changes": [
+        "Parse nested if, unless, for, tablerow, capture, case and ifchanged blocks using explicit frames and the original header parsers.",
+        "Parse nested bracket accesses with an explicit stack; reject unsupported call syntax at its language boundary rather than recursively constructing an unadmitted expression.",
+        "Retain logical nesting checks, cancellation and source-bound public tests through the supported explicit limit."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/DeepParserStackTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
