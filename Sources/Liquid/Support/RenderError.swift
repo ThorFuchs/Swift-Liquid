@@ -39,6 +39,7 @@ internal enum RenderError: RuntimeLiquidError, Equatable {
     case typeError(expected: String, actual: String, operation: String, sourceLocation: LiquidSourceLocation? = nil)
     
     case arithmeticError(String, sourceLocation: LiquidSourceLocation? = nil)
+    case divisionByZero(sourceLocation: LiquidSourceLocation? = nil)
     
     case custom(String, sourceLocation: LiquidSourceLocation? = nil)
     
@@ -69,6 +70,7 @@ extension RenderError {
              .resourceLimitExceeded(_, _, let location),
              .typeError(_, _, _, let location),
              .arithmeticError(_, let location),
+             .divisionByZero(let location),
              .custom(_, let location),
              .debugAborted(let location):
             return location
@@ -107,6 +109,8 @@ extension RenderError {
             return .typeError(expected: expected, actual: actual, operation: operation, sourceLocation: context.sourceLocation)
         case .arithmeticError(let message, _):
             return .arithmeticError(message, sourceLocation: context.sourceLocation)
+        case .divisionByZero:
+            return .divisionByZero(sourceLocation: context.sourceLocation)
         case .custom(let message, _):
             return .custom(message, sourceLocation: context.sourceLocation)
         case .debugAborted(_):
@@ -150,6 +154,8 @@ extension RenderError {
             return "Type error in \(operation): expected \(expected), got \(actual)"
         case .arithmeticError(let reason, _):
             return "Arithmetic error: \(reason)"
+        case .divisionByZero:
+            return "divided by 0"
         case .custom(let message, _):
             return message
         case .debugAborted(_):
@@ -171,7 +177,7 @@ extension RenderError {
             return .security
         case .resourceLimitExceeded:
             return .resource
-        case .arithmeticError:
+        case .arithmeticError, .divisionByZero:
             return .arithmetic
         case .custom:
             return .custom
@@ -190,7 +196,7 @@ extension RenderError {
             return .error
         case .templateNotFound:
             return .error
-        case .typeError, .arithmeticError:
+        case .typeError, .arithmeticError, .divisionByZero:
             return .error
         default:
             return .error
@@ -231,7 +237,7 @@ extension RenderError {
             return "Optimize template to use less \(resource) (current limit: \(limit))"
         case .typeError(let expected, _, let operation, _):
             return "Provide a \(expected) value for \(operation)"
-        case .arithmeticError:
+        case .arithmeticError, .divisionByZero:
             return "Check for division by zero or invalid numeric operations"
         case .custom:
             return nil

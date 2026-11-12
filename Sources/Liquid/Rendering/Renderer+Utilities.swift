@@ -488,7 +488,7 @@ extension Renderer {
     internal func divide(_ left: Any, _ right: Any) throws -> Any {
         // Integer division when both operands are integers (Shopify behavior: 5/3=1)
         if let l = left as? Int, let r = right as? Int {
-            guard r != 0 else { throw RenderError.arithmeticError("Division by zero") }
+            guard r != 0 else { throw RenderError.divisionByZero() }
             guard !(l == Int.min && r == -1) else { throw LiquidError.invalidValue("Integer overflow") }
             let quotient = l / r
             let remainder = l % r
@@ -499,7 +499,7 @@ extension Renderer {
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
         guard r != 0 else {
-            throw RenderError.arithmeticError("Division by zero")
+            throw RenderError.divisionByZero()
         }
         let result = l / r
         // If neither input was a float, return Int (string coercion case)
@@ -511,7 +511,7 @@ extension Renderer {
 
     internal func modulo(_ left: Any, _ right: Any) throws -> Any {
         if let l = left as? Int, let r = right as? Int {
-            guard r != 0 else { throw RenderError.arithmeticError("Division by zero") }
+            guard r != 0 else { throw RenderError.divisionByZero() }
             if l == Int.min && r == -1 { return 0 }
             let remainder = l % r
             return remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
@@ -520,7 +520,7 @@ extension Renderer {
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
         guard r != 0 else {
-            throw RenderError.arithmeticError("Division by zero")
+            throw RenderError.divisionByZero()
         }
         let remainder = l.truncatingRemainder(dividingBy: r)
         let result = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder

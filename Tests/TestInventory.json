@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.ZeroDivisionDiagnosticTests/divisionAndModuloRetainErrorAndRecoveryBoundaries()": null,
+    "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroStillFailsAndCancellationRemainsTerminal()": null,
     "LiquidTests.NilComparisonTests/nilRelationalComparisonsAreFalseAcrossPolicies()": null,
     "LiquidTests.NilComparisonTests/nilOrderingRetainsQuotaAndCancellation()": null,
     "LiquidTests.FilterStringCoercionTests/outputObjectsInspectNestedValuesAcrossRenderPaths()": null,

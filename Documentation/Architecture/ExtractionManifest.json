@@ -1266,6 +1266,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are recorded externally; full conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed zero-division reason",
+      "scopeDecision": "The maintainer commissioned further Shopify mismatch batches while preserving pinned fixtures, finite-number policy and existing holds.",
+      "changes": [
+        "Represent the existing division/modulo-by-zero failure with a typed arithmetic reason whose public text matches Ruby Liquid.",
+        "Preserve raising and recovery boundaries, partial origins, cancellation and finite-number rejection; add public regression cases."
+      ],
+      "files": [
+        "Sources/Liquid/Support/RenderError.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/ZeroDivisionDiagnosticTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; full conformance, performance, integration, release and downstream acceptance remain pending."
     }
   ]
 }
