@@ -2282,8 +2282,7 @@ internal final class Parser {
                     advance()
                 }
             } else {
-                if syntaxMode == .strict2, case .number = currentToken.type,
-                   let error = trailingTokenError(currentToken) { throw error }
+                if let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
                 }
@@ -2370,8 +2369,7 @@ internal final class Parser {
                     advance()
                 }
             } else {
-                if syntaxMode == .strict2, case .number = currentToken.type,
-                   let error = trailingTokenError(currentToken) { throw error }
+                if let error = trailingTokenError(currentToken) { throw error }
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
                 }

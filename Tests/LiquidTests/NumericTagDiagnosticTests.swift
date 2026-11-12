@@ -29,6 +29,17 @@ struct NumericTagDiagnosticTests {
                 }
             }
         }
+        let tails = [(")", "close_round"), ("]", "close_square"), (":", "colon"),
+                     ("-", "dash"), ("(", "open_round"), ("?", "question"), ("'hi'", "string")]
+        for (suffix, kind) in tails {
+            for source in ["{% include x \(suffix) %}", "{% render 'snippet' \(suffix) %}"] {
+                do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+                catch LiquidError.syntax(let message, let line, let column) {
+                    #expect(message == "Expected end_of_string but found \(kind)", "\(source)")
+                    #expect(line == 1 && column != nil)
+                }
+            }
+        }
     }
 
     @Test func strictAliasWithoutBindingAndOtherModesStayBounded() throws {

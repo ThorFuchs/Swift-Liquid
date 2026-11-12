@@ -28,6 +28,22 @@ struct Strict2PunctuationTests {
                 }
             }
         }
+        for op in ["!=", "<", ">", "<=", ">="] {
+            for source in ["{{ x | x : x , , \(op) }}", "{{ x | x : x , , x : \(op) }}"] {
+                do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+                catch LiquidError.syntax(let message, let line, let column) {
+                    #expect(message == "[:comma, \",\"] is not a valid expression")
+                    #expect(line == 1 && column != nil)
+                }
+            }
+            for source in ["{{ \(op) }}", "{{ x | x : \(op) }}"] {
+                do { _ = try LiquidTemplate(source, syntaxMode: .strict2); Issue.record("Expected rejection") }
+                catch LiquidError.syntax(let message, let line, let column) {
+                    #expect(message == "[:comparison, \"\(op)\"] is not a valid expression")
+                    #expect(line == 1 && column != nil)
+                }
+            }
+        }
     }
 
     @Test func directAndTrailingPunctuationUseTypedReason() throws {
@@ -48,6 +64,8 @@ struct Strict2PunctuationTests {
         catch LiquidError.syntax(let message, _, _) { #expect(message.contains("Unexpected character $")) }
         for mode in [LiquidSyntaxMode.lax, .strict] {
             do { _ = try LiquidTemplate("{{ ? }}", syntaxMode: mode); Issue.record("Expected rejection") }
+            catch LiquidError.syntax(let message, _, _) { #expect(message.contains("Unexpected character")) }
+            do { _ = try LiquidTemplate("{{ < }}", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message.contains("Unexpected character")) }
         }
         #expect(try await LiquidEngine().render(template: "{{ 'a?' }}|{{ -5 }}", syntaxMode: .strict2) == "a?|-5")

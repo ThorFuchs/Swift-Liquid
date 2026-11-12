@@ -588,6 +588,22 @@ internal final class Lexer {
                 advanceASCII()
                 tokens.append(Token(type: .equals, position: tokenPosition, line: tokenLine, column: tokenColumn))
 
+            // Strict2 recognizes comparison tokens in output markup before
+            // rejecting them in the expression grammar. This preserves an
+            // earlier parser error, such as a doubled filter-argument comma.
+            case Self.exclamation where syntaxMode == .strict2 && nextByte == Self.equals:
+                advanceASCII()
+                advanceASCII()
+                tokens.append(Token(type: .notEquals, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
+            case let operatorByte where syntaxMode == .strict2 && (operatorByte == Self.lessThan || operatorByte == Self.greaterThan):
+                let less = byte == Self.lessThan
+                advanceASCII()
+                let hasEquals = nextByte == Self.equals
+                if hasEquals { advanceASCII() }
+                let kind: TokenType = less ? (hasEquals ? .lessThanOrEqual : .lessThan) : (hasEquals ? .greaterThanOrEqual : .greaterThan)
+                tokens.append(Token(type: kind, position: tokenPosition, line: tokenLine, column: tokenColumn))
+
             case Self.doubleQuote, Self.singleQuote:
                 let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                 try tokenizeString(&tokens, start: tokenStart, quote: byte)

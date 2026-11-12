@@ -1312,6 +1312,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Strict2 output comparisons and partial tag diagnostics",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance batches while retaining source provenance, parser modes and pinned fixtures.",
+      "changes": [
+        "Tokenize strict2 comparison operators in output markup so the existing parser reports its original first rejection, preserving lax and strict lexer behavior.",
+        "Report invalid include and render trailing tokens through the existing strict2 typed trailing-token diagnostics."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/Strict2PunctuationTests.swift",
+        "Tests/LiquidTests/NumericTagDiagnosticTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }
