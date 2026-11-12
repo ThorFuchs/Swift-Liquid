@@ -1449,6 +1449,22 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Render and include interrupt boundaries",
+      "scopeDecision": "The maintainer commissioned Shopify conformance while preserving invocation-owned state, cancellation, resource budgets, exact registry identity and existing holds.",
+      "changes": [
+        "Propagate loop interrupts through intermediate node lists with their partial output until consumed by a loop or top-level render.",
+        "Contain interrupts at isolated render boundaries, including render-for, while retaining include propagation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialInterruptCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

@@ -44,6 +44,8 @@ An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+Loop interrupts remain inside an isolated `render`; `include` shares the
+caller's interrupt flow. Output produced before an interrupt is retained.
 See the [adopted host-input decision](LQ1-R3/RENDER-GLOBALS-ADR.md).
 
 A case evaluates its current operand before each when value, in source order.

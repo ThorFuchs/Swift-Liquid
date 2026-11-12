@@ -779,8 +779,12 @@ extension Renderer {
                     context.restoreState(savedState)
                 }
                 let preparedAST = try await prepareASTForRendering(ast)
-                output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                    try await renderNode(preparedAST)
+                do {
+                    output += try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                        try await renderNode(preparedAST)
+                    }
+                } catch let signal as LoopControlSignal {
+                    output += signal.partialOutput
                 }
             }
             return output
@@ -824,8 +828,12 @@ extension Renderer {
                 context.restoreState(savedState)
             }
             let preparedAST = try await prepareASTForRendering(ast)
-            return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
-                try await renderNode(preparedAST)
+            do {
+                return try await withAuthoringScope(for: preparedAST, templatePath: resolvedPath) {
+                    try await renderNode(preparedAST)
+                }
+            } catch let signal as LoopControlSignal {
+                return signal.partialOutput
             }
         } else {
             try enterLiquidScope()

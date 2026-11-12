@@ -140,8 +140,9 @@ extension Renderer {
             do { output.append(try await renderNode(node)) }
             catch let signal as LoopControlSignal {
                 output.append(signal.partialOutput)
-                if context.isInsideLoop { throw signal.carrying(output) }
-                return output
+                // The root renderer or an isolated render boundary consumes
+                // this signal; intermediate blocks must preserve it.
+                throw signal.carrying(output)
             }
         }
 
@@ -169,14 +170,16 @@ extension Renderer {
             if staticCapacityHint > 0 {
                 output.reserveCapacity(staticCapacityHint)
             }
-            try await appendRenderedSimpleNodePairFast(nodes[0], nodes[1], to: &output)
+            do { try await appendRenderedSimpleNodePairFast(nodes[0], nodes[1], to: &output) }
+            catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
             return output
         case 3:
             var output = String()
             if staticCapacityHint > 0 {
                 output.reserveCapacity(staticCapacityHint)
             }
-            try await appendRenderedSimpleNodeTripleFast(nodes[0], nodes[1], nodes[2], to: &output)
+            do { try await appendRenderedSimpleNodeTripleFast(nodes[0], nodes[1], nodes[2], to: &output) }
+            catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
             return output
         default:
             break
@@ -187,7 +190,8 @@ extension Renderer {
             output.reserveCapacity(staticCapacityHint)
         }
 
-        try await appendRenderedSimpleNodeListFast(nodes, to: &output)
+        do { try await appendRenderedSimpleNodeListFast(nodes, to: &output) }
+        catch let signal as LoopControlSignal { throw signal.carrying(output + signal.partialOutput) }
         return output
     }
 

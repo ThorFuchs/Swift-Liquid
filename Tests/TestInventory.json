@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.PartialInterruptCompatibilityTests/renderContainsSignalsAndIncludePropagatesThem()": null,
+    "LiquidTests.PartialInterruptCompatibilityTests/renderForAndExactRegistryStayIsolated()": null,
     "LiquidTests.InlineCommentCompatibilityTests/invalidContinuationsRetainMarkupLine()": null,
     "LiquidTests.InlineCommentCompatibilityTests/blankLinesAndFirstMarkupLineAreAccepted()": null,
     "LiquidTests.StandardFilterCoercionTests/defaultAndSquishHandleCompositeInputs()": null,
