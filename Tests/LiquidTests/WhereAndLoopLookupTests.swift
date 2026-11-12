@@ -46,6 +46,18 @@ struct WhereAndLoopLookupTests {
             #expect(try await engine.renderWithDiagnostics(parsed, context: context).output == "bc")
             let roots = try engine.inspect(parsed).variableRoots
             #expect(roots.contains("bounds") && roots.contains("offsets"))
+            let duplicateCases = [
+                ("offset:continue offset:3", "a|d"),
+                ("offset:3 offset:continue", "a|bcd"),
+                ("offset: bounds.count offset:1", "a|bcd"),
+                ("offset:1 offset: bounds.count", "a|cd"),
+                ("limit: bounds.count limit:1", "a|a"),
+                ("limit:1 limit: bounds.count", "a|ab")
+            ]
+            for (attributes, expected) in duplicateCases {
+                let repeated = "{% for x in items limit:1 %}{{ x }}{% endfor %}|{% for x in items \(attributes) %}{{ x }}{% endfor %}"
+                #expect(try await engine.render(template: repeated, context: context, syntaxMode: mode) == expected, "\(attributes)")
+            }
         }
         await #expect(throws: LiquidError.self) { try await LiquidEngine(limits: .init(outputBytes: 1)).render(template: source, context: context) }
         let task = Task { () async throws -> String in
