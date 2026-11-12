@@ -1986,6 +1986,19 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public consumer regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Slice integer diagnostics",
+      "scopeDecision": "The maintainer requested Shopify-compatible diagnostics without changing pinned fixtures or recovery and compatibility holds.",
+      "changes": [
+        "Report the pinned Ruby invalid-integer reason for invalid slice offsets and lengths while retaining existing public error categories and nil length behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/StandardFilterCoercionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Public consumer regression and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
