@@ -1365,6 +1365,24 @@
         "Documentation/AssignmentTargets.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Computed include property and index names",
+      "scopeDecision": "The maintainer commissioned further Shopify conformance while retaining the exact-registry simple-name lookup contract, source quotas, cancellation and existing holds.",
+      "changes": [
+        "Admit property and index expressions as include names and evaluate them before resolving a template, retaining AST inspection and one invocation-owned budget.",
+        "Resolve the computed string exactly once without context fallback; preserve literal-first and simple-variable fallback behavior for previously admitted include forms."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/DynamicIncludeAccessTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md",
+        "Documentation/Inspection.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

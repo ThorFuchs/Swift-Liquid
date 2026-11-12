@@ -667,7 +667,7 @@ extension Renderer {
         return result
     }
     
-    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?) async throws -> String {
+    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?, allowContextFallback: Bool = true) async throws -> String {
         guard let templateLoader else {
             throw RenderError.includeError(
                 template.string,
@@ -695,7 +695,7 @@ extension Renderer {
             let selected: PreparedExactTemplates.Selected
             if let literal = try prepared.select(templateName) {
                 selected = literal
-            } else if let variableName = context.getVariable(templateName) as? String {
+            } else if allowContextFallback, let variableName = context.getVariable(templateName) as? String {
                 templateName = variableName
                 guard let fallback = try prepared.select(templateName) else {
                     throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
@@ -719,7 +719,7 @@ extension Renderer {
                 )
             } catch {
                 // If literal name fails, try resolving as a variable reference
-                if let variableValue = context.getVariable(templateName) as? String {
+                if allowContextFallback, let variableValue = context.getVariable(templateName) as? String {
                     templateName = variableValue
                     do {
                         resolvedPath = try templateLoader.resolvedTemplatePath(

@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.DynamicIncludeAccessTests/accessNamesResolveAgainstBothTemplateLoaders()": null,
+    "LiquidTests.DynamicIncludeAccessTests/computedNamesKeepExactIdentityAndDoNotRetryVariables()": null,
     "LiquidTests.AssignmentPrecheckCompatibilityTests/invalidOriginalPrecheckKeepsSourceLocation()": null,
     "LiquidTests.CycleCompatibilityTests/laxAndStrictUseFirstExpressionPerFragment()": null,
     "LiquidTests.CycleCompatibilityTests/quotaAndCancellationRemainTerminal()": null,

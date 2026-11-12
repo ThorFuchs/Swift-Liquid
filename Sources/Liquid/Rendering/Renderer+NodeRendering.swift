@@ -106,7 +106,14 @@ extension Renderer {
         case .liquid(let nodes):
             return try await renderTemplate(nodes)
 
-        case .include(let template, _, let withVars, let asVar):
+        case .include(let template, let reference, let withVars, let asVar):
+            if case .access = reference {
+                let value = try await evaluateExpression(reference)
+                guard let name = value as? String else {
+                    throw RenderError.templateNotFound(stringify(value))
+                }
+                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, allowContextFallback: false)
+            }
             return try await renderInclude(template: template, with: withVars, as: asVar)
 
         }

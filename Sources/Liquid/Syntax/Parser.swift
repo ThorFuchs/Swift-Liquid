@@ -2254,6 +2254,10 @@ internal final class Parser {
         } else if case .variable(let name) = templateName {
             // Support include with variable name: {% include my_template %}
             templateStr = name
+        } else if case .access = templateName {
+            // The runtime evaluates this newly admitted dynamic expression;
+            // no literal candidate is implied by its source spelling.
+            templateStr = InlineString("")
         } else {
             throw ParserError.expectedString
         }
