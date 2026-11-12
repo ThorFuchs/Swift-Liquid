@@ -1635,6 +1635,20 @@
         "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
+    },
+    {
+      "area": "Correction of dangling-pipe diagnostic expectation",
+      "scopeDecision": "The maintainer authorized Shopify compatibility while preserving the pinned fixture and reference; the prior authored test disagreed with both.",
+      "changes": [
+        "Correct the authored regression to the current pinned case and pinned Ruby behavior: a dangling filter pipe rejects the missing filter identifier.",
+        "Supersede the preceding dangling-pipe adaptation; preserve the failed native evidence and leave all fixture bytes unchanged."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/ExpressionTokenDiagnosticTests.swift",
+        "Tests/LiquidTests/FilterArgumentBoundaryTests.swift"
+      ],
+      "qualification": "Source-bound checks and independent comparison are retained externally; conformance, performance, integration and release acceptance remain pending."
     }
   ]
 }

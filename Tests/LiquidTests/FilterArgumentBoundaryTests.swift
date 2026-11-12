@@ -25,6 +25,6 @@ struct FilterArgumentBoundaryTests {
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ x | append: , }}", syntaxMode: .strict2) }
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ x | append: 'a',, }}", syntaxMode: .strict2) }
         do { _ = try LiquidTemplate("{% assign x = x | x : | %}", syntaxMode: .strict2); Issue.record("Expected rejection") }
-        catch LiquidError.syntax(let message, _, _) { #expect(message == "[:pipe, \"|\"] is not a valid expression") }
+        catch LiquidError.syntax(let message, _, _) { #expect(message == "Expected id but found end_of_string") }
     }
 }
