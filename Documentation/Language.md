@@ -65,6 +65,9 @@ Finite limits can reject an otherwise valid template. The raising render API thr
 cancellation remains `CancellationError`. Explicit diagnostic rendering can
 recover Liquid runtime errors while retaining every diagnostic; see
 [errors and recovery](Errors.md).
+Relational comparisons involving `nil` return false, while equality and
+inequality retain their usual Liquid behavior.
+
 These limits are policy, not language invalidity. They do not certify a process
 sandbox, wall-clock deadline, or memory ceiling.
 

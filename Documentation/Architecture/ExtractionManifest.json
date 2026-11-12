@@ -1251,6 +1251,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Source-bound checks and independent comparison are retained externally; complete conformance, performance, integration, release and downstream acceptance remain pending."
+    },
+    {
+      "area": "Reference-backed nil ordering",
+      "scopeDecision": "The maintainer commissioned additional reference-backed conformance batches while retaining pinned fixtures, independent comparison and existing holds.",
+      "changes": [
+        "Return false for relational operators when either operand is nil, matching pinned Ruby Liquid without changing equality or coercing nil to zero.",
+        "Cover both operand orders, all relational operators, modes and public rendering policies, plus quotas and cancellation."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Tests/LiquidTests/NilComparisonTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Source-bound checks and independent comparison are recorded externally; full conformance, performance, integration, release and downstream acceptance remain pending."
     }
   ]
 }

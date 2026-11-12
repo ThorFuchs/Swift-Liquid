@@ -345,22 +345,22 @@ extension Renderer {
     }
 
     internal func isLess(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
         return try compareValues(left, right) < 0
     }
 
     internal func isLessEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
         return try compareValues(left, right) <= 0
     }
 
     internal func isGreater(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
         return try compareValues(left, right) > 0
     }
 
     internal func isGreaterEqual(_ left: Any, _ right: Any) throws -> Bool {
-        if left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
+        if left is NSNull || right is NSNull || left is LiquidSpecialValue || right is LiquidSpecialValue { return false }
         return try compareValues(left, right) >= 0
     }
 

@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.NilComparisonTests/nilRelationalComparisonsAreFalseAcrossPolicies()": null,
+    "LiquidTests.NilComparisonTests/nilOrderingRetainsQuotaAndCancellation()": null,
     "LiquidTests.FilterStringCoercionTests/outputObjectsInspectNestedValuesAcrossRenderPaths()": null,
     "LiquidTests.BlockMarkupDiagnosticTests/pinnedMarkupAndNestingRejections()": null,
     "LiquidTests.BlockMarkupDiagnosticTests/validBlocksOtherModesAndAdmissionRemainStable()": null,
