@@ -677,11 +677,7 @@ extension Renderer {
 
         let isRender = withVars?["__render_isolated__"] != nil
         let hasForIteration = withVars?["_for"] != nil
-        let evaluatedVariables = try await evaluateIncludeBindings(
-            template: template,
-            with: withVars,
-            as: asVar
-        )
+        let bindings = try await evaluateIncludeBindings(with: withVars)
 
         var templateName = template.string
 
@@ -741,6 +737,12 @@ extension Renderer {
                     throw RenderError.includeError(templateName, reason: error.localizedDescription)
                 }
             }
+        }
+
+        var evaluatedVariables = bindings.variables
+        if let value = bindings.withValue {
+            let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
+            evaluatedVariables[alias] = value
         }
 
         // Handle {% render "template" for collection %} — iterate and render for each item
@@ -906,12 +908,10 @@ extension Renderer {
     }
 
     internal func evaluateIncludeBindings(
-        template: InlineString,
-        with withVars: [String: LiquidExpression]?,
-        as asVar: InlineString?
-    ) async throws -> RuntimeVariables {
+        with withVars: [String: LiquidExpression]?
+    ) async throws -> (variables: RuntimeVariables, withValue: Any?) {
         guard let withVars else {
-            return [:]
+            return ([:], nil)
         }
 
         var evaluatedVariables: RuntimeVariables = [:]
@@ -926,12 +926,10 @@ extension Renderer {
             }
         }
 
-        if let withExpression = withVars["_with"] {
-            let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
-            evaluatedVariables[alias] = try await evaluateExpression(withExpression)
-        }
-
-        return evaluatedVariables
+        let withValue: Any?
+        if let withExpression = withVars["_with"] { withValue = try await evaluateExpression(withExpression) }
+        else { withValue = nil }
+        return (evaluatedVariables, withValue)
     }
 
     internal func defaultTemplateAlias(for templatePath: String) -> String {

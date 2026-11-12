@@ -54,6 +54,9 @@ For an include whose name is a property or index expression, the expression is
 evaluated to a string and that exact name is resolved once; it does not receive
 the separate context-variable fallback. Existing simple-name lookup retains its
 literal-first behavior.
+An include with a `with` binding and no explicit alias derives the alias from
+the selected name after any variable fallback; argument expressions retain
+their established evaluation order.
 Shared include scope, isolated render scope, iteration/cycle/interrupt state and
 immediate-template dispatch are the existing runtime paths. Variable-form render
 grammar remains unsupported. Public include bindings accept primary expressions,

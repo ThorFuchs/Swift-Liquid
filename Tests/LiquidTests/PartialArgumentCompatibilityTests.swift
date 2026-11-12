@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Partial argument syntax")
 struct PartialArgumentCompatibilityTests {
+    @Test func dynamicIncludeWithUsesResolvedNameAsDefaultAlias() async throws {
+        let engine = LiquidEngine()
+        let context: LiquidObject = ["tpl": "product", "featured": "Widget"]
+        let source = "{% include tpl with featured, tpl: 'named' %}"
+        let partial = "{{ product }}|{{ tpl }}"
+        let registry = try LiquidTemplateRegistry([.init("product", .raw(partial))])
+        let literalFirst = try LiquidTemplateRegistry([.init("tpl", .raw("literal={{ tpl }}")), .init("product", .raw(partial))])
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, context: context, registry: registry, syntaxMode: mode) == "Widget|named")
+            #expect(try await engine.render(template: source, context: context, templates: ["product": partial], syntaxMode: mode) == "Widget|named")
+            #expect(try await engine.render(template: source, context: context, registry: literalFirst, syntaxMode: mode) == "literal=Widget")
+            let result = try await engine.renderWithDiagnostics(template: source, context: context, registry: registry, syntaxMode: mode)
+            #expect(result.output == "Widget|named" && result.diagnostics.isEmpty)
+        }
+    }
     @Test func laxPartialAttributesIgnoreUnrecognizedPunctuation() async throws {
         let engine = LiquidEngine()
         let partial = "{{ a }}:{{ b }}"

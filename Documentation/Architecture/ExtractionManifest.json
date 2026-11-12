@@ -2180,6 +2180,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
+    },
+    {
+      "area": "Dynamic include default binding alias",
+      "scopeDecision": "The maintainer requested Ruby-compatible dynamic partial bindings while preserving exact literal-first lookup and argument evaluation order.",
+      "changes": [
+        "Derive an implicit with-binding alias from the selected partial name after variable fallback, while evaluating binding expressions before lookup as before."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/ExactRegistryRendering.md"
+      ],
+      "qualification": "Public regressions and source-bound CI and independent conformance remain subject to their recorded outcomes; no performance or release claim is implied."
     }
   ]
 }
