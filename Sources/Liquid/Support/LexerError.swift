@@ -21,6 +21,7 @@ internal enum LexerError: Error, Sendable, Equatable {
     case invalidUTF8(position: Int)
     
     case unclosedDelimiter(String, position: Int)
+    case unclosedShopifyBlock(String, opening: Token)
     
     case unexpectedEndOfInput(position: Int)
 }
@@ -46,6 +47,8 @@ extension LexerError {
             return "Invalid UTF-8 sequence"
         case .unclosedDelimiter(let delimiter, _):
             return "Unclosed delimiter '\(delimiter)'"
+        case .unclosedShopifyBlock(let tag, _):
+            return "'\(tag)' tag was never closed"
         case .unexpectedEndOfInput:
             return "Unexpected end of input"
         }
@@ -53,6 +56,7 @@ extension LexerError {
     
     internal var position: Int {
         switch self {
+        case .unclosedShopifyBlock(_, let opening): return opening.position
         case .unexpectedCharacter(_, let pos, _),
              .unterminatedString(let pos),
              .invalidNumber(_, let pos),
@@ -68,7 +72,7 @@ extension LexerError {
         switch self {
         case .unexpectedCharacter, .invalidUTF8:
             return .syntax
-        case .unterminatedString, .unclosedDelimiter:
+        case .unterminatedString, .unclosedDelimiter, .unclosedShopifyBlock:
             return .unterminated
         case .invalidNumber, .invalidEscapeSequence:
             return .malformed
@@ -101,6 +105,8 @@ extension LexerError {
             return "Use a valid escape sequence or escape the backslash: \\\(char) or \\\\"
         case .invalidUTF8:
             return "Ensure the template file is saved with UTF-8 encoding"
+        case .unclosedShopifyBlock(let tag, _):
+            return "Add the closing delimiter for '\(tag)'"
         case .unclosedDelimiter(let delimiter, _):
             switch delimiter {
             case "{{":

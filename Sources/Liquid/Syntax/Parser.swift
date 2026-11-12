@@ -472,7 +472,15 @@ internal final class Parser {
         return .echo(expression: expression, location: .init(line: line, suppressErrorText: false))
     }
     
+    // Called immediately after the parser consumes an original tag header.
+    private func originalBlockOpening() -> Token? {
+        guard case .original = sourceProvenance, current >= 2,
+              tokens[current - 2].type == .tagStart else { return nil }
+        return tokens[current - 2]
+    }
+
     private func parseCommentTag() throws ->ASTNode {
+        let opening = originalBlockOpening()
         try consumeTagEnd()
 
         // Track nesting depth for nested comment blocks
@@ -499,6 +507,7 @@ internal final class Parser {
 
         // Consume final endcomment
         guard currentTagMatches(.endcomment, identifier: "endcomment") else {
+            if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("comment", opening: opening) }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance() // consume {%
@@ -678,6 +687,7 @@ internal final class Parser {
     private func parseConditionOperand() throws -> LiquidExpression {
         let value = try parsePrimaryExpression()
         if currentToken.type == .filter {
+            if syntaxMode == .strict2 { throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe") }
             guard syntaxMode == .lax else { throw ParserError.unexpectedToken(currentToken) }
             while !isAtEnd && currentToken.type != .tagEnd { advance() }
         }
@@ -1959,6 +1969,7 @@ internal final class Parser {
     private func parseRawTag() throws ->ASTNode {
         // Record position right after {% raw %} tag end
         let tagEndToken = currentToken
+        let opening = originalBlockOpening()
         try consumeTagEnd(presentComparison: false)
 
         // If we have the original source, extract raw content verbatim
@@ -1971,6 +1982,7 @@ internal final class Parser {
             }
 
             guard currentTagMatches(.endraw, identifier: "endraw") else {
+                if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("raw", opening: opening) }
                 throw ParserError.unexpectedToken(currentToken)
             }
 
@@ -2010,6 +2022,7 @@ internal final class Parser {
         }
 
         guard currentTagMatches(.endraw, identifier: "endraw") else {
+            if syntaxMode == .strict2, let opening { throw ParserError.unclosedShopifyBlock("raw", opening: opening) }
             throw ParserError.unexpectedToken(currentToken)
         }
         advance()
@@ -2264,6 +2277,9 @@ internal final class Parser {
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
                 }
+                if syntaxMode == .strict2, currentToken.type == .filter {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe")
+                }
                 throw ParserError.unexpectedToken(currentToken)
             }
         }
@@ -2336,6 +2352,9 @@ internal final class Parser {
             } else {
                 if syntaxMode == .strict2, isOriginalComparison(currentToken) {
                     throw ParserError.unexpectedTrailingToken(currentToken, kind: "comparison")
+                }
+                if syntaxMode == .strict2, currentToken.type == .filter {
+                    throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe")
                 }
                 throw ParserError.unexpectedToken(currentToken)
             }

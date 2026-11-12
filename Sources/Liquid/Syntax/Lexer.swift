@@ -81,6 +81,11 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                if syntaxMode == .strict2, case .unclosedDelimiter("doc", _) = error,
+                   case .original = sourceProvenance, firstToken < tokens.count,
+                   tokens[firstToken].type == .tagStart {
+                    throw LexerError.unclosedShopifyBlock("doc", opening: tokens[firstToken])
+                }
                 // Only present an unmatched quote when its original markup frame is validated.
                 if syntaxMode == .strict2, case .unterminatedString(let offset) = error,
                    offset >= 0, offset < bytes.count,

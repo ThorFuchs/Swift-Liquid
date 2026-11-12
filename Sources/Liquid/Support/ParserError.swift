@@ -41,6 +41,7 @@ internal enum ParserError: Error, Sendable, Equatable {
     case unsupportedFeature(String)
     
     case unclosedTag(String)
+    case unclosedShopifyBlock(String, opening: Token)
     
     case invalidForLoopParameter
     
@@ -114,6 +115,8 @@ extension ParserError {
             return "Unsupported feature: \(feature)"
         case .unclosedTag(let tag):
             return "Unclosed tag '\(tag)'"
+        case .unclosedShopifyBlock(let tag, _):
+            return "'\(tag)' tag was never closed"
         case .invalidForLoopParameter:
             return "Invalid for loop parameter"
         case .unknownForLoopParameter(let param):
@@ -145,7 +148,7 @@ extension ParserError {
             return .unknown
         case .unsupportedFeature:
             return .semantic
-        case .unclosedTag:
+        case .unclosedTag, .unclosedShopifyBlock:
             return .structure
         case .invalidForLoopParameter, .invalidRange, .malformedFilter, 
              .invalidAssignmentTarget, .invalidParameterValue:
@@ -162,6 +165,8 @@ extension ParserError {
         case .unexpectedToken(let token), .invalidCommaExpression(let token), .invalidCloseRoundExpression(let token), .invalidOperatorExpression(let token, _, _), .unexpectedTrailingIdentifier(let token), .unexpectedTrailingToken(let token, _),
              .missingAttributeColonBeforeComma(let token), .invalidExpressionAtMarkupEnd(let token), .expectedIdentifierAtMarkupEnd(let token), .expectedIdentifierBeforeNumber(let token), .expectedIdentifierBeforeString(let token):
             return token.sourceLocation
+        case .unclosedShopifyBlock(_, let opening):
+            return opening.sourceLocation
         case .expectedToken(_, _, .resolved(let origin)?):
             return .init(position: origin.anchor, line: origin.position.line, column: origin.position.column)
         default:
@@ -223,7 +228,7 @@ extension ParserError {
             return checkTagNameSuggestion(for: tag)
         case .unsupportedFeature(let feature):
             return "Use only the actively supported 1.x syntax surface. \(feature)"
-        case .unclosedTag(let tag):
+        case .unclosedTag(let tag), .unclosedShopifyBlock(let tag, _):
             return "Add {% end\(tag) %} to close the \(tag) block"
         case .invalidForLoopParameter:
             return "Use valid parameters: limit, offset, reversed, or if"

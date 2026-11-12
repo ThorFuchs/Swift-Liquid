@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.BlockAndPipeDiagnosticTests/pinnedRejectionsRetainSourceAndReason()": null,
+    "LiquidTests.BlockAndPipeDiagnosticTests/validBlocksAndOtherModesStayBounded()": null,
     "LiquidTests.UnclosedQuoteDiagnosticTests/pinnedQuotesRetainSourceAndRejection()": null,
     "LiquidTests.UnclosedQuoteDiagnosticTests/quoteBoundariesRetainModesAndOriginalSourceOwnership()": null,
     "LiquidTests.ComparisonTokenDiagnosticTests/pinnedComparisonRejectionsUseOriginalSpelling()": null,
