@@ -2456,6 +2456,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify lax conditional ampersands",
+      "scopeDecision": "Follow the pinned Ruby lax conditional scanner while keeping strict2 rejection and cancellation.",
+      "changes": [
+        "Retain the expression preceding an invalid ampersand segment and continue at the next unquoted boolean operator in the original tag.",
+        "Check cancellation during the bounded scan and propagate cancellation rather than converting it to a syntax error."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }

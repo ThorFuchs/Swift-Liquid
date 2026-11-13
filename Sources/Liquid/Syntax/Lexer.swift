@@ -83,6 +83,7 @@ internal final class Lexer {
             do {
                 try tokenizeNext(&tokens, startPosition: start)
             } catch {
+                guard let error = error as? LexerError else { throw error }
                 // Ruby tokenizes the outer delimiter before interpreting
                 // quotes. Present an unclosed construct only when the
                 // original bytes contain no matching outer terminator.
@@ -278,7 +279,7 @@ internal final class Lexer {
     
     // MARK: - Tokenization
     
-    private func tokenizeNext(_ tokens: inout [Token], startPosition: TokenPosition) throws(LexerError) {
+    private func tokenizeNext(_ tokens: inout [Token], startPosition: TokenPosition) throws {
         // Check for Liquid constructs
         if current == Self.openBrace {
             if peek() == Self.openBrace {
@@ -855,7 +856,7 @@ internal final class Lexer {
         }
     }
     
-    private func tokenizeTag(_ tokens: inout [Token], start: TokenPosition) throws(LexerError) {
+    private func tokenizeTag(_ tokens: inout [Token], start: TokenPosition) throws {
         let tagTokenStart = tokens.count
         advanceASCII() // consume {
         advanceASCII() // consume %
@@ -996,6 +997,34 @@ internal final class Lexer {
             let tokenColumn = column
 
             switch byte {
+            case 0x26 where syntaxMode == .lax && tokens.count > tagTokenStart + 2 &&
+                (tokens[tagTokenStart + 1].type == .if || tokens[tagTokenStart + 1].type == .unless || tokens[tagTokenStart + 1].type == .elsif):
+                // Ruby's lax conditional scanner keeps the parsed prefix of
+                // an invalid ampersand segment, then resumes at a boolean
+                // operator. Respect quoted text and the original delimiter.
+                var quote: UInt8? = nil
+                var steps = 0
+                while byteIndex < end {
+                    if steps & 255 == 0 { try Task.checkCancellation() }
+                    steps += 1
+                    let b = bytes[byteIndex]
+                    if let active = quote {
+                        if b == active { quote = nil }
+                        advance()
+                        continue
+                    }
+                    if b == Self.singleQuote || b == Self.doubleQuote { quote = b; advanceASCII(); continue }
+                    if b == Self.percent, byteIndex + 1 < end, bytes[byteIndex + 1] == Self.closeBrace { break }
+                    if b == Self.dash, byteIndex + 2 < end, bytes[byteIndex + 1] == Self.percent, bytes[byteIndex + 2] == Self.closeBrace { break }
+                    let previousIsWord = byteIndex > 0 && bytes[byteIndex - 1].isIdentifierContinueByte
+                    if !previousIsWord {
+                        let isAnd = byteIndex + 3 <= end && bytes[byteIndex..<byteIndex + 3].elementsEqual([97, 110, 100])
+                        let isOr = byteIndex + 2 <= end && bytes[byteIndex..<byteIndex + 2].elementsEqual([111, 114])
+                        let length = isAnd ? 3 : (isOr ? 2 : 0)
+                        if length > 0, byteIndex + length == end || !bytes[byteIndex + length].isIdentifierContinueByte { break }
+                    }
+                    advance()
+                }
             case Self.equals:
                 if nextByte == Self.equals {
                     advanceASCII()

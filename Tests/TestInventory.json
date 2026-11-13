@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LiquidSpecRegressionTests/laxConditionalAmpersandsKeepRubyBooleanBoundaries()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/emptyCounterNamesFollowParserModeAndRenderIsolation()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/renderDisallowsIncludeInItsIsolatedSubtree()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/includeForRendersScalarOnceAndScopesArguments()": null,

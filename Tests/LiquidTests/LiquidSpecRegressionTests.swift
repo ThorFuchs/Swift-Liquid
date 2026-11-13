@@ -4,6 +4,21 @@ import Testing
 
 @Suite("Independent liquid-spec regressions", .timeLimit(.minutes(1)))
 struct LiquidSpecRegressionTests {
+    @Test func laxConditionalAmpersandsKeepRubyBooleanBoundaries() async throws {
+        let engine = LiquidEngine()
+        let cases = [
+            ("true && false", "Y"), ("false && true", "N"),
+            ("false && true or true", "Y"), ("true && false and false", "N"),
+            ("true & 'and' or false", "Y"), ("1 == 1 && false", "Y")
+        ]
+        for (condition, expected) in cases {
+            let source = "{% if \(condition) %}Y{% else %}N{% endif %}"
+            #expect(try await engine.render(template: source, syntaxMode: .lax) == expected)
+        }
+        #expect(throws: LiquidError.self) {
+            try LiquidTemplate("{% if true && false %}Y{% endif %}", syntaxMode: .strict2)
+        }
+    }
     // Provenance: Shopify/liquid-spec 84bf25e, basics/filter-edge-cases.yml:282,
     // truncate_zero_length. Additional cases protect the general rule and quotas.
     @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
