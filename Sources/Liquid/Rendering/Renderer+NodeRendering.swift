@@ -135,6 +135,9 @@ extension Renderer {
             case .exact, nil: shopifyNames = false
             }
             if !isRender && shopifyNames {
+                if case .literal(.string) = reference {
+                    return try await renderInclude(template: template, with: withVars, as: asVar, isRender: false, allowContextFallback: false)
+                }
                 let value = systemPrimary(try await evaluateExpression(reference))
                 guard let name = value as? String else { throw RenderError.illegalIncludeName() }
                 return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: false, allowContextFallback: false)

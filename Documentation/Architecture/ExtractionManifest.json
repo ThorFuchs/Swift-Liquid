@@ -2435,6 +2435,7 @@
         "Tools/LiquidSpecAdapter/adapter.rb",
         "Scripts/check_liquid_spec_protocol.py",
         "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/LiquidTests/R6ExpectedTokenTests.swift",
         "Documentation/Language.md",
         "Documentation/Metrics.md",
         "Sources/Liquid/Documentation.docc/RenderingAndPartials.md",
