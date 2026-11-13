@@ -100,7 +100,8 @@ private func rpcError(_ code: Int, _ message: String) -> LiquidValue { rpcError(
 private struct Compiled {
     let id: String
     let root: LiquidTemplate
-    let partials: [String: LiquidTemplate]
+    let partials: [String: String]
+    let resolver: LiquidTemplateNameResolver
 }
 private struct Server {
     private var initialized = false
@@ -147,6 +148,7 @@ private struct Server {
                 case "strict2": mode = .strict2
                 default: throw WireFailure.invalid("Unknown parser mode")
                 }
+                let hasFilesystem = params["filesystem"] != nil
                 let files = try object(params["filesystem"])
                 var remaining = sourceBytes - source.utf8.count
                 guard remaining >= 0 else { throw WireFailure.invalid("Compiled source capacity exceeded") }
@@ -159,10 +161,20 @@ private struct Server {
                 }
                 do {
                     let root = try LiquidTemplate(source, syntaxMode: mode, limits: profile)
-                    let partials = try supplied.mapValues { try LiquidTemplate($0, syntaxMode: mode, limits: profile) }
                     guard sequence < 200_000 else { throw WireFailure.invalid("Compile request capacity exceeded") }
                     sequence += 1
-                    let compiled = Compiled(id: "template_\(sequence)", root: root, partials: partials)
+                    let names = files.entries.map(\.key)
+                    let resolver = LiquidTemplateNameResolver(select: { requested in
+                        func normalize(_ value: String) -> String {
+                            let lower = value.lowercased()
+                            return lower.hasSuffix(".liquid") ? lower : lower + ".liquid"
+                        }
+                        let normalized = normalize(requested)
+                        return names.first { normalize($0).caseInsensitiveCompare(normalized) == .orderedSame }
+                    }, missing: { name in
+                        hasFilesystem ? "Could not find asset " + name : "This liquid context does not allow includes."
+                    })
+                    let compiled = Compiled(id: "template_\(sequence)", root: root, partials: supplied, resolver: resolver)
                     slot = compiled
                     result = ["template_id": .string(compiled.id)]
                 } catch is WireFailure { throw WireFailure.invalid("Compile request capacity exceeded") }
@@ -198,14 +210,14 @@ private struct Server {
                 let engine = LiquidEngine(limits: profile, referenceTime: reference)
                 do {
                     if recovering {
-                        let rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, templates: compiled.partials)
+                        let rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)
                         result = ["output": .string(rendered.output), "errors": .array(rendered.diagnostics.map { diagnostic in
                             var fields: [LiquidObject.Entry] = [.init("type", "render_error"), .init("message", .string(diagnostic.message))]
                             if let line = diagnostic.line { fields.append(.init("line", .integer(line))) }
                             if let name = diagnostic.templateName { fields.append(.init("template_name", .string(name))) }
                             return .object(.init(fields))
                         })]
-                    } else { result = ["output": .string(try await engine.renderLocatingFailures(compiled.root, context: context, templates: compiled.partials)), "errors": []] }
+                    } else { result = ["output": .string(try await engine.renderLocatingFailures(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)), "errors": []] }
                 } catch { result = ["output": nil, "error": problem(error), "errors": []] }
             case "quit": slot = nil; quitting = true; result = [:]
             default:

@@ -2411,6 +2411,36 @@
         "README.md"
       ],
       "qualification": "Public and pinned corpus outcomes are recorded separately; host mapping, lazy loading, ordered bindings and downstream qualification remain open."
+    },
+    {
+      "area": "Shopify source partial preparation and host names",
+      "scopeDecision": "The maintainer selected Shopify-compatible default partial behavior and an explicit byte-exact registry profile; host name policy remains external to the core.",
+      "changes": [
+        "Admit all source bytes before rendering, parse a selected source partial on first use, and cache it only within that invocation.",
+        "Add a checked-Sendable host name resolver over pre-admitted source maps; retain exact-registry eager preparation and selection.",
+        "Adapt the pinned JSON-RPC host to its reference filesystem naming and missing-asset policy; report root-only parse timing for lazy source dictionaries.",
+        "Evaluate default include attributes in source order within an invocation-owned temporary scope, while retaining exact-registry binding behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Support/TemplateLoader.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidTemplateNameResolver.swift",
+        "Sources/Liquid/LiquidRenderMetrics.swift",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/Language.md",
+        "Documentation/Metrics.md",
+        "Sources/Liquid/Documentation.docc/RenderingAndPartials.md",
+        "Sources/Liquid/Documentation.docc/RenderMetrics.md"
+      ],
+      "qualification": "Public, protocol, independent corpus and release checks remain subject to recorded outcomes; external source loading and downstream qualification remain open."
     }
   ]
 }

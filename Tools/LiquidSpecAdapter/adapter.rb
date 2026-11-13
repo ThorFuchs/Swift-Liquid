@@ -139,8 +139,9 @@ module LQ1
         @process.case_key = @case_key
         @process.initialize!
       end
-      files = options[:file_system]&.to_h || {}
-      id = send_request('compile', 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true }, 'filesystem' => files).fetch('template_id')
+      parameters = { 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true } }
+      parameters['filesystem'] = options[:file_system].to_h if options[:file_system]
+      id = send_request('compile', parameters).fetch('template_id')
       @compile_outcome = 'compiled'
       id
     end

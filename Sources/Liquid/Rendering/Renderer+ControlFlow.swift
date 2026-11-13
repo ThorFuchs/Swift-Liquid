@@ -669,7 +669,7 @@ extension Renderer {
         return result
     }
     
-    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?, isRender: Bool = false, allowContextFallback: Bool = true) async throws -> String {
+    internal func renderInclude(template: InlineString, with withVars: PartialBindings?, as asVar: InlineString?, isRender: Bool = false, allowContextFallback: Bool = true) async throws -> String {
         guard let templateLoader else {
             throw RenderError.includeError(
                 template.string,
@@ -677,8 +677,11 @@ extension Renderer {
             )
         }
 
-        let hasForIteration = withVars?["_for"] != nil
-        let bindings = try await evaluateIncludeBindings(with: withVars)
+        let isExact: Bool
+        if case .exact = templateLoader { isExact = true } else { isExact = false }
+        let forExpression = withVars?.forExpression ?? (isExact ? withVars?["_for"] : nil)
+        let hasForIteration = forExpression != nil
+        let earlyBindings = isExact ? try await evaluateIncludeBindings(with: withVars, shopify: false, shareBindings: false) : nil
 
         var templateName = template.string
 
@@ -703,6 +706,24 @@ extension Renderer {
             }
             resolvedPath = selected.storedName
             ast = selected.ast
+        case .sources(let sources):
+            do {
+                resolvedPath = try sources.resolvedTemplatePath(for: templateName)
+            } catch let error as TemplateLoaderError {
+                throw mapTemplateLoaderError(error, template: templateName)
+            }
+            if let cached = parsedPartialSources[resolvedPath] {
+                ast = cached
+            } else {
+                try Task.checkCancellation()
+                guard let source = sources.sources[resolvedPath] else {
+                    throw mapTemplateLoaderError(.templateNotFound(templateName), template: templateName)
+                }
+                let parsed = try LiquidTemplate(source, syntaxMode: sources.syntaxMode,
+                    extensionProfile: sources.extensionProfile, limits: sources.limits)
+                ast = parsed.ast
+                parsedPartialSources[resolvedPath] = ast
+            }
         case .legacy(let templateLoader):
             do {
                 // Try literal template name first
@@ -740,10 +761,14 @@ extension Renderer {
             }
         }
 
+        let bindings: (variables: RuntimeVariables, withValue: Any?, forValue: Any?)
+        if let earlyBindings { bindings = earlyBindings }
+        else { bindings = try await evaluateIncludeBindings(with: withVars, shopify: true, shareBindings: !isRender) }
+
         let diagnosticName: String
         switch templateLoader {
         case .exact: diagnosticName = resolvedPath
-        case .legacy: diagnosticName = templateName
+        case .legacy, .sources: diagnosticName = templateName
         }
         var evaluatedVariables = bindings.variables
         if let value = bindings.withValue {
@@ -752,8 +777,10 @@ extension Renderer {
         }
 
         // Handle {% render "template" for collection %} — iterate and render for each item
-        if isRender, hasForIteration, let forExpr = withVars?["_for"] {
-            let suppliedCollection = try await evaluateExpression(forExpr)
+        if isRender, hasForIteration, let forExpr = forExpression {
+            let suppliedCollection: Any
+            if let value = bindings.forValue { suppliedCollection = value }
+            else { suppliedCollection = try await evaluateExpression(forExpr) }
             let collection = systemPrimary(suppliedCollection)
             let alias = asVar?.string ?? defaultTemplateAlias(for: template.string)
             let items: [Any]?
@@ -831,10 +858,12 @@ extension Renderer {
         }
 
         // Handle {% include "template" for collection %} (non-render mode)
-        if !isRender, hasForIteration, let forExpr = withVars?["_for"] {
+        if !isRender, hasForIteration, let forExpr = forExpression {
             try enterLiquidScope()
             defer { liquidLocalScopeDepth -= 1 }
-            let suppliedCollection = try await evaluateExpression(forExpr)
+            let suppliedCollection: Any
+            if let value = bindings.forValue { suppliedCollection = value }
+            else { suppliedCollection = try await evaluateExpression(forExpr) }
             let collection = systemPrimary(suppliedCollection)
             let array = collection as? [Any]
             let items = array ?? [suppliedCollection]
@@ -931,28 +960,37 @@ extension Renderer {
     }
 
     internal func evaluateIncludeBindings(
-        with withVars: [String: LiquidExpression]?
-    ) async throws -> (variables: RuntimeVariables, withValue: Any?) {
+        with withVars: PartialBindings?, shopify: Bool, shareBindings: Bool
+    ) async throws -> (variables: RuntimeVariables, withValue: Any?, forValue: Any?) {
         guard let withVars else {
-            return ([:], nil)
+            return ([:], nil, nil)
         }
 
         var evaluatedVariables: RuntimeVariables = [:]
         evaluatedVariables.reserveCapacity(withVars.count)
 
-        for (key, expression) in withVars {
-            switch key {
-            case "_with", "_for":
-                continue
-            default:
-                evaluatedVariables[key] = try await evaluateExpression(expression)
+        if shopify {
+            let withValue: Any? = if let expression = withVars.withExpression { try await evaluateExpression(expression) } else { nil }
+            let forValue: Any? = if let expression = withVars.forExpression { try await evaluateExpression(expression) } else { nil }
+            if shareBindings { context.pushScope() }
+            defer { if shareBindings { context.popScope() } }
+            for key in withVars.order {
+                guard let expression = withVars[key] else { continue }
+                let value = try await evaluateExpression(expression)
+                evaluatedVariables[key] = value
+                if shareBindings { context.setVariable(key, value: value) }
             }
+            return (evaluatedVariables, withValue, forValue)
+        }
+
+        for (key, expression) in withVars.storage {
+            if key != "_with" && key != "_for" { evaluatedVariables[key] = try await evaluateExpression(expression) }
         }
 
         let withValue: Any?
-        if let withExpression = withVars["_with"] { withValue = try await evaluateExpression(withExpression) }
+        if let withExpression = withVars.withExpression ?? withVars["_with"] { withValue = try await evaluateExpression(withExpression) }
         else { withValue = nil }
-        return (evaluatedVariables, withValue)
+        return (evaluatedVariables, withValue, nil)
     }
 
     internal func defaultTemplateAlias(for templatePath: String) -> String {

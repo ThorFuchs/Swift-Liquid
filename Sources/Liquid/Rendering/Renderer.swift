@@ -112,6 +112,7 @@ internal final class Renderer {
 
     internal var templatePathStack: [String]
     internal var diagnosticTemplateNameStack: [String] = []
+    internal var parsedPartialSources: [String: ASTNode] = [:]
 
 
 

@@ -129,7 +129,12 @@ extension Renderer {
             if isolatedRenderDepth > 0, !isRender {
                 throw RenderError.includeDisabled()
             }
-            if !isRender, case .legacy = templateLoader {
+            let shopifyNames: Bool
+            switch templateLoader {
+            case .legacy, .sources: shopifyNames = true
+            case .exact, nil: shopifyNames = false
+            }
+            if !isRender && shopifyNames {
                 let value = systemPrimary(try await evaluateExpression(reference))
                 guard let name = value as? String else { throw RenderError.illegalIncludeName() }
                 return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: false, allowContextFallback: false)
@@ -616,6 +621,8 @@ extension Renderer {
         switch error {
         case .templateNotFound(let path):
             return .templateNotFound(path)
+        case .hostMissing(let message):
+            return .custom(message)
         case .pathTraversal(let detail), .absolutePathNotAllowed(let detail):
             return .accessDenied(detail)
         case .invalidPath(let detail), .invalidExtension(let detail), .ioError(let detail):

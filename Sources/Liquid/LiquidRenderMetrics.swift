@@ -5,7 +5,8 @@
 public struct LiquidRenderMetrics: Sendable, Equatable {
     /// Monotonic elapsed time through final output admission, including host suspension.
     public let totalDuration: Duration
-    /// Root/partial parsing time for source calls; nil when templates were already parsed.
+    /// Root parsing time for source-map calls; lazy partial parsing is in totalDuration.
+    /// Exact-registry calls include their eagerly prepared entries. Nil for parsed dictionary calls.
     public let parseDuration: Duration?
     /// Admitted UTF-8 bytes of the root and every supplied partial, including unused ones.
     public let sourceBytes: Int

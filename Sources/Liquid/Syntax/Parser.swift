@@ -2451,7 +2451,7 @@ internal final class Parser {
             templateStr = InlineString("")
         }
 
-        var variables: [String: LiquidExpression] = [:]
+        var variables = PartialBindings()
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
@@ -2475,7 +2475,7 @@ internal final class Parser {
                 // {% include 'template' for collection %} — iterate over collection
                 advance() // consume 'for'
                 let expr = try parseExpression()
-                variables["_for"] = expr
+                variables.forExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2511,7 +2511,7 @@ internal final class Parser {
                 advance() // consume 'with'
                 // Parse the object to merge
                 let expr = try parsePrimaryExpression()
-                variables["_with"] = expr
+                variables.withExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2557,7 +2557,7 @@ internal final class Parser {
             throw ParserError.expectedString
         }
 
-        var variables: [String: LiquidExpression] = [:]
+        var variables = PartialBindings()
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
@@ -2600,7 +2600,7 @@ internal final class Parser {
             } else if currentToken.type == .with {
                 advance()
                 let expr = try parsePrimaryExpression()
-                variables["_with"] = expr
+                variables.withExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2613,7 +2613,7 @@ internal final class Parser {
             } else if currentToken.type == .for {
                 advance()
                 let expr = try parsePrimaryExpression()
-                variables["_for"] = expr
+                variables.forExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
