@@ -2484,6 +2484,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify comment opening delimiter framing",
+      "scopeDecision": "Match the pinned Ruby comment tag's delimiter framing without changing fixtures or executing comment contents.",
+      "changes": [
+        "Consume ignored comment opening markup up to its actual outer tag delimiter before scanning the comment body.",
+        "Preserve whitespace controls, missing-close failures and cancellation during the scan."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }

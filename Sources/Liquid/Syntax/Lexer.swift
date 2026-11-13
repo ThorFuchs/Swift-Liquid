@@ -980,6 +980,22 @@ internal final class Lexer {
                 continue
             }
 
+            // Shopify consumes the complete outer tag delimiter before its
+            // comment tag ignores opening markup, including nested openers.
+            if tokens.count == tagTokenStart + 2, tokens[tagTokenStart + 1].type == .comment {
+                var steps = 0
+                while byteIndex < end {
+                    if steps & 255 == 0 { try Task.checkCancellation() }
+                    steps += 1
+                    if bytes[byteIndex] == Self.percent, byteIndex + 1 < end,
+                       bytes[byteIndex + 1] == Self.closeBrace { break }
+                    if bytes[byteIndex] == Self.dash, byteIndex + 2 < end,
+                       bytes[byteIndex + 1] == Self.percent, bytes[byteIndex + 2] == Self.closeBrace { break }
+                    advance()
+                }
+                continue
+            }
+
             if tokens.count >= 2, tokens.last?.type == .assign,
                tokens[tokens.count - 2].type == .tagStart {
                 let nameStart = byteIndex

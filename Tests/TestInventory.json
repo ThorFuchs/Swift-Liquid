@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.CommentDelimiterCompatibilityTests/openingMarkupConsumesTheOuterDelimiterBeforeTheBody()": null,
     "LiquidTests.NilTruncationTests/nonIntegerLengthsMatchRubyInsidePartials()": null,
     "LiquidTests.LiquidSpecRegressionTests/laxConditionalAmpersandsKeepRubyBooleanBoundaries()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/emptyCounterNamesFollowParserModeAndRenderIsolation()": null,

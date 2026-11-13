@@ -4,6 +4,20 @@ import Testing
 
 @Suite("Shopify comment closing tags")
 struct CommentDelimiterCompatibilityTests {
+    @Test func openingMarkupConsumesTheOuterDelimiterBeforeTheBody() async throws {
+        let engine = LiquidEngine()
+        let sources = [
+            "A{%comment}{% assign a = 1 %}{%endcomment}{% endif %}Z",
+            "A{%comment}garbage%}inner{% endcomment %}Z",
+            "A{% comment}{%if true%}B{%endcomment%}Z"
+        ]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for source in sources {
+                #expect(try await engine.render(template: source, syntaxMode: mode) == "AZ")
+            }
+            #expect(throws: LiquidError.self) { try LiquidTemplate("{% comment}missing close", syntaxMode: mode) }
+        }
+    }
     @Test func closingMarkupAndWhitespaceControl() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
