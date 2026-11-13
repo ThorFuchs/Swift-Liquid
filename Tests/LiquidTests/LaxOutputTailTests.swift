@@ -25,6 +25,7 @@ struct LaxOutputTailTests {
             }
         }
         #expect(try await engine.render(template: "{{ - x | append: '!' }}", context: ["-": "dash"], syntaxMode: .lax) == "dash!")
+        #expect(try await engine.render(template: "A{{ - x -}}  B", context: ["-": "dash"], syntaxMode: .lax) == "AdashB")
         #expect(try await engine.render(template: "{{ -5 }}", syntaxMode: .lax) == "-5")
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ ! }}", syntaxMode: .lax) }
         for suffix in ["a", "1", "=", "<", ">", "!", "-"] {

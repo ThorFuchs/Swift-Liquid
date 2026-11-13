@@ -2316,7 +2316,7 @@
       "area": "Lax leading dash expression",
       "scopeDecision": "Match the pinned Ruby lax variable parser while preserving strict parser rejection.",
       "changes": [
-        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning."
+        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning and right-trim markers."
       ],
       "files": [
         "Sources/Liquid/Syntax/Lexer.swift",
@@ -2330,7 +2330,8 @@
       "changes": [
         "Add opt-in raising render that reports the first recoverable runtime failure with its node location; the conformance adapter consumes this information.",
         "Keep cancellation, host failures, quotas and security failures terminal, and retain all fixture and reference outcomes.",
-        "Omit derived line numbers for rewritten liquid bodies without a verified original source map."
+        "Omit derived line numbers for rewritten liquid bodies without a verified original source map.",
+        "Capture failures on existing fast paths so opt-in diagnostics preserve ordinary render-step accounting."
       ],
       "files": [
         "Sources/Liquid/LiquidEngine.swift",
