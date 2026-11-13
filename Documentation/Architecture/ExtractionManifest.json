@@ -2442,6 +2442,19 @@
         "Sources/Liquid/Documentation.docc/RenderMetrics.md"
       ],
       "qualification": "Public, protocol, independent corpus and release checks remain subject to recorded outcomes; external source loading and downstream qualification remain open."
+    },
+    {
+      "area": "Shopify parenthesized string expression diagnostics",
+      "scopeDecision": "Follow the pinned Shopify parser separately in lax and strict2 modes, preserving fixture inputs and existing strict rejection.",
+      "changes": [
+        "In lax mode, treat a parenthesized quoted string as the Ruby scanner's nil value while retaining its filter chain.",
+        "In strict2 mode, consume a quoted range start before reporting the expected dotdot at a pipe."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }

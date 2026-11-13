@@ -968,7 +968,14 @@ internal final class Parser {
     
     @inline(__always)
     private func parseExpression() throws ->LiquidExpression {
+        let laxStringGrouping: Bool = {
+            guard syntaxMode == .lax, currentToken.type == .leftParen,
+                  case .string = nextTokenStorage.type, current + 2 < tokens.count else { return false }
+            return tokens[current + 2].type == .filter || tokens[current + 2].type == .rightParen
+        }()
         let expr = try parsePrimaryExpression()
+
+        if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
 
         guard currentTokenStorage.type == .filter else {
             return expr
@@ -995,6 +1002,8 @@ internal final class Parser {
             arguments: firstArguments,
             namedArguments: firstNamedArgs
         )
+
+        if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
 
         guard currentTokenStorage.type == .filter else {
             return .filtered(expr: expr, filters: [firstFilter])
@@ -1025,6 +1034,7 @@ internal final class Parser {
                     namedArguments: namedArgs
                 )
             )
+            if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
         } while currentTokenStorage.type == .filter
 
         return .filtered(expr: expr, filters: allFilters)
@@ -1099,11 +1109,25 @@ internal final class Parser {
         case .leftParen:
             advance() // consume (
 
+            // In Ruby's lax variable scanner a parenthesized quoted string
+            // is not an expression; filters still receive its nil value.
+            if syntaxMode == .lax, case .string = currentToken.type,
+               nextTokenStorage.type == .filter || nextTokenStorage.type == .rightParen {
+                advance()
+                return .literal(.null)
+            }
+
             // Parse range inside parentheses: (expr..expr)
             // Start can be a number, identifier, or negative number
             let startExpr: LiquidExpression
             if case .number(let startValue, let startIsFloat) = currentToken.type {
                 startExpr = .literal(currentToken.exactInteger.map(Value.integer) ?? .number(startValue, isFloat: startIsFloat))
+                advance()
+            } else if syntaxMode == .strict2, case .string(let value) = currentToken.type,
+                      nextTokenStorage.type == .filter {
+                // Ruby's strict expression parser consumes the string as the
+                // range start before requiring dotdot at the following pipe.
+                startExpr = .literal(.string(value))
                 advance()
             } else if case .identifier(let name) = currentToken.type {
                 advance()
@@ -1123,7 +1147,7 @@ internal final class Parser {
             }
 
             guard currentToken.type == .range else {
-                if syntaxMode == .strict2, currentToken.type == .comma {
+                if syntaxMode == .strict2, currentToken.type == .comma || currentToken.type == .filter {
                     throw ParserError.expectedToken(.range, got: currentToken.type)
                 }
                 throw ParserError.unexpectedToken(currentToken)
