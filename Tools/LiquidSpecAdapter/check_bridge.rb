@@ -33,13 +33,18 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
           File.write(ENV.fetch('LQ1_BRIDGE_PROBE_MARKER'), 'failed case must stay failed')
           exit 7
         end
-        {template_id: 'new-process-template'}
+        if request.fetch('params').fetch('template') == 'syntax-probe'
+          {template_id: nil, error: {type: 'syntax_error', message: 'root syntax', line: 1}}
+        else
+          {template_id: 'new-process-template'}
+        end
       when 'render'
         kind = request.fetch('params').fetch('environment').fetch('kind')
         case kind
         when 'raise' then {output: nil, error: {type: 'render_error', message: 'probe error', line: 2}}
         when 'domain' then {output: nil, error: {type: 'domain_error', message: 'probe domain'}}
         when 'quota' then {output: nil, error: {type: 'operational_error', message: 'probe quota'}}
+        when 'partial-syntax' then {output: nil, error: {type: 'syntax_error', message: 'partial syntax', line: 2}}
         else {output: 'recovered', errors: [{type: 'render_error', message: 'probe recovered', line: 3}]}
         end
       end
@@ -54,9 +59,13 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
   assert.call(bridge.observed == 'operational-error', 'Crash outcome was hidden')
   id = bridge.compile('probe', {})
   assert.call(id == 'new-process-template', 'Next compile did not recover a fresh subprocess')
+  error = expect_error.call(LQ1::SyntaxError) { bridge.compile('syntax-probe', {}) }
+  assert.call(error.line == 1 && bridge.observed == 'parse-error' && bridge.detail['type'] == 'syntax_error', 'Root syntax phase or family changed')
   options = {registers: {current_time: Time.utc(2024)}, strict_errors: true}
   error = expect_error.call(LQ1::RenderError) { bridge.render(id, {'kind' => 'raise'}, options) }
   assert.call(error.line == 2 && bridge.observed == 'render-error', 'Raised result.error lost type/location')
+  error = expect_error.call(LQ1::SyntaxError) { bridge.render(id, {'kind' => 'partial-syntax'}, options) }
+  assert.call(error.line == 2 && bridge.observed == 'render-error' && bridge.detail['type'] == 'syntax_error', 'Partial syntax phase or family changed')
   expect_error.call(LQ1::DomainError) { bridge.render(id, {'kind' => 'domain'}, options) }
   assert.call(bridge.observed == 'domain-divergence', 'Domain error became output')
   expect_error.call(LQ1::OperationalError) { bridge.render(id, {'kind' => 'quota'}, options) }

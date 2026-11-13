@@ -81,6 +81,14 @@ class ProtocolTests(unittest.TestCase):
         self.assertNotEqual(new, old)
         self.assertEqual(self.peer.request('render', {'template_id': old})['error']['code'], -32602)
 
+    def test_selected_partial_syntax_failure_occurs_during_render(self):
+        compiled = self.peer.compile("{% render 'broken' %}", filesystem={'broken': 'first\n{% if true'})['result']
+        self.assertIsNotNone(compiled['template_id'])
+        rendered = self.peer.request('render', {'template_id': compiled['template_id']})['result']
+        self.assertIsNone(rendered['output'])
+        self.assertEqual(rendered['error']['type'], 'syntax_error')
+        self.assertEqual(rendered['error']['line'], 2)
+
     def test_default_lax_mode_accepts_empty_filter_segments(self):
         template = self.peer.compile("{{ 'hello' || upcase }}")['result']['template_id']
         result = self.peer.request('render', {'template_id': template})['result']

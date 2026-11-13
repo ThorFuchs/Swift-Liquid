@@ -2528,6 +2528,21 @@
         "Documentation/Language.md"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Liquid-spec partial syntax failure phase",
+      "scopeDecision": "Classify the actual JSON-RPC operation phase independently from the retained syntax-error family; do not change fixtures or the qualification comparator.",
+      "changes": [
+        "Record a syntax failure returned during render as a render-phase failure while preserving the syntax exception, error type, line and original upstream verdict.",
+        "Add subprocess bridge and protocol controls for root-compile and selected-partial render failures."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py"
+      ],
+      "qualification": "Bridge, protocol and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }

@@ -44,3 +44,6 @@ R2 records the original upstream `result.passed?` unchanged in `upstreamVerdict`
 and `comparison`. The separate `qualificationComparison` retains LQ1's stricter
 phase/operational checks. Diagnostic dimensions are explanatory, never a
 replacement comparator. See [R2 evidence semantics](../../Documentation/LQ1-R2/README.md).
+The observed phase follows the JSON-RPC operation: syntax errors returned while
+rendering a lazily parsed partial are render-phase failures, while their
+reported error family and original partial-local line remain syntax evidence.
