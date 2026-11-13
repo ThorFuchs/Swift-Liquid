@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
-  "method": "Static review of pinned fixture source; candidates have not been admitted or run.",
+  "method": "Pinned, individually identified cases admitted after validating that their excluded callback or resource limit cannot affect the supplied case; actual outcomes remain in the suite matrix.",
   "filesystemCandidates": [
     {
       "caseID": "liquid_ruby/specs/liquid_ruby/include_bracket_dot.yml:34/RecordedTest#IncludeBracketDotTest#test_or_with_blank_comparison_34935bd0/strict2/raise",

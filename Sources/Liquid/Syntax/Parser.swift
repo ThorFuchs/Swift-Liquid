@@ -2326,24 +2326,26 @@ internal final class Parser {
             .map { $0.trimmingCharacters(in: .whitespaces) }
 
         var result: [String] = []
-        var inComment = false
+        var commentDepth = 0
         for line in lines {
             if line.isEmpty { result.append(""); continue }
 
-            if inComment {
-                // Inside comment block, check for endcomment
-                if line == "endcomment" {
+            if commentDepth > 0 {
+                // The Ruby tokenizer recognizes nested comment tags inside a liquid body.
+                if line == "comment" || line.hasPrefix("comment ") || line.hasPrefix("comment\t") {
+                    result.append("{% comment %}")
+                    commentDepth += 1
+                } else if line == "endcomment" || line.hasPrefix("endcomment ") || line.hasPrefix("endcomment\t") {
                     result.append("{% endcomment %}")
-                    inComment = false
-                }
-                else { result.append("") }
+                    commentDepth -= 1
+                } else { result.append("") }
                 // Keep line positions while the comment lexer discards content.
                 continue
             }
 
             if line.hasPrefix("comment") {
                 result.append("{% comment %}")
-                inComment = true
+                commentDepth = 1
                 continue
             }
 

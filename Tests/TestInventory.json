@@ -350,7 +350,8 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null,
-    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null
+    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null,
+    "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",

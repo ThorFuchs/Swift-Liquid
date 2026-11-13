@@ -44,7 +44,7 @@ not change. JSON-RPC remains isolated development tooling, not a new `liquid` mo
 2. Capture every tracked source hash and allocate a new private external run
    directory. Reject an overlapping run in the same console.
 3. Invoke the existing canonical lane with `--output-root`. This option is limited
-   to `liquid-spec` and `conformance-console`; all existing lane defaults stay intact.
+   to the liquid-spec lanes and `conformance-console`; all existing lane defaults stay intact.
 4. Show actual checkpoints and phase progress. Do not invent a completion percentage
    or reinterpret a partial matrix as a complete observation.
 5. Verify ending source identities, source inventory joins, report hashes and full

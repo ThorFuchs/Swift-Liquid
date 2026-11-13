@@ -71,8 +71,9 @@ outcomes, missing evidence, new failures or a conflict that starts passing fail
 the reviewed profile until it is reassessed. No suite result grants release or
 complete-language acceptance.
 
-The pinned historical population contains 488 unexecuted variants. The adapter
-cannot be assumed incapable of each one: `ExclusionCandidates.json` identifies
-56 filesystem-callback cases with no `include` or `render` word in their supplied
-sources and two range-metadata cases without a resource-limit field. These 58
-are static candidates for further review, not newly admitted or passing cases.
+The historical population contained 488 unexecuted variants. `ExclusionCandidates.json`
+identifies 56 filesystem-callback cases with no `include` or `render` word in their
+supplied sources and two range-metadata cases without resource limits. These 58
+are individually admitted only while their identity, fixture bytes and relevant
+conditions remain unchanged. `review/ADMISSION_AUDIT.json` records each actual
+suite and Ruby-reference outcome. Other exclusions remain separately visible.

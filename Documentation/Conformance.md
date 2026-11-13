@@ -19,12 +19,14 @@ cases. These describe the current adapter selection, not a finding that every
 exclusion is intrinsic to Liquid or permanently justified. A static inspection
 found 56 of the 57 filesystem-callback exclusions have no `include`/`render`
 word in their root or supplied partial sources, and two of the ten
-range-resource-tagged cases do not declare resource limits. The exact 58
-admission candidates are in `Tools/LiquidSpecAdapter/ExclusionCandidates.json`;
-they require separate source-aware review and execution. Other feature-tagged
-cases also need case-level review before widening the profile. The reviewed
-lane emits an identity- and fixture-hash-bound inventory of every unexecuted
-case. No complete-language, downstream or release acceptance follows from it.
+range-resource-tagged cases do not declare resource limits. Those exact 58
+cases are now admitted individually using fixture-hash-bound guards. The
+filesystem cases must contain no include or render reference in the supplied
+sources; the range cases must declare no resource limits. The reviewed lane
+records each actual result in `ADMISSION_AUDIT.json`. Other feature-tagged
+cases still need case-level review. The lane also emits an identity- and
+fixture-hash-bound inventory of every unexecuted case. No complete-language,
+downstream or release acceptance follows from it.
 
 Swift-Liquid targets Shopify's open-source Liquid core. The reference is
 Shopify/liquid 5.14.0 at commit `4e39ae4cc3da73921923c0669e0fc84a66b2f696`,

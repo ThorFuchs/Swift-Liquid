@@ -227,7 +227,7 @@ The opt-in reviewed profile reports unexpected failures separately from five
 On the recorded `c9d5a79` source snapshot, 4,619 cases matched, five mismatched
 for both Swift-Liquid and the pinned Ruby reference, and 488 were not executed. This is a
 scoped result, not complete Shopify conformance; [the audit](Documentation/Conformance.md)
-also identifies unexecuted cases that merit further admission work. Storefront objects, theme-only tags,
+describes later case-by-case admissions and remaining exclusions. Storefront objects, theme-only tags,
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
 

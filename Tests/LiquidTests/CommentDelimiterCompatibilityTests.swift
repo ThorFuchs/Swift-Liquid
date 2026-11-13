@@ -4,6 +4,22 @@ import Testing
 
 @Suite("Shopify comment closing tags")
 struct CommentDelimiterCompatibilityTests {
+    @Test func nestedCommentsInsideLiquidKeepTheOuterCommentOpen() async throws {
+        let engine = LiquidEngine()
+        let cases = [
+            "{% liquid\necho 'A'\ncomment\ncomment\nnested\nendcomment\nstill hidden\nendcomment\necho 'B'\n%}",
+            "{% liquid\necho 'A'\ncomment\ncomment extra\nhidden\nendcomment suffix\nstill hidden\nendcomment\necho 'B'\n%}",
+            "{% liquid\necho 'A'\ncomment\ncommentary\nendcomment\necho 'B'\n%}"
+        ]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for source in cases {
+                #expect(try await engine.render(template: source, syntaxMode: mode) == "AB")
+            }
+            #expect(throws: LiquidError.self) {
+                try LiquidTemplate("{% liquid\ncomment\ncomment\nendcomment\n%}", syntaxMode: mode)
+            }
+        }
+    }
     @Test func openingMarkupConsumesTheOuterDelimiterBeforeTheBody() async throws {
         let engine = LiquidEngine()
         let sources = [

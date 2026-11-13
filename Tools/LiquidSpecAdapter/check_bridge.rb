@@ -5,6 +5,7 @@ require 'tmpdir'
 require 'rbconfig'
 require 'stringio'
 require_relative 'adapter'
+require_relative 'admission'
 
 checks = 0
 assert = ->(condition, message) { raise message unless condition; checks += 1 }
@@ -79,4 +80,20 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
 ensure
   ENV.delete('LQ1_BRIDGE_PROBE_MARKER')
 end
+spec = Struct.new(:template, :raw_filesystem, :raw_template_factory, :raw_resource_limits).new('hello', {'_error-message' => 'missing'}, nil, {})
+fs = [:unused_filesystem_callback, 'digest']
+assert.call(LQ1::Admission.check(fs, spec, 'digest', []) == :unused_filesystem_callback, 'Unrelated callback was not admitted')
+spec.template = "{% render 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.template = 'hello'; spec.raw_filesystem['child'] = "{% include 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.raw_filesystem.delete('child'); spec.raw_resource_limits = {'render_score_limit' => 1}
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.raw_resource_limits = {}
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'changed', []) }
+range = [:unused_resource_limits, 'digest']
+assert.call(LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES) == :unused_resource_limits, 'Metadata-only case was not admitted')
+expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES + [:drops]) }
+spec.raw_resource_limits = {'render_score_limit' => 1}
+expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES) }
 puts JSON.generate(checks: checks, status: 'passed', scope: 'negative bridge integration; no conformance cases')

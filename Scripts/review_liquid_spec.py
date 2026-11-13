@@ -147,18 +147,28 @@ def main():
             raise ValueError('Exclusion candidate membership changed')
         for item in candidate_rows:
             row = by_id.get(item['caseID'])
-            if row is None or row['selected'] or row['sourceDigest'] != item['sourceDigest']:
-                raise ValueError('Exclusion candidate no longer matches pinned evidence')
+            if row is None or not row['selected'] or row['sourceDigest'] != item['sourceDigest']:
+                raise ValueError('Admission candidate no longer matches pinned evidence')
+            group = 'unused_filesystem_callback' if item in candidates['filesystemCandidates'] else 'unused_resource_limits'
+            if row.get('admission') != group:
+                raise ValueError('Candidate admission rationale missing or changed')
+        admitted = [{'caseID': by_id[item['caseID']]['caseID'], 'sourceDigest': item['sourceDigest'],
+                     'sourceLocation': by_id[item['caseID']]['sourceLocation'],
+                     'admission': by_id[item['caseID']]['admission'],
+                     'comparison': by_id[item['caseID']]['comparison'],
+                     'qualificationComparison': by_id[item['caseID']]['qualificationComparison'],
+                     'referenceQualificationComparison': by_id[item['caseID']]['referenceQualificationComparison']}
+                    for item in candidate_rows]
+        (args.output / 'ADMISSION_AUDIT.json').write_text(json.dumps(admitted, indent=2) + '\n')
         output.update(sourceRevision=revision, pins=policy['pins'], rawReceiptSHA256=sha(receipt_path),
                       rawMatrixSHA256=sha(reports / 'ELIGIBILITY_MATRIX.json'), policySHA256=sha(POLICY),
-                      fixtureFiles=len(file_digests), exclusionCandidates=58, candidatesSHA256=sha(CANDIDATES))
-        candidate_ids = {item['caseID'] for item in candidate_rows}
+                      fixtureFiles=len(file_digests), admittedCandidates=58, candidatesSHA256=sha(CANDIDATES),
+                      admissionAuditSHA256=sha(args.output / 'ADMISSION_AUDIT.json'))
         excluded = [{'caseID': row['caseID'], 'sourceLocation': row['sourceLocation'],
                      'sourceDigest': row['sourceDigest'], 'parserMode': row['parserMode'],
                      'renderMode': row['renderMode'], 'featureTags': row['featureTags'], 'reason': row['reason'],
                      'category': row['observedCategory'],
-                     'review': ('static-admission-candidate-not-run' if row['caseID'] in candidate_ids
-                                else 'reassess-overbroad-selection' if ('custom filesystem error callback' in row['reason'] or 'range_resource_limits' in row['reason'])
+                     'review': ('reassess-overbroad-selection' if ('custom filesystem error callback' in row['reason'] or 'range_resource_limits' in row['reason'])
                                 else 'tag-based-selection-requires-case-review' if any(tag in row['reason'] for tag in ('ruby_drops:', 'drops:', 'drop_class_output:'))
                                 else 'current-adapter-boundary-not-conformance')}
                     for row in rows if not row['selected']]

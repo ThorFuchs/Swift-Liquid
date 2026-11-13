@@ -2564,6 +2564,30 @@
         "README.md"
       ],
       "qualification": "The reviewed status is separate from the raw suite and does not establish complete conformance or release acceptance."
+    },
+    {
+      "area": "Individually admitted liquid-spec filesystem and range cases",
+      "scopeDecision": "Admit only the 58 pinned case variants after exact fixture-bound validation that the excluded callback or resource limit is not used; retain upstream verdicts and all remaining exclusions.",
+      "changes": [
+        "Validate the 56 unused filesystem callbacks and two resource-free tagged cases individually without bypassing other feature or transport restrictions.",
+        "Preserve the source-bound case-by-case admission record and correct nested comment depth in liquid-tag bodies to match the Ruby reference."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/admission.rb",
+        "Tools/LiquidSpecAdapter/run.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Scripts/review_liquid_spec.py",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Conformance.md",
+        "Documentation/ConformanceConsole.md",
+        "Tools/LiquidSpecAdapter/README.md",
+        "README.md"
+      ],
+      "qualification": "Record source-bound reviewed and raw suite results separately; no complete-conformance or release acceptance is implied."
     }
   ]
 }
