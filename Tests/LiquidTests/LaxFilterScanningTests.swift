@@ -31,6 +31,12 @@ struct LaxFilterScanningTests {
             }
         }
         #expect(try await LiquidEngine().render(template: "{{ 'hi there' | split:\"t\"\" | reverse | first }}", syntaxMode: .lax) == "here")
+        #expect(try await LiquidEngine().render(template: "{{ 'hi there' | split:\"t\"\" | remove:\"i\" | first }}", syntaxMode: .lax) == "hi ")
+        #expect(try await LiquidEngine().render(template: "{{ 'abc' | append:\"x\"\" | append:\"q\" }}", syntaxMode: .lax) == "abcx")
+        #expect(try await LiquidEngine().render(template: "{{ 'abc' | append:\"x\"\" | z\" | append: \"q\" }}", syntaxMode: .lax) == "abcxq")
+        for mode in [LiquidSyntaxMode.strict, .strict2] {
+            #expect(throws: LiquidError.self) { try LiquidTemplate("{{ 'hi there' | split:\"t\"\" | remove:\"i\" | first }}", syntaxMode: mode) }
+        }
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ 'x' | append: 'unterminated }}", syntaxMode: .lax) }
     }
 }
