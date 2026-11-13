@@ -108,6 +108,14 @@ func platformExtensionsAreRejected(source: String) {
     let hostTemplate = try LiquidTemplate("{{ '' | host_fail }}")
     await #expect(throws: HostFailure.self) { try await host.renderLocatingFailures(hostTemplate) }
     #expect(try await engine.renderLocatingFailures(LiquidTemplate("hello {{ name }}"), context: ["name": "world"]) == "hello world")
+    let rewritten = try LiquidTemplate("{% liquid\n echo 1 | divided_by: 0\n%}")
+    do {
+        _ = try await engine.renderLocatingFailures(rewritten)
+        Issue.record("Expected failure in liquid body")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.message == "divided by 0")
+        #expect(failure.diagnostic.line == nil)
+    }
 }
 
 @Test(arguments: ["{\"a\":1,\"a\":2}", "[1,]", "01", "true false", "1e9999", "\"\\uD800\""])

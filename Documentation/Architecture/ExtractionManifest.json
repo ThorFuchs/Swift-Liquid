@@ -2329,7 +2329,8 @@
       "scopeDecision": "Expose genuine first-failure line and partial identity without changing existing render or recovery APIs.",
       "changes": [
         "Add opt-in raising render that reports the first recoverable runtime failure with its node location; the conformance adapter consumes this information.",
-        "Keep cancellation, host failures, quotas and security failures terminal, and retain all fixture and reference outcomes."
+        "Keep cancellation, host failures, quotas and security failures terminal, and retain all fixture and reference outcomes.",
+        "Omit derived line numbers for rewritten liquid bodies without a verified original source map."
       ],
       "files": [
         "Sources/Liquid/LiquidEngine.swift",
@@ -2337,6 +2338,8 @@
         "Sources/Liquid/Rendering/Renderer.swift",
         "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
         "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
         "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
         "Tests/LiquidTests/PublicContractTests.swift",
         "Documentation/Errors.md"

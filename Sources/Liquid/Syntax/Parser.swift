@@ -29,6 +29,11 @@ internal final class Parser {
     private let maxNestingDepth: Int
     private var parseDepth = 0
 
+    private var hasOriginalSource: Bool {
+        if case .original = sourceProvenance { return true }
+        return false
+    }
+
     
     private var current: Int = 0
 
@@ -227,7 +232,7 @@ internal final class Parser {
         advance() // consume {{
         if currentTokenStorage.type == .variableEnd {
             advance()
-            return .output(.literal(.null), location: .init(line: line, suppressErrorText: false))
+            return .output(.literal(.null), location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
         }
         
         let expression = try parseExpression()
@@ -254,7 +259,7 @@ internal final class Parser {
         }
         advance() // consume }}
         
-        return .output(expression, location: .init(line: line, suppressErrorText: false))
+        return .output(expression, location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
     }
     
     @inline(__always)
@@ -490,7 +495,7 @@ internal final class Parser {
         }
         try consumeTagEnd()
         
-        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
+        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource))
     }
     
     /// Pinned Assign::Syntax is unanchored: only its final matching signature
@@ -544,7 +549,7 @@ internal final class Parser {
         let expression = try parseExpression()
         try consumeTagEnd()
 
-        return .echo(expression: expression, location: .init(line: line, suppressErrorText: false))
+        return .echo(expression: expression, location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
     }
     
     // Called immediately after the parser consumes an original tag header.
@@ -667,7 +672,7 @@ internal final class Parser {
                 try consumeTagEnd()
                 return Frame(kind: kind, opening: opening, condition: expression)
             }
-            let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+            let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource)
             let condition = try parseComplexExpression()
             try consumeTagEnd()
             return Frame(kind: kind, opening: opening, condition: condition, location: location)
@@ -1808,7 +1813,7 @@ internal final class Parser {
     }
     
     private func parseForHeader() throws -> (InlineString, LiquidExpression, ForParams) {
-        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource)
         func isRuntimeLookup(_ expression: LiquidExpression) -> Bool {
             switch expression {
             case .variable, .access: return true
@@ -2405,7 +2410,7 @@ internal final class Parser {
     }
     
     private func parseIncludeTag() throws ->ASTNode {
-        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false, hasOriginalSource: hasOriginalSource)
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
@@ -2508,7 +2513,7 @@ internal final class Parser {
     }
     
     private func parseRenderTag() throws ->ASTNode {
-        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false, hasOriginalSource: hasOriginalSource)
         // Similar to include but with isolated scope
         if syntaxMode == .strict2, currentToken.type == .tagEnd {
             throw LiquidError.syntax(message: "Expected string but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
