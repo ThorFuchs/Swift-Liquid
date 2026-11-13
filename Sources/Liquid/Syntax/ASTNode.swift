@@ -207,6 +207,13 @@ internal enum LoopBodyRenderPlan: Sendable, Equatable {
 internal struct RenderLocation: Sendable, Equatable {
     let line: Int
     let suppressErrorText: Bool
+    let hasOriginalSource: Bool
+
+    init(line: Int, suppressErrorText: Bool, hasOriginalSource: Bool = true) {
+        self.line = line
+        self.suppressErrorText = suppressErrorText
+        self.hasOriginalSource = hasOriginalSource
+    }
 }
 
 extension ASTNode {

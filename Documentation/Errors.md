@@ -29,6 +29,8 @@ Liquid runtime failure and throws `LiquidRenderFailure` with a diagnostic. A lin
 or partial name is included only when available. This does not recover output;
 ordinary `render` retains its existing error type and behavior. Cancellation,
 quota, security and unexpected host failures remain terminal.
+Rewritten `{% liquid %}` bodies do not yet have a verified original source map,
+so their raising diagnostics omit the line rather than reporting a derived one.
 
 Unexpected-character syntax errors can retain a verified original source excerpt
 and construct/header position. These positions use one-based LF lines and Unicode

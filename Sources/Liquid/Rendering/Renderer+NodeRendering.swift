@@ -28,7 +28,7 @@ extension Renderer {
                 } else {
                     location = node.renderLocation
                 }
-                firstFailure = .init(message: error.message, line: location?.line,
+                firstFailure = .init(message: error.message, line: location?.hasOriginalSource == true ? location?.line : nil,
                     templateName: diagnosticTemplateNameStack.last ?? currentTemplatePath)
             }
             guard recoveryEnabled, error.renderErrorCategory != .resource,
