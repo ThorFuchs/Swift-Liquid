@@ -2381,6 +2381,18 @@
         "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift"
       ],
       "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Lax filter fragment scanning",
+      "scopeDecision": "Follow the pinned Ruby lax quoted-fragment scanner without changing strict modes.",
+      "changes": [
+        "When a trailing quote pairs across a filter separator, consume the ignored fragment and resume at the next filter boundary; preserve unmatched-quote and right-trim handling."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift"
+      ],
+      "qualification": "Public regressions and the pinned independent conformance outcome are recorded separately; performance and release remain held."
     }
   ]
 }

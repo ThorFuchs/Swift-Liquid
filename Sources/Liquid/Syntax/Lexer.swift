@@ -720,17 +720,30 @@ internal final class Lexer {
                 while probe < end && bytes[probe].isWhitespaceByte { probe += 1 }
                 let atBoundary = probe < end && (bytes[probe] == Self.pipe ||
                     (bytes[probe] == Self.closeBrace && probe + 1 < end && bytes[probe + 1] == Self.closeBrace))
-                var laterQuote = false
+                var laterQuote: Int?
                 if atBoundary {
                     var scan = probe
                     while scan < end {
                         if bytes[scan] == Self.closeBrace && scan + 1 < end && bytes[scan + 1] == Self.closeBrace { break }
-                        if bytes[scan] == byte { laterQuote = true; break }
+                        if bytes[scan] == byte { laterQuote = scan; break }
                         scan += 1
                     }
                 }
-                if syntaxMode == .lax, context == .filter, atBoundary, !laterQuote, let previous = tokens.last, case .string = previous.type {
-                    advanceASCII() // unmatched trailing quote ignored by lax scanning
+                if syntaxMode == .lax, context == .filter, atBoundary, let previous = tokens.last, case .string = previous.type {
+                    if let laterQuote {
+                        // Ruby's lax fragment scanner can pair this stray
+                        // quote across a filter separator. The paired fragment
+                        // and its trailing junk do not form filter tokens.
+                        while byteIndex <= laterQuote { advance() }
+                        while byteIndex < end {
+                            if bytes[byteIndex] == Self.pipe ||
+                                (bytes[byteIndex] == Self.closeBrace && byteIndex + 1 < end && bytes[byteIndex + 1] == Self.closeBrace) ||
+                                (bytes[byteIndex] == Self.dash && byteIndex + 2 < end && bytes[byteIndex + 1] == Self.closeBrace && bytes[byteIndex + 2] == Self.closeBrace) { break }
+                            advance()
+                        }
+                    } else {
+                        advanceASCII() // unmatched trailing quote ignored by lax scanning
+                    }
                 } else {
                     let tokenStart = TokenPosition(position: tokenPosition, line: tokenLine, column: tokenColumn)
                     try tokenizeString(&tokens, start: tokenStart, quote: byte)
