@@ -84,6 +84,12 @@ public struct LiquidEngine: Sendable {
     /// Renders a parsed template, throwing `LiquidRenderFailure` for the first
     /// recoverable Liquid runtime error, with its source location when available.
     /// Cancellation, capacity, security and unexpected host errors still throw.
+    /// - Parameters:
+    ///   - template: An immutable parsed root template.
+    ///   - context: Values admitted for this invocation.
+    ///   - templates: Parsed partial templates addressed by name.
+    /// - Returns: The complete output when rendering succeeds.
+    /// - Throws: A located Liquid failure, or an unchanged terminal error.
     public func renderLocatingFailures(_ template: LiquidTemplate, context: LiquidObject = [:],
                                        templates: [String: LiquidTemplate] = [:]) async throws -> String {
         try await perform(template, context: context, templates: templates, recovering: false, locateFailures: true).result.output
