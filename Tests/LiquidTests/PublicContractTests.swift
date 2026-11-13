@@ -99,6 +99,15 @@ func platformExtensionsAreRejected(source: String) {
         return try await engine.renderLocatingFailures(root)
     }
     await #expect(throws: CancellationError.self) { try await worker.value }
+    let limited = LiquidEngine(limits: .init(outputBytes: 1))
+    let oversized = try LiquidTemplate("long")
+    let limit = await #expect(throws: LiquidError.self) { try await limited.renderLocatingFailures(oversized) }
+    if case .limitExceeded? = limit {} else { Issue.record("Expected terminal limit failure") }
+    enum HostFailure: Error { case unexpected }
+    let host = try LiquidEngine(filters: [LiquidFilter("host_fail") { _, _, _ in throw HostFailure.unexpected }])
+    let hostTemplate = try LiquidTemplate("{{ '' | host_fail }}")
+    await #expect(throws: HostFailure.self) { try await host.renderLocatingFailures(hostTemplate) }
+    #expect(try await engine.renderLocatingFailures(LiquidTemplate("hello {{ name }}"), context: ["name": "world"]) == "hello world")
 }
 
 @Test(arguments: ["{\"a\":1,\"a\":2}", "[1,]", "01", "true false", "1e9999", "\"\\uD800\""])
