@@ -2342,6 +2342,18 @@
         "Documentation/Errors.md"
       ],
       "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Bracket lookup and collection commands",
+      "scopeDecision": "Follow Ruby Liquid by reserving first and last collection commands for dotted access while preserving actual dictionary keys.",
+      "changes": [
+        "Do not invoke fallback first or last for string-key bracket lookups."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }

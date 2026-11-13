@@ -13,6 +13,9 @@ struct WhereAndLoopLookupTests {
             #expect(try await engine.render(parsed, context: context) == "||range|1")
             let recovered = try await engine.renderWithDiagnostics(parsed, context: context)
             #expect(recovered.output == "||range|1" && recovered.diagnostics.isEmpty)
+            let access = "{{ values.first }}|{{ values['first'] }}|{{ values.last }}|{{ values[key] }}|{{ obj.first }}|{{ obj['first'] }}|{{ keyed['first'] }}"
+            let keys: LiquidObject = ["values": [1, 2], "key": "last", "obj": ["x": "a"], "keyed": ["first": "actual"]]
+            #expect(try await engine.render(template: access, context: keys, syntaxMode: mode) == "1||2||xa||actual")
         }
     }
     @Test func whereSupportsStringsAndObjectInputs() async throws {
