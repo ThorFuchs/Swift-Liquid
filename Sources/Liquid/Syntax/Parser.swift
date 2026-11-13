@@ -2513,11 +2513,17 @@ internal final class Parser {
         if syntaxMode == .strict2, currentToken.type == .tagEnd {
             throw LiquidError.syntax(message: "Expected string but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
         }
+        if syntaxMode != .strict2, currentToken.type == .tagEnd {
+            throw LiquidError.syntax(message: "Syntax error in tag 'render' - Template name must be a quoted string", line: nil, column: nil)
+        }
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
             templateStr = name
         } else {
+            if syntaxMode != .strict2 {
+                throw LiquidError.syntax(message: "Syntax error in tag 'render' - Template name must be a quoted string", line: nil, column: nil)
+            }
             throw ParserError.expectedString
         }
 

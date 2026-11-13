@@ -2354,6 +2354,18 @@
         "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
       ],
       "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Render tag non-string name diagnostic",
+      "scopeDecision": "Match the pinned Ruby rejection reason for invalid render names in lax and strict parser modes while preserving strict2 behavior.",
+      "changes": [
+        "Report the render-specific quoted-name reason without inventing source positions or a markup excerpt."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }
