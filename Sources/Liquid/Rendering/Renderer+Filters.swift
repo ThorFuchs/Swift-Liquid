@@ -28,7 +28,10 @@ extension Renderer {
     @inline(__always)
     internal func applyFilterFast(_ filter: Filter, to input: Any) async throws -> Any {
         let value = try await applyFilterCore(filter, to: input)
-        if let number = value as? Double, !number.isFinite { throw LiquidError.invalidValue("Arithmetic produced a non-finite number") }
+        if let number = value as? Double, !number.isFinite {
+            if input is RuntimeNonFinite { return RuntimeNonFinite(value: number) }
+            throw LiquidError.invalidValue("Arithmetic produced a non-finite number")
+        }
         if let text = value as? String { try budget.output(text) }
         return value
     }

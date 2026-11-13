@@ -95,6 +95,9 @@ The supported numeric domain is Swift `Int` plus finite binary `Double`, rather
 than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
+Floating-point division by zero can produce invocation-local `Infinity`,
+`-Infinity`, or `NaN` as in Ruby Liquid; these are not admitted as host inputs
+or passed through the finite typed custom-filter boundary.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
 `truncatewords` recognizes Ruby's ASCII word separators; non-ASCII whitespace
 inside a word remains part of that word. Numeric sorting of object properties

@@ -4,6 +4,16 @@ import Testing
 
 @Suite("Independent liquid-spec regressions", .timeLimit(.minutes(1)))
 struct LiquidSpecRegressionTests {
+    @Test func floatingZeroDivisionPreservesShopifySpecialValues() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let source = "{{ 10.0 | divided_by: 0.0 }}|{{ -10.0 | divided_by: 0.0 }}|{{ 0.0 | divided_by: 0.0 }}|{{ 10.0 | divided_by: 0.0 | plus: 1 }}"
+            #expect(try await engine.render(template: source, syntaxMode: mode) == "Infinity|-Infinity|NaN|Infinity")
+            #expect(try await engine.render(template: "{% assign v = 1.0 | divided_by: 0.0 %}{% if v > 1 %}yes{% endif %}", syntaxMode: mode) == "yes")
+            await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ 10 | divided_by: 0 }}", syntaxMode: mode) }
+            await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ value }}", context: ["value": .number(.infinity)], syntaxMode: mode) }
+        }
+    }
     @Test func laxConditionalParenthesesUseRubyFragmentSemantics() async throws {
         let engine = LiquidEngine()
         let cases: [(String, LiquidObject, String)] = [

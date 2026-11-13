@@ -2512,6 +2512,22 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify floating-point zero division",
+      "scopeDecision": "Match Ruby's internally produced Infinity and NaN while retaining finite external value and custom-filter boundaries.",
+      "changes": [
+        "Represent non-finite values arising from floating-point division by zero as invocation-owned runtime values with Shopify string spelling.",
+        "Preserve integer zero-division errors, propagate special values through numeric filters, and reject non-finite host inputs and unexpected arithmetic overflow."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }
