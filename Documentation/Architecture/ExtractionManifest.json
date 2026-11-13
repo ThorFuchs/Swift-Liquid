@@ -2311,6 +2311,18 @@
         "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
       ],
       "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Lax leading dash expression",
+      "scopeDecision": "Match the pinned Ruby lax variable parser while preserving strict parser rejection.",
+      "changes": [
+        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift"
+      ],
+      "qualification": "Public regressions and independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }

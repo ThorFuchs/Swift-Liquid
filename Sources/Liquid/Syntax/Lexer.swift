@@ -764,6 +764,20 @@ internal final class Lexer {
                     advanceASCII()
                     break
                 }
+                // Ruby's lax variable parser treats a leading, whitespace-
+                // separated dash as the variable named "-" and scans past
+                // the remaining expression markup to the first filter.
+                if syntaxMode == .lax, tokens.last?.type == .variableStart,
+                   byteIndex + 1 < end, bytes[byteIndex + 1].isWhitespaceByte {
+                    advanceASCII()
+                    tokens.append(Token(type: .identifier(InlineString("-")), position: tokenPosition, line: tokenLine, column: tokenColumn))
+                    while byteIndex < end {
+                        if bytes[byteIndex] == Self.pipe ||
+                            (bytes[byteIndex] == Self.closeBrace && byteIndex + 1 < end && bytes[byteIndex + 1] == Self.closeBrace) { break }
+                        advance()
+                    }
+                    break
+                }
                 // Check if this is a negative number literal (-5, -3.14)
                 // vs a trim marker (-%}) — look ahead for digit
                 let nextIdx = byteIndex + 1
