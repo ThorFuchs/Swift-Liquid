@@ -20,16 +20,14 @@ extension Renderer {
             try budget.output(output)
             return output
         } catch let error as RenderError {
-            if locateFailures && !observedFailure && error.renderErrorCategory != .resource && error.renderErrorCategory != .security {
-                observedFailure = true
+            if locateFailures {
                 let location: RenderLocation?
                 if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
                     location = includeLocation
                 } else {
                     location = node.renderLocation
                 }
-                firstFailure = .init(message: error.message, line: location?.hasOriginalSource == true ? location?.line : nil,
-                    templateName: diagnosticTemplateNameStack.last ?? currentTemplatePath)
+                recordLocatedFailure(error, location: location)
             }
             guard recoveryEnabled, error.renderErrorCategory != .resource,
                   error.renderErrorCategory != .security else { throw error }
@@ -172,7 +170,7 @@ extension Renderer {
     }
 
     internal func renderSimpleNodeListFast(_ nodes: [ASTNode], staticCapacityHint: Int) async throws -> String {
-        if recoveryEnabled || locateFailures { return try await renderTemplate(nodes, staticCapacityHint: staticCapacityHint) }
+        if recoveryEnabled { return try await renderTemplate(nodes, staticCapacityHint: staticCapacityHint) }
 
 
         switch nodes.count {
@@ -182,8 +180,9 @@ extension Renderer {
             switch nodes[0] {
             case .text(let content), .raw(let content):
                 return content.string
-            case .output(let expression, _), .echo(let expression, _):
-                return try await renderExpressionFast(expression)
+            case .output(let expression, let location), .echo(let expression, let location):
+                do { return try await renderExpressionFast(expression) }
+                catch let error as RenderError { recordLocatedFailure(error, location: location); throw error }
             default:
                 return try await renderNode(nodes[0])
             }
@@ -218,7 +217,7 @@ extension Renderer {
     }
 
     internal func appendRenderedSimpleNodeListFast(_ nodes: [ASTNode], to output: inout String) async throws {
-        if recoveryEnabled || locateFailures { output.append(try await renderTemplate(nodes)); return }
+        if recoveryEnabled { output.append(try await renderTemplate(nodes)); return }
 
 
         switch nodes.count {
@@ -245,12 +244,12 @@ extension Renderer {
 
     @inline(__always)
     internal func appendRenderedSimpleNodeFast(_ node: ASTNode, to output: inout String) async throws {
-        if recoveryEnabled || locateFailures { output.append(try await renderNode(node)); return }
+        if recoveryEnabled { output.append(try await renderNode(node)); return }
         switch node {
         case .text(let content), .raw(let content):
             output.append(content.string)
-        case .output(let expression, _), .echo(let expression, _):
-            try await appendRenderedExpressionFast(expression, to: &output)
+        case .output(let expression, let location), .echo(let expression, let location):
+            try await appendLocatedExpressionFast(expression, location: location, to: &output)
         default:
             output.append(try await renderNode(node))
         }
@@ -262,6 +261,11 @@ extension Renderer {
         _ second: ASTNode,
         to output: inout String
     ) async throws {
+        if locateFailures {
+            try await appendRenderedSimpleNodeFast(first, to: &output)
+            try await appendRenderedSimpleNodeFast(second, to: &output)
+            return
+        }
         switch (first, second) {
         case (.text(let leading), .text(let trailing)),
              (.text(let leading), .raw(let trailing)),
@@ -302,6 +306,12 @@ extension Renderer {
         _ third: ASTNode,
         to output: inout String
     ) async throws {
+        if locateFailures {
+            try await appendRenderedSimpleNodeFast(first, to: &output)
+            try await appendRenderedSimpleNodeFast(second, to: &output)
+            try await appendRenderedSimpleNodeFast(third, to: &output)
+            return
+        }
         switch (first, second, third) {
         case (.text(let leading), .output(let expression, _), .text(let trailing)),
              (.text(let leading), .output(let expression, _), .raw(let trailing)),
@@ -328,21 +338,48 @@ extension Renderer {
     @inline(__always)
     internal func appendLoopBodyRenderPlanFast(
         _ plan: LoopBodyRenderPlan,
+        locations: [RenderLocation?]? = nil,
         to output: inout String
     ) async throws {
         switch plan {
         case .single(let prefix, let expression, let suffix):
             output.append(prefix.string)
-            try await appendRenderedExpressionFast(expression, to: &output)
+            try await appendLocatedExpressionFast(expression, location: locations?.first ?? nil, to: &output)
             output.append(suffix.string)
 
         case .double(let prefix, let first, let middle, let second, let suffix):
             output.append(prefix.string)
-            try await appendRenderedExpressionFast(first, to: &output)
+            try await appendLocatedExpressionFast(first, location: locations?.first ?? nil, to: &output)
             output.append(middle.string)
-            try await appendRenderedExpressionFast(second, to: &output)
+            try await appendLocatedExpressionFast(second, location: (locations?.count ?? 0) > 1 ? locations?[1] : nil, to: &output)
             output.append(suffix.string)
         }
+    }
+
+    internal func recordLocatedFailure(_ error: RenderError, location: RenderLocation?) {
+        guard locateFailures, !observedFailure, error.renderErrorCategory != .resource,
+              error.renderErrorCategory != .security else { return }
+        observedFailure = true
+        firstFailure = .init(message: error.message, line: location?.hasOriginalSource == true ? location?.line : nil,
+                             templateName: diagnosticTemplateNameStack.last ?? currentTemplatePath)
+    }
+
+    internal func outputLocations(in nodes: [ASTNode]) -> [RenderLocation?] {
+        var result: [RenderLocation?] = []
+        for node in nodes {
+            switch node {
+            case .output(_, let location), .echo(_, let location): result.append(location)
+            default: break
+            }
+        }
+        return result
+    }
+
+    @inline(__always)
+    internal func appendLocatedExpressionFast(_ expression: LiquidExpression, location: RenderLocation?, to output: inout String) async throws {
+        guard locateFailures else { try await appendRenderedExpressionFast(expression, to: &output); return }
+        do { try await appendRenderedExpressionFast(expression, to: &output) }
+        catch let error as RenderError { recordLocatedFailure(error, location: location); throw error }
     }
 
     @inline(__always)

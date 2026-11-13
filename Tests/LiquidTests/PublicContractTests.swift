@@ -116,6 +116,26 @@ func platformExtensionsAreRejected(source: String) {
         #expect(failure.diagnostic.message == "divided by 0")
         #expect(failure.diagnostic.line == nil)
     }
+    let bounded = try LiquidTemplate("{% for i in (1..3) %}{{ i }}{% endfor %}")
+    for steps in [1, 2, 5, 10, 20, 40, 80] {
+        let engine = LiquidEngine(limits: .init(renderSteps: steps))
+        var normal: String?
+        var located: String?
+        var normalLimited = false
+        var locatedLimited = false
+        do { normal = try await engine.render(bounded) }
+        catch LiquidError.limitExceeded { normalLimited = true }
+        do { located = try await engine.renderLocatingFailures(bounded) }
+        catch LiquidError.limitExceeded { locatedLimited = true }
+        #expect(normal == located && normalLimited == locatedLimited, "renderSteps: \(steps)")
+    }
+    for tag in ["for", "tablerow"] {
+        let loop = try LiquidTemplate("{% \(tag) i in (1..2) %}\n{{ i }} {{ 1 | divided_by: 0 }}{% end\(tag) %}")
+        do { _ = try await engine.renderLocatingFailures(loop); Issue.record("Expected loop-body failure") }
+        catch let failure as LiquidRenderFailure {
+            #expect(failure.diagnostic.line == 2 && failure.diagnostic.message == "divided by 0")
+        }
+    }
 }
 
 @Test(arguments: ["{\"a\":1,\"a\":2}", "[1,]", "01", "true false", "1e9999", "\"\\uD800\""])
