@@ -2369,6 +2369,18 @@
         "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
       ],
       "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Liquid body structural diagnostics",
+      "scopeDecision": "Follow the pinned Ruby structural rejection reasons without assigning rewritten locations to original source.",
+      "changes": [
+        "Identify stray block delimiters, empty assignments and unclosed blocks inside a liquid body; leave unverified source positions absent."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }
