@@ -2470,6 +2470,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify truncate length coercion",
+      "scopeDecision": "Use the pinned Ruby integer coercion and recovery semantics for truncate and truncatewords, including inside partials.",
+      "changes": [
+        "Reject noninteger length arguments with invalid integer instead of silently rounding or substituting a default.",
+        "Retain nil input short-circuiting, omitted-argument defaults and existing resource bounds."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/NilTruncationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }

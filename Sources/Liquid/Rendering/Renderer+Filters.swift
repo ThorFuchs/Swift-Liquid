@@ -398,10 +398,15 @@ extension Renderer {
         }
         if filterName.equals("truncate") {
             if value is NSNull { return NSNull() }
-            if let firstArg = args.first, firstArg is NSNull {
-                throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncate")
+            let length: Int
+            if let firstArg = args.first {
+                guard !(firstArg is Double), !(firstArg is Bool), let coerced = integerValue(firstArg) else {
+                    throw RenderError.custom("invalid integer")
+                }
+                length = coerced
+            } else {
+                length = 50
             }
-            let length = args.first.flatMap(integerValue) ?? 50
             let ending: String
             if let secondArg = args.dropFirst().first {
                 ending = secondArg is NSNull ? "" : stringify(secondArg)
@@ -412,10 +417,15 @@ extension Renderer {
         }
         if filterName.equals("truncatewords") {
             if value is NSNull { return NSNull() }
-            if let firstArg = args.first, firstArg is NSNull {
-                throw RenderError.typeError(expected: "integer", actual: "nil", operation: "truncatewords")
+            let count: Int
+            if let firstArg = args.first {
+                guard !(firstArg is Double), !(firstArg is Bool), let coerced = integerValue(firstArg) else {
+                    throw RenderError.custom("invalid integer")
+                }
+                count = max(coerced, 1)
+            } else {
+                count = 15
             }
-            let count = max(args.first.flatMap(integerValue) ?? 15, 1)  // Min 1 word (Shopify: 0→1)
             let ending: String
             if let secondArg = args.dropFirst().first {
                 ending = secondArg is NSNull ? "" : stringify(secondArg)
