@@ -871,7 +871,39 @@ internal final class Parser {
     // MARK: - LiquidExpression Parsing
     
     private func parseConditionOperand() throws -> LiquidExpression {
-        let value = try parsePrimaryExpression()
+        var adjacentOpening = false
+        if syntaxMode == .lax {
+            var skipped = 0
+            openingScan: while currentToken.type == .leftParen, current + 2 < tokens.count,
+                  tokens[current + 2].type != .range,
+                  nextTokenStorage.position == currentToken.position + 1 {
+                switch nextTokenStorage.type {
+                case .identifier, .number, .leftParen:
+                    guard parseDepth + skipped < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+                    if skipped & 255 == 0 { try Task.checkCancellation() }
+                    adjacentOpening = nextTokenStorage.position == currentToken.position + 1
+                    skipped += 1
+                    advance()
+                default: break openingScan
+                }
+            }
+        }
+        let value: LiquidExpression
+        if syntaxMode == .lax, case .identifier(let name) = currentToken.type,
+           literalExpression(for: name) != nil,
+           adjacentOpening || (nextTokenStorage.type == .rightParen && nextTokenStorage.position == currentToken.position + name.utf8Count) {
+            value = .variable(name)
+            advance()
+        } else if syntaxMode == .lax, case .number = currentToken.type,
+                  nextTokenStorage.type == .rightParen, let source,
+                  let start = stringIndex(in: source, utf8Offset: currentToken.position),
+                  let end = stringIndex(in: source, utf8Offset: nextTokenStorage.position),
+                  !source[start..<end].contains(where: { $0.isWhitespace }) {
+            value = .variable(InlineString(String(source[start..<end])))
+            advance()
+        } else {
+            value = try parsePrimaryExpression()
+        }
         if currentToken.type == .filter {
             if syntaxMode == .strict2 { throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe") }
             guard syntaxMode == .lax else { throw ParserError.unexpectedToken(currentToken) }
@@ -881,8 +913,18 @@ internal final class Parser {
     }
 
     private func parseComplexExpression() throws ->LiquidExpression {
+        func skipLaxClosers() throws {
+            guard syntaxMode == .lax else { return }
+            var count = 0
+            while currentToken.type == .rightParen {
+                if count & 255 == 0 { try Task.checkCancellation() }
+                count += 1
+                advance()
+            }
+        }
         var firstExpr = try parseConditionOperand()
         firstExpr = try parseComparisonContinuation(startingWith: firstExpr)
+        try skipLaxClosers()
 
         // Collect all expressions and operators
         var expressions: [LiquidExpression] = [firstExpr]
@@ -895,6 +937,7 @@ internal final class Parser {
 
             var right = try parseConditionOperand()
             right = try parseComparisonContinuation(startingWith: right)
+            try skipLaxClosers()
             expressions.append(right)
         }
 

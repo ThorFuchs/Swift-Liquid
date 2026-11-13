@@ -4,6 +4,22 @@ import Testing
 
 @Suite("Independent liquid-spec regressions", .timeLimit(.minutes(1)))
 struct LiquidSpecRegressionTests {
+    @Test func laxConditionalParenthesesUseRubyFragmentSemantics() async throws {
+        let engine = LiquidEngine()
+        let cases: [(String, LiquidObject, String)] = [
+            ("a == 'foo' or (b == 'bar' and c == 'baz') or false", ["b": "bar", "c": "baz"], "Y"),
+            ("(true)", [:], "N"), ("(x)", ["x": 1], "Y"),
+            ("(x == 1)", ["x": 1], "N"), ("(x == 1 )", ["x": 1], "Y"),
+            ("true and (false or true)", [:], "N"), ("(1..2)", [:], "Y")
+        ]
+        for (condition, context, expected) in cases {
+            let source = "{% if \(condition) %}Y{% else %}N{% endif %}"
+            #expect(try await engine.render(template: source, context: context, syntaxMode: .lax) == expected, "\(condition)")
+        }
+        #expect(throws: LiquidError.self) {
+            try LiquidTemplate("{% if (x == 1) %}Y{% endif %}", syntaxMode: .strict2)
+        }
+    }
     @Test func laxConditionalAmpersandsKeepRubyBooleanBoundaries() async throws {
         let engine = LiquidEngine()
         let cases = [

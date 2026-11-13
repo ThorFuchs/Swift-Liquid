@@ -2498,6 +2498,20 @@
         "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify lax conditional parentheses",
+      "scopeDecision": "Follow the pinned Ruby scanner for lax conditional fragments; preserve strict2 behavior and do not introduce grouping semantics.",
+      "changes": [
+        "Treat adjacent lax parentheses as fragment delimiters while preserving range syntax, original literal spellings and right-associative logical operators.",
+        "Check cancellation and nesting limits while scanning opening and closing tokens."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
   ]
 }
