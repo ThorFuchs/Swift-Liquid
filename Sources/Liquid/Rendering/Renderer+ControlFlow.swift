@@ -667,7 +667,7 @@ extension Renderer {
         return result
     }
     
-    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?, allowContextFallback: Bool = true) async throws -> String {
+    internal func renderInclude(template: InlineString, with withVars: [String: LiquidExpression]?, as asVar: InlineString?, isRender: Bool = false, allowContextFallback: Bool = true) async throws -> String {
         guard let templateLoader else {
             throw RenderError.includeError(
                 template.string,
@@ -675,7 +675,6 @@ extension Renderer {
             )
         }
 
-        let isRender = withVars?["__render_isolated__"] != nil
         let hasForIteration = withVars?["_for"] != nil
         let bindings = try await evaluateIncludeBindings(with: withVars)
 
@@ -739,6 +738,11 @@ extension Renderer {
             }
         }
 
+        let diagnosticName: String
+        switch templateLoader {
+        case .exact: diagnosticName = resolvedPath
+        case .legacy: diagnosticName = templateName
+        }
         var evaluatedVariables = bindings.variables
         if let value = bindings.withValue {
             let alias = asVar?.string ?? defaultTemplateAlias(for: templateName)
@@ -761,11 +765,14 @@ extension Renderer {
                 var itemVars = evaluatedVariables
                 if !(collection is NSNull) { itemVars[alias] = suppliedCollection }
                 let savedLiquidScope = try enterLiquidIsolatedScope()
-                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
+                isolatedRenderDepth += 1
+                defer { isolatedRenderDepth -= 1; (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreState(savedState)
                 }
@@ -798,11 +805,14 @@ extension Renderer {
                 itemVars["forloop"] = forloop
                 itemVars["__render_forloop__"] = true  // Flag for parentloop suppression
                 let savedLiquidScope = try enterLiquidIsolatedScope()
-                defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
+                isolatedRenderDepth += 1
+                defer { isolatedRenderDepth -= 1; (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
                 let savedState = context.saveState()
                 context.isolateScope(with: itemVars)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreState(savedState)
                 }
@@ -839,7 +849,9 @@ extension Renderer {
                 let snapshots = context.snapshotVariables(named: [alias])
                 context.setVariable(alias, value: item)
                 templatePathStack.append(resolvedPath)
+                diagnosticTemplateNameStack.append(diagnosticName)
                 defer {
+                    _ = diagnosticTemplateNameStack.popLast()
                     _ = templatePathStack.popLast()
                     context.restoreVariables(snapshots)
                 }
@@ -857,11 +869,14 @@ extension Renderer {
 
         if isRender {
             let savedLiquidScope = try enterLiquidIsolatedScope()
-            defer { (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
+            isolatedRenderDepth += 1
+            defer { isolatedRenderDepth -= 1; (liquidBaseScopeDepth, liquidLocalScopeDepth) = savedLiquidScope }
             let savedState = context.saveState()
             context.isolateScope(with: evaluatedVariables)
             templatePathStack.append(resolvedPath)
+            diagnosticTemplateNameStack.append(diagnosticName)
             defer {
+                _ = diagnosticTemplateNameStack.popLast()
                 _ = templatePathStack.popLast()
                 context.restoreState(savedState)
             }
@@ -883,7 +898,9 @@ extension Renderer {
             }
 
             templatePathStack.append(resolvedPath)
+            diagnosticTemplateNameStack.append(diagnosticName)
             defer {
+                _ = diagnosticTemplateNameStack.popLast()
                 _ = templatePathStack.popLast()
                 if !evaluatedVariables.isEmpty {
                     context.popScope()
@@ -923,7 +940,7 @@ extension Renderer {
 
         for (key, expression) in withVars {
             switch key {
-            case "__render_isolated__", "_with", "_for":
+            case "_with", "_for":
                 continue
             default:
                 evaluatedVariables[key] = try await evaluateExpression(expression)

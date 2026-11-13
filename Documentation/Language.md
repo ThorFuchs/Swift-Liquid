@@ -50,8 +50,11 @@ An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+Following Shopify Liquid, `include` is not allowed inside a `render` subtree;
+use `render` for nested partials there. This also applies to nested renders.
 Within each scope, an initialized increment/decrement counter shadows a host
 input of the same name; an explicit Liquid assignment remains visible above it.
+Lax and strict parsing admit an empty counter name; strict2 requires a name.
 Loop interrupts remain inside an isolated `render`; `include` shares the
 caller's interrupt flow. Output produced before an interrupt is retained.
 For `include ... for`, output from earlier partial iterations is retained too,

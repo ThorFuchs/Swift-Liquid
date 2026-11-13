@@ -22,9 +22,17 @@ extension Renderer {
         } catch let error as RenderError {
             guard recoveryEnabled, error.renderErrorCategory != .resource,
                   error.renderErrorCategory != .security else { throw error }
-            let location = node.renderLocation
+            let location: RenderLocation?
+            let diagnosticName: String?
+            if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
+                location = includeLocation
+                diagnosticName = diagnosticTemplateNameStack.last ?? currentTemplatePath
+            } else {
+                location = node.renderLocation
+                diagnosticName = currentTemplatePath
+            }
             let message = error.message
-            diagnostics.append(.init(message: message, line: location?.line, templateName: currentTemplatePath))
+            diagnostics.append(.init(message: message, line: location?.line, templateName: diagnosticName))
             if location?.suppressErrorText == true {
                 switch node {
                 case .if, .unless, .for:
@@ -34,7 +42,7 @@ extension Renderer {
                 }
             }
             if case .undefinedFilter = error { return "" }
-            let prefix = location.map { "Liquid error (\(currentTemplatePath.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
+            let prefix = location.map { "Liquid error (\(diagnosticName.map { $0 + " " } ?? "")line \($0.line)): " } ?? "Liquid error: "
             let output = prefix + message
             try budget.output(output)
             return output
@@ -106,15 +114,18 @@ extension Renderer {
         case .liquid(let nodes):
             return try await renderTemplate(nodes)
 
-        case .include(let template, let reference, let withVars, let asVar):
+        case .include(let template, let reference, let withVars, let asVar, let isRender, _):
+            if isolatedRenderDepth > 0, !isRender {
+                throw RenderError.includeDisabled()
+            }
             if case .access = reference {
                 let value = try await evaluateExpression(reference)
                 guard let name = value as? String else {
                     throw RenderError.templateNotFound(stringify(value))
                 }
-                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, allowContextFallback: false)
+                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: isRender, allowContextFallback: false)
             }
-            return try await renderInclude(template: template, with: withVars, as: asVar)
+            return try await renderInclude(template: template, with: withVars, as: asVar, isRender: isRender)
 
         }
     }
@@ -533,6 +544,7 @@ extension Renderer {
     }
 
     internal func resetTemplatePathStack() {
+        diagnosticTemplateNameStack.removeAll(keepingCapacity: true)
         if !templatePathStack.isEmpty {
             templatePathStack.removeAll(keepingCapacity: true)
         }

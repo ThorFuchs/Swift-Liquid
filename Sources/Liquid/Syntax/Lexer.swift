@@ -500,7 +500,19 @@ internal final class Lexer {
                    bytes[probe+3] == 0x72, bytes[probe+4] == 0x61, bytes[probe+5] == 0x77 {
                     let afterWord = probe + 6
                     // Ensure it's not part of a longer identifier
-                    if afterWord >= end || (!bytes[afterWord].isIdentifierContinueByte && !bytes[afterWord].isDigitByte) {
+                    if afterWord < end && (bytes[afterWord].isIdentifierContinueByte || bytes[afterWord].isDigitByte) {
+                        advance()
+                        continue
+                    }
+                    var boundary = afterWord
+                    while boundary + 1 < end,
+                          !(bytes[boundary] == Self.percent && bytes[boundary + 1] == Self.closeBrace),
+                          !(bytes[boundary] == Self.openBrace && bytes[boundary + 1] == Self.percent) {
+                        boundary += 1
+                    }
+                    let hasClosingDelimiter = boundary + 1 < end && bytes[boundary] == Self.percent
+                        && bytes[boundary + 1] == Self.closeBrace
+                    if hasClosingDelimiter {
                         // Emit raw text content
                         if tagPos > rawStart {
                             let rawContent = InlineString(String(bytes: Array(bytes[rawStart..<tagPos]), encoding: .utf8) ?? "")

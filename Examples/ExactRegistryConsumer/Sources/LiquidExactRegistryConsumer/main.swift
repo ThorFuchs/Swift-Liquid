@@ -52,7 +52,7 @@ private struct Observation {
                 }
             }
         }
-        let nested = try LiquidTemplateRegistry([.init("é", .raw("A{% include 'e\u{301}' %}")), .init("e\u{301}", .raw("B{% render 'K' %}")), .init("K", .raw("C{% include 'K' %}")), .init("K", .raw("D"))])
+        let nested = try LiquidTemplateRegistry([.init("é", .raw("A{% include 'e\u{301}' %}")), .init("e\u{301}", .raw("B{% render 'K' %}")), .init("K", .raw("C{% render 'K' %}")), .init("K", .raw("D"))])
         let nestedOutput = try await engine.render(template: "{% include selected %}", context: ["selected": "é"], registry: nested)
         precondition(nestedOutput == "ABCD")
         let allParsed = try LiquidTemplateRegistry([.init("p", .parsed(LiquidTemplate("π")))])

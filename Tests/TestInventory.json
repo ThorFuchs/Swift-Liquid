@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.PartialInterruptCompatibilityTests/emptyCounterNamesFollowParserModeAndRenderIsolation()": null,
+    "LiquidTests.PartialInterruptCompatibilityTests/renderDisallowsIncludeInItsIsolatedSubtree()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/includeForRendersScalarOnceAndScopesArguments()": null,
     "LiquidTests.BlockAndPipeDiagnosticTests/unclosedControlBlocksRetainOriginalOpening()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/dynamicIncludeWithUsesResolvedNameAsDefaultAlias()": null,
