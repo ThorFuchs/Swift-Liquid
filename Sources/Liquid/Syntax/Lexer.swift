@@ -773,7 +773,8 @@ internal final class Lexer {
                     tokens.append(Token(type: .identifier(InlineString("-")), position: tokenPosition, line: tokenLine, column: tokenColumn))
                     while byteIndex < end {
                         if bytes[byteIndex] == Self.pipe ||
-                            (bytes[byteIndex] == Self.closeBrace && byteIndex + 1 < end && bytes[byteIndex + 1] == Self.closeBrace) { break }
+                            (bytes[byteIndex] == Self.closeBrace && byteIndex + 1 < end && bytes[byteIndex + 1] == Self.closeBrace) ||
+                            (bytes[byteIndex] == Self.dash && byteIndex + 2 < end && bytes[byteIndex + 1] == Self.closeBrace && bytes[byteIndex + 2] == Self.closeBrace) { break }
                         advance()
                     }
                     break
