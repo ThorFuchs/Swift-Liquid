@@ -2544,6 +2544,26 @@
         "Scripts/check_liquid_spec_protocol.py"
       ],
       "qualification": "Bridge, protocol and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Reviewed Shopify reference conflicts and exclusion audit",
+      "scopeDecision": "The maintainer adopted a separate reviewed status for five documented reference conflicts; raw upstream verdicts, exclusions and all existing acceptance holds remain intact.",
+      "changes": [
+        "Add an opt-in fail-closed reviewed lane that first executes the unmodified pinned suite and binds each exception to source, fixture, mode, engine and Ruby-reference observations.",
+        "Retain raw failures and emit all not-executed case identities with source hashes and review status, including separately identified static admission candidates."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Scripts/review_liquid_spec.py",
+        "Scripts/check_liquid_spec_review.py",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Documentation/Conformance.md",
+        "Documentation/ConformanceConsole.md",
+        "README.md"
+      ],
+      "qualification": "The reviewed status is separate from the raw suite and does not establish complete conformance or release acceptance."
     }
   ]
 }

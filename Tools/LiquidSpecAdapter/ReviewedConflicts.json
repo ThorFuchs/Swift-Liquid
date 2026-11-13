@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "issue": "https://github.com/Shopify/liquid-spec/issues/170",
+  "pins": {
+    "spec": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+    "ruby": "4e39ae4cc3da73921923c0669e0fc84a66b2f696"
+  },
+  "scope": "Five observed upstream/reference conflicts; do not promote raw failures to passes.",
+  "conflicts": [
+    {
+      "caseID": "basics/specs/basics/security.yml:12/security_var_name_no_interpolation/lax/raise",
+      "sourceDigest": "15aac36bb702a53c43c415228df4254b50c5ec924e4a807a63be12b0e64704db",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "expectedCategory": "output",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "observedCategory": "parse-error",
+      "actual": "LQ1::SyntaxError: Liquid syntax error: Unexpected character '#'",
+      "semanticResultDigest": "a8fbfc1301c1c760bb75991a3fee4816dd91bbfddc27258c6cbb8b8e08ebc52b",
+      "reportedErrors": {
+        "type": "syntax_error",
+        "message": "Unexpected character '#'"
+      },
+      "referenceObservedCategory": "parse-error",
+      "referenceActual": "Liquid::SyntaxError: Liquid syntax error (line 1): Variable '{{ #{1+1}' was not properly terminated with regexp: /\\}\\}/",
+      "referenceReportedErrors": {
+        "type": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Variable '{{ #{1+1}' was not properly terminated with regexp: /\\}\\}/",
+        "line": 1,
+        "column": null
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/blank_body_error_handling.yml:162/blank_if_body_suppresses_error_text_strict [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "4971f3e583d056aa92c341ab88b730a31c5ba3351c03b36182ff22a8e54d69f5",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "expectedCategory": "output",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "observedCategory": "recovered-error",
+      "actual": "Liquid error (line 1): comparison of Integer with String failed",
+      "semanticResultDigest": "bee9a3e63219dfb9486ca928a234d84c9af749349f7d14b5a8e4218a7850f51c",
+      "reportedErrors": [
+        {
+          "type": "render_error",
+          "message": "comparison of Integer with String failed",
+          "line": 1
+        }
+      ],
+      "referenceObservedCategory": "recovered-error",
+      "referenceActual": "Liquid error (line 1): comparison of Integer with String failed",
+      "referenceReportedErrors": [
+        {
+          "type": "Liquid::ArgumentError",
+          "message": "Liquid error (line 1): comparison of Integer with String failed",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/blank_body_error_handling.yml:174/blank_unless_body_suppresses_error_text_strict [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "4971f3e583d056aa92c341ab88b730a31c5ba3351c03b36182ff22a8e54d69f5",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "expectedCategory": "output",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "observedCategory": "recovered-error",
+      "actual": "Liquid error (line 1): comparison of Integer with String failed",
+      "semanticResultDigest": "bee9a3e63219dfb9486ca928a234d84c9af749349f7d14b5a8e4218a7850f51c",
+      "reportedErrors": [
+        {
+          "type": "render_error",
+          "message": "comparison of Integer with String failed",
+          "line": 1
+        }
+      ],
+      "referenceObservedCategory": "recovered-error",
+      "referenceActual": "Liquid error (line 1): comparison of Integer with String failed",
+      "referenceReportedErrors": [
+        {
+          "type": "Liquid::ArgumentError",
+          "message": "Liquid error (line 1): comparison of Integer with String failed",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/blank_body_error_handling.yml:184/blank_for_body_suppresses_error_text_strict [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "4971f3e583d056aa92c341ab88b730a31c5ba3351c03b36182ff22a8e54d69f5",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "expectedCategory": "output",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "observedCategory": "recovered-error",
+      "actual": "Liquid error (line 1): invalid integer",
+      "semanticResultDigest": "37476d42f3ea742c382f423eff19b4303a420b73be94e04ded9b6bdff8c4976b",
+      "reportedErrors": [
+        {
+          "type": "render_error",
+          "message": "invalid integer",
+          "line": 1
+        }
+      ],
+      "referenceObservedCategory": "recovered-error",
+      "referenceActual": "Liquid error (line 1): invalid integer",
+      "referenceReportedErrors": [
+        {
+          "type": "Liquid::ArgumentError",
+          "message": "Liquid error (line 1): invalid integer",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/filter_argument_semantics.yml:57/assign_swallows_filter_error/strict2/inline",
+      "sourceDigest": "37d0766cae9da24de63f52a846c1abc4f3c9ecca77fca4118ddc0fd52142e53e",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "expectedCategory": "output",
+      "expectation": {
+        "output": "beforeafter[]",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "observedCategory": "recovered-error",
+      "actual": "beforeLiquid error (line 1): invalid integerafter[]",
+      "semanticResultDigest": "744f6b737e9f0c1638d37c61bc50e6a732b5362a5bc1d24dafe5601819929f70",
+      "reportedErrors": [
+        {
+          "type": "render_error",
+          "message": "invalid integer",
+          "line": 1
+        }
+      ],
+      "referenceObservedCategory": "recovered-error",
+      "referenceActual": "beforeLiquid error (line 1): invalid integerafter[]",
+      "referenceReportedErrors": [
+        {
+          "type": "Liquid::ArgumentError",
+          "message": "Liquid error (line 1): invalid integer",
+          "line": 1
+        }
+      ]
+    }
+  ],
+  "eligibilitySHA256": "e531b456abe8ad948233aa0354167d9aa90ca7730f5e328c598c34be30063713",
+  "expectedPopulation": 5112
+}

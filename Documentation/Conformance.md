@@ -1,5 +1,31 @@
 # Compatibility evidence
 
+## Reviewed liquid-spec reference conflicts
+
+The recorded `c9d5a79` candidate run contained 5,112 variants: 4,619 matched,
+five mismatched and 488 were not executed. Shopify's pinned Ruby reference also
+fails the five expectations; the cases and reproduction were reported in
+[liquid-spec issue #170](https://github.com/Shopify/liquid-spec/issues/170).
+The original verdict and the independent lane remain failed. A separate,
+opt-in `liquid-spec-reviewed` lane requires the same complete raw evidence and
+can report zero **unexpected** failures with five reviewed conflicts. It does
+not count those conflicts or unexecuted cases as passes. Its policy binds exact
+case identities, modes, fixture bytes, observed results, reference results and
+eligibility, and requires reassessment on drift.
+
+The 488 not-executed variants comprise 459 recorded transport/host-object
+limitations, 22 unsupported policy or mode cases, and seven numeric-domain
+cases. These describe the current adapter selection, not a finding that every
+exclusion is intrinsic to Liquid or permanently justified. A static inspection
+found 56 of the 57 filesystem-callback exclusions have no `include`/`render`
+word in their root or supplied partial sources, and two of the ten
+range-resource-tagged cases do not declare resource limits. The exact 58
+admission candidates are in `Tools/LiquidSpecAdapter/ExclusionCandidates.json`;
+they require separate source-aware review and execution. Other feature-tagged
+cases also need case-level review before widening the profile. The reviewed
+lane emits an identity- and fixture-hash-bound inventory of every unexecuted
+case. No complete-language, downstream or release acceptance follows from it.
+
 Swift-Liquid targets Shopify's open-source Liquid core. The reference is
 Shopify/liquid 5.14.0 at commit `4e39ae4cc3da73921923c0669e0fc84a66b2f696`,
 with Ruby 4.0.1, Date 3.5.1, and Time 0.4.2. Reference runs use UTC, line numbers,

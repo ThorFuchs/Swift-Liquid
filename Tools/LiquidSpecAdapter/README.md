@@ -47,3 +47,32 @@ replacement comparator. See [R2 evidence semantics](../../Documentation/LQ1-R2/R
 The observed phase follows the JSON-RPC operation: syntax errors returned while
 rendering a lazily parsed partial are render-phase failures, while their
 reported error family and original partial-local line remain syntax evidence.
+
+## Reviewed reference conflicts
+
+The raw `liquid-spec` lane remains unchanged and reports the upstream verdict,
+including its nonzero exit when the five cases in [issue #170](https://github.com/Shopify/liquid-spec/issues/170)
+fail. The separate reviewed profile runs that same lane first and admits only
+the exact pinned case identities, fixture digests, modes, outcomes and independent
+Ruby observations in `ReviewedConflicts.json`:
+
+```sh
+python3 -B Scripts/ci.py --lane liquid-spec-reviewed \
+  --spec-path /path/to/liquid-spec --reference-path /path/to/liquid \
+  --output-root /path/outside/the/checkout
+```
+
+Its successful status is `passed-with-reviewed-reference-conflicts`, with zero
+unexpected failures. The five remain raw failures, not passes. `review/REVIEWED_RESULT.json`
+records both views, pinned source and checksums; `review/EXCLUSION_AUDIT.json`
+lists each not-executed case and its recorded reason. The raw runner's complete
+evidence remains under `independent/`. Changed fixtures, selections, conflict
+outcomes, missing evidence, new failures or a conflict that starts passing fail
+the reviewed profile until it is reassessed. No suite result grants release or
+complete-language acceptance.
+
+The pinned historical population contains 488 unexecuted variants. The adapter
+cannot be assumed incapable of each one: `ExclusionCandidates.json` identifies
+56 filesystem-callback cases with no `include` or `render` word in their supplied
+sources and two range-metadata cases without a resource-limit field. These 58
+are static candidates for further review, not newly admitted or passing cases.

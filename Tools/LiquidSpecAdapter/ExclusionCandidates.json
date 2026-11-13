@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "method": "Static review of pinned fixture source; candidates have not been admitted or run.",
+  "filesystemCandidates": [
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/include_bracket_dot.yml:34/RecordedTest#IncludeBracketDotTest#test_or_with_blank_comparison_34935bd0/strict2/raise",
+      "sourceDigest": "268caabaeaf505f15a50653c3c83f840fc44b01fe2b09dfc9eccbb77b683f94f"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/include_bracket_dot.yml:42/RecordedTest#IncludeBracketDotTest#test_or_with_empty_comparison_3bd8cff3/strict2/raise",
+      "sourceDigest": "268caabaeaf505f15a50653c3c83f840fc44b01fe2b09dfc9eccbb77b683f94f"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/include_bracket_dot.yml:50/RecordedTest#IncludeBracketDotTest#test_or_with_variable_gt_and_blank_a4c76fdc/strict2/raise",
+      "sourceDigest": "268caabaeaf505f15a50653c3c83f840fc44b01fe2b09dfc9eccbb77b683f94f"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:2/RecordedTest#LiquidTagParityTest#test_and_condition_false_outer_renders_else_1e15e0f4/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:20/RecordedTest#LiquidTagParityTest#test_and_condition_followed_by_assign_inside_if_else_a995b0c4/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:45/RecordedTest#LiquidTagParityTest#test_assign_and_echo_in_liquid_d8b4c1bd/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:56/RecordedTest#LiquidTagParityTest#test_break_inside_case_in_for_9dc0a6f5/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:80/RecordedTest#LiquidTagParityTest#test_capture_inside_case_dc9873c0/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:99/RecordedTest#LiquidTagParityTest#test_case_inside_for_does_not_eat_subsequent_content_da17cba7/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:109/RecordedTest#LiquidTagParityTest#test_case_nested_in_if_7d984571/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:129/RecordedTest#LiquidTagParityTest#test_case_when_comma_separated_f29e079d/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:146/RecordedTest#LiquidTagParityTest#test_case_when_else_not_taken_760aa77d/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:163/RecordedTest#LiquidTagParityTest#test_case_when_integer_64a84978/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:180/RecordedTest#LiquidTagParityTest#test_case_when_match_first_58703254/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:197/RecordedTest#LiquidTagParityTest#test_case_when_match_second_fc02c15e/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:214/RecordedTest#LiquidTagParityTest#test_case_when_no_match_b334d9d7/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:231/RecordedTest#LiquidTagParityTest#test_case_when_with_else_5e0bf252/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:248/RecordedTest#LiquidTagParityTest#test_case_with_for_inside_b027d27c/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:287/RecordedTest#LiquidTagParityTest#test_cycle_in_liquid_c5f6cd52/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:306/RecordedTest#LiquidTagParityTest#test_decrement_in_liquid_6e75fc9f/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:319/RecordedTest#LiquidTagParityTest#test_elsif_four_branches_68fd1e38/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:341/RecordedTest#LiquidTagParityTest#test_elsif_four_branches_aa8824ee/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:363/RecordedTest#LiquidTagParityTest#test_elsif_four_branches_b1159db1/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:385/RecordedTest#LiquidTagParityTest#test_elsif_four_branches_cf128bc1/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:407/RecordedTest#LiquidTagParityTest#test_elsif_four_branches_e803c5a8/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:429/RecordedTest#LiquidTagParityTest#test_elsif_three_branches_6ff1db3c/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:449/RecordedTest#LiquidTagParityTest#test_elsif_three_branches_8713863c/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:469/RecordedTest#LiquidTagParityTest#test_elsif_three_branches_9b198409/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:489/RecordedTest#LiquidTagParityTest#test_elsif_three_branches_ddf3f4b9/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:509/RecordedTest#LiquidTagParityTest#test_for_else_empty_79b57faa/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:525/RecordedTest#LiquidTagParityTest#test_for_else_nonempty_b38a8073/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:543/RecordedTest#LiquidTagParityTest#test_for_with_case_inside_a03efb65/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:568/RecordedTest#LiquidTagParityTest#test_for_with_ifchanged_and_case_12ecd658/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:596/RecordedTest#LiquidTagParityTest#test_if_else_in_liquid_3aac8535/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:612/RecordedTest#LiquidTagParityTest#test_if_else_in_liquid_false_54526d24/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:628/RecordedTest#LiquidTagParityTest#test_if_with_tablerow_inside_1c48c77f/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:649/RecordedTest#LiquidTagParityTest#test_ifchanged_all_different_0ea65590/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:668/RecordedTest#LiquidTagParityTest#test_ifchanged_all_same_7a497f9c/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:687/RecordedTest#LiquidTagParityTest#test_ifchanged_basic_bdc30a2f/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:708/RecordedTest#LiquidTagParityTest#test_increment_in_liquid_a7c65aba/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:722/RecordedTest#LiquidTagParityTest#test_inline_comment_hash_3fee7c03/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:734/RecordedTest#LiquidTagParityTest#test_nested_comment_in_liquid_1dfcfcd5/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:761/RecordedTest#LiquidTagParityTest#test_tablerow_basic_27c09d63/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:780/RecordedTest#LiquidTagParityTest#test_tablerow_empty_878313e6/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:796/RecordedTest#LiquidTagParityTest#test_tablerow_with_cols_b66abba1/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:817/RecordedTest#LiquidTagParityTest#test_tablerow_with_limit_b774ae45/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:837/RecordedTest#LiquidTagParityTest#test_tablerow_with_offset_d6053a99/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:857/RecordedTest#LiquidTagParityTest#test_unless_else_falsy_24720c48/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:873/RecordedTest#LiquidTagParityTest#test_unless_else_truthy_2ac8f8d6/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:2/RecordedTest#MultilineIfTest#test_multiline_if_with_or_and_mix_4a3c7b80/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:21/RecordedTest#MultilineIfTest#test_multiple_or_then_and_d985c12f/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:33/RecordedTest#MultilineIfTest#test_multiple_or_then_and_or_5449e06b/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:46/RecordedTest#MultilineIfTest#test_or_and_with_deep_property_and_comparison_00f3719a/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:61/RecordedTest#MultilineIfTest#test_or_and_with_property_lookups_736601d3/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:77/RecordedTest#MultilineIfTest#test_simple_or_and_mix_43aaad9d/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/multiline_if.yml:88/RecordedTest#MultilineIfTest#test_with_comparisons_9edfcbcd/strict2/raise",
+      "sourceDigest": "cd6cbfd15b9bd64562a87d77efb65cde53338d2255642673dcc80ef56a5f0e82"
+    }
+  ],
+  "rangeMetadataCandidates": [
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:45/for_literal_range_reversed_offset_limit_keeps_metadata/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59"
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:54/tablerow_literal_range_offset_limit_keeps_metadata/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59"
+    }
+  ]
+}
