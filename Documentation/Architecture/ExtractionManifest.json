@@ -2299,6 +2299,18 @@
         "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift"
       ],
       "qualification": "Public regressions and source-bound independent conformance remain subject to recorded outcomes; performance and release remain held."
+    },
+    {
+      "area": "Repeated loop attribute precedence",
+      "scopeDecision": "Follow pinned Ruby Liquid last-attribute-wins behavior across all parser modes.",
+      "changes": [
+        "Clear the prior loop limit or offset representation before recording a repeated literal, dynamic expression, or continue attribute."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
+      ],
+      "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }

@@ -1877,6 +1877,17 @@ internal final class Parser {
                 throw ParserError.unexpectedToken(currentToken)
             }
             advance()
+
+            // Each occurrence replaces the preceding attribute, regardless of
+            // whether either value is a literal, lookup, or `continue`.
+            if paramName.equals("limit") {
+                limit = nil
+                limitExpression = nil
+            } else {
+                offset = nil
+                offsetExpression = nil
+                offsetContinue = false
+            }
             
             // Check for offset: continue (special keyword)
             if paramName.equals("offset"),
