@@ -22,7 +22,8 @@ extension Renderer {
         } catch let error as RenderError {
             if locateFailures {
                 let location: RenderLocation?
-                if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
+                if case .include(_, _, _, _, _, let includeLocation) = node,
+               error == .includeDisabled() || error == .illegalIncludeName() {
                     location = includeLocation
                 } else {
                     location = node.renderLocation
@@ -33,7 +34,8 @@ extension Renderer {
                   error.renderErrorCategory != .security else { throw error }
             let location: RenderLocation?
             let diagnosticName: String?
-            if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
+            if case .include(_, _, _, _, _, let includeLocation) = node,
+               error == .includeDisabled() || error == .illegalIncludeName() {
                 location = includeLocation
                 diagnosticName = diagnosticTemplateNameStack.last ?? currentTemplatePath
             } else {
@@ -127,12 +129,18 @@ extension Renderer {
             if isolatedRenderDepth > 0, !isRender {
                 throw RenderError.includeDisabled()
             }
+            if !isRender, case .legacy = templateLoader {
+                let value = systemPrimary(try await evaluateExpression(reference))
+                guard let name = value as? String else { throw RenderError.illegalIncludeName() }
+                return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: false, allowContextFallback: false)
+            }
             if case .access = reference {
                 let value = try await evaluateExpression(reference)
-                guard let name = value as? String else {
-                    throw RenderError.templateNotFound(stringify(value))
-                }
+                guard let name = systemPrimary(value) as? String else { throw RenderError.illegalIncludeName() }
                 return try await renderInclude(template: InlineString(name), with: withVars, as: asVar, isRender: isRender, allowContextFallback: false)
+            }
+            if case .literal(.string) = reference {} else if case .variable = reference {} else {
+                throw RenderError.illegalIncludeName()
             }
             return try await renderInclude(template: template, with: withVars, as: asVar, isRender: isRender)
 

@@ -122,6 +122,8 @@ print(output) // <h2>Swift &amp; Liquid</h2>
 
 `render` sees the original host inputs and explicit bindings while isolating caller
 assignments, loop locals and counters. `include` follows Liquid's shared-scope behavior.
+With `templates:`, a dynamic `include` name is evaluated before partial lookup.
+The optional byte-exact registry retains its documented selection policy.
 Supply partials as sources or parsed templates. HTML escaping is explicit: use
 `escape` or `escape_once` when inserting text into HTML. Read the
 [rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).

@@ -50,6 +50,10 @@ An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+With the default `templates:` APIs, `include` evaluates its template-name
+expression first, as Shopify Liquid does; nil and other non-string names fail.
+The explicit byte-exact `registry:` profile retains its documented
+literal-first simple-name selection.
 Following Shopify Liquid, `include` is not allowed inside a `render` subtree;
 use `render` for nested partials there. This also applies to nested renders.
 Within each scope, an initialized increment/decrement counter shadows a host

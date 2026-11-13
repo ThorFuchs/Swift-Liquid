@@ -31,6 +31,13 @@ struct PartialArgumentCompatibilityTests {
             #expect(try await engine.render(template: source, context: context, registry: registry, syntaxMode: mode) == "Widget|named")
             #expect(try await engine.render(template: source, context: context, templates: ["product": partial], syntaxMode: mode) == "Widget|named")
             #expect(try await engine.render(template: source, context: context, registry: literalFirst, syntaxMode: mode) == "literal=Widget")
+            #expect(try await engine.render(template: "{% include tpl %}", context: context, templates: ["tpl": "literal", "product": "dynamic"], syntaxMode: mode) == "dynamic")
+            for invalid in ["{% include missing %}", "{% include 1 %}", "{% include nil %}"] {
+                do { _ = try await engine.render(template: invalid, syntaxMode: mode); Issue.record("Expected illegal include name") }
+                catch LiquidError.rendering(let message) { #expect(message.contains("Illegal template name")) }
+                let recovered = try await engine.renderWithDiagnostics(template: invalid, syntaxMode: mode)
+                #expect(recovered.diagnostics.first?.message.contains("Illegal template name") == true)
+            }
             let result = try await engine.renderWithDiagnostics(template: source, context: context, registry: registry, syntaxMode: mode)
             #expect(result.output == "Widget|named" && result.diagnostics.isEmpty)
         }

@@ -2394,6 +2394,23 @@
         "Tests/LiquidTests/LaxFilterScanningTests.swift"
       ],
       "qualification": "Public regressions and the pinned independent conformance outcome are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Shopify dynamic include names",
+      "scopeDecision": "The maintainer selected Shopify language behavior for the default engine while retaining the explicit byte-exact registry selection profile.",
+      "changes": [
+        "Evaluate default include names as Liquid expressions and reject non-string values with a typed recoverable reason.",
+        "Retain the exact registry simple-name literal-first policy and its explicit selection behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/RenderError.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/Language.md",
+        "README.md"
+      ],
+      "qualification": "Public and pinned corpus outcomes are recorded separately; host mapping, lazy loading, ordered bindings and downstream qualification remain open."
     }
   ]
 }
