@@ -220,6 +220,9 @@ extension Renderer {
             return command ? runtimeSizeProperty(baseValue) ?? NSNull() : NSNull()
         }
         if key == "length" { return NSNull() }
+        // Bracket lookup addresses a key; only dotted command access may
+        // invoke collection first/last when no dictionary key exists.
+        if !command && (key == "first" || key == "last") { return NSNull() }
         if key == "first" {
             if let array = baseValue as? [Any], !array.isEmpty {
                 return array[0]

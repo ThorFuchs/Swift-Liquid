@@ -59,6 +59,13 @@ struct BlockMarkupDiagnosticTests {
         let engine = LiquidEngine()
         #expect(try await engine.render(template: "{% doc %}text{% enddoc %}{% raw %}{{x}}{% endraw %}", syntaxMode: .strict2) == "{{x}}")
         for mode in [LiquidSyntaxMode.lax, .strict] {
+            for invalid in ["{% render name %}", "{% render 5 %}", "{% render true %}", "{% render %}"] {
+                do { _ = try LiquidTemplate(invalid, syntaxMode: mode); Issue.record("Expected render-name rejection") }
+                catch LiquidError.syntax(let message, let line, let column) {
+                    #expect(message == "Syntax error in tag 'render' - Template name must be a quoted string")
+                    #expect(line == nil && column == nil)
+                }
+            }
             do { _ = try LiquidTemplate("{% raw x %}{% endraw %}", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: identifier(x)") }
             do { _ = try LiquidTemplate("{% doc %}{% doc %}{% enddoc %}", syntaxMode: mode); Issue.record("Expected rejection") }

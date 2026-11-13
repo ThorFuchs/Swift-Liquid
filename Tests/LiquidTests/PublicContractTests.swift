@@ -73,6 +73,69 @@ func platformExtensionsAreRejected(source: String) {
         guard case .syntax = error else { Issue.record("Expected public syntax error"); return }
     } catch { Issue.record("Unexpected error type") }
     await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "{% render 'missing' %}") }
+    let engine = LiquidEngine()
+    let root = try LiquidTemplate("a\nb\n{{ 1 | divided_by: 0 }}")
+    do {
+        _ = try await engine.renderLocatingFailures(root)
+        Issue.record("Expected located failure")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.line == 3)
+        #expect(failure.diagnostic.templateName == nil)
+        #expect(failure.diagnostic.message == "divided by 0")
+    }
+    await #expect(throws: LiquidError.self) { try await engine.render(root) }
+    let outer = try LiquidTemplate("{% render 'outer' %}")
+    let outerPartial = try LiquidTemplate("{% render 'inner' %}")
+    let innerPartial = try LiquidTemplate("one\n{{ 1 | divided_by: 0 }}")
+    do {
+        _ = try await engine.renderLocatingFailures(outer, templates: ["outer.liquid": outerPartial, "inner.liquid": innerPartial])
+        Issue.record("Expected located partial failure")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.line == 2)
+        #expect(failure.diagnostic.templateName == "inner")
+    }
+    let worker = Task { () async throws -> String in
+        withUnsafeCurrentTask { $0?.cancel() }
+        return try await engine.renderLocatingFailures(root)
+    }
+    await #expect(throws: CancellationError.self) { try await worker.value }
+    let limited = LiquidEngine(limits: .init(outputBytes: 1))
+    let oversized = try LiquidTemplate("long")
+    let limit = await #expect(throws: LiquidError.self) { try await limited.renderLocatingFailures(oversized) }
+    if case .limitExceeded? = limit {} else { Issue.record("Expected terminal limit failure") }
+    enum HostFailure: Error { case unexpected }
+    let host = try LiquidEngine(filters: [LiquidFilter("host_fail") { _, _, _ in throw HostFailure.unexpected }])
+    let hostTemplate = try LiquidTemplate("{{ '' | host_fail }}")
+    await #expect(throws: HostFailure.self) { try await host.renderLocatingFailures(hostTemplate) }
+    #expect(try await engine.renderLocatingFailures(LiquidTemplate("hello {{ name }}"), context: ["name": "world"]) == "hello world")
+    let rewritten = try LiquidTemplate("{% liquid\n echo 1 | divided_by: 0\n%}")
+    do {
+        _ = try await engine.renderLocatingFailures(rewritten)
+        Issue.record("Expected failure in liquid body")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.message == "divided by 0")
+        #expect(failure.diagnostic.line == nil)
+    }
+    let bounded = try LiquidTemplate("{% for i in (1..3) %}{{ i }}{% endfor %}")
+    for steps in [1, 2, 5, 10, 20, 40, 80] {
+        let engine = LiquidEngine(limits: .init(renderSteps: steps))
+        var normal: String?
+        var located: String?
+        var normalLimited = false
+        var locatedLimited = false
+        do { normal = try await engine.render(bounded) }
+        catch LiquidError.limitExceeded { normalLimited = true }
+        do { located = try await engine.renderLocatingFailures(bounded) }
+        catch LiquidError.limitExceeded { locatedLimited = true }
+        #expect(normal == located && normalLimited == locatedLimited, "renderSteps: \(steps)")
+    }
+    for tag in ["for", "tablerow"] {
+        let loop = try LiquidTemplate("{% \(tag) i in (1..2) %}\n{{ i }} {{ 1 | divided_by: 0 }}{% end\(tag) %}")
+        do { _ = try await engine.renderLocatingFailures(loop); Issue.record("Expected loop-body failure") }
+        catch let failure as LiquidRenderFailure {
+            #expect(failure.diagnostic.line == 2 && failure.diagnostic.message == "divided by 0")
+        }
+    }
 }
 
 @Test(arguments: ["{\"a\":1,\"a\":2}", "[1,]", "01", "true false", "1e9999", "\"\\uD800\""])

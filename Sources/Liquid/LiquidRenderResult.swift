@@ -13,6 +13,13 @@ public struct LiquidDiagnostic: Sendable, Equatable {
     }
 }
 
+/// A Liquid runtime failure reported by an explicitly source-aware raising render.
+public struct LiquidRenderFailure: Error, Sendable {
+    /// The first failing operation and its source location when available.
+    public let diagnostic: LiquidDiagnostic
+    internal init(diagnostic: LiquidDiagnostic) { self.diagnostic = diagnostic }
+}
+
 /// Rendered output and all recovered errors, in encounter order.
 public struct LiquidRenderResult: Sendable {
     /// Complete output, including error text where the language emits it.

@@ -271,6 +271,7 @@ extension Renderer {
 
             let needsForloopObject = bodyNeedsImplicitLoopObject(named: "forloop", nodes: body)
             let variableName = variable.string
+            let locations = locateFailures ? outputLocations(in: body) : nil
 
             // Capture parent forloop before pushing scope (for nested loop parentloop access)
             // Don't use render-for's forloop as parentloop (Shopify: render is isolated)
@@ -298,7 +299,7 @@ extension Renderer {
                 }
 
                 do {
-                    try await appendLoopBodyRenderPlanFast(renderPlan, to: &output)
+                    try await appendLoopBodyRenderPlanFast(renderPlan, locations: locations, to: &output)
                 } catch let signal as LoopControlSignal {
                     output += signal.partialOutput
                     switch signal {
@@ -466,6 +467,7 @@ extension Renderer {
             let needsTableRowLoopObject = bodyNeedsImplicitLoopObject(named: "tablerowloop", nodes: body)
             let itemCountInt = itemCount
             let variableName = variable.string
+            let locations = locateFailures ? outputLocations(in: body) : nil
 
             context.pushScope()
             context.enterLoop()
@@ -496,7 +498,7 @@ extension Renderer {
 
                 output.append("<td class=\"col\(colIndex + 1)\">")
                 do {
-                    try await appendLoopBodyRenderPlanFast(renderPlan, to: &output)
+                    try await appendLoopBodyRenderPlanFast(renderPlan, locations: locations, to: &output)
                 } catch let signal as LoopControlSignal {
                     output += signal.partialOutput
                     output.append("</td>")

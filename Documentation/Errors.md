@@ -23,6 +23,15 @@ Diagnostics retain encounter order, line numbers where available, and partial
 names. Each invocation owns its diagnostic array. Reusing an engine or parsed
 template does not carry errors into later renders.
 
+For a raising render that also needs source information, use
+`renderLocatingFailures` with parsed templates. It stops at the first recoverable
+Liquid runtime failure and throws `LiquidRenderFailure` with a diagnostic. A line
+or partial name is included only when available. This does not recover output;
+ordinary `render` retains its existing error type and behavior. Cancellation,
+quota, security and unexpected host failures remain terminal.
+Rewritten `{% liquid %}` bodies do not yet have a verified original source map,
+so their raising diagnostics omit the line rather than reporting a derived one.
+
 Unexpected-character syntax errors can retain a verified original source excerpt
 and construct/header position. These positions use one-based LF lines and Unicode
 scalar columns; Ruby column parity is not claimed. Ambiguous, rewritten and inner

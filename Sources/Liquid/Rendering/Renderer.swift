@@ -66,6 +66,9 @@ internal final class Renderer {
     
     internal let budget: RuntimeBudget
     internal let recoveryEnabled: Bool
+    internal let locateFailures: Bool
+    internal var observedFailure = false
+    internal var firstFailure: LiquidDiagnostic?
     internal let referenceTime: Date
     internal var diagnostics: [LiquidDiagnostic] = []
     internal var lastIfChanged: String?
@@ -120,10 +123,11 @@ internal final class Renderer {
     // MARK: - Initialization
     
     internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default,
-                  recoveryEnabled: Bool = false, referenceTime: Date = Date(), filters: [ScalarKey: LiquidFilter] = [:],
+                  recoveryEnabled: Bool = false, locateFailures: Bool = false, referenceTime: Date = Date(), filters: [ScalarKey: LiquidFilter] = [:],
                   systemContextEnabled: Bool = false) {
         self.referenceTime = referenceTime
         self.recoveryEnabled = recoveryEnabled
+        self.locateFailures = locateFailures
         self.budget = RuntimeBudget(limits)
         self.context = RenderingContext()
         self.configuration = configuration

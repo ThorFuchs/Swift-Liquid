@@ -81,6 +81,20 @@ public struct LiquidEngine: Sendable {
         try await perform(template, context: context, templates: templates, recovering: false).result.output
     }
 
+    /// Renders a parsed template, throwing `LiquidRenderFailure` for the first
+    /// recoverable Liquid runtime error, with its source location when available.
+    /// Cancellation, capacity, security and unexpected host errors still throw.
+    /// - Parameters:
+    ///   - template: An immutable parsed root template.
+    ///   - context: Values admitted for this invocation.
+    ///   - templates: Parsed partial templates addressed by name.
+    /// - Returns: The complete output when rendering succeeds.
+    /// - Throws: A located Liquid failure, or an unchanged terminal error.
+    public func renderLocatingFailures(_ template: LiquidTemplate, context: LiquidObject = [:],
+                                       templates: [String: LiquidTemplate] = [:]) async throws -> String {
+        try await perform(template, context: context, templates: templates, recovering: false, locateFailures: true).result.output
+    }
+
     /// Renders source while retaining recovered Liquid runtime diagnostics.
     /// Syntax errors, cancellation, unsupported values and quota failures still throw.
     /// - Parameters:
@@ -324,21 +338,21 @@ public struct LiquidEngine: Sendable {
     }
 
     private func perform(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate],
-                         recovering: Bool, measurement: Measurement? = nil) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+                         recovering: Bool, measurement: Measurement? = nil, locateFailures: Bool = false) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         try Task.checkCancellation()
         try limits.validate()
         let sourceBytes = try checkSources(template.source, partials: templates.values.map(\.source))
         return try await perform(template.ast, context: context,
             loader: TemplateLoader(templates: templates.mapValues(\.ast)), sourceBytes: sourceBytes,
-            recovering: recovering, measurement: measurement)
+            recovering: recovering, measurement: measurement, locateFailures: locateFailures)
     }
 
     // Both legacy and exact preparation converge here: one context, budget,
     // evaluator, recovery collection, output admission and metrics snapshot.
     private func perform(_ ast: ASTNode, context: LiquidObject, loader: TemplateLoader,
-                         sourceBytes: Int, recovering: Bool, measurement: Measurement?) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+                         sourceBytes: Int, recovering: Bool, measurement: Measurement?, locateFailures: Bool = false) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
-            recoveryEnabled: recovering, referenceTime: referenceTime ?? Date(), filters: filters)
+            recoveryEnabled: recovering, locateFailures: locateFailures, referenceTime: referenceTime ?? Date(), filters: filters)
         try admit(context, budget: renderer.budget)
         renderer.setTemplateLoader(loader)
         let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
@@ -353,7 +367,12 @@ public struct LiquidEngine: Sendable {
                     admittedValues: limits.contextValues - renderer.budget.remainingValues)
             }
             return (LiquidRenderResult(output: output, diagnostics: renderer.diagnostics), metrics)
-        } catch { throw publicError(error) }
+        } catch {
+            if locateFailures, error is RenderError, let diagnostic = renderer.firstFailure {
+                throw LiquidRenderFailure(diagnostic: diagnostic)
+            }
+            throw publicError(error)
+        }
     }
 
     private func performExact(_ root: LiquidTemplateRegistry.Content, context: LiquidObject,

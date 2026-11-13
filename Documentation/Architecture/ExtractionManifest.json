@@ -2311,6 +2311,89 @@
         "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
       ],
       "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Lax leading dash expression",
+      "scopeDecision": "Match the pinned Ruby lax variable parser while preserving strict parser rejection.",
+      "changes": [
+        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning and right-trim markers."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxOutputTailTests.swift"
+      ],
+      "qualification": "Public regressions and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Source-aware raising runtime diagnostics",
+      "scopeDecision": "Expose genuine first-failure line and partial identity without changing existing render or recovery APIs.",
+      "changes": [
+        "Add opt-in raising render that reports the first recoverable runtime failure with its node location; the conformance adapter consumes this information.",
+        "Keep cancellation, host failures, quotas and security failures terminal, and retain all fixture and reference outcomes.",
+        "Omit derived line numbers for rewritten liquid bodies without a verified original source map.",
+        "Capture failures on existing fast paths so opt-in diagnostics preserve ordinary render-step accounting."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidRenderResult.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tests/LiquidTests/PublicContractTests.swift",
+        "Documentation/Errors.md"
+      ],
+      "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Bracket lookup and collection commands",
+      "scopeDecision": "Follow Ruby Liquid by reserving first and last collection commands for dotted access while preserving actual dictionary keys.",
+      "changes": [
+        "Do not invoke fallback first or last for string-key bracket lookups."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/WhereAndLoopLookupTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Render tag non-string name diagnostic",
+      "scopeDecision": "Match the pinned Ruby rejection reason for invalid render names in lax and strict parser modes while preserving strict2 behavior.",
+      "changes": [
+        "Report the render-specific quoted-name reason without inventing source positions or a markup excerpt."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockMarkupDiagnosticTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Liquid body structural diagnostics",
+      "scopeDecision": "Follow the pinned Ruby structural rejection reasons without assigning rewritten locations to original source.",
+      "changes": [
+        "Identify stray block delimiters, empty assignments and unclosed blocks inside a liquid body; leave unverified source positions absent."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/BlockAndPipeDiagnosticTests.swift"
+      ],
+      "qualification": "Public regression and pinned independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Lax filter fragment scanning",
+      "scopeDecision": "Follow the pinned Ruby lax quoted-fragment scanner without changing strict modes.",
+      "changes": [
+        "When a trailing quote pairs across a filter separator, consume the ignored fragment and resume at the next filter boundary; preserve unmatched-quote and right-trim handling."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LaxFilterScanningTests.swift"
+      ],
+      "qualification": "Public regressions and the pinned independent conformance outcome are recorded separately; performance and release remain held."
     }
   ]
 }

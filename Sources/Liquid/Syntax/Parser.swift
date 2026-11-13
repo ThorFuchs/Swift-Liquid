@@ -23,11 +23,17 @@ internal final class Parser {
 
     private let source: String?
     private let sourceProvenance: DiagnosticSourceProvenance
+    private let liquidBody: Bool
     private let syntaxMode: LiquidSyntaxMode
     private let extensionProfile: LiquidExtensionProfile
     private let lineOffset: Int
     private let maxNestingDepth: Int
     private var parseDepth = 0
+
+    private var hasOriginalSource: Bool {
+        if case .original = sourceProvenance { return true }
+        return false
+    }
 
     
     private var current: Int = 0
@@ -46,6 +52,7 @@ internal final class Parser {
         consuming tokens: [Token],
         source: String? = nil,
         sourceProvenance: DiagnosticSourceProvenance = .unmapped,
+        liquidBody: Bool = false,
         syntaxMode: LiquidSyntaxMode = .lax,
         extensionProfile: LiquidExtensionProfile = .standard,
         maxNestingDepth: Int = 64,
@@ -54,6 +61,7 @@ internal final class Parser {
         self.tokens = tokens
         self.source = source
         self.sourceProvenance = sourceProvenance
+        self.liquidBody = liquidBody
         self.syntaxMode = syntaxMode
         self.extensionProfile = extensionProfile
         self.lineOffset = lineOffset
@@ -227,7 +235,7 @@ internal final class Parser {
         advance() // consume {{
         if currentTokenStorage.type == .variableEnd {
             advance()
-            return .output(.literal(.null), location: .init(line: line, suppressErrorText: false))
+            return .output(.literal(.null), location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
         }
         
         let expression = try parseExpression()
@@ -254,7 +262,7 @@ internal final class Parser {
         }
         advance() // consume }}
         
-        return .output(expression, location: .init(line: line, suppressErrorText: false))
+        return .output(expression, location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
     }
     
     @inline(__always)
@@ -263,6 +271,22 @@ internal final class Parser {
 
         let tagToken = currentTokenStorage
         advance()
+
+        if liquidBody {
+            let delimiter: String?
+            switch tagToken.type {
+            case .endif: delimiter = "endif"
+            case .endunless: delimiter = "endunless"
+            case .endcase: delimiter = "endcase"
+            case .endfor: delimiter = "endfor"
+            case .endtablerow: delimiter = "endtablerow"
+            case .endcapture: delimiter = "endcapture"
+            default: delimiter = nil
+            }
+            if let delimiter {
+                throw LiquidError.syntax(message: "'\(delimiter)' is not a valid delimiter for liquid tags. use %}", line: nil, column: nil)
+            }
+        }
 
         switch tagToken.type {
         case .if:
@@ -416,6 +440,9 @@ internal final class Parser {
     
     private func parseAssignTag() throws ->ASTNode {
         let line = currentToken.line + lineOffset
+        if liquidBody, currentToken.type == .tagEnd {
+            throw LiquidError.syntax(message: "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]", line: nil, column: nil)
+        }
         if syntaxMode == .strict2 {
             if case .identifier(let name) = currentToken.type, name.string.first?.isNumber == true {
                 if name.string.utf8.allSatisfy({ (48...57).contains($0) }) {
@@ -450,6 +477,9 @@ internal final class Parser {
             throw LiquidError.syntax(message: "Unexpected character =", line: currentToken.line + lineOffset, column: currentToken.column)
         }
         guard currentToken.type == .equals else {
+            if liquidBody, currentToken.type == .tagEnd {
+                throw LiquidError.syntax(message: "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]", line: nil, column: nil)
+            }
             if syntaxMode == .strict2, case .number = currentToken.type {
                 throw identifierExpected(currentToken)
             }
@@ -490,7 +520,7 @@ internal final class Parser {
         }
         try consumeTagEnd()
         
-        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2))
+        return .assign(variable: admittedName, value: value, location: .init(line: line, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource))
     }
     
     /// Pinned Assign::Syntax is unanchored: only its final matching signature
@@ -544,7 +574,7 @@ internal final class Parser {
         let expression = try parseExpression()
         try consumeTagEnd()
 
-        return .echo(expression: expression, location: .init(line: line, suppressErrorText: false))
+        return .echo(expression: expression, location: .init(line: line, suppressErrorText: false, hasOriginalSource: hasOriginalSource))
     }
     
     // Called immediately after the parser consumes an original tag header.
@@ -667,7 +697,7 @@ internal final class Parser {
                 try consumeTagEnd()
                 return Frame(kind: kind, opening: opening, condition: expression)
             }
-            let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+            let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource)
             let condition = try parseComplexExpression()
             try consumeTagEnd()
             return Frame(kind: kind, opening: opening, condition: condition, location: location)
@@ -820,7 +850,7 @@ internal final class Parser {
                 }
             }
         }
-        if let frame = frames.last, let opening = frame.opening {
+        if let frame = frames.last, frame.opening != nil || liquidBody {
             let tag: String
             switch frame.kind {
             case .conditional: tag = "if"
@@ -831,7 +861,8 @@ internal final class Parser {
             case .caseBlock: tag = "case"
             case .ifChanged: tag = "ifchanged"
             }
-            throw ParserError.unclosedShopifyBlock(tag, opening: opening)
+            if let opening = frame.opening { throw ParserError.unclosedShopifyBlock(tag, opening: opening) }
+            throw LiquidError.syntax(message: "'\(tag)' tag was never closed", line: nil, column: nil)
         }
         if frames.last?.kind == .ifChanged { throw ParserError.unclosedTag("ifchanged") }
         throw ParserError.unexpectedToken(currentToken)
@@ -1808,7 +1839,7 @@ internal final class Parser {
     }
     
     private func parseForHeader() throws -> (InlineString, LiquidExpression, ForParams) {
-        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2)
+        let blockLocation = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: syntaxMode != .strict2, hasOriginalSource: hasOriginalSource)
         func isRuntimeLookup(_ expression: LiquidExpression) -> Bool {
             switch expression {
             case .variable, .access: return true
@@ -2198,6 +2229,7 @@ internal final class Parser {
         let nestedParser = Parser(
             consuming: nestedTokens,
             source: rewrittenTemplate,
+            liquidBody: true,
             syntaxMode: syntaxMode,
             extensionProfile: extensionProfile,
             maxNestingDepth: maxNestingDepth,
@@ -2405,7 +2437,7 @@ internal final class Parser {
     }
     
     private func parseIncludeTag() throws ->ASTNode {
-        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false, hasOriginalSource: hasOriginalSource)
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
@@ -2508,16 +2540,22 @@ internal final class Parser {
     }
     
     private func parseRenderTag() throws ->ASTNode {
-        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false)
+        let location = RenderLocation(line: tokens[current - 1].line + lineOffset, suppressErrorText: false, hasOriginalSource: hasOriginalSource)
         // Similar to include but with isolated scope
         if syntaxMode == .strict2, currentToken.type == .tagEnd {
             throw LiquidError.syntax(message: "Expected string but found end_of_string", line: currentToken.line + lineOffset, column: currentToken.column)
+        }
+        if syntaxMode != .strict2, currentToken.type == .tagEnd {
+            throw LiquidError.syntax(message: "Syntax error in tag 'render' - Template name must be a quoted string", line: nil, column: nil)
         }
         let templateName = try parsePrimaryExpression()
         let templateStr: InlineString
         if case .literal(.string(let name)) = templateName {
             templateStr = name
         } else {
+            if syntaxMode != .strict2 {
+                throw LiquidError.syntax(message: "Syntax error in tag 'render' - Template name must be a quoted string", line: nil, column: nil)
+            }
             throw ParserError.expectedString
         }
 

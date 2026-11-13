@@ -77,6 +77,22 @@ struct BlockAndPipeDiagnosticTests {
             #expect(try await engine.render(template: "{% raw %}a{% endrawx %}b{% endraw %}", syntaxMode: mode) == "a{% endrawx %}b")
         }
         #expect(try await engine.render(template: "{% if true %}yes{% endif %}", syntaxMode: .strict2) == "yes")
+        let liquidErrors = [
+            ("{% liquid\nendfor\n%}", "'endfor' is not a valid delimiter for liquid tags. use %}"),
+            ("{% liquid\nassign\n%}", "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"),
+            ("{% liquid\nassign x = 1\nassign\n%}", "Syntax Error in 'assign' - Valid syntax: assign [var] = [source]"),
+            ("{% liquid\nfor i in (1..3)\necho i\n%}", "'for' tag was never closed")
+        ]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (source, expected) in liquidErrors {
+                do { _ = try LiquidTemplate(source, syntaxMode: mode); Issue.record("Expected liquid-body rejection") }
+                catch LiquidError.syntax(let message, let line, let column) {
+                    #expect(message == expected)
+                    #expect(line == nil && column == nil)
+                }
+            }
+            #expect(try await engine.render(template: "{% liquid\nfor i in (1..2)\necho i\nendfor\n%}", syntaxMode: mode) == "12")
+        }
         for mode in [LiquidSyntaxMode.lax, .strict] {
             do { _ = try LiquidTemplate("{% raw %}text", syntaxMode: mode); Issue.record("Expected rejection") }
             catch LiquidError.syntax(let message, _, _) { #expect(message == "Unexpected token: text()") }

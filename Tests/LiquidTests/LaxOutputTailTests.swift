@@ -17,6 +17,16 @@ struct LaxOutputTailTests {
         }
         #expect(try await engine.render(template: "{{ obj.name ! }}", context: ["obj": ["name": "ok"]]) == "ok")
         #expect(try await engine.render(template: "{{ value | upcase }}", context: ["value": "ok"]) == "OK")
+        for source in ["{{ - 'theme.css' - }}", "{{ - x }}", "{{ - }}"] {
+            #expect(try await engine.render(template: source, syntaxMode: .lax) == "")
+            #expect(try await engine.render(template: source, context: ["-": "dash"], syntaxMode: .lax) == "dash")
+            for mode in [LiquidSyntaxMode.strict, .strict2] {
+                #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: mode) }
+            }
+        }
+        #expect(try await engine.render(template: "{{ - x | append: '!' }}", context: ["-": "dash"], syntaxMode: .lax) == "dash!")
+        #expect(try await engine.render(template: "A{{ - x -}}  B", context: ["-": "dash"], syntaxMode: .lax) == "AdashB")
+        #expect(try await engine.render(template: "{{ -5 }}", syntaxMode: .lax) == "-5")
         #expect(throws: LiquidError.self) { try LiquidTemplate("{{ ! }}", syntaxMode: .lax) }
         for suffix in ["a", "1", "=", "<", ">", "!", "-"] {
             for source in ["{% assign x = false \(suffix) %}{{ x }}", "{% liquid assign x = false \(suffix)\n%}{{ x }}"] {
