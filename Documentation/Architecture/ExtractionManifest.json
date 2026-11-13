@@ -2524,6 +2524,7 @@
         "Sources/Liquid/Rendering/Renderer+Utilities.swift",
         "Sources/Liquid/Rendering/Renderer+Filters.swift",
         "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/LiquidTests/ZeroDivisionDiagnosticTests.swift",
         "Tests/TestInventory.json",
         "Documentation/Language.md"
       ],

@@ -28,10 +28,9 @@ struct ZeroDivisionDiagnosticTests {
         #expect(result.diagnostics.count == 1 && result.diagnostics.first?.line == 2)
     }
 
-    @Test func floatZeroStillFailsAndCancellationRemainsTerminal() async throws {
+    @Test func floatZeroMatchesRubyAndCancellationRemainsTerminal() async throws {
         let engine = LiquidEngine()
-        do { _ = try await engine.render(template: "{{ 1.0 | divided_by: 0.0 }}"); Issue.record("Expected finite-domain rejection") }
-        catch LiquidError.rendering(let message) { #expect(message == "divided by 0") }
+        #expect(try await engine.render(template: "{{ 1.0 | divided_by: 0.0 }}") == "Infinity")
         let task = Task { () async throws -> String in
             withUnsafeCurrentTask { $0?.cancel() }
             return try await engine.render(template: "{{ 1 | modulo: 0 }}")

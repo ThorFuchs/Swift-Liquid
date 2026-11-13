@@ -109,7 +109,7 @@
     "LiquidTests.NumericTagDiagnosticTests/pinnedNumbersPreserveTheExpectedToken()": null,
     "LiquidTests.NumericTagDiagnosticTests/strictAliasWithoutBindingAndOtherModesStayBounded()": null,
     "LiquidTests.ZeroDivisionDiagnosticTests/divisionAndModuloRetainErrorAndRecoveryBoundaries()": null,
-    "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroStillFailsAndCancellationRemainsTerminal()": null,
+    "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroMatchesRubyAndCancellationRemainsTerminal()": null,
     "LiquidTests.NilComparisonTests/nilRelationalComparisonsAreFalseAcrossPolicies()": null,
     "LiquidTests.NilComparisonTests/nilOrderingRetainsQuotaAndCancellation()": null,
     "LiquidTests.FilterStringCoercionTests/outputObjectsInspectNestedValuesAcrossRenderPaths()": null,
