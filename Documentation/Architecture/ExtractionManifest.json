@@ -2323,6 +2323,25 @@
         "Tests/LiquidTests/LaxOutputTailTests.swift"
       ],
       "qualification": "Public regressions and independent conformance outcomes are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Source-aware raising runtime diagnostics",
+      "scopeDecision": "Expose genuine first-failure line and partial identity without changing existing render or recovery APIs.",
+      "changes": [
+        "Add opt-in raising render that reports the first recoverable runtime failure with its node location; the conformance adapter consumes this information.",
+        "Keep cancellation, host failures, quotas and security failures terminal, and retain all fixture and reference outcomes."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidRenderResult.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tests/LiquidTests/PublicContractTests.swift",
+        "Documentation/Errors.md"
+      ],
+      "qualification": "Public regression and independent conformance outcomes are recorded separately; performance and release remain held."
     }
   ]
 }

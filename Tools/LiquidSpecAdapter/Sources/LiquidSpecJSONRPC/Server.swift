@@ -74,6 +74,12 @@ private func rejectMarkers(_ value: LiquidValue, depth: Int = 0) throws {
 private func problem(_ error: Error) -> LiquidValue {
     var fields: [LiquidObject.Entry] = []
     switch error {
+    case let failure as LiquidRenderFailure:
+        let diagnostic = failure.diagnostic
+        let prefix = diagnostic.line.map { "Liquid error (\(diagnostic.templateName.map { $0 + " " } ?? "")line \($0)): " } ?? "Liquid error: "
+        fields = [.init("type", "render_error"), .init("message", .string(prefix + diagnostic.message))]
+        if let line = diagnostic.line { fields.append(.init("line", .integer(line))) }
+        if let name = diagnostic.templateName { fields.append(.init("template_name", .string(name))) }
     case LiquidError.syntax(let message, let line, let column):
         fields = [.init("type", "syntax_error"), .init("message", .string(message))]
         if let line { fields.append(.init("line", .integer(line))) }
@@ -199,7 +205,7 @@ private struct Server {
                             if let name = diagnostic.templateName { fields.append(.init("template_name", .string(name))) }
                             return .object(.init(fields))
                         })]
-                    } else { result = ["output": .string(try await engine.render(compiled.root, context: context, templates: compiled.partials)), "errors": []] }
+                    } else { result = ["output": .string(try await engine.renderLocatingFailures(compiled.root, context: context, templates: compiled.partials)), "errors": []] }
                 } catch { result = ["output": nil, "error": problem(error), "errors": []] }
             case "quit": slot = nil; quitting = true; result = [:]
             default:

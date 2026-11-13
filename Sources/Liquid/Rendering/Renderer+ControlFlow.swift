@@ -262,7 +262,7 @@ extension Renderer {
             return output
         }
 
-        if !recoveryEnabled, let renderPlan = params.renderPlan {
+        if !recoveryEnabled && !locateFailures, let renderPlan = params.renderPlan {
             var output = String()
             let staticPlanCapacity = renderPlan.staticUTF8Count
             if staticPlanCapacity > 0 {
@@ -459,7 +459,7 @@ extension Renderer {
             return output
         }
 
-        if !recoveryEnabled, let renderPlan = params.renderPlan {
+        if !recoveryEnabled && !locateFailures, let renderPlan = params.renderPlan {
             var output = String()
             output.reserveCapacity(try budget.capacity((renderPlan.staticUTF8Count + 32), count: itemCount))
 

@@ -73,6 +73,32 @@ func platformExtensionsAreRejected(source: String) {
         guard case .syntax = error else { Issue.record("Expected public syntax error"); return }
     } catch { Issue.record("Unexpected error type") }
     await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "{% render 'missing' %}") }
+    let engine = LiquidEngine()
+    let root = try LiquidTemplate("a\nb\n{{ 1 | divided_by: 0 }}")
+    do {
+        _ = try await engine.renderLocatingFailures(root)
+        Issue.record("Expected located failure")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.line == 3)
+        #expect(failure.diagnostic.templateName == nil)
+        #expect(failure.diagnostic.message == "divided by 0")
+    }
+    await #expect(throws: LiquidError.self) { try await engine.render(root) }
+    let outer = try LiquidTemplate("{% render 'outer' %}")
+    let outerPartial = try LiquidTemplate("{% render 'inner' %}")
+    let innerPartial = try LiquidTemplate("one\n{{ 1 | divided_by: 0 }}")
+    do {
+        _ = try await engine.renderLocatingFailures(outer, templates: ["outer.liquid": outerPartial, "inner.liquid": innerPartial])
+        Issue.record("Expected located partial failure")
+    } catch let failure as LiquidRenderFailure {
+        #expect(failure.diagnostic.line == 2)
+        #expect(failure.diagnostic.templateName == "inner")
+    }
+    let worker = Task { () async throws -> String in
+        withUnsafeCurrentTask { $0?.cancel() }
+        return try await engine.renderLocatingFailures(root)
+    }
+    await #expect(throws: CancellationError.self) { try await worker.value }
 }
 
 @Test(arguments: ["{\"a\":1,\"a\":2}", "[1,]", "01", "true false", "1e9999", "\"\\uD800\""])

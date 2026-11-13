@@ -20,6 +20,17 @@ extension Renderer {
             try budget.output(output)
             return output
         } catch let error as RenderError {
+            if locateFailures && !observedFailure && error.renderErrorCategory != .resource && error.renderErrorCategory != .security {
+                observedFailure = true
+                let location: RenderLocation?
+                if case .include(_, _, _, _, _, let includeLocation) = node, case .includeDisabled = error {
+                    location = includeLocation
+                } else {
+                    location = node.renderLocation
+                }
+                firstFailure = .init(message: error.message, line: location?.line,
+                    templateName: diagnosticTemplateNameStack.last ?? currentTemplatePath)
+            }
             guard recoveryEnabled, error.renderErrorCategory != .resource,
                   error.renderErrorCategory != .security else { throw error }
             let location: RenderLocation?
@@ -161,7 +172,7 @@ extension Renderer {
     }
 
     internal func renderSimpleNodeListFast(_ nodes: [ASTNode], staticCapacityHint: Int) async throws -> String {
-        if recoveryEnabled { return try await renderTemplate(nodes, staticCapacityHint: staticCapacityHint) }
+        if recoveryEnabled || locateFailures { return try await renderTemplate(nodes, staticCapacityHint: staticCapacityHint) }
 
 
         switch nodes.count {
@@ -207,7 +218,7 @@ extension Renderer {
     }
 
     internal func appendRenderedSimpleNodeListFast(_ nodes: [ASTNode], to output: inout String) async throws {
-        if recoveryEnabled { output.append(try await renderTemplate(nodes)); return }
+        if recoveryEnabled || locateFailures { output.append(try await renderTemplate(nodes)); return }
 
 
         switch nodes.count {
@@ -234,7 +245,7 @@ extension Renderer {
 
     @inline(__always)
     internal func appendRenderedSimpleNodeFast(_ node: ASTNode, to output: inout String) async throws {
-        if recoveryEnabled { output.append(try await renderNode(node)); return }
+        if recoveryEnabled || locateFailures { output.append(try await renderNode(node)); return }
         switch node {
         case .text(let content), .raw(let content):
             output.append(content.string)
