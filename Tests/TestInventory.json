@@ -8,6 +8,8 @@
     "LiquidTests.PartialArgumentCompatibilityTests/dynamicIncludeWithUsesResolvedNameAsDefaultAlias()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/laxPartialAttributesIgnoreUnrecognizedPunctuation()": null,
     "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
+    "LiquidTests.RangeExpectedTokenTests/laxQuotedParenthesesUseRubyVariableScanner()": null,
+    "LiquidTests.RangeExpectedTokenTests/stringRangeStartReportsPipeAtTheFirstRejectedToken()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/includeForCarriesPriorOutputAndRestoresBindings()": null,
     "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,
     "LiquidTests.LaxFilterScanningTests/emptyFilterSegmentsAreLaxOnly()": null,

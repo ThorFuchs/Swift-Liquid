@@ -2452,7 +2452,8 @@
       ],
       "files": [
         "Sources/Liquid/Syntax/Parser.swift",
-        "Tests/LiquidTests/RangeExpectedTokenTests.swift"
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
       ],
       "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
     }
