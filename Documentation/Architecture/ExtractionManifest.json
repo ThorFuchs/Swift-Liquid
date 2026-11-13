@@ -2316,7 +2316,7 @@
       "area": "Lax leading dash expression",
       "scopeDecision": "Match the pinned Ruby lax variable parser while preserving strict parser rejection.",
       "changes": [
-        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning."
+        "Treat a leading whitespace-separated dash as the variable name and retain subsequent filter scanning and right-trim markers."
       ],
       "files": [
         "Sources/Liquid/Syntax/Lexer.swift",
