@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 2.0.0 — 2026-11-14
+
+- Follow Shopify partial-name evaluation and lazy selected-partial parsing for
+  source dictionaries; provide an explicit host resolver and retain the
+  byte-exact registry profile. Isolated render retains original host inputs.
+- Add the opt-in closed system environment for bounded resident values,
+  descriptors and representations, with explicit host-owned trust boundaries.
+- Improve syntax and runtime diagnostics, nested comments, arithmetic, filters,
+  and scope compatibility with the pinned Ruby reference.
+- Record the independent Shopify suite's raw verdict alongside a reviewed
+  five-conflict profile and a case-by-case audit of unexecuted variants.
+
 - Add an immutable exact-name template registry, eight rendering overloads and two
   dependency-inspection overloads while preserving existing dictionary APIs.
   Qualify public registry consumers and cancellation-responsive test rendezvous.

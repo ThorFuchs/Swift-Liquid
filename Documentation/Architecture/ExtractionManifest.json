@@ -2607,6 +2607,31 @@
         "Documentation/Conformance.md"
       ],
       "qualification": "Raw and reviewed suite outcomes remain distinct; conformance, performance and release holds remain in force."
+    },
+    {
+      "area": "2.0.0 release preparation and exclusion transparency",
+      "scopeDecision": "The maintainer selected 2.0.0 for the intentional Shopify-aligned default behavior changes; retain all original fixtures, exclusions, reference conflicts and release gates.",
+      "changes": [
+        "Set the CLI version and its check, document migration impacts and preserve the exact 425-case exclusion review.",
+        "Prepare release-facing documentation without claiming performance or complete conformance before qualification."
+      ],
+      "files": [
+        "Sources/LiquidCLI/LiquidCommand.swift",
+        "Scripts/check_cli.py",
+        "README.md",
+        "CHANGELOG.md",
+        "Documentation/CLI.md",
+        "Documentation/Conformance.md",
+        "Documentation/ExactTemplateRegistry.md",
+        "Documentation/ExactRegistryRendering.md",
+        "Documentation/ExactRegistryDependencies.md",
+        "Documentation/PackageDiscovery.md",
+        "Documentation/README.md",
+        "Documentation/ReleasePlan.md",
+        "Documentation/Releases/2.0.0.md",
+        "Documentation/LQ1/UNEXECUTED-CASE-REVIEW.md"
+      ],
+      "qualification": "Exact-main release lanes, reviewed performance evidence and publication remain required; this record grants no release acceptance."
     }
   ]
 }

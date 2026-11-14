@@ -1,11 +1,11 @@
-# Exact template registry — development U1 primitive
+# Exact template registry
 
-`LiquidTemplateRegistry` is an additive development API for immutable named raw
-or parsed content. U2 connects it to the existing renderer through required `registry:` APIs; see
+`LiquidTemplateRegistry` stores immutable named raw or parsed content. The
+renderer accepts it through required `registry:` APIs; see
 [exact registry rendering](ExactRegistryRendering.md) and
 [exact registry graphs](ExactRegistryDependencies.md). Existing `templates:`
-dictionaries retain Swift's canonical String identity. The CLI and Vapor retain
-their existing APIs; no new release or dependency pin is implied.
+dictionaries retain Swift's canonical String identity and use their documented
+partial-selection policy. A registry does not change downstream dependencies.
 
 Entries preserve caller order. Names compare exact UTF-8 bytes using the existing
 internal ScalarKey: composed `é` and decomposed `e` plus U+0301 coexist, as do K
@@ -45,5 +45,5 @@ projection, escaping change or new language syntax is introduced.
 
 The standalone [public consumer](../Examples/RegistryConsumer) imports only Liquid
 and demonstrates raw/parsed entries, stored byte spelling, suffix fallback, typed
-capacity and concurrent reads. Independent compilation, native test receipts,
-current limitations and explicit next-gate approval belong to the U1 return.
+capacity and concurrent reads. The extraction record retains historical source
+and qualification boundaries for the original implementation.

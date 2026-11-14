@@ -25,6 +25,7 @@ guides that are compiled from the public Swift symbol graph.
 | [LQ1-R3 runtime review](LQ1-R3/README.md) | Local runtime integration, case/size and adopted host-input semantics; historical deferral retained |
 | [LQ1-R2 triage](LQ1-R2/README.md) | Three bounded semantic repairs, diagnostic ledger and source-aware RFC |
 | [LQ1 independent conformance](LQ1/README.md) | Isolated liquid-spec tooling, exact failures and next review gate |
+| [Unexecuted case review](LQ1/UNEXECUTED-CASE-REVIEW.md) | Pinned case-by-case reasons and adapter boundaries |
 | [Local conformance console](ConformanceConsole.md) | Run the pinned JSON-RPC suite locally and inspect original case evidence |
 | [Conformance](Conformance.md) | Pinned fixtures, reference comparisons, counts, and limitations |
 | [Performance](Performance.md) | Repeatable release-mode measurements |
@@ -41,6 +42,7 @@ guides that are compiled from the public Swift symbol graph.
 | [1.1 roadmap](Roadmap.md) | Adopted custom filters, template inspection, delivery sequence and release gates |
 | [1.2 roadmap](Roadmap-1.2.md) | Adopted opt-in render metrics, CLI JSON file, compatibility boundaries and qualification |
 | [1.3.1 release notes](Releases/1.3.1.md) | JSON depth and cancellation fixes, quality gates and retained measurements |
+| [2.0.0 release notes](Releases/2.0.0.md) | Shopify compatibility, upgrade notes and qualification boundaries |
 | [1.3.0 release notes](Releases/1.3.0.md) | Additive dependency tooling, compatibility, measurements and release assets |
 | [Exact registry graphs](ExactRegistryDependencies.md) | Two exact-name overloads, atomic admission and runtime parity |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
@@ -52,12 +54,13 @@ under Artifacts and remain outside source control.
 
 - [Maintained development and CI operations](Maintenance.md)
 
-## Development exact-name primitive
+## Exact-name registry
 
 [Exact template registry](ExactTemplateRegistry.md) documents the additive U1
 registry and resolver. [Exact registry rendering](ExactRegistryRendering.md)
 describes the additive U2 runtime bridge. [Exact registry graphs](ExactRegistryDependencies.md)
-documents the two additive U3 inspection overloads. Existing dictionary, CLI and
-Vapor APIs retain their behavior.
+documents the two additive U3 inspection overloads. The explicit registry and
+the dictionary APIs use distinct partial-name policies; see the [language contract](Language.md)
+for the current dictionary behavior.
 
 The local [U4-Q independent audit](U4-Q/README.md) separates measured conformance failures from registry API regression qualification.

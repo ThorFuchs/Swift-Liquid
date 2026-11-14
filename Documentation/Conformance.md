@@ -35,6 +35,8 @@ Ruby fixture loader. The adapter checks each case's exact identity and fixture
 digest, the relevant source or data shape, and all other transport boundaries.
 Their actual upstream and Ruby-reference results are retained in the admission
 audit; an admitted case is not counted as a match unless it actually matches.
+The [case-by-case review](LQ1/UNEXECUTED-CASE-REVIEW.md) records the fixture
+identity and current adapter boundary for each of the remaining 425 variants.
 
 Swift-Liquid targets Shopify's open-source Liquid core. The reference is
 Shopify/liquid 5.14.0 at commit `4e39ae4cc3da73921923c0669e0fc84a66b2f696`,
