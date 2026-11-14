@@ -145,3 +145,19 @@ Publish source, compiled DocC and qualification archives, notes and checksums
 only after exact-main qualification, benchmark review and the maintainer's
 explicit publication request. Historical 1.0–1.3 releases and their evidence
 remain unchanged.
+
+## 2.0.0 release preparation
+
+The maintainer selected a major version for the intentional default rendering
+changes in the [2.0.0 notes](Releases/2.0.0.md). Qualify the exact clean final
+main commit using all nine lanes in [RELEASING.md](../RELEASING.md), including
+the immutable 1.3.0 matched baseline, complete observations and a separately
+bound review of every latency and variance flag. Keep the historical performance
+findings and all unexecuted or mismatched conformance cases visible. A reviewed
+profile with zero unexpected failures is not a complete-conformance claim.
+
+Prepare the source, DocC and qualification archives and checksums only after all
+required gates pass. Publish the requested immutable tag and release only after
+exact-main hosted evidence and the release packaging validator agree. Verify
+exact published SwiftPM version resolution afterward. Existing releases and
+the published-installation anchor remain unchanged.

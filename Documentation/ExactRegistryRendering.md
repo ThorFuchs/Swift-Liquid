@@ -1,12 +1,12 @@
-# Exact registry rendering — development U2
+# Exact registry rendering
 
 The eight additive `registry:` render APIs use the existing evaluator and one
 invocation-owned budget. Each family accepts a raw or parsed root: `render`,
 `renderWithDiagnostics`, `renderWithMetrics`, and
 `renderWithDiagnosticsAndMetrics`. The registry argument is required; calls using
-the older `templates:` dictionaries keep their signatures, defaults and canonical
-Swift String lookup behavior. No released version or Vapor dependency change is
-implied by this local feature checkpoint.
+the older `templates:` dictionaries retain their signatures and canonical Swift
+String key identity. Their current partial-selection behavior is documented in
+the [language contract](Language.md).
 
 ```swift
 import Liquid
@@ -22,7 +22,7 @@ let output = try await LiquidEngine().render(
 
 The [executable public consumer](../Examples/ExactRegistryConsumer) exercises all
 eight APIs, mixed source, function references, original-byte identities, typed
-failures and timing presence. Existing dictionary consumers remain unchanged.
+failures and timing presence. Dictionary consumers use their own explicit APIs.
 
 ## Atomic preparation and lookup
 
@@ -68,8 +68,8 @@ For `render ... for`, arrays, ranges, and objects render once per element; a sca
 renders once, and a nil value leaves any explicitly supplied alias argument intact.
 For `include ... for`, an array renders once per element; other inputs render once.
 Named arguments are scoped to the include, including when control flow propagates.
-Exact registry dependency inspection is available in the local U3 checkpoint;
-the CLI and Vapor still use their existing APIs.
+Exact registry dependency inspection uses the same resolver; the CLI uses its
+existing dictionary API.
 
 ## Successful-only metrics, errors and bounds
 

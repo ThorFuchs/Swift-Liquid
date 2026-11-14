@@ -13,12 +13,12 @@ metrics when you need them. Each operation owns its mutable state.
 
 [Read the documentation →](https://thorfuchs.github.io/Swift-Liquid/)
 
-Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). The latest stable
-release is [1.3.1](https://github.com/ThorFuchs/Swift-Liquid/releases/tag/1.3.1).
-The [1.3.1 release notes](Documentation/Releases/1.3.1.md) describe the
-maintenance release. Use a released version for applications; `main` and the
-documentation site track ongoing development. Release assets include the source,
-compiled DocC reference, qualification evidence and SHA-256 checksums for that exact version.
+Maintained by [Thorsten Fuchs](https://github.com/ThorFuchs). Select a version
+from the [published releases](https://github.com/ThorFuchs/Swift-Liquid/releases).
+The [2.0.0 release notes](Documentation/Releases/2.0.0.md) describe the major
+version's compatibility changes. `main` and the documentation site track ongoing
+development. Release assets include source, compiled DocC, qualification evidence
+and SHA-256 checksums for the exact version.
 
 ## Why Swift-Liquid?
 
@@ -55,10 +55,10 @@ tool uses [Swift-JSON](https://github.com/ThorFuchs/Swift-JSON); applications li
 
 ## Installation
 
-Add the package to `Package.swift`:
+After 2.0.0 is published, add the package to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "1.3.1")
+.package(url: "https://github.com/ThorFuchs/Swift-Liquid.git", from: "2.0.0")
 ```
 
 Then add the library product to your target:
@@ -224,10 +224,11 @@ Swift-Liquid targets that open-source core. The new [LQ1 independent liquid-spec
 track](Documentation/LQ1/README.md) retains the unmodified suite verdicts and reference evidence.
 The opt-in reviewed profile reports unexpected failures separately from five
 [documented reference conflicts](https://github.com/Shopify/liquid-spec/issues/170).
-On the recorded `c9d5a79` source snapshot, 4,619 cases matched, five mismatched
-for both Swift-Liquid and the pinned Ruby reference, and 488 were not executed. This is a
-scoped result, not complete Shopify conformance; [the audit](Documentation/Conformance.md)
-describes later case-by-case admissions and remaining exclusions. Storefront objects, theme-only tags,
+On the recorded `57583aa` source snapshot, 4,682 cases matched, five mismatched
+for both Swift-Liquid and the pinned Ruby reference, and 425 were not executed.
+This is a scoped result, not complete Shopify conformance; [the audit](Documentation/Conformance.md)
+describes the reference conflicts and [each unexecuted case](Documentation/LQ1/UNEXECUTED-CASE-REVIEW.md).
+Storefront objects, theme-only tags,
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
 

@@ -1,11 +1,10 @@
 # Exact registry dependency inspection
 
-The local U3 checkpoint adds two required-`registry:` overloads of
-`LiquidEngine.inspectDependencies`. They return the existing immutable
-`LiquidDependencyInspection`; they share U2's prepared AST table and U1's exact
+Two required-`registry:` overloads of `LiquidEngine.inspectDependencies` return
+the immutable `LiquidDependencyInspection`. They share the prepared AST table and exact
 UTF-8 resolver. Existing `templates:` graph and render calls keep canonical Swift
-String lookup. The CLI still uses its existing dictionary API. No release or
-Vapor dependency update follows from this checkpoint.
+String lookup. The CLI uses its existing dictionary API. Downstream dependency
+updates remain separate from registry inspection.
 
 ```swift
 import Liquid
