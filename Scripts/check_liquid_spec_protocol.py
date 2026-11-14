@@ -61,6 +61,16 @@ class ProtocolTests(unittest.TestCase):
             result = self.peer.request('render', {'template_id': template, 'environment': {'name': name}, 'options': {'registers': {'current_time': date}}})['result']
             self.assertEqual(result, {'output': name + 'P|' + date[:10] + '||0', 'errors': []})
 
+    def test_host_names_and_absent_filesystem_are_distinct(self):
+        root = "{% include 'CARD' %}"
+        template = self.peer.compile(root, filesystem={'card.liquid': 'found'})['result']['template_id']
+        result = self.peer.request('render', {'template_id': template})['result']
+        self.assertEqual(result['output'], 'found')
+        for extra, expected in [({}, 'does not allow includes'), ({'filesystem': {}}, 'Could not find asset')]:
+            template = self.peer.compile(root, **extra)['result']['template_id']
+            result = self.peer.request('render', {'template_id': template})['result']
+            self.assertIn(expected, result['error']['message'])
+
     def test_compile_error_is_structured_and_invalidates_previous_slot(self):
         old = self.peer.compile('old')['result']['template_id']
         result = self.peer.compile('x\n{{ 1 | | upcase }}', options={'error_mode': 'strict2'})['result']
@@ -70,6 +80,14 @@ class ProtocolTests(unittest.TestCase):
         new = self.peer.compile('new')['result']['template_id']
         self.assertNotEqual(new, old)
         self.assertEqual(self.peer.request('render', {'template_id': old})['error']['code'], -32602)
+
+    def test_selected_partial_syntax_failure_occurs_during_render(self):
+        compiled = self.peer.compile("{% render 'broken' %}", filesystem={'broken': 'first\n{% if true'})['result']
+        self.assertIsNotNone(compiled['template_id'])
+        rendered = self.peer.request('render', {'template_id': compiled['template_id']})['result']
+        self.assertIsNone(rendered['output'])
+        self.assertEqual(rendered['error']['type'], 'syntax_error')
+        self.assertEqual(rendered['error']['line'], 2)
 
     def test_default_lax_mode_accepts_empty_filter_segments(self):
         template = self.peer.compile("{{ 'hello' || upcase }}")['result']['template_id']

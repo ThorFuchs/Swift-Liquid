@@ -2394,6 +2394,219 @@
         "Tests/LiquidTests/LaxFilterScanningTests.swift"
       ],
       "qualification": "Public regressions and the pinned independent conformance outcome are recorded separately; performance and release remain held."
+    },
+    {
+      "area": "Shopify dynamic include names",
+      "scopeDecision": "The maintainer selected Shopify language behavior for the default engine while retaining the explicit byte-exact registry selection profile.",
+      "changes": [
+        "Evaluate default include names as Liquid expressions and reject non-string values with a typed recoverable reason.",
+        "Retain the exact registry simple-name literal-first policy and its explicit selection behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Support/RenderError.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Documentation/Language.md",
+        "README.md"
+      ],
+      "qualification": "Public and pinned corpus outcomes are recorded separately; host mapping, lazy loading, ordered bindings and downstream qualification remain open."
+    },
+    {
+      "area": "Shopify source partial preparation and host names",
+      "scopeDecision": "The maintainer selected Shopify-compatible default partial behavior and an explicit byte-exact registry profile; host name policy remains external to the core.",
+      "changes": [
+        "Admit all source bytes before rendering, parse a selected source partial on first use, and cache it only within that invocation.",
+        "Add a checked-Sendable host name resolver over pre-admitted source maps; retain exact-registry eager preparation and selection.",
+        "Adapt the pinned JSON-RPC host to its reference filesystem naming and missing-asset policy; report root-only parse timing for lazy source dictionaries.",
+        "Evaluate default include attributes in source order within an invocation-owned temporary scope, while retaining exact-registry binding behavior."
+      ],
+      "files": [
+        "Sources/Liquid/Support/TemplateLoader.swift",
+        "Sources/Liquid/Syntax/ASTNode.swift",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/LiquidTemplateNameResolver.swift",
+        "Sources/Liquid/LiquidRenderMetrics.swift",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Tests/LiquidTests/PartialArgumentCompatibilityTests.swift",
+        "Tests/LiquidTests/R6ExpectedTokenTests.swift",
+        "Documentation/Language.md",
+        "Documentation/Metrics.md",
+        "Sources/Liquid/Documentation.docc/RenderingAndPartials.md",
+        "Sources/Liquid/Documentation.docc/RenderMetrics.md"
+      ],
+      "qualification": "Public, protocol, independent corpus and release checks remain subject to recorded outcomes; external source loading and downstream qualification remain open."
+    },
+    {
+      "area": "Shopify parenthesized string expression diagnostics",
+      "scopeDecision": "Follow the pinned Shopify parser separately in lax and strict2 modes, preserving fixture inputs and existing strict rejection.",
+      "changes": [
+        "In lax mode, treat a parenthesized quoted string as the Ruby scanner's nil value while retaining its filter chain.",
+        "In strict2 mode, consume a quoted range start before reporting the expected dotdot at a pipe."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/RangeExpectedTokenTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify lax conditional ampersands",
+      "scopeDecision": "Follow the pinned Ruby lax conditional scanner while keeping strict2 rejection and cancellation.",
+      "changes": [
+        "Retain the expression preceding an invalid ampersand segment and continue at the next unquoted boolean operator in the original tag.",
+        "Check cancellation during the bounded scan and propagate cancellation rather than converting it to a syntax error."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify truncate length coercion",
+      "scopeDecision": "Use the pinned Ruby integer coercion and recovery semantics for truncate and truncatewords, including inside partials.",
+      "changes": [
+        "Reject noninteger length arguments with invalid integer instead of silently rounding or substituting a default.",
+        "Retain nil input short-circuiting, omitted-argument defaults and existing resource bounds."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/NilTruncationTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify comment opening delimiter framing",
+      "scopeDecision": "Match the pinned Ruby comment tag's delimiter framing without changing fixtures or executing comment contents.",
+      "changes": [
+        "Consume ignored comment opening markup up to its actual outer tag delimiter before scanning the comment body.",
+        "Preserve whitespace controls, missing-close failures and cancellation during the scan."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify lax conditional parentheses",
+      "scopeDecision": "Follow the pinned Ruby scanner for lax conditional fragments; preserve strict2 behavior and do not introduce grouping semantics.",
+      "changes": [
+        "Treat adjacent lax parentheses as fragment delimiters while preserving range syntax, original literal spellings and right-associative logical operators.",
+        "Check cancellation and nesting limits while scanning opening and closing tokens."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Shopify floating-point zero division",
+      "scopeDecision": "Match Ruby's internally produced Infinity and NaN while retaining finite external value and custom-filter boundaries.",
+      "changes": [
+        "Represent non-finite values arising from floating-point division by zero as invocation-owned runtime values with Shopify string spelling.",
+        "Preserve integer zero-division errors, propagate special values through numeric filters, and reject non-finite host inputs and unexpected arithmetic overflow."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/LiquidTests/ZeroDivisionDiagnosticTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Language.md"
+      ],
+      "qualification": "Focused, native and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Liquid-spec partial syntax failure phase",
+      "scopeDecision": "Classify the actual JSON-RPC operation phase independently from the retained syntax-error family; do not change fixtures or the qualification comparator.",
+      "changes": [
+        "Record a syntax failure returned during render as a render-phase failure while preserving the syntax exception, error type, line and original upstream verdict.",
+        "Add subprocess bridge and protocol controls for root-compile and selected-partial render failures."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py"
+      ],
+      "qualification": "Bridge, protocol and independent results are recorded separately; no conformance or release acceptance is implied."
+    },
+    {
+      "area": "Reviewed Shopify reference conflicts and exclusion audit",
+      "scopeDecision": "The maintainer adopted a separate reviewed status for five documented reference conflicts; raw upstream verdicts, exclusions and all existing acceptance holds remain intact.",
+      "changes": [
+        "Add an opt-in fail-closed reviewed lane that first executes the unmodified pinned suite and binds each exception to source, fixture, mode, engine and Ruby-reference observations.",
+        "Retain raw failures and emit all not-executed case identities with source hashes and review status, including separately identified static admission candidates."
+      ],
+      "files": [
+        "Scripts/ci.py",
+        "Scripts/review_liquid_spec.py",
+        "Scripts/check_liquid_spec_review.py",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Documentation/Conformance.md",
+        "Documentation/ConformanceConsole.md",
+        "README.md"
+      ],
+      "qualification": "The reviewed status is separate from the raw suite and does not establish complete conformance or release acceptance."
+    },
+    {
+      "area": "Individually admitted liquid-spec filesystem and range cases",
+      "scopeDecision": "Admit only the 58 pinned case variants after exact fixture-bound validation that the excluded callback or resource limit is not used; retain upstream verdicts and all remaining exclusions.",
+      "changes": [
+        "Validate the 56 unused filesystem callbacks and two resource-free tagged cases individually without bypassing other feature or transport restrictions.",
+        "Preserve the source-bound case-by-case admission record and correct nested comment depth in liquid-tag bodies to match the Ruby reference."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/admission.rb",
+        "Tools/LiquidSpecAdapter/run.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Scripts/review_liquid_spec.py",
+        "Sources/Liquid/Syntax/Parser.swift",
+        "Tests/LiquidTests/CommentDelimiterCompatibilityTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/Conformance.md",
+        "Documentation/ConformanceConsole.md",
+        "Tools/LiquidSpecAdapter/README.md",
+        "README.md"
+      ],
+      "qualification": "Record source-bound reviewed and raw suite results separately; no complete-conformance or release acceptance is implied."
+    },
+    {
+      "area": "Five individually reviewed liquid-spec exclusions",
+      "scopeDecision": "Admit only the five specifically reviewed fixture variants under exact source-bound and transport checks; do not change fixtures, comparator, remaining exclusions or reference-conflict verdicts.",
+      "changes": [
+        "Validate the comment-only filesystem case, materialized LongString and three missing-file diagnostics without waiving unrelated adapter features.",
+        "Record every candidate's unmodified suite and independent Ruby result, and test that changed input or unsupported features fail admission."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/admission.rb",
+        "Tools/LiquidSpecAdapter/run.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Scripts/review_liquid_spec.py",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Documentation/Conformance.md"
+      ],
+      "qualification": "Raw and reviewed suite outcomes remain distinct; conformance, performance and release holds remain in force."
     }
   ]
 }

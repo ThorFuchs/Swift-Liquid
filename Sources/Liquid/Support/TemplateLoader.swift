@@ -19,10 +19,46 @@ internal struct LegacyTemplates: Sendable {
 // The tag prevents exact selection from entering the legacy catch/relookup path.
 internal enum TemplateLoader: Sendable {
     case legacy(LegacyTemplates)
+    case sources(LegacySources)
     case exact(PreparedExactTemplates)
 
     init(templates: [String: ASTNode]) {
         self = .legacy(.init(templates: templates))
+    }
+}
+
+// Source admission remains eager, but each selected source is parsed at most
+// once per render invocation by Renderer. No mutable cache lives in the engine.
+internal struct LegacySources: Sendable {
+    let sources: [String: String]
+    let syntaxMode: LiquidSyntaxMode
+    let extensionProfile: LiquidExtensionProfile
+    let limits: LiquidLimits
+    let resolver: LiquidTemplateNameResolver?
+
+    init(sources: [String: String], syntaxMode: LiquidSyntaxMode,
+         extensionProfile: LiquidExtensionProfile, limits: LiquidLimits,
+         resolver: LiquidTemplateNameResolver? = nil) {
+        self.sources = sources
+        self.syntaxMode = syntaxMode
+        self.extensionProfile = extensionProfile
+        self.limits = limits
+        self.resolver = resolver
+    }
+
+    func resolvedTemplatePath(for name: String) throws -> String {
+        if let resolver {
+            try Task.checkCancellation()
+            let selected = resolver.select(name)
+            try Task.checkCancellation()
+            if let selected, sources[selected] != nil { return selected }
+            let message = resolver.missing(name)
+            try Task.checkCancellation()
+            throw TemplateLoaderError.hostMissing(message)
+        }
+        if sources[name] != nil { return name }
+        if sources[name + ".liquid"] != nil { return name + ".liquid" }
+        throw TemplateLoaderError.templateNotFound(name)
     }
 }
 
@@ -47,4 +83,5 @@ internal struct PreparedExactTemplates: Sendable {
 internal enum TemplateLoaderError: Error {
     case templateNotFound(String), pathTraversal(String), absolutePathNotAllowed(String)
     case invalidPath(String), invalidExtension(String), ioError(String)
+    case hostMissing(String)
 }

@@ -122,6 +122,8 @@ print(output) // <h2>Swift &amp; Liquid</h2>
 
 `render` sees the original host inputs and explicit bindings while isolating caller
 assignments, loop locals and counters. `include` follows Liquid's shared-scope behavior.
+With `templates:`, a dynamic `include` name is evaluated before partial lookup.
+The optional byte-exact registry retains its documented selection policy.
 Supply partials as sources or parsed templates. HTML escaping is explicit: use
 `escape` or `escape_once` when inserting text into HTML. Read the
 [rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).
@@ -219,14 +221,20 @@ with pinned sources and explicit evidence grades.
 The language authority is [Shopify's Liquid reference implementation](https://github.com/Shopify/liquid)
 and its [core language documentation](https://shopify.github.io/liquid/).
 Swift-Liquid targets that open-source core. The new [LQ1 independent liquid-spec
-track](Documentation/LQ1/README.md) and [R2 triage](Documentation/LQ1-R2/README.md) and [R3 runtime review](Documentation/LQ1-R3/README.md) record substantial open compatibility differences;
-its failed gate does not expand the released qualification claim. Storefront objects, theme-only tags,
+track](Documentation/LQ1/README.md) retains the unmodified suite verdicts and reference evidence.
+The opt-in reviewed profile reports unexpected failures separately from five
+[documented reference conflicts](https://github.com/Shopify/liquid-spec/issues/170).
+On the recorded `c9d5a79` source snapshot, 4,619 cases matched, five mismatched
+for both Swift-Liquid and the pinned Ruby reference, and 488 were not executed. This is a
+scoped result, not complete Shopify conformance; [the audit](Documentation/Conformance.md)
+describes later case-by-case admissions and remaining exclusions. Storefront objects, theme-only tags,
 inheritance, macros, platform data loaders, document rendering and hosting services
 remain outside this package's [language contract](Documentation/Language.md).
 
-The [local conformance console](Documentation/ConformanceConsole.md) runs this
-pinned JSON-RPC track through a browser control center and retains the original
-case verdicts, exclusions, diagnostics and source-bound evidence.
+The [local conformance console](Documentation/ConformanceConsole.md) runs the
+unmodified pinned JSON-RPC track and retains original case verdicts. The separate
+[`liquid-spec-reviewed` lane](Tools/LiquidSpecAdapter/README.md) runs the same
+track before producing a source-bound reviewed result and exclusion inventory.
 
 The independent [Golden Liquid test suite](https://github.com/jg-rp/golden-liquid),
 maintained by James Prior, contributes all **1,098 cases** from a

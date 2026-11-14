@@ -6,6 +6,27 @@ import Testing
 struct PartialArgumentCompatibilityTests {
     @Test func includeForRendersScalarOnceAndScopesArguments() async throws {
         let engine = LiquidEngine()
+        let invalid = "{% if %}"
+        #expect(try await engine.render(template: "ok", templates: ["unused": invalid]) == "ok")
+        await #expect(throws: LiquidError.self) { try await engine.render(template: "{% include 'unused' %}", templates: ["unused": invalid]) }
+        let exact = try LiquidTemplateRegistry([.init("unused", .raw(invalid))])
+        await #expect(throws: LiquidError.self) { try await engine.render(template: "ok", registry: exact) }
+        let bounded = LiquidEngine(limits: .init(sourceBytes: 4))
+        await #expect(throws: LiquidError.self) { try await bounded.render(template: "ok", templates: ["unused": invalid]) }
+        let resolver = LiquidTemplateNameResolver(select: { name in
+            name.lowercased() == "card" ? "card.liquid" : nil
+        }, missing: { "Could not find asset " + $0 })
+        let mapped = try LiquidTemplate("{% include chosen %}")
+        #expect(try await engine.render(mapped, context: ["chosen": "CARD"], partialSources: ["card.liquid": "found"], resolver: resolver) == "found")
+        #expect(try await engine.renderLocatingFailures(mapped, context: ["chosen": "CARD"], partialSources: ["card.liquid": "found"], resolver: resolver) == "found")
+        let missing = try await engine.renderWithDiagnostics(mapped, context: ["chosen": "absent"], partialSources: ["card.liquid": "found"], resolver: resolver)
+        #expect(missing.diagnostics.first?.message == "Could not find asset absent")
+        let sequential = "{% include 'p', a: one, b: a %}|{{ a }}"
+        let sequentialContext: LiquidObject = ["one": 1, "a": "outer"]
+        #expect(try await engine.render(template: sequential, context: sequentialContext, templates: ["p": "{{ a }}-{{ b }}"]) == "1-1|outer")
+        let priorProfile = try LiquidTemplateRegistry([.init("p", .raw("{{ a }}-{{ b }}"))])
+        #expect(try await engine.render(template: sequential, context: sequentialContext, registry: priorProfile) == "1-outer|outer")
+        #expect(try await engine.render(template: "{% include 'p', _for: 'a', _with: 'b' %}", templates: ["p": "{{ _for }}:{{ _with }}"], syntaxMode: .strict2) == "a:b")
         let context: LiquidObject = ["product": ["title": "Widget"], "entry": "outer", "prefix": "host"]
         let source = "{% include 'p' for product as entry, prefix: '>' %}|{{ entry }}|{{ prefix }}"
         let partial = "{{ prefix }}[{{ entry.title }}]"
@@ -31,6 +52,13 @@ struct PartialArgumentCompatibilityTests {
             #expect(try await engine.render(template: source, context: context, registry: registry, syntaxMode: mode) == "Widget|named")
             #expect(try await engine.render(template: source, context: context, templates: ["product": partial], syntaxMode: mode) == "Widget|named")
             #expect(try await engine.render(template: source, context: context, registry: literalFirst, syntaxMode: mode) == "literal=Widget")
+            #expect(try await engine.render(template: "{% include tpl %}", context: context, templates: ["tpl": "literal", "product": "dynamic"], syntaxMode: mode) == "dynamic")
+            for invalid in ["{% include missing %}", "{% include 1 %}", "{% include nil %}"] {
+                do { _ = try await engine.render(template: invalid, syntaxMode: mode); Issue.record("Expected illegal include name") }
+                catch LiquidError.rendering(let message) { #expect(message.contains("Illegal template name")) }
+                let recovered = try await engine.renderWithDiagnostics(template: invalid, syntaxMode: mode)
+                #expect(recovered.diagnostics.first?.message.contains("Illegal template name") == true)
+            }
             let result = try await engine.renderWithDiagnostics(template: source, context: context, registry: registry, syntaxMode: mode)
             #expect(result.output == "Widget|named" && result.diagnostics.isEmpty)
         }

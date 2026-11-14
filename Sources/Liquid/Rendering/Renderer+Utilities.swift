@@ -9,6 +9,12 @@
 
 import Foundation
 
+// Non-finite values can arise inside Shopify's floating-point arithmetic.
+// Host-provided and custom-filter values retain their finite admission rules.
+internal struct RuntimeNonFinite: Sendable {
+    let value: Double
+}
+
 extension Renderer {
     // MARK: - Utility Functions
     
@@ -72,6 +78,9 @@ extension Renderer {
     internal func stringifyUnescaped(_ value: Any) -> String {
         let value = systemPrimary(value)
         switch value {
+        case let number as RuntimeNonFinite:
+            if number.value.isNaN { return "NaN" }
+            return number.value.sign == .minus ? "-Infinity" : "Infinity"
         case is RuntimeSelf: return "Liquid::SelfDrop"
         case is LiquidSpecialValue: return ""
         case let range as RuntimeRange: return range.description
@@ -256,6 +265,8 @@ extension Renderer {
     internal func numericValue(_ value: Any) -> Double? {
         let value = systemPrimary(value)
         switch value {
+        case let number as RuntimeNonFinite:
+            return number.value
         case let double as Double:
             return double
         case let int as Int:
@@ -290,6 +301,13 @@ extension Renderer {
     internal func isEqual(_ left: Any, _ right: Any) -> Bool {
         let left = systemPrimary(left)
         let right = systemPrimary(right)
+        if left is RuntimeNonFinite || right is RuntimeNonFinite {
+            if left is Bool || right is Bool { return false }
+            guard (left is RuntimeNonFinite || left is Double || left is Int),
+                  (right is RuntimeNonFinite || right is Double || right is Int),
+                  let l = numericValue(left), let r = numericValue(right) else { return false }
+            return l == r
+        }
         if let left = left as? RuntimeSelf, let right = right as? RuntimeSelf {
             return left.scope === right.scope
         }
@@ -379,6 +397,7 @@ extension Renderer {
 
     private func hasOrdering(_ value: Any) -> Bool {
         if value is Bool { return false }
+        if let value = value as? RuntimeNonFinite { return !value.value.isNaN }
         return value is Int || value is Double || value is String
     }
 
@@ -388,8 +407,8 @@ extension Renderer {
             return left == right ? 0 : (left < right ? -1 : 1)
         }
         // Both numeric (Int or Double, but NOT String coerced to number)
-        let leftIsNumeric = left is Int || left is Double
-        let rightIsNumeric = right is Int || right is Double
+        let leftIsNumeric = left is Int || left is Double || left is RuntimeNonFinite
+        let rightIsNumeric = right is Int || right is Double || right is RuntimeNonFinite
 
         if leftIsNumeric && rightIsNumeric {
             let l = numericValue(left) ?? 0
@@ -423,6 +442,7 @@ extension Renderer {
     @inline(__always)
     internal func isFloatLike(_ value: Any) -> Bool {
         let value = systemPrimary(value)
+        if value is RuntimeNonFinite { return true }
         if value is Double { return true }
         if let str = value as? String { return str.contains(".") && Double(str)?.isFinite == true }
         if let inline = value as? InlineString { return inline.string.contains(".") && Double(inline.string)?.isFinite == true }
@@ -529,6 +549,7 @@ extension Renderer {
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
         guard r != 0 else {
+            if hasFloat { return RuntimeNonFinite(value: l / r) }
             throw RenderError.divisionByZero()
         }
         let result = l / r

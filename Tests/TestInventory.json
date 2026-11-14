@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LiquidSpecRegressionTests/floatingZeroDivisionPreservesShopifySpecialValues()": null,
+    "LiquidTests.LiquidSpecRegressionTests/laxConditionalParenthesesUseRubyFragmentSemantics()": null,
+    "LiquidTests.CommentDelimiterCompatibilityTests/openingMarkupConsumesTheOuterDelimiterBeforeTheBody()": null,
+    "LiquidTests.NilTruncationTests/nonIntegerLengthsMatchRubyInsidePartials()": null,
+    "LiquidTests.LiquidSpecRegressionTests/laxConditionalAmpersandsKeepRubyBooleanBoundaries()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/emptyCounterNamesFollowParserModeAndRenderIsolation()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/renderDisallowsIncludeInItsIsolatedSubtree()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/includeForRendersScalarOnceAndScopesArguments()": null,
@@ -8,6 +13,8 @@
     "LiquidTests.PartialArgumentCompatibilityTests/dynamicIncludeWithUsesResolvedNameAsDefaultAlias()": null,
     "LiquidTests.PartialArgumentCompatibilityTests/laxPartialAttributesIgnoreUnrecognizedPunctuation()": null,
     "LiquidTests.RangeExpectedTokenTests/dynamicFloatRangeBoundsUseRubyIntegerError()": null,
+    "LiquidTests.RangeExpectedTokenTests/laxQuotedParenthesesUseRubyVariableScanner()": null,
+    "LiquidTests.RangeExpectedTokenTests/stringRangeStartReportsPipeAtTheFirstRejectedToken()": null,
     "LiquidTests.PartialInterruptCompatibilityTests/includeForCarriesPriorOutputAndRestoresBindings()": null,
     "LiquidTests.FilterStringCoercionTests/compositeSortAndJoinSeparatorUseRubyStringCoercion()": null,
     "LiquidTests.LaxFilterScanningTests/emptyFilterSegmentsAreLaxOnly()": null,
@@ -102,7 +109,7 @@
     "LiquidTests.NumericTagDiagnosticTests/pinnedNumbersPreserveTheExpectedToken()": null,
     "LiquidTests.NumericTagDiagnosticTests/strictAliasWithoutBindingAndOtherModesStayBounded()": null,
     "LiquidTests.ZeroDivisionDiagnosticTests/divisionAndModuloRetainErrorAndRecoveryBoundaries()": null,
-    "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroStillFailsAndCancellationRemainsTerminal()": null,
+    "LiquidTests.ZeroDivisionDiagnosticTests/floatZeroMatchesRubyAndCancellationRemainsTerminal()": null,
     "LiquidTests.NilComparisonTests/nilRelationalComparisonsAreFalseAcrossPolicies()": null,
     "LiquidTests.NilComparisonTests/nilOrderingRetainsQuotaAndCancellation()": null,
     "LiquidTests.FilterStringCoercionTests/outputObjectsInspectNestedValuesAcrossRenderPaths()": null,
@@ -343,7 +350,8 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null,
-    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null
+    "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null,
+    "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",

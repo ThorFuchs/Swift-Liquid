@@ -65,9 +65,11 @@ public struct LiquidEngine: Sendable {
     /// - Returns: The complete rendered output.
     /// - Throws: Syntax, runtime, or cancellation errors.
     public func render(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> String {
-        try checkSources(template, partials: Array(templates.values))
-        return try await render(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits), context: context,
-                                templates: templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) })
+        let sourceBytes = try checkSources(template, partials: Array(templates.values))
+        let root = try LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits)
+        return try await perform(root.ast, context: context,
+            loader: .sources(.init(sources: templates, syntaxMode: syntaxMode, extensionProfile: .standard, limits: limits)),
+            sourceBytes: sourceBytes, recovering: false, measurement: nil).result.output
     }
 
     /// Renders a parsed template without repeating its parsing work.
@@ -79,6 +81,19 @@ public struct LiquidEngine: Sendable {
     /// - Throws: Runtime or cancellation errors.
     public func render(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> String {
         try await perform(template, context: context, templates: templates, recovering: false).result.output
+    }
+
+    /// Renders a parsed root with source partials parsed on first use.
+    /// - Parameters:
+    ///   - template: An immutable parsed root.
+    ///   - context: Values available to this invocation.
+    ///   - partialSources: Named sources admitted together and parsed when selected.
+    ///   - resolver: Optional host policy mapping requested names to supplied sources.
+    /// - Returns: The complete rendered output.
+    /// - Throws: Syntax, runtime, admission, limit, host or cancellation errors.
+    public func render(_ template: LiquidTemplate, context: LiquidObject = [:],
+                       partialSources: [String: String], resolver: LiquidTemplateNameResolver? = nil) async throws -> String {
+        try await performSources(template, context: context, sources: partialSources, resolver: resolver, recovering: false, locateFailures: false).result.output
     }
 
     /// Renders a parsed template, throwing `LiquidRenderFailure` for the first
@@ -95,6 +110,19 @@ public struct LiquidEngine: Sendable {
         try await perform(template, context: context, templates: templates, recovering: false, locateFailures: true).result.output
     }
 
+    /// Renders a parsed root with source partials parsed on first use.
+    /// - Parameters:
+    ///   - template: An immutable parsed root.
+    ///   - context: Values available to this invocation.
+    ///   - partialSources: Named sources admitted together and parsed when selected.
+    ///   - resolver: Optional host policy mapping requested names to supplied sources.
+    /// - Returns: Complete output.
+    /// - Throws: A located Liquid failure or a terminal syntax, limit, host or cancellation error.
+    public func renderLocatingFailures(_ template: LiquidTemplate, context: LiquidObject = [:],
+                                       partialSources: [String: String], resolver: LiquidTemplateNameResolver? = nil) async throws -> String {
+        try await performSources(template, context: context, sources: partialSources, resolver: resolver, recovering: false, locateFailures: true).result.output
+    }
+
     /// Renders source while retaining recovered Liquid runtime diagnostics.
     /// Syntax errors, cancellation, unsupported values and quota failures still throw.
     /// - Parameters:
@@ -106,9 +134,11 @@ public struct LiquidEngine: Sendable {
     /// - Throws: Syntax, runtime, invalid-value, quota or cancellation errors.
     ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnostics(template: String, context: LiquidObject = [:], templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
-        try checkSources(template, partials: Array(templates.values))
-        return try await renderWithDiagnostics(LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits), context: context,
-            templates: templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) })
+        let sourceBytes = try checkSources(template, partials: Array(templates.values))
+        let root = try LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits)
+        return try await perform(root.ast, context: context,
+            loader: .sources(.init(sources: templates, syntaxMode: syntaxMode, extensionProfile: .standard, limits: limits)),
+            sourceBytes: sourceBytes, recovering: true, measurement: nil).result
     }
 
     /// Renders a reusable template and returns output together with recovered errors.
@@ -121,6 +151,19 @@ public struct LiquidEngine: Sendable {
     ///   Only explicitly recoverable Liquid failures become diagnostics; other host errors propagate.
     public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], templates: [String: LiquidTemplate] = [:]) async throws -> LiquidRenderResult {
         try await perform(template, context: context, templates: templates, recovering: true).result
+    }
+
+    /// Renders a parsed root with source partials parsed on first use and explicit recovery.
+    /// - Parameters:
+    ///   - template: An immutable parsed root.
+    ///   - context: Values available to this invocation.
+    ///   - partialSources: Named sources admitted together and parsed when selected.
+    ///   - resolver: Optional host policy mapping requested names to supplied sources.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Syntax, admission, limit, host or cancellation errors.
+    public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:],
+                                      partialSources: [String: String], resolver: LiquidTemplateNameResolver? = nil) async throws -> LiquidRenderResult {
+        try await performSources(template, context: context, sources: partialSources, resolver: resolver, recovering: true).result
     }
 
     /// Parses and renders source with opt-in timing and cumulative budget observations.
@@ -320,13 +363,14 @@ public struct LiquidEngine: Sendable {
                                syntaxMode: LiquidSyntaxMode, recovering: Bool) async throws -> LiquidMeasuredRenderResult {
         let clock = ContinuousClock()
         let start = clock.now
-        try checkSources(source, partials: Array(templates.values))
+        let sourceBytes = try checkSources(source, partials: Array(templates.values))
         let parseStart = clock.now
         let root = try LiquidTemplate(source, syntaxMode: syntaxMode, limits: limits)
-        let partials = try templates.mapValues { try LiquidTemplate($0, syntaxMode: syntaxMode, limits: limits) }
         let parseDuration = parseStart.duration(to: clock.now)
-        return try await measure(root, context: context, templates: partials, recovering: recovering,
-                                 measurement: .init(start: start, parseDuration: parseDuration))
+        let execution = try await perform(root.ast, context: context,
+            loader: .sources(.init(sources: templates, syntaxMode: syntaxMode, extensionProfile: .standard, limits: limits)),
+            sourceBytes: sourceBytes, recovering: recovering, measurement: .init(start: start, parseDuration: parseDuration))
+        return LiquidMeasuredRenderResult(result: execution.result, metrics: execution.metrics!)
     }
 
     private func measure(_ template: LiquidTemplate, context: LiquidObject, templates: [String: LiquidTemplate],
@@ -345,6 +389,16 @@ public struct LiquidEngine: Sendable {
         return try await perform(template.ast, context: context,
             loader: TemplateLoader(templates: templates.mapValues(\.ast)), sourceBytes: sourceBytes,
             recovering: recovering, measurement: measurement, locateFailures: locateFailures)
+    }
+
+    private func performSources(_ template: LiquidTemplate, context: LiquidObject, sources: [String: String], resolver: LiquidTemplateNameResolver?,
+                                recovering: Bool, locateFailures: Bool = false) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+        try Task.checkCancellation()
+        let sourceBytes = try checkSources(template.source, partials: Array(sources.values))
+        return try await perform(template.ast, context: context,
+            loader: .sources(.init(sources: sources, syntaxMode: template.syntaxMode,
+                                   extensionProfile: template.extensionProfile, limits: limits, resolver: resolver)),
+            sourceBytes: sourceBytes, recovering: recovering, measurement: nil, locateFailures: locateFailures)
     }
 
     // Both legacy and exact preparation converge here: one context, budget,

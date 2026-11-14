@@ -5,6 +5,7 @@ require 'tmpdir'
 require 'rbconfig'
 require 'stringio'
 require_relative 'adapter'
+require_relative 'admission'
 
 checks = 0
 assert = ->(condition, message) { raise message unless condition; checks += 1 }
@@ -33,13 +34,18 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
           File.write(ENV.fetch('LQ1_BRIDGE_PROBE_MARKER'), 'failed case must stay failed')
           exit 7
         end
-        {template_id: 'new-process-template'}
+        if request.fetch('params').fetch('template') == 'syntax-probe'
+          {template_id: nil, error: {type: 'syntax_error', message: 'root syntax', line: 1}}
+        else
+          {template_id: 'new-process-template'}
+        end
       when 'render'
         kind = request.fetch('params').fetch('environment').fetch('kind')
         case kind
         when 'raise' then {output: nil, error: {type: 'render_error', message: 'probe error', line: 2}}
         when 'domain' then {output: nil, error: {type: 'domain_error', message: 'probe domain'}}
         when 'quota' then {output: nil, error: {type: 'operational_error', message: 'probe quota'}}
+        when 'partial-syntax' then {output: nil, error: {type: 'syntax_error', message: 'partial syntax', line: 2}}
         else {output: 'recovered', errors: [{type: 'render_error', message: 'probe recovered', line: 3}]}
         end
       end
@@ -54,9 +60,13 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
   assert.call(bridge.observed == 'operational-error', 'Crash outcome was hidden')
   id = bridge.compile('probe', {})
   assert.call(id == 'new-process-template', 'Next compile did not recover a fresh subprocess')
+  error = expect_error.call(LQ1::SyntaxError) { bridge.compile('syntax-probe', {}) }
+  assert.call(error.line == 1 && bridge.observed == 'parse-error' && bridge.detail['type'] == 'syntax_error', 'Root syntax phase or family changed')
   options = {registers: {current_time: Time.utc(2024)}, strict_errors: true}
   error = expect_error.call(LQ1::RenderError) { bridge.render(id, {'kind' => 'raise'}, options) }
   assert.call(error.line == 2 && bridge.observed == 'render-error', 'Raised result.error lost type/location')
+  error = expect_error.call(LQ1::SyntaxError) { bridge.render(id, {'kind' => 'partial-syntax'}, options) }
+  assert.call(error.line == 2 && bridge.observed == 'render-error' && bridge.detail['type'] == 'syntax_error', 'Partial syntax phase or family changed')
   expect_error.call(LQ1::DomainError) { bridge.render(id, {'kind' => 'domain'}, options) }
   assert.call(bridge.observed == 'domain-divergence', 'Domain error became output')
   expect_error.call(LQ1::OperationalError) { bridge.render(id, {'kind' => 'quota'}, options) }
@@ -70,4 +80,43 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
 ensure
   ENV.delete('LQ1_BRIDGE_PROBE_MARKER')
 end
+spec = Struct.new(:template, :raw_filesystem, :raw_template_factory, :raw_resource_limits, :raw_environment, :render_errors, :errors).new('hello', {'_error-message' => 'missing'}, nil, {}, {}, false, {})
+fs = [:unused_filesystem_callback, 'digest']
+assert.call(LQ1::Admission.check(fs, spec, 'digest', []) == :unused_filesystem_callback, 'Unrelated callback was not admitted')
+spec.template = "{% render 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.template = 'hello'; spec.raw_filesystem['child'] = "{% include 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.raw_filesystem.delete('child'); spec.raw_resource_limits = {'render_score_limit' => 1}
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'digest', []) }
+spec.raw_resource_limits = {}
+expect_error.call(RuntimeError) { LQ1::Admission.check(fs, spec, 'changed', []) }
+range = [:unused_resource_limits, 'digest']
+assert.call(LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES) == :unused_resource_limits, 'Metadata-only case was not admitted')
+expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES + [:drops]) }
+spec.raw_resource_limits = {'render_score_limit' => 1}
+expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES) }
+spec.raw_resource_limits = {}; spec.template = LQ1::Admission::COMMENT_TEMPLATE
+spec.raw_filesystem = {'_error-message' => 'This liquid context does not allow includes.'}
+comment = [:comment_only_filesystem_callback, 'digest']
+assert.call(LQ1::Admission.check(comment, spec, 'digest', []) == :comment_only_filesystem_callback, 'Comment-only callback case was not admitted')
+spec.template += "{% render 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(comment, spec, 'digest', []) }
+spec.raw_filesystem = {}; spec.raw_environment = {'long_string' => {'instantiate:LongString' => {'length' => 100_000}}}
+def spec.instantiate_environment = {'long_string' => 'X' * 100_000}
+long = [:materialized_long_string, 'digest']
+assert.call(LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) == :materialized_long_string, 'Exact materialized string was not admitted')
+def spec.instantiate_environment = {'long_string' => 'Y' * 100_000}
+expect_error.call(RuntimeError) { LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) }
+def spec.instantiate_environment = {'long_string' => 'X' * 100_000}
+spec.raw_environment['long_string']['instantiate:LongString']['length'] = 100_001
+expect_error.call(RuntimeError) { LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) }
+spec.raw_environment = {}; spec.render_errors = true; spec.errors = {'output' => ['not found']}
+diagnostic = [:missing_file_diagnostics, 'digest']
+assert.call(LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) == :missing_file_diagnostics, 'Portable diagnostic case was not admitted')
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format, :drops]) }
+spec.raw_filesystem = {'_error-message' => 'custom'}
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) }
+spec.raw_filesystem = {}; spec.render_errors = false
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) }
 puts JSON.generate(checks: checks, status: 'passed', scope: 'negative bridge integration; no conformance cases')

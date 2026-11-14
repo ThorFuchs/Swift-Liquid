@@ -50,6 +50,15 @@ An isolated `render` retains the original host inputs, with explicit bindings
 shadowing those inputs locally. Caller assignments, captures, generated loop
 locals and counters do not cross into it. Nested render sees the original inputs,
 not the outer partial's local bindings. `include` continues to share caller state.
+With the default `templates:` APIs, `include` evaluates its template-name
+expression first, as Shopify Liquid does; nil and other non-string names fail.
+Named `include` attributes are evaluated in source order, with earlier values
+available to later attributes. These temporary values do not escape the include.
+The explicit byte-exact `registry:` profile retains its documented
+literal-first simple-name selection.
+For source dictionaries, all supplied bytes are admitted against the shared
+source limit before rendering, and a selected partial is parsed on first use
+within that invocation. The byte-exact registry continues eager preparation.
 Following Shopify Liquid, `include` is not allowed inside a `render` subtree;
 use `render` for nested partials there. This also applies to nested renders.
 Within each scope, an initialized increment/decrement counter shadows a host
@@ -86,6 +95,9 @@ The supported numeric domain is Swift `Int` plus finite binary `Double`, rather
 than Ruby's arbitrary-precision integers. JSON values outside `Int` may round to
 Double; strings are appropriate when exact large-decimal representation matters.
 Numeric overflow/non-finite input must fail as an operational error, never crash.
+Floating-point division by zero can produce invocation-local `Infinity`,
+`-Infinity`, or `NaN` as in Ruby Liquid; these are not admitted as host inputs
+or passed through the finite typed custom-filter boundary.
 String sizes, splitting, first/last access, and slicing use Unicode code points.
 `truncatewords` recognizes Ruby's ASCII word separators; non-ASCII whitespace
 inside a word remains part of that word. Numeric sorting of object properties

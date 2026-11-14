@@ -4,6 +4,47 @@ import Testing
 
 @Suite("Independent liquid-spec regressions", .timeLimit(.minutes(1)))
 struct LiquidSpecRegressionTests {
+    @Test func floatingZeroDivisionPreservesShopifySpecialValues() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let source = "{{ 10.0 | divided_by: 0.0 }}|{{ -10.0 | divided_by: 0.0 }}|{{ 0.0 | divided_by: 0.0 }}|{{ 10.0 | divided_by: 0.0 | plus: 1 }}"
+            #expect(try await engine.render(template: source, syntaxMode: mode) == "Infinity|-Infinity|NaN|Infinity")
+            #expect(try await engine.render(template: "{% assign v = 1.0 | divided_by: 0.0 %}{% if v > 1 %}yes{% endif %}", syntaxMode: mode) == "yes")
+            await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ 10 | divided_by: 0 }}", syntaxMode: mode) }
+            await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ value }}", context: ["value": .number(.infinity)], syntaxMode: mode) }
+        }
+    }
+    @Test func laxConditionalParenthesesUseRubyFragmentSemantics() async throws {
+        let engine = LiquidEngine()
+        let cases: [(String, LiquidObject, String)] = [
+            ("a == 'foo' or (b == 'bar' and c == 'baz') or false", ["b": "bar", "c": "baz"], "Y"),
+            ("(true)", [:], "N"), ("(x)", ["x": 1], "Y"),
+            ("(x == 1)", ["x": 1], "N"), ("(x == 1 )", ["x": 1], "Y"),
+            ("true and (false or true)", [:], "N"), ("(1..2)", [:], "Y")
+        ]
+        for (condition, context, expected) in cases {
+            let source = "{% if \(condition) %}Y{% else %}N{% endif %}"
+            #expect(try await engine.render(template: source, context: context, syntaxMode: .lax) == expected, "\(condition)")
+        }
+        #expect(throws: LiquidError.self) {
+            try LiquidTemplate("{% if (x == 1) %}Y{% endif %}", syntaxMode: .strict2)
+        }
+    }
+    @Test func laxConditionalAmpersandsKeepRubyBooleanBoundaries() async throws {
+        let engine = LiquidEngine()
+        let cases = [
+            ("true && false", "Y"), ("false && true", "N"),
+            ("false && true or true", "Y"), ("true && false and false", "N"),
+            ("true & 'and' or false", "Y"), ("1 == 1 && false", "Y")
+        ]
+        for (condition, expected) in cases {
+            let source = "{% if \(condition) %}Y{% else %}N{% endif %}"
+            #expect(try await engine.render(template: source, syntaxMode: .lax) == expected)
+        }
+        #expect(throws: LiquidError.self) {
+            try LiquidTemplate("{% if true && false %}Y{% endif %}", syntaxMode: .strict2)
+        }
+    }
     // Provenance: Shopify/liquid-spec 84bf25e, basics/filter-edge-cases.yml:282,
     // truncate_zero_length. Additional cases protect the general rule and quotas.
     @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])

@@ -21,8 +21,10 @@ print(result.metrics.totalDuration)
 ```
 
 Total duration uses a monotonic clock through final output admission and includes
-host suspension. Source calls also report parsing time for the root and all
-supplied partials; parsed calls have nil parse time. Parse time is included in
+host suspension. Source-map calls report parsing time for the root; selected
+source partials are parsed lazily and included in total time.
+Parsed dictionary calls have nil parse time; exact registries retain their eager
+preparation measurement. Parse time is included in
 total time. The Liquid date reference clock is independent.
 
 Counts describe admitted source bytes, final output bytes, consumed evaluator

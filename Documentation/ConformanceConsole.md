@@ -1,5 +1,10 @@
 # Local conformance control center
 
+The console currently presents the **raw** pinned suite result, including the
+five reference conflicts as failures. The separate reviewed CLI lane and its
+exclusion inventory are described in the [adapter guide](../Tools/LiquidSpecAdapter/README.md);
+the console does not yet present that reviewed status.
+
 This development tool makes the existing independent Shopify `liquid-spec` lane
 usable from a browser. It wraps the existing runner; it does not introduce another
 parser, renderer, value converter or comparison policy.
@@ -39,7 +44,7 @@ not change. JSON-RPC remains isolated development tooling, not a new `liquid` mo
 2. Capture every tracked source hash and allocate a new private external run
    directory. Reject an overlapping run in the same console.
 3. Invoke the existing canonical lane with `--output-root`. This option is limited
-   to `liquid-spec` and `conformance-console`; all existing lane defaults stay intact.
+   to the liquid-spec lanes and `conformance-console`; all existing lane defaults stay intact.
 4. Show actual checkpoints and phase progress. Do not invent a completion percentage
    or reinterpret a partial matrix as a complete observation.
 5. Verify ending source identities, source inventory joins, report hashes and full

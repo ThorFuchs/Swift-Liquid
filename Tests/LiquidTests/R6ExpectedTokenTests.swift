@@ -166,10 +166,12 @@ struct R6ExpectedTokenTests {
         if case .limitExceeded("nestingDepth")? = depth {} else { Issue.record("Depth rejection must stay operational") }
         let engine = LiquidEngine()
         for recovering in [false, true] {
+            let healthy = try await engine.render(template: "root\n\nhealthy", templates: ["unused": "partial\n" + source], syntaxMode: mode)
+            #expect(healthy == "root\n\nhealthy")
             do {
-                if recovering { _ = try await engine.renderWithDiagnostics(template: "root\n\nhealthy", templates: ["unused": "partial\n" + source], syntaxMode: mode) }
-                else { _ = try await engine.render(template: "root\n\nhealthy", templates: ["unused": "partial\n" + source], syntaxMode: mode) }
-                Issue.record("Eager partial rejection changed")
+                if recovering { _ = try await engine.renderWithDiagnostics(template: "{% include 'unused' %}", templates: ["unused": "partial\n" + source], syntaxMode: mode) }
+                else { _ = try await engine.render(template: "{% include 'unused' %}", templates: ["unused": "partial\n" + source], syntaxMode: mode) }
+                Issue.record("Selected partial must retain its syntax rejection")
             } catch LiquidError.syntax(let message, let line, let column) {
                 #expect(message == "Expected close_square but found end_of_string in \"{{ x[0 }}\"")
                 #expect(line == 2 && column == 1) // Partial-local, with no invented template name.

@@ -122,8 +122,13 @@ module LQ1
       @last_result = result
       if result['error']
         @detail = result['error']
-        @observed = { 'syntax_error' => 'parse-error', 'render_error' => 'render-error', 'domain_error' => 'domain-divergence' }.fetch(@detail['type'], 'operational-error')
-        klass = { 'parse-error' => SyntaxError, 'render-error' => RenderError, 'domain-divergence' => DomainError }.fetch(@observed, OperationalError)
+        kind = @detail['type']
+        @observed = if kind == 'syntax_error' && method == 'render'
+          'render-error' # A lazily parsed partial failed during rendering; retain its syntax family below.
+        else
+          { 'syntax_error' => 'parse-error', 'render_error' => 'render-error', 'domain_error' => 'domain-divergence' }.fetch(kind, 'operational-error')
+        end
+        klass = { 'syntax_error' => SyntaxError, 'render_error' => RenderError, 'domain_error' => DomainError }.fetch(kind, OperationalError)
         raise klass, @detail.fetch('message') unless [SyntaxError, RenderError].include?(klass)
         @compile_outcome = @observed if method == 'compile'
         @exception = klass.new(@detail)
@@ -139,8 +144,9 @@ module LQ1
         @process.case_key = @case_key
         @process.initialize!
       end
-      files = options[:file_system]&.to_h || {}
-      id = send_request('compile', 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true }, 'filesystem' => files).fetch('template_id')
+      parameters = { 'template' => source, 'options' => { 'error_mode' => (options[:error_mode] || :strict2).to_s, 'line_numbers' => true } }
+      parameters['filesystem'] = options[:file_system].to_h if options[:file_system]
+      id = send_request('compile', parameters).fetch('template_id')
       @compile_outcome = 'compiled'
       id
     end

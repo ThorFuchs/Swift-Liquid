@@ -4,6 +4,29 @@ import Testing
 
 @Suite("Strict2 range expected-token diagnostics")
 struct RangeExpectedTokenTests {
+    @Test func laxQuotedParenthesesUseRubyVariableScanner() async throws {
+        let engine = LiquidEngine()
+        let cases = [
+            ("{% assign x = ('X' | downcase) %}[{{ x }}]", "[]"),
+            ("{% assign x = ('X') %}[{{ x }}]", "[]"),
+            ("{% assign x = ('X' | default: 'q') %}[{{ x }}]", "[q]"),
+            ("{% assign x = ('X' | downcase) | append: 'z' %}[{{ x }}]", "[z]"),
+            ("{{ ('X' | downcase) }}", "")
+        ]
+        for (source, output) in cases {
+            #expect(try await engine.render(template: source, syntaxMode: .lax) == output)
+        }
+    }
+    @Test func stringRangeStartReportsPipeAtTheFirstRejectedToken() throws {
+        let source = "{% assign foo = ('X' | downcase) %}"
+        do {
+            _ = try LiquidTemplate(source, syntaxMode: .strict2)
+            Issue.record("Expected a strict range syntax failure")
+        } catch LiquidError.syntax(let message, let line, _) {
+            #expect(message.contains("Expected dotdot but found pipe"))
+            #expect(line == 1)
+        }
+    }
     @Test func dynamicFloatRangeBoundsUseRubyIntegerError() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {

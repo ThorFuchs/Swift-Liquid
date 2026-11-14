@@ -19,7 +19,7 @@ internal indirect enum ASTNode: Sendable {
     case capture(variable: InlineString, body: [ASTNode])
     case increment(name: InlineString)
     case decrement(name: InlineString)
-    case include(template: InlineString, reference: LiquidExpression, with: [String: LiquidExpression]?, as: InlineString?, isRender: Bool = false, location: RenderLocation? = nil)
+    case include(template: InlineString, reference: LiquidExpression, with: PartialBindings?, as: InlineString?, isRender: Bool = false, location: RenderLocation? = nil)
     case comment
     case raw(InlineString)
     case liquid(body: [ASTNode])
@@ -49,8 +49,37 @@ internal indirect enum ASTNode: Sendable {
         case .for(_, let value, _, _, let params): return [value] + [params.limitExpression, params.offsetExpression].compactMap { $0 }
         case .tablerow(_, let value, _, let params): return [value] + [params.cols, params.limit, params.offset].compactMap { $0 }
         case .cycle(let group, let values, _): return values + (group.map { [$0] } ?? [])
-        case .include(_, let reference, let values, _, _, _): return [reference] + (values.map { Array($0.values) } ?? [])
+        case .include(_, let reference, let values, _, _, _):
+            return [reference] + (values.map { Array($0.storage.values) + [$0.withExpression, $0.forExpression].compactMap { $0 } } ?? [])
         default: return []
+        }
+    }
+}
+
+// Preserve source order as well as the previous dictionary representation:
+// the exact registry keeps its existing binding behavior.
+internal struct PartialBindings: Sendable, ExpressibleByDictionaryLiteral {
+    private(set) var storage: [String: LiquidExpression] = [:]
+    private(set) var order: [String] = []
+    var withExpression: LiquidExpression?
+    var forExpression: LiquidExpression?
+    var count: Int { storage.count }
+    var isEmpty: Bool { storage.isEmpty && withExpression == nil && forExpression == nil }
+    init() {}
+    init(dictionaryLiteral elements: (String, LiquidExpression)...) {
+        for (name, expression) in elements { self[name] = expression }
+    }
+    mutating func reserveCapacity(_ capacity: Int) { storage.reserveCapacity(capacity); order.reserveCapacity(capacity) }
+    subscript(_ name: String) -> LiquidExpression? {
+        get { storage[name] }
+        set {
+            if let newValue {
+                if storage[name] == nil { order.append(name) }
+                storage[name] = newValue
+            } else {
+                storage.removeValue(forKey: name)
+                order.removeAll { $0 == name }
+            }
         }
     }
 }

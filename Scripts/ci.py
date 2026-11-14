@@ -54,7 +54,7 @@ def source_revision(archive_provenance=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'conformance-console'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console'], default='native')
     parser.add_argument('--output-root', type=Path,
                         help='External artifacts root for isolated liquid-spec or conformance-console runs')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
@@ -65,8 +65,8 @@ def main():
     if args.archive_provenance is not None and args.lane != 'native':
         parser.error('--archive-provenance is only for native qualification of a source export')
     if args.output_root is not None:
-        if args.lane not in ['liquid-spec', 'conformance-console']:
-            parser.error('--output-root is supported only for liquid-spec and conformance-console')
+        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console']:
+            parser.error('--output-root is supported only for liquid-spec, liquid-spec-reviewed and conformance-console')
         if args.output_root.resolve().is_relative_to(ROOT):
             parser.error('--output-root must be outside the source checkout')
     output = (args.output_root.resolve() if args.output_root else ROOT / 'Artifacts') / args.lane
@@ -114,6 +114,7 @@ def main():
             raise RuntimeError('Swift 6.4 or later is required')
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
         if args.lane in ['native', 'development']:
+            run([sys.executable, '-B', 'Scripts/check_liquid_spec_review.py'], 'reviewed-conflict-contract')
             run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')
             run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
             run([sys.executable, '-B', 'Scripts/check_release_evidence.py'], 'release-evidence-contract')
@@ -151,6 +152,17 @@ def main():
                 raise RuntimeError('liquid-spec requires --spec-path and --reference-path')
             run([sys.executable, '-B', 'Scripts/check_liquid_spec.py', '--spec-path', str(args.spec_path),
                  '--reference-path', str(args.reference_path), '--output', str(output / 'independent')], 'liquid-spec')
+        elif args.lane == 'liquid-spec-reviewed':
+            if not args.spec_path or not args.reference_path:
+                raise RuntimeError('liquid-spec-reviewed requires --spec-path and --reference-path')
+            run([sys.executable, '-B', 'Scripts/check_liquid_spec_review.py'], 'reviewed-conflict-contract')
+            raw = run([sys.executable, '-B', 'Scripts/check_liquid_spec.py', '--spec-path', str(args.spec_path),
+                       '--reference-path', str(args.reference_path), '--output', str(output / 'independent')], 'liquid-spec', check=False)
+            if raw.returncode != 1:
+                raise RuntimeError('Unexpected raw suite exit; reviewed conflicts require reassessment')
+            run([sys.executable, '-B', 'Scripts/review_liquid_spec.py', '--input', str(output / 'independent'),
+                 '--spec-path', str(args.spec_path), '--reference-path', str(args.reference_path),
+                 '--output', str(output / 'review')], 'reviewed-result')
         elif args.lane == 'reference':
             if not args.reference_path:
                 raise RuntimeError('The reference lane requires --reference-path to a clean pinned checkout')

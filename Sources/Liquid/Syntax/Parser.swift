@@ -871,7 +871,39 @@ internal final class Parser {
     // MARK: - LiquidExpression Parsing
     
     private func parseConditionOperand() throws -> LiquidExpression {
-        let value = try parsePrimaryExpression()
+        var adjacentOpening = false
+        if syntaxMode == .lax {
+            var skipped = 0
+            openingScan: while currentToken.type == .leftParen, current + 2 < tokens.count,
+                  tokens[current + 2].type != .range,
+                  nextTokenStorage.position == currentToken.position + 1 {
+                switch nextTokenStorage.type {
+                case .identifier, .number, .leftParen:
+                    guard parseDepth + skipped < maxNestingDepth else { throw LiquidError.limitExceeded("nestingDepth") }
+                    if skipped & 255 == 0 { try Task.checkCancellation() }
+                    adjacentOpening = nextTokenStorage.position == currentToken.position + 1
+                    skipped += 1
+                    advance()
+                default: break openingScan
+                }
+            }
+        }
+        let value: LiquidExpression
+        if syntaxMode == .lax, case .identifier(let name) = currentToken.type,
+           literalExpression(for: name) != nil,
+           adjacentOpening || (nextTokenStorage.type == .rightParen && nextTokenStorage.position == currentToken.position + name.utf8Count) {
+            value = .variable(name)
+            advance()
+        } else if syntaxMode == .lax, case .number = currentToken.type,
+                  nextTokenStorage.type == .rightParen, let source,
+                  let start = stringIndex(in: source, utf8Offset: currentToken.position),
+                  let end = stringIndex(in: source, utf8Offset: nextTokenStorage.position),
+                  !source[start..<end].contains(where: { $0.isWhitespace }) {
+            value = .variable(InlineString(String(source[start..<end])))
+            advance()
+        } else {
+            value = try parsePrimaryExpression()
+        }
         if currentToken.type == .filter {
             if syntaxMode == .strict2 { throw ParserError.unexpectedTrailingToken(currentToken, kind: "pipe") }
             guard syntaxMode == .lax else { throw ParserError.unexpectedToken(currentToken) }
@@ -881,8 +913,18 @@ internal final class Parser {
     }
 
     private func parseComplexExpression() throws ->LiquidExpression {
+        func skipLaxClosers() throws {
+            guard syntaxMode == .lax else { return }
+            var count = 0
+            while currentToken.type == .rightParen {
+                if count & 255 == 0 { try Task.checkCancellation() }
+                count += 1
+                advance()
+            }
+        }
         var firstExpr = try parseConditionOperand()
         firstExpr = try parseComparisonContinuation(startingWith: firstExpr)
+        try skipLaxClosers()
 
         // Collect all expressions and operators
         var expressions: [LiquidExpression] = [firstExpr]
@@ -895,6 +937,7 @@ internal final class Parser {
 
             var right = try parseConditionOperand()
             right = try parseComparisonContinuation(startingWith: right)
+            try skipLaxClosers()
             expressions.append(right)
         }
 
@@ -968,7 +1011,14 @@ internal final class Parser {
     
     @inline(__always)
     private func parseExpression() throws ->LiquidExpression {
+        let laxStringGrouping: Bool = {
+            guard syntaxMode == .lax, currentToken.type == .leftParen,
+                  case .string = nextTokenStorage.type, current + 2 < tokens.count else { return false }
+            return tokens[current + 2].type == .filter || tokens[current + 2].type == .rightParen
+        }()
         let expr = try parsePrimaryExpression()
+
+        if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
 
         guard currentTokenStorage.type == .filter else {
             return expr
@@ -995,6 +1045,8 @@ internal final class Parser {
             arguments: firstArguments,
             namedArguments: firstNamedArgs
         )
+
+        if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
 
         guard currentTokenStorage.type == .filter else {
             return .filtered(expr: expr, filters: [firstFilter])
@@ -1025,6 +1077,7 @@ internal final class Parser {
                     namedArguments: namedArgs
                 )
             )
+            if laxStringGrouping, currentTokenStorage.type == .rightParen { advance() }
         } while currentTokenStorage.type == .filter
 
         return .filtered(expr: expr, filters: allFilters)
@@ -1099,11 +1152,25 @@ internal final class Parser {
         case .leftParen:
             advance() // consume (
 
+            // In Ruby's lax variable scanner a parenthesized quoted string
+            // is not an expression; filters still receive its nil value.
+            if syntaxMode == .lax, case .string = currentToken.type,
+               nextTokenStorage.type == .filter || nextTokenStorage.type == .rightParen {
+                advance()
+                return .literal(.null)
+            }
+
             // Parse range inside parentheses: (expr..expr)
             // Start can be a number, identifier, or negative number
             let startExpr: LiquidExpression
             if case .number(let startValue, let startIsFloat) = currentToken.type {
                 startExpr = .literal(currentToken.exactInteger.map(Value.integer) ?? .number(startValue, isFloat: startIsFloat))
+                advance()
+            } else if syntaxMode == .strict2, case .string(let value) = currentToken.type,
+                      nextTokenStorage.type == .filter {
+                // Ruby's strict expression parser consumes the string as the
+                // range start before requiring dotdot at the following pipe.
+                startExpr = .literal(.string(value))
                 advance()
             } else if case .identifier(let name) = currentToken.type {
                 advance()
@@ -1123,7 +1190,7 @@ internal final class Parser {
             }
 
             guard currentToken.type == .range else {
-                if syntaxMode == .strict2, currentToken.type == .comma {
+                if syntaxMode == .strict2, currentToken.type == .comma || currentToken.type == .filter {
                     throw ParserError.expectedToken(.range, got: currentToken.type)
                 }
                 throw ParserError.unexpectedToken(currentToken)
@@ -2259,24 +2326,26 @@ internal final class Parser {
             .map { $0.trimmingCharacters(in: .whitespaces) }
 
         var result: [String] = []
-        var inComment = false
+        var commentDepth = 0
         for line in lines {
             if line.isEmpty { result.append(""); continue }
 
-            if inComment {
-                // Inside comment block, check for endcomment
-                if line == "endcomment" {
+            if commentDepth > 0 {
+                // The Ruby tokenizer recognizes nested comment tags inside a liquid body.
+                if line == "comment" || line.hasPrefix("comment ") || line.hasPrefix("comment\t") {
+                    result.append("{% comment %}")
+                    commentDepth += 1
+                } else if line == "endcomment" || line.hasPrefix("endcomment ") || line.hasPrefix("endcomment\t") {
                     result.append("{% endcomment %}")
-                    inComment = false
-                }
-                else { result.append("") }
+                    commentDepth -= 1
+                } else { result.append("") }
                 // Keep line positions while the comment lexer discards content.
                 continue
             }
 
             if line.hasPrefix("comment") {
                 result.append("{% comment %}")
-                inComment = true
+                commentDepth = 1
                 continue
             }
 
@@ -2445,15 +2514,13 @@ internal final class Parser {
         } else if case .variable(let name) = templateName {
             // Support include with variable name: {% include my_template %}
             templateStr = name
-        } else if case .access = templateName {
-            // The runtime evaluates this newly admitted dynamic expression;
-            // no literal candidate is implied by its source spelling.
-            templateStr = InlineString("")
         } else {
-            throw ParserError.expectedString
+            // Runtime validates the evaluated name, as Shopify does. No
+            // literal candidate is implied by a non-string expression.
+            templateStr = InlineString("")
         }
 
-        var variables: [String: LiquidExpression] = [:]
+        var variables = PartialBindings()
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
@@ -2477,7 +2544,7 @@ internal final class Parser {
                 // {% include 'template' for collection %} — iterate over collection
                 advance() // consume 'for'
                 let expr = try parseExpression()
-                variables["_for"] = expr
+                variables.forExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2513,7 +2580,7 @@ internal final class Parser {
                 advance() // consume 'with'
                 // Parse the object to merge
                 let expr = try parsePrimaryExpression()
-                variables["_with"] = expr
+                variables.withExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2559,7 +2626,7 @@ internal final class Parser {
             throw ParserError.expectedString
         }
 
-        var variables: [String: LiquidExpression] = [:]
+        var variables = PartialBindings()
         variables.reserveCapacity(4)
         var alias: InlineString? = nil
 
@@ -2602,7 +2669,7 @@ internal final class Parser {
             } else if currentToken.type == .with {
                 advance()
                 let expr = try parsePrimaryExpression()
-                variables["_with"] = expr
+                variables.withExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {
@@ -2615,7 +2682,7 @@ internal final class Parser {
             } else if currentToken.type == .for {
                 advance()
                 let expr = try parsePrimaryExpression()
-                variables["_for"] = expr
+                variables.forExpression = expr
                 if case .identifier(let keyword) = currentToken.type, keyword.equals("as") {
                     advance()
                     guard case .identifier(let aliasName) = currentToken.type else {

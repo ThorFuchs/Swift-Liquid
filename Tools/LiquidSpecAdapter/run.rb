@@ -23,6 +23,7 @@ require 'liquid/spec'
 require 'liquid/spec/deps/liquid_ruby'
 require 'liquid/spec/cli/runner'
 require_relative 'adapter'
+require_relative 'admission'
 raise 'Wrong Ruby Liquid version' unless Liquid::VERSION == '5.14.0'
 raise 'Wrong liquid-spec version' unless Liquid::Spec::VERSION == '2.0.0'
 output = File.expand_path(options.fetch(:output)); FileUtils.mkdir_p(output)
@@ -116,6 +117,8 @@ reference.on_render do |ctx, assigns, render_options|
 end
 reference.ensure_setup!
 rows = []; runs = []
+admission = LQ1::Admission.load(File.join(__dir__, 'ExclusionCandidates.json'))
+seen_admissions = Set.new
 Liquid::Spec::TimeFreezer.freeze_spec_time do
   options[:suites].each do |suite|
     specs = Liquid::Spec::SpecLoader.load_all(suite: suite.to_sym, random_seed: options[:seed])
@@ -135,18 +138,23 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         expectation: { output: spec.expected, outputPattern: spec.expected_pattern, errors: spec.errors },
         complexity: spec.complexity, sourceDigest: Digest::SHA256.file(spec.source_file).hexdigest, resultDigest: nil }
       missing = spec.features & LQ1::MISSING_FEATURES.keys
+      admitted = LQ1::Admission.check(admission[key], spec, row[:sourceDigest], missing)
+      seen_admissions.add(key) if admitted
+      missing = missing - LQ1::Admission.waived_features(admitted)
       reason = missing.empty? ? nil : missing.map { |feature| "#{feature}: #{LQ1::MISSING_FEATURES.fetch(feature)}" }.join('; ')
       reason ||= 'unsupported: declared parser mode is outside lax/strict/strict2' unless LQ1::PARSER_MODES.include?(spec.error_mode)
       unless reason
         begin
           reason = transport_reason(spec.instantiate_environment)
-          reason ||= 'transport-inapplicable: custom filesystem error callback' if spec.raw_filesystem.is_a?(Hash) && spec.raw_filesystem.key?('_error-message')
+          reason ||= transport_reason(spec.instantiate_filesystem.to_h) if [:unused_filesystem_callback, :comment_only_filesystem_callback, :missing_file_diagnostics].include?(admitted)
+          reason ||= 'transport-inapplicable: custom filesystem error callback' if ![:unused_filesystem_callback, :comment_only_filesystem_callback].include?(admitted) && spec.raw_filesystem.is_a?(Hash) && spec.raw_filesystem.key?('_error-message')
           reason ||= 'transport-inapplicable: template factory callback' if spec.raw_template_factory
           reason ||= 'unsupported: Ruby resource-score policy has no verified Swift mapping' unless spec.raw_resource_limits.empty?
         rescue StandardError => e
           reason = "operational-error: fixture instantiation failed: #{e.class}: #{e.message}"
         end
       end
+      raise "Admitted case failed transport preflight: #{key}: #{reason}" if admitted && reason
       if reason
         row[:reason] = reason
         row[:observedCategory] = if reason.include?('transport-inapplicable:') then 'transport-inapplicable' elsif reason.include?('unsupported-by-domain:') then 'unsupported-by-domain' elsif reason.include?('operational-error:') then 'operational-error' else 'unsupported' end
@@ -155,7 +163,13 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:disabled] = true
       else
         row[:selected] = true; row[:disabled] = false; row[:reason] = 'portable primitive JSON; declared parser/render modes; explicit partial map'
-        result = adapter.run_single(spec)
+        row[:admission] = admitted.to_s if admitted
+        adapter.set_missing_features(LQ1::MISSING_FEATURES.keys - LQ1::Admission.waived_features(admitted))
+        begin
+          result = adapter.run_single(spec)
+        ensure
+          adapter.set_missing_features(LQ1::MISSING_FEATURES.keys)
+        end
         row[:observedCategory] = bridge.observed || 'operational-error'
         row[:resultDigest] = bridge.result_digest
         verdict = receipt_value({ status: result.status, passed: result.passed?, output: result.output, expected: result.expected })
@@ -214,6 +228,7 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
     warn JSON.generate(summary)
   end
 end
+raise 'Admission candidate membership changed' unless seen_admissions == admission.keys.to_set
 shutdown_error = nil
 begin
   bridge.shutdown

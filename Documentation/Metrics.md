@@ -28,7 +28,7 @@ assert(reused.metrics.parseDuration == nil)
 | Field | Meaning |
 | --- | --- |
 | `totalDuration: Duration` | Monotonic elapsed duration from measured entry to the snapshot after final output admission; includes parsing when requested, value admission, evaluation and suspension in host callbacks |
-| `parseDuration: Duration?` | Source parsing interval, including root and all supplied partials, after cumulative source admission; nil for parsed-template calls |
+| `parseDuration: Duration?` | For `templates:` sources, root parsing after cumulative admission; lazy partial parsing is included in `totalDuration`. Exact-registry calls include eager entry preparation. Nil for parsed roots with parsed dictionaries. |
 | `sourceBytes: Int` | Cumulative UTF-8 bytes of the root and every supplied partial, even unused partials |
 | `outputBytes: Int` | Final returned output's UTF-8 bytes, excluding intermediate/captured buffers |
 | `renderSteps: Int` | Consumed evaluator-step capacity |

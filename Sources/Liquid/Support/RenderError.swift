@@ -28,6 +28,7 @@ internal enum RenderError: RuntimeLiquidError, Equatable {
     
     case includeError(String, reason: String, sourceLocation: LiquidSourceLocation? = nil)
     case includeDisabled(sourceLocation: LiquidSourceLocation? = nil)
+    case illegalIncludeName(sourceLocation: LiquidSourceLocation? = nil)
     
     case circularDependency([String], sourceLocation: LiquidSourceLocation? = nil)
     
@@ -66,6 +67,7 @@ extension RenderError {
              .tagError(_, _, let location),
              .includeError(_, _, let location),
              .includeDisabled(let location),
+             .illegalIncludeName(let location),
              .circularDependency(_, let location),
              .templateNotFound(_, let location),
              .accessDenied(_, let location),
@@ -101,6 +103,8 @@ extension RenderError {
             return .includeError(name, reason: reason, sourceLocation: context.sourceLocation)
         case .includeDisabled:
             return .includeDisabled(sourceLocation: context.sourceLocation)
+        case .illegalIncludeName:
+            return .illegalIncludeName(sourceLocation: context.sourceLocation)
         case .circularDependency(let chain, _):
             return .circularDependency(chain, sourceLocation: context.sourceLocation)
         case .templateNotFound(let name, _):
@@ -148,6 +152,8 @@ extension RenderError {
             return "Include '\(template)' failed: \(reason)"
         case .includeDisabled:
             return "include usage is not allowed in this context"
+        case .illegalIncludeName:
+            return "Argument error in tag 'include' - Illegal template name"
         case .circularDependency(let chain, _):
             return "Circular dependency: \(chain.joined(separator: " -> "))"
         case .templateNotFound(let name, _):
@@ -177,7 +183,7 @@ extension RenderError {
             return .type
         case .filterError, .tagError:
             return .execution
-        case .includeError, .includeDisabled, .circularDependency:
+        case .includeError, .includeDisabled, .illegalIncludeName, .circularDependency:
             return .template
         case .accessDenied:
             return .security
@@ -233,7 +239,7 @@ extension RenderError {
             return "Check the syntax and arguments for tag '\(tag)'"
         case .includeError(let template, _, _):
             return "Ensure template '\(template)' exists and is accessible"
-        case .includeDisabled:
+        case .includeDisabled, .illegalIncludeName:
             return nil
         case .circularDependency(let chain, _):
             return "Break the circular dependency in: \(chain.joined(separator: " -> "))"
