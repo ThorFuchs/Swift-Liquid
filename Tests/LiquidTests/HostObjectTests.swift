@@ -78,7 +78,8 @@ struct HostObjectTests {
         let object = LiquidHostObject("host", properties: [LiquidHostProperty("title") { "visible" }])
         let engine = LiquidEngine()
         for source in ["{{ host }}", "A{{ host }}B", "{{ host | upcase }}", "{% if host %}yes{% endif %}",
-                       "{% assign x = host %}{{ x }}", "{{ self.host }}", "{{ self.host.name }}", "{{ host[0] }}"] {
+                       "{% assign x = host %}{{ x }}", "{{ self.host }}", "{{ self.host.name }}",
+                       "{% assign alias = self %}{{ alias.host.name }}", "{{ host[0] }}"] {
             await #expect(throws: LiquidError.self) { try await engine.render(template: source, hostObjects: [object]) }
         }
         #expect(try await engine.render(template: "{{ host.title }}", hostObjects: [object]) == "visible")

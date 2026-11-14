@@ -596,6 +596,8 @@ internal final class RenderingContext {
     }
 
     private func resolve(_ component: PathComponent, from value: Any) -> Any? {
+        // A cached path must never reflect on an explicitly registered host object.
+        if value is LiquidHostObject { return nil }
         if let selfValue = value as? RuntimeSelf {
             switch component {
             case .size: return selfValue.lookup("size")

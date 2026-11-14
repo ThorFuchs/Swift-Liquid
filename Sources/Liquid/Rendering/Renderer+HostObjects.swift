@@ -7,7 +7,8 @@ extension Renderer {
         guard !systemContextEnabled else { return false }
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
-        return root != "self" && !(context.getLiteralVariable(root) is LiquidHostObject)
+        let value = context.getLiteralVariable(root)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeSelf)
     }
 
     @inline(__always)

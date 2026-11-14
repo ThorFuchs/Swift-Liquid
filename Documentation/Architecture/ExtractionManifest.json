@@ -2637,7 +2637,7 @@
       "area": "Explicit host property bindings",
       "scopeDecision": "Add opt-in, checked-Sendable asynchronous root property bindings without changing the ordinary value domain, existing render overloads, or Shopify fixture selection.",
       "changes": [
-        "Route explicit host property lookups through invocation-owned budgets and cancellation checks while rejecting direct object use and preserving ordinary lookup behavior.",
+        "Route explicit host property lookups through invocation-owned budgets and cancellation checks while rejecting direct object use, blocking cached self-alias reflection, and preserving ordinary lookup behavior.",
         "Retain callback failures and provide public source/parsed consumer, isolation, cancellation, naming and budget tests."
       ],
       "files": [
