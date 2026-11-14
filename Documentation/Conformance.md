@@ -28,6 +28,14 @@ cases still need case-level review. The lane also emits an identity- and
 fixture-hash-bound inventory of every unexecuted case. No complete-language,
 downstream or release acceptance follows from it.
 
+The later review of the remaining 430 variants identified five more cases for
+individual admission: one comment-only filesystem case, three missing-file
+diagnostic cases, and a 100,000-character string materialized by the pinned
+Ruby fixture loader. The adapter checks each case's exact identity and fixture
+digest, the relevant source or data shape, and all other transport boundaries.
+Their actual upstream and Ruby-reference results are retained in the admission
+audit; an admitted case is not counted as a match unless it actually matches.
+
 Swift-Liquid targets Shopify's open-source Liquid core. The reference is
 Shopify/liquid 5.14.0 at commit `4e39ae4cc3da73921923c0669e0fc84a66b2f696`,
 with Ruby 4.0.1, Date 3.5.1, and Time 0.4.2. Reference runs use UTC, line numbers,

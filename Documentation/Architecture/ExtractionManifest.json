@@ -2588,6 +2588,25 @@
         "README.md"
       ],
       "qualification": "Record source-bound reviewed and raw suite results separately; no complete-conformance or release acceptance is implied."
+    },
+    {
+      "area": "Five individually reviewed liquid-spec exclusions",
+      "scopeDecision": "Admit only the five specifically reviewed fixture variants under exact source-bound and transport checks; do not change fixtures, comparator, remaining exclusions or reference-conflict verdicts.",
+      "changes": [
+        "Validate the comment-only filesystem case, materialized LongString and three missing-file diagnostics without waiving unrelated adapter features.",
+        "Record every candidate's unmodified suite and independent Ruby result, and test that changed input or unsupported features fail admission."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/admission.rb",
+        "Tools/LiquidSpecAdapter/run.rb",
+        "Tools/LiquidSpecAdapter/check_bridge.rb",
+        "Tools/LiquidSpecAdapter/ExclusionCandidates.json",
+        "Tools/LiquidSpecAdapter/ReviewedConflicts.json",
+        "Scripts/review_liquid_spec.py",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Documentation/Conformance.md"
+      ],
+      "qualification": "Raw and reviewed suite outcomes remain distinct; conformance, performance and release holds remain in force."
     }
   ]
 }

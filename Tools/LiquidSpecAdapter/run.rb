@@ -140,14 +140,14 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
       missing = spec.features & LQ1::MISSING_FEATURES.keys
       admitted = LQ1::Admission.check(admission[key], spec, row[:sourceDigest], missing)
       seen_admissions.add(key) if admitted
-      missing = missing - LQ1::Admission::RESOURCE_FEATURES if admitted == :unused_resource_limits
+      missing = missing - LQ1::Admission.waived_features(admitted)
       reason = missing.empty? ? nil : missing.map { |feature| "#{feature}: #{LQ1::MISSING_FEATURES.fetch(feature)}" }.join('; ')
       reason ||= 'unsupported: declared parser mode is outside lax/strict/strict2' unless LQ1::PARSER_MODES.include?(spec.error_mode)
       unless reason
         begin
           reason = transport_reason(spec.instantiate_environment)
-          reason ||= transport_reason(spec.instantiate_filesystem.to_h) if admitted == :unused_filesystem_callback
-          reason ||= 'transport-inapplicable: custom filesystem error callback' if admitted != :unused_filesystem_callback && spec.raw_filesystem.is_a?(Hash) && spec.raw_filesystem.key?('_error-message')
+          reason ||= transport_reason(spec.instantiate_filesystem.to_h) if [:unused_filesystem_callback, :comment_only_filesystem_callback, :missing_file_diagnostics].include?(admitted)
+          reason ||= 'transport-inapplicable: custom filesystem error callback' if ![:unused_filesystem_callback, :comment_only_filesystem_callback].include?(admitted) && spec.raw_filesystem.is_a?(Hash) && spec.raw_filesystem.key?('_error-message')
           reason ||= 'transport-inapplicable: template factory callback' if spec.raw_template_factory
           reason ||= 'unsupported: Ruby resource-score policy has no verified Swift mapping' unless spec.raw_resource_limits.empty?
         rescue StandardError => e
@@ -164,7 +164,7 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
       else
         row[:selected] = true; row[:disabled] = false; row[:reason] = 'portable primitive JSON; declared parser/render modes; explicit partial map'
         row[:admission] = admitted.to_s if admitted
-        adapter.set_missing_features(LQ1::MISSING_FEATURES.keys - (admitted == :unused_resource_limits ? LQ1::Admission::RESOURCE_FEATURES : []))
+        adapter.set_missing_features(LQ1::MISSING_FEATURES.keys - LQ1::Admission.waived_features(admitted))
         begin
           result = adapter.run_single(spec)
         ensure

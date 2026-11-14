@@ -80,7 +80,7 @@ Dir.mktmpdir('lq1-bridge-probe-') do |directory|
 ensure
   ENV.delete('LQ1_BRIDGE_PROBE_MARKER')
 end
-spec = Struct.new(:template, :raw_filesystem, :raw_template_factory, :raw_resource_limits).new('hello', {'_error-message' => 'missing'}, nil, {})
+spec = Struct.new(:template, :raw_filesystem, :raw_template_factory, :raw_resource_limits, :raw_environment, :render_errors, :errors).new('hello', {'_error-message' => 'missing'}, nil, {}, {}, false, {})
 fs = [:unused_filesystem_callback, 'digest']
 assert.call(LQ1::Admission.check(fs, spec, 'digest', []) == :unused_filesystem_callback, 'Unrelated callback was not admitted')
 spec.template = "{% render 'x' %}"
@@ -96,4 +96,27 @@ assert.call(LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE
 expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES + [:drops]) }
 spec.raw_resource_limits = {'render_score_limit' => 1}
 expect_error.call(RuntimeError) { LQ1::Admission.check(range, spec, 'digest', LQ1::Admission::RESOURCE_FEATURES) }
+spec.raw_resource_limits = {}; spec.template = LQ1::Admission::COMMENT_TEMPLATE
+spec.raw_filesystem = {'_error-message' => 'This liquid context does not allow includes.'}
+comment = [:comment_only_filesystem_callback, 'digest']
+assert.call(LQ1::Admission.check(comment, spec, 'digest', []) == :comment_only_filesystem_callback, 'Comment-only callback case was not admitted')
+spec.template += "{% render 'x' %}"
+expect_error.call(RuntimeError) { LQ1::Admission.check(comment, spec, 'digest', []) }
+spec.raw_filesystem = {}; spec.raw_environment = {'long_string' => {'instantiate:LongString' => {'length' => 100_000}}}
+def spec.instantiate_environment = {'long_string' => 'X' * 100_000}
+long = [:materialized_long_string, 'digest']
+assert.call(LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) == :materialized_long_string, 'Exact materialized string was not admitted')
+def spec.instantiate_environment = {'long_string' => 'Y' * 100_000}
+expect_error.call(RuntimeError) { LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) }
+def spec.instantiate_environment = {'long_string' => 'X' * 100_000}
+spec.raw_environment['long_string']['instantiate:LongString']['length'] = 100_001
+expect_error.call(RuntimeError) { LQ1::Admission.check(long, spec, 'digest', [:ruby_drops]) }
+spec.raw_environment = {}; spec.render_errors = true; spec.errors = {'output' => ['not found']}
+diagnostic = [:missing_file_diagnostics, 'digest']
+assert.call(LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) == :missing_file_diagnostics, 'Portable diagnostic case was not admitted')
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format, :drops]) }
+spec.raw_filesystem = {'_error-message' => 'custom'}
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) }
+spec.raw_filesystem = {}; spec.render_errors = false
+expect_error.call(RuntimeError) { LQ1::Admission.check(diagnostic, spec, 'digest', [:shopify_error_format]) }
 puts JSON.generate(checks: checks, status: 'passed', scope: 'negative bridge integration; no conformance cases')

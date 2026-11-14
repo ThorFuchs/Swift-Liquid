@@ -141,17 +141,22 @@ def main():
         candidates = json.loads(CANDIDATES.read_text())
         if candidates['specPin'] != policy['pins']['spec']:
             raise ValueError('Exclusion candidate pin changed')
-        candidate_rows = candidates['filesystemCandidates'] + candidates['rangeMetadataCandidates']
+        groups = {'filesystemCandidates': 'unused_filesystem_callback',
+                  'rangeMetadataCandidates': 'unused_resource_limits',
+                  'commentCandidates': 'comment_only_filesystem_callback',
+                  'longStringCandidates': 'materialized_long_string',
+                  'missingFileCandidates': 'missing_file_diagnostics'}
+        candidate_rows = [item for name in groups for item in candidates[name]]
         by_id = {row['caseID']: row for row in rows}
-        if len(candidate_rows) != 58 or len({item['caseID'] for item in candidate_rows}) != 58:
+        if len(candidate_rows) != 63 or len({item['caseID'] for item in candidate_rows}) != 63:
             raise ValueError('Exclusion candidate membership changed')
-        for item in candidate_rows:
-            row = by_id.get(item['caseID'])
-            if row is None or not row['selected'] or row['sourceDigest'] != item['sourceDigest']:
-                raise ValueError('Admission candidate no longer matches pinned evidence')
-            group = 'unused_filesystem_callback' if item in candidates['filesystemCandidates'] else 'unused_resource_limits'
-            if row.get('admission') != group:
-                raise ValueError('Candidate admission rationale missing or changed')
+        for name, group in groups.items():
+            for item in candidates[name]:
+                row = by_id.get(item['caseID'])
+                if row is None or not row['selected'] or row['sourceDigest'] != item['sourceDigest']:
+                    raise ValueError('Admission candidate no longer matches pinned evidence')
+                if row.get('admission') != group:
+                    raise ValueError('Candidate admission rationale missing or changed')
         admitted = [{'caseID': by_id[item['caseID']]['caseID'], 'sourceDigest': item['sourceDigest'],
                      'sourceLocation': by_id[item['caseID']]['sourceLocation'],
                      'admission': by_id[item['caseID']]['admission'],
@@ -162,7 +167,7 @@ def main():
         (args.output / 'ADMISSION_AUDIT.json').write_text(json.dumps(admitted, indent=2) + '\n')
         output.update(sourceRevision=revision, pins=policy['pins'], rawReceiptSHA256=sha(receipt_path),
                       rawMatrixSHA256=sha(reports / 'ELIGIBILITY_MATRIX.json'), policySHA256=sha(POLICY),
-                      fixtureFiles=len(file_digests), admittedCandidates=58, candidatesSHA256=sha(CANDIDATES),
+                      fixtureFiles=len(file_digests), admittedCandidates=63, candidatesSHA256=sha(CANDIDATES),
                       admissionAuditSHA256=sha(args.output / 'ADMISSION_AUDIT.json'))
         excluded = [{'caseID': row['caseID'], 'sourceLocation': row['sourceLocation'],
                      'sourceDigest': row['sourceDigest'], 'parserMode': row['parserMode'],

@@ -77,3 +77,8 @@ supplied sources and two range-metadata cases without resource limits. These 58
 are individually admitted only while their identity, fixture bytes and relevant
 conditions remain unchanged. `review/ADMISSION_AUDIT.json` records each actual
 suite and Ruby-reference outcome. Other exclusions remain separately visible.
+
+Five further individually identified cases cover a comment-only filesystem
+callback, three missing-file diagnostics and the pinned loader's exact
+100,000-character `LongString` materialization. Their narrowly checked feature
+exceptions never bypass unrelated transport checks or change the comparator.

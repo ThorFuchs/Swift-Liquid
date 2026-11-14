@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
-  "method": "Pinned, individually identified cases admitted after validating that their excluded callback or resource limit cannot affect the supplied case; actual outcomes remain in the suite matrix.",
+  "method": "Pinned individually identified cases admitted only after verifying the relevant fixture-bound conditions; actual outcomes remain in the suite matrix.",
   "filesystemCandidates": [
     {
       "caseID": "liquid_ruby/specs/liquid_ruby/include_bracket_dot.yml:34/RecordedTest#IncludeBracketDotTest#test_or_with_blank_comparison_34935bd0/strict2/raise",
@@ -236,6 +236,32 @@
     {
       "caseID": "basics/specs/basics/range-resource-limits.yml:54/tablerow_literal_range_offset_limit_keeps_metadata/strict2/raise",
       "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59"
+    }
+  ],
+  "commentCandidates": [
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/liquid_tag.yml:272/RecordedTest#LiquidTagParityTest#test_comment_block_in_liquid_3d7f1024/strict2/raise",
+      "sourceDigest": "be8eb5b93dd6d6eae86f9153f810a534374b2ab7a1713f11dacd3ddb85b76ea6"
+    }
+  ],
+  "longStringCandidates": [
+    {
+      "caseID": "basics/specs/basics/error-handling.yml:200/very_long_string_filter/lax/raise",
+      "sourceDigest": "c802c2d27cc9a7af0f5487801cc15860faec42113a7d4184c7fedcd8c2446d3a"
+    }
+  ],
+  "missingFileCandidates": [
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/manual.yml:20/Rendering include tag with variables and file does not exist [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "ed2ea515d883d8645d0c45a5aeb1186ff9a8f12664edbecfa1eef0e9a58bb55a"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/manual.yml:32/Rendering include tag with file does not exist does not repeat .liquid extension [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "ed2ea515d883d8645d0c45a5aeb1186ff9a8f12664edbecfa1eef0e9a58bb55a"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/manual.yml:44/Rendering include asset not found error from snippet [error_mode=strict2]/strict2/inline",
+      "sourceDigest": "ed2ea515d883d8645d0c45a5aeb1186ff9a8f12664edbecfa1eef0e9a58bb55a"
     }
   ]
 }
