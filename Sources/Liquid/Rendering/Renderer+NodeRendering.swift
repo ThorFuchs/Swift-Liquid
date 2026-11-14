@@ -416,7 +416,8 @@ extension Renderer {
             try appendStringifiedUnescapedValueFast(ordinaryHostValue(context.getVariable(name.string) ?? NSNull()), to: &output)
 
         case .access:
-            if let path = expression.staticVariablePath, canUseStaticPath(path) {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 try appendStringifiedUnescapedValueFast(context.getVariable(path) ?? NSNull(), to: &output)
             } else {
                 output.append(try await renderExpressionFast(expression))

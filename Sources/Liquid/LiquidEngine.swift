@@ -448,22 +448,24 @@ public struct LiquidEngine: Sendable {
         try admit(context, budget: renderer.budget)
         renderer.setTemplateLoader(loader)
         var roots = context.entries.map { ($0.key, $0.value.runtimeValue) }
-        var names = Set(context.entries.map { ScalarKey($0.key) })
-        for object in hostObjects {
-            try renderer.budget.filterValue(depth: 1)
-            guard !object.name.isEmpty, object.name != "self", object.name.utf8.count <= limits.outputBytes,
-                  names.insert(ScalarKey(object.name)).inserted else {
-                throw LiquidError.invalidValue("Invalid or duplicate host object name")
-            }
-            var properties = Set<ScalarKey>()
-            for property in object.properties {
-                try renderer.budget.filterValue(depth: 2)
-                guard !property.name.isEmpty, property.name.utf8.count <= limits.outputBytes,
-                      properties.insert(ScalarKey(property.name)).inserted else {
-                    throw LiquidError.invalidValue("Invalid or duplicate host property name")
+        if !hostObjects.isEmpty {
+            var names = Set(context.entries.map { ScalarKey($0.key) })
+            for object in hostObjects {
+                try renderer.budget.filterValue(depth: 1)
+                guard !object.name.isEmpty, object.name != "self", object.name.utf8.count <= limits.outputBytes,
+                      names.insert(ScalarKey(object.name)).inserted else {
+                    throw LiquidError.invalidValue("Invalid or duplicate host object name")
                 }
+                var properties = Set<ScalarKey>()
+                for property in object.properties {
+                    try renderer.budget.filterValue(depth: 2)
+                    guard !property.name.isEmpty, property.name.utf8.count <= limits.outputBytes,
+                          properties.insert(ScalarKey(property.name)).inserted else {
+                        throw LiquidError.invalidValue("Invalid or duplicate host property name")
+                    }
+                }
+                roots.append((object.name, object))
             }
-            roots.append((object.name, object))
         }
         let values = RuntimeVariables(roots)
         do {

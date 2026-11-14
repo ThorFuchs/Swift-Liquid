@@ -24,7 +24,8 @@ extension Renderer {
         case .variable(let name):
             return try renderStringify(ordinaryHostValue(context.getVariable(name.string) ?? NSNull()))
         case .access:
-            if let path = expression.staticVariablePath, canUseStaticPath(path) {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return try renderStringify(context.getVariable(path) ?? NSNull())
             }
             return try renderStringify(try await evaluateExpressionFast(expression))
@@ -58,7 +59,8 @@ extension Renderer {
             return try systemAccess(property, from: try await evaluateExpressionFast(base))
 
         case .access(let expr, let key, let command):
-            if let path = expression.staticVariablePath, canUseStaticPath(path) {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return context.getVariable(path) ?? NSNull()
             }
             // Handle bracket notation sentinel: .access(.variable(""), key)
@@ -277,7 +279,8 @@ extension Renderer {
         case .variable(let name):
             return try ordinaryHostValue(context.getVariable(name.string) ?? NSNull())
         case .access:
-            if let path = expression.staticVariablePath, canUseStaticPath(path) {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)
