@@ -1,0 +1,3430 @@
+{
+  "schemaVersion": 1,
+  "status": "RESEARCH_NOT_CONFORMANCE_QUALIFICATION",
+  "swiftLiquidCommit": "390016a96a64a558bdc7844a0a456bf601156307",
+  "swiftLiquidTree": "6c78358181e62aced96109870e2f09b11ed1be01",
+  "liquidSpecCommit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "rubyLiquidCommit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "fixtureLicense": "MIT; source and copyright retained at https://github.com/Shopify/liquid-spec",
+  "inputAuditSHA256": "65e030c5d03aae74d385ffe716d1778e7a75724b069aa2571fbf518ab98ffe4b",
+  "referenceProbeSHA256": "dbeeb327d533eaa013a3c60c003712e851b096a18343f489b0c836c3226e907c",
+  "primitiveProbeSHA256": "4b782b91f5c08a5269c4bd80f99c4e747072f569abf1d7f08c1062005fa3323b",
+  "swiftPrimitiveProbeSHA256": "37da3e5e8f7ebfe2ac4f66360337140afd65976f2d9d14bbebb7cf0dbd79c006",
+  "referenceMethod": "Exploratory direct renders using pinned Ruby Liquid and pinned standard drop classes; not the upstream runner or its comparator. Fixture generator expressions were not executed.",
+  "caveats": [
+    "Exploratory direct Ruby reference probes, not upstream runner results or qualification comparisons.",
+    "Two generated cases were not executed; fixture generator expressions were not evaluated.",
+    "The Swift probe renders primitive substitutions via the public API; it does not implement real Drop objects. Case-level agreement does not establish object equivalence or authorize admission.",
+    "The first probe used the wrong Ruby context setup and is retained externally alongside the corrected probe.",
+    "All 56 remain excluded with unchanged fixture, mode, selection, denominator and comparator.",
+    "Additional pinned-Ruby controls found 7 divergences in 78 comparisons between boxed drops and primitive replacements; a general flattening policy is not equivalent."
+  ],
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 19
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_boolean_true_renders",
+        "template": "{{ flag }}",
+        "environment": {
+          "flag": {
+            "instantiate:BooleanDrop": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 32
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_boolean_false_renders",
+        "template": "{{ flag }}",
+        "environment": {
+          "flag": {
+            "instantiate:BooleanDrop": {
+              "value": false
+            }
+          }
+        },
+        "expected": "false",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "false",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "false",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "false"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 45
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_boolean_true_is_truthy",
+        "template": "{% if flag %}yes{% else %}no{% endif %}",
+        "environment": {
+          "flag": {
+            "instantiate:BooleanDrop": {
+              "value": true
+            }
+          }
+        },
+        "expected": "yes",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "yes"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 58
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_boolean_false_is_falsy",
+        "template": "{% if flag %}yes{% else %}no{% endif %}",
+        "environment": {
+          "flag": {
+            "instantiate:BooleanDrop": {
+              "value": false
+            }
+          }
+        },
+        "expected": "no",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "no"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 72
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_number_renders",
+        "template": "{{ count }}",
+        "environment": {
+          "count": {
+            "instantiate:NumberDrop": {
+              "value": 42
+            }
+          }
+        },
+        "expected": "42",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NumberDrop",
+          "parameters": {
+            "value": 42
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed numeric materialization and numeric-filter coercion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "42",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "42",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "42"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 85
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_number_works_with_filters",
+        "template": "{{ count | plus: 1 }}",
+        "environment": {
+          "count": {
+            "instantiate:NumberDrop": {
+              "value": 41
+            }
+          }
+        },
+        "expected": "42",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NumberDrop",
+          "parameters": {
+            "value": 41
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed numeric materialization and numeric-filter coercion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "42",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "42",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "42"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 101
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_number_zero_is_truthy",
+        "template": "{% if count %}yes{% else %}no{% endif %}",
+        "environment": {
+          "count": {
+            "instantiate:NumberDrop": {
+              "value": 0
+            }
+          }
+        },
+        "expected": "yes",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NumberDrop",
+          "parameters": {
+            "value": 0
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed numeric materialization and numeric-filter coercion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "yes"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 114
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_string_renders",
+        "template": "{{ name }}",
+        "environment": {
+          "name": {
+            "instantiate:StringDrop": {
+              "value": "hello"
+            }
+          }
+        },
+        "expected": "hello",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "hello"
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed string/nil materialization, truthiness and string/filter semantics"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "hello",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "hello",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "hello"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 127
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_string_works_with_filters",
+        "template": "{{ name | upcase }}",
+        "environment": {
+          "name": {
+            "instantiate:StringDrop": {
+              "value": "hello"
+            }
+          }
+        },
+        "expected": "HELLO",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "hello"
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed string/nil materialization, truthiness and string/filter semantics"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "HELLO",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "HELLO",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "HELLO"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:143/drop_method_echo/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 143
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_method_echo",
+        "template": "{{ drop.echo_42 }}",
+        "environment": {
+          "drop": "instantiate:MethodDrop"
+        },
+        "expected": "42",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "MethodDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic method-like lookup with integer-bearing property names"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:143/drop_method_echo/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "42",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:143/drop_method_echo/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: MethodDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:154/drop_method_square/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 154
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_method_square",
+        "template": "{{ drop.square_5 }}",
+        "environment": {
+          "drop": "instantiate:MethodDrop"
+        },
+        "expected": "25",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "MethodDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic method-like lookup with integer-bearing property names"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:154/drop_method_square/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "25",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:154/drop_method_square/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: MethodDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:164/drop_method_double/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 164
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_method_double",
+        "template": "{{ drop.double_7 }}",
+        "environment": {
+          "drop": "instantiate:MethodDrop"
+        },
+        "expected": "14",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "MethodDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic method-like lookup with integer-bearing property names"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:164/drop_method_double/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "14",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:164/drop_method_double/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: MethodDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:174/drop_method_square_random/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 174
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_method_square_random",
+        "template": "{{ drop.square_#{n} }}",
+        "environment": {
+          "drop": "instantiate:MethodDrop"
+        },
+        "expected": "#{n * n}",
+        "generate": {
+          "n": {
+            "type": "numeric",
+            "min": 1,
+            "max": 100
+          }
+        },
+        "features": [
+          "drops",
+          "randomness"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "MethodDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic method-like lookup with integer-bearing property names"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:174/drop_method_square_random/strict2/raise",
+        "status": "NOT_RUN_GENERATED_INPUT",
+        "reason": "Fixture generator was not evaluated"
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:174/drop_method_square_random/strict2/raise",
+        "status": "NOT_RUN_GENERATED_INPUT",
+        "reason": "Fixture generator was not evaluated"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:191/drop_method_echo_random/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 191
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_method_echo_random",
+        "template": "{{ drop.echo_#{n} }}",
+        "environment": {
+          "drop": "instantiate:MethodDrop"
+        },
+        "expected": "#{n}",
+        "generate": {
+          "n": {
+            "type": "numeric",
+            "min": 1,
+            "max": 1000
+          }
+        },
+        "features": [
+          "drops",
+          "randomness"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "MethodDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic method-like lookup with integer-bearing property names"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:191/drop_method_echo_random/strict2/raise",
+        "status": "NOT_RUN_GENERATED_INPUT",
+        "reason": "Fixture generator was not evaluated"
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:191/drop_method_echo_random/strict2/raise",
+        "status": "NOT_RUN_GENERATED_INPUT",
+        "reason": "Fixture generator was not evaluated"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:209/drop_index_integer/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 209
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_index_integer",
+        "template": "{{ drop[0] }}",
+        "environment": {
+          "drop": "instantiate:IndexDrop"
+        },
+        "expected": "zero",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "IndexDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "typed integer/string index lookup"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:209/drop_index_integer/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "zero",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:209/drop_index_integer/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: IndexDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:219/drop_index_integer_one/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 219
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_index_integer_one",
+        "template": "{{ drop[1] }}",
+        "environment": {
+          "drop": "instantiate:IndexDrop"
+        },
+        "expected": "one",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "IndexDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "typed integer/string index lookup"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:219/drop_index_integer_one/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "one",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:219/drop_index_integer_one/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: IndexDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:229/drop_index_string/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 229
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_index_string",
+        "template": "{{ drop['foo'] }}",
+        "environment": {
+          "drop": "instantiate:IndexDrop"
+        },
+        "expected": "foo",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "IndexDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "typed integer/string index lookup"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:229/drop_index_string/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "foo",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:229/drop_index_string/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: IndexDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:242/drop_sequence_iterate/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 242
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_sequence_iterate",
+        "template": "{% for item in items %}{{ item }} {% endfor %}",
+        "environment": {
+          "items": "instantiate:SequenceDrop"
+        },
+        "expected": "first second third ",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "SequenceDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic iteration and size/first/last properties"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:242/drop_sequence_iterate/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "first second third ",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:242/drop_sequence_iterate/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: SequenceDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:253/drop_sequence_size/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 253
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_sequence_size",
+        "template": "{{ items.size }}",
+        "environment": {
+          "items": "instantiate:SequenceDrop"
+        },
+        "expected": "3",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "SequenceDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic iteration and size/first/last properties"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:253/drop_sequence_size/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "3",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:253/drop_sequence_size/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: SequenceDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:263/drop_sequence_first/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 263
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_sequence_first",
+        "template": "{{ items.first }}",
+        "environment": {
+          "items": "instantiate:SequenceDrop"
+        },
+        "expected": "first",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "SequenceDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic iteration and size/first/last properties"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:263/drop_sequence_first/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "first",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:263/drop_sequence_first/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: SequenceDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:273/drop_sequence_last/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 273
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_sequence_last",
+        "template": "{{ items.last }}",
+        "environment": {
+          "items": "instantiate:SequenceDrop"
+        },
+        "expected": "third",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "SequenceDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic iteration and size/first/last properties"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:273/drop_sequence_last/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "third",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:273/drop_sequence_last/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: SequenceDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:283/drop_sequence_forloop_index/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 283
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_sequence_forloop_index",
+        "template": "{% for item in items %}{{ forloop.index }}:{{ item }} {% endfor %}",
+        "environment": {
+          "items": "instantiate:SequenceDrop"
+        },
+        "expected": "1:first 2:second 3:third ",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "SequenceDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "dynamic iteration and size/first/last properties"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:283/drop_sequence_forloop_index/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "1:first 2:second 3:third ",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:283/drop_sequence_forloop_index/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: SequenceDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 296
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nil_renders_empty",
+        "template": "[{{ drop }}]",
+        "environment": {
+          "drop": "instantiate:NilDrop"
+        },
+        "expected": "[]",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NilDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "nil materialization and object-sensitive empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "[]",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "[]",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "[]"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 307
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nil_is_falsy",
+        "template": "{% if drop %}yes{% else %}no{% endif %}",
+        "environment": {
+          "drop": "instantiate:NilDrop"
+        },
+        "expected": "no",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NilDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "nil materialization and object-sensitive empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "no"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:320/drop_opaque_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 320
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_opaque_renders",
+        "template": "{{ drop }}",
+        "environment": {
+          "drop": "instantiate:OpaqueDrop"
+        },
+        "expected": "opaque",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "OpaqueDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "object truthiness, stringification and empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:320/drop_opaque_renders/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "opaque",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:320/drop_opaque_renders/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: OpaqueDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:331/drop_opaque_is_truthy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 331
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_opaque_is_truthy",
+        "template": "{% if drop %}yes{% else %}no{% endif %}",
+        "environment": {
+          "drop": "instantiate:OpaqueDrop"
+        },
+        "expected": "yes",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "OpaqueDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "object truthiness, stringification and empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:331/drop_opaque_is_truthy/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:331/drop_opaque_is_truthy/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: OpaqueDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 346
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_error_raises",
+        "template": "{{ drop.foo }}",
+        "environment": {
+          "drop": "instantiate:ErrorDrop"
+        },
+        "errors": {
+          "render_error": [
+            "ErrorDrop"
+          ]
+        },
+        "features": [
+          "drops"
+        ],
+        "error_mode": [
+          "strict2",
+          "strict"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "ErrorDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "error-producing dynamic access and render error policy"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "exception",
+        "errorClass": "Liquid::Error",
+        "message": "Liquid error (line 1): ErrorDrop: access triggered an error",
+        "matchesFixtureErrorText": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: ErrorDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 363
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_boolean_false_not_empty",
+        "template": "{% if flag == empty %}empty{% else %}not{% endif %}",
+        "environment": {
+          "flag": {
+            "instantiate:BooleanDrop": {
+              "value": false
+            }
+          }
+        },
+        "expected": "not",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "not",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "not",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "not"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:377/drop_opaque_not_empty/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 377
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_opaque_not_empty",
+        "template": "{% if drop == empty %}empty{% else %}not{% endif %}",
+        "environment": {
+          "drop": "instantiate:OpaqueDrop"
+        },
+        "expected": "not",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "OpaqueDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "object truthiness, stringification and empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:377/drop_opaque_not_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "not",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:377/drop_opaque_not_empty/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: OpaqueDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 387
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nil_is_falsy_but_not_empty",
+        "template": "{% if drop == empty %}empty{% else %}not{% endif %}",
+        "environment": {
+          "drop": "instantiate:NilDrop"
+        },
+        "expected": "not",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NilDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "nil materialization and object-sensitive empty comparison"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "not",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "not",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "not"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 398
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nested_returns_self",
+        "template": "{{ drop.nested }}",
+        "environment": {
+          "drop": "instantiate:NestedDrop"
+        },
+        "expected": "3",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NestedDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "recursive dynamic property access and drop identity/value conversion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "3",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: NestedDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 410
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nested_chained_self",
+        "template": "{{ drop.nested.nested.nested }}",
+        "environment": {
+          "drop": "instantiate:NestedDrop"
+        },
+        "expected": "3",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NestedDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "recursive dynamic property access and drop identity/value conversion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "3",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: NestedDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 421
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nested_square_returns_new_drop",
+        "template": "{{ drop.square }}",
+        "environment": {
+          "drop": {
+            "instantiate:NestedDrop": {
+              "value": 3
+            }
+          }
+        },
+        "expected": "9",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NestedDrop",
+          "parameters": {
+            "value": 3
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "recursive dynamic property access and drop identity/value conversion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "9",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: NestedDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 436
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nested_square_chained",
+        "template": "{{ drop.square.square }}",
+        "environment": {
+          "drop": {
+            "instantiate:NestedDrop": {
+              "value": 3
+            }
+          }
+        },
+        "expected": "81",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NestedDrop",
+          "parameters": {
+            "value": 3
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "recursive dynamic property access and drop identity/value conversion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "81",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: NestedDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 449
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "drop_nested_mixed_chain",
+        "template": "{{ drop.nested.square.nested }}",
+        "environment": {
+          "drop": {
+            "instantiate:NestedDrop": {
+              "value": 3
+            }
+          }
+        },
+        "expected": "9",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "NestedDrop",
+          "parameters": {
+            "value": 3
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "recursive dynamic property access and drop identity/value conversion"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "9",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: NestedDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 166
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "truthiness_stringdrop_with_value_nil",
+        "template": "StringDrop with value nil: truthy:{% if v %}yes{% else %}no{% endif %}, empty:{% if v == empty %}yes{% else %}no{% endif %}, blank:{% if v == blank %}yes{% else %}no{% endif %}",
+        "environment": {
+          "v": {
+            "instantiate:StringDrop": {}
+          }
+        },
+        "expected": "StringDrop with value nil: truthy:no, empty:no, blank:yes",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "StringDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed string/nil materialization, truthiness and string/filter semantics"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "StringDrop with value nil: truthy:no, empty:no, blank:yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "StringDrop with value nil: truthy:no, empty:no, blank:yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "StringDrop with value nil: truthy:no, empty:no, blank:yes"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 186
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "truthiness_booleandrop_with_value_true",
+        "template": "BooleanDrop with value \"true\": truthy:{% if v %}yes{% else %}no{% endif %}, empty:{% if v == empty %}yes{% else %}no{% endif %}, blank:{% if v == blank %}yes{% else %}no{% endif %}",
+        "environment": {
+          "v": {
+            "instantiate:BooleanDrop": {
+              "value": true
+            }
+          }
+        },
+        "expected": "BooleanDrop with value \"true\": truthy:yes, empty:no, blank:no",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "BooleanDrop with value \"true\": truthy:yes, empty:no, blank:no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "BooleanDrop with value \"true\": truthy:yes, empty:no, blank:no",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "BooleanDrop with value \"true\": truthy:yes, empty:no, blank:no"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 197
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "truthiness_booleandrop_with_value_false",
+        "template": "BooleanDrop with value \"false\": truthy:{% if v %}yes{% else %}no{% endif %}, empty:{% if v == empty %}yes{% else %}no{% endif %}, blank:{% if v == blank %}yes{% else %}no{% endif %}",
+        "environment": {
+          "v": {
+            "instantiate:BooleanDrop": {
+              "value": false
+            }
+          }
+        },
+        "expected": "BooleanDrop with value \"false\": truthy:no, empty:no, blank:yes",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "BooleanDrop with value \"false\": truthy:no, empty:no, blank:yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "BooleanDrop with value \"false\": truthy:no, empty:no, blank:yes",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "BooleanDrop with value \"false\": truthy:no, empty:no, blank:yes"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5008
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "featureTags": [
+        "drops",
+        "inline_errors",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430",
+        "template": "{% render 'foo' with errors %}",
+        "environment": {
+          "errors": {
+            "instantiate:ErrorDrop:": {}
+          }
+        },
+        "expected": "Liquid error (foo line 1): ErrorDrop: access triggered an error",
+        "filesystem": {
+          "foo": "{{ foo.standard_error }}"
+        },
+        "features": [
+          "drops"
+        ],
+        "render_errors": true
+      },
+      "constructors": [
+        {
+          "class": "ErrorDrop",
+          "parameters": {}
+        }
+      ],
+      "requiredCapabilities": [
+        "error-producing dynamic access and render error policy"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "Liquid error (foo line 1): ErrorDrop: access triggered an error",
+        "errors": [
+          {
+            "class": "Liquid::Error",
+            "message": "Liquid error (foo line 1): ErrorDrop: access triggered an error"
+          }
+        ],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+        "status": "NOT_APPLICABLE_NONBOXED",
+        "reason": "NOT_BOXED: ErrorDrop"
+      },
+      "swiftPrimitiveProbe": {
+        "status": "NOT_RUN"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "DYNAMIC_OR_UNRESOLVED"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5352
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFiltersTest#test_default_18953643",
+        "template": "{{ drop | default: 'bar' }}",
+        "environment": {
+          "drop": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5370
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFiltersTest#test_default_ce94fa11",
+        "template": "{{ drop | default: 'bar' }}",
+        "environment": {
+          "drop": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "bar",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "bar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "bar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "bar"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5388
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFiltersTest#test_default_handle_false_b5a82ccc",
+        "template": "{{ drop | default: 'bar', allow_false: true }}",
+        "environment": {
+          "drop": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "false",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "false",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "false",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "false"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5400
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFiltersTest#test_default_handle_false_d4715f99",
+        "template": "{{ drop | default: 'bar', allow_false: true }}",
+        "environment": {
+          "drop": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8523
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_if_tag_calls_to_liquid_value_1a8da583",
+        "template": "{% if foo == true %}true{% endif %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8551
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_if_tag_calls_to_liquid_value_2914c337",
+        "template": "{% if foo and true %}SHOULD NOT HAPPEN{% endif %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": ""
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8643
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_if_tag_calls_to_liquid_value_e162081a",
+        "template": "{% if foo == true %}True{% endif %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": ""
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8657
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_if_tag_calls_to_liquid_value_ebf53802",
+        "template": "{% if foo %}true{% endif %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8671
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7",
+        "template": "{% if foo %}true{% endif %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": ""
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8781
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9",
+        "template": "{% unless foo %}true{% endunless %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": false
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": false
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8795
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786",
+        "template": "{% unless foo %}true{% endunless %}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": ""
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8856
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768",
+        "template": "{{ foo }}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "true",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "true",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "true"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8870
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a",
+        "template": "{{ foo | upcase }}",
+        "environment": {
+          "foo": {
+            "instantiate:BooleanDrop:": {
+              "value": true
+            }
+          }
+        },
+        "expected": "TRUE",
+        "features": [
+          "drops"
+        ],
+        "render_errors": false
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "TRUE",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "TRUE",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "TRUE"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6034
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFilterTest#test_uniq_0b90eef9",
+        "template": "{{ a0 | uniq }}",
+        "environment": {
+          "a0": [
+            "foo",
+            {
+              "instantiate:StringDrop:": {
+                "value": "foo"
+              }
+            },
+            {
+              "instantiate:StringDrop:": {
+                "value": "bar"
+              }
+            }
+          ]
+        },
+        "expected": "foobar",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "foo"
+          }
+        },
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "bar"
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed string/nil materialization, truthiness and string/filter semantics"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "foobar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "foobar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "foobar"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6155
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "StandardFilterTest#test_uniq_879d03c3",
+        "template": "{{ a0 | uniq }}",
+        "environment": {
+          "a0": [
+            {
+              "instantiate:StringDrop:": {
+                "value": "foo"
+              }
+            },
+            {
+              "instantiate:StringDrop:": {
+                "value": "bar"
+              }
+            },
+            "foo"
+          ]
+        },
+        "expected": "foobar",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "foo"
+          }
+        },
+        {
+          "class": "StringDrop",
+          "parameters": {
+            "value": "bar"
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed string/nil materialization, truthiness and string/filter semantics"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "foobar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "foobar",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "foobar"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/variable_type_filters.yml",
+        "line": 384
+      },
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "fixture": {
+        "name": "filter_booleandrop_first_last_size",
+        "template": "drop value:{{- d }}\ndrop, first:{{- d | first }}\ndrop, last:{{- d | last }}\ndrop, size:{{- d | size }}\n",
+        "environment": {
+          "d": {
+            "instantiate:BooleanDrop": {
+              "value": true
+            }
+          }
+        },
+        "expected": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby_lax/variable_type_filters.yml",
+        "line": 500
+      },
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "lax_parsing"
+      ],
+      "fixture": {
+        "name": "lax_filter_booleandrop_first_last_size",
+        "template": "drop value:{{- d }}\ndrop, first:{{- d | first }}\ndrop, last:{{- d | last }}\ndrop, size:{{- d | size }}\n",
+        "environment": {
+          "d": {
+            "instantiate:BooleanDrop": {
+              "value": true
+            }
+          }
+        },
+        "expected": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "features": [
+          "drops"
+        ]
+      },
+      "constructors": [
+        {
+          "class": "BooleanDrop",
+          "parameters": {
+            "value": true
+          }
+        }
+      ],
+      "requiredCapabilities": [
+        "boxed Boolean materialization, truthiness, equality and filter behavior"
+      ],
+      "referenceObservation": {
+        "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "primitiveCounterfactual": {
+        "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+        "status": "OBSERVED",
+        "kind": "output",
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "errors": [],
+        "matchesFixtureOutput": true
+      },
+      "swiftPrimitiveProbe": {
+        "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+        "kind": "output",
+        "matchesFixture": true,
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n"
+      },
+      "admission": "EXCLUDED_UNCHANGED",
+      "assessment": "FIXTURE_OUTPUT_AGREES_BUT_PRIMITIVE_REPLACEMENT_NOT_GENERALLY_EQUIVALENT"
+    }
+  ],
+  "negativeControlSHA256": "8c65d27ffa0a4b106d1e8badb16b7da203c09deb9b1d897c722f411209968cd6",
+  "negativeControlSummary": {
+    "total": 78,
+    "differences": 7,
+    "interpretation": "Naive unqualified primitive replacement is not generally equivalent to real boxed drops; no candidate admission follows."
+  }
+}
