@@ -72,6 +72,42 @@ public struct LiquidEngine: Sendable {
             sourceBytes: sourceBytes, recovering: false, measurement: nil).result.output
     }
 
+    /// Renders source with explicitly registered root host objects.
+    /// - Parameters:
+    ///   - template: Standard Liquid source.
+    ///   - context: Ordinary typed values available to the template.
+    ///   - hostObjects: Root bindings exposing explicitly registered properties.
+    ///   - templates: Explicit partial sources.
+    ///   - syntaxMode: Parser mode applied to the root and its partials.
+    /// - Returns: The complete rendered output.
+    /// - Throws: Invalid bindings, callback, syntax, runtime, quota or cancellation errors.
+    public func render(template: String, context: LiquidObject = [:], hostObjects: [LiquidHostObject],
+                       templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> String {
+        let sourceBytes = try checkSources(template, partials: Array(templates.values))
+        let root = try LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits)
+        return try await perform(root.ast, context: context,
+            loader: .sources(.init(sources: templates, syntaxMode: syntaxMode, extensionProfile: .standard, limits: limits)),
+            sourceBytes: sourceBytes, recovering: false, measurement: nil, hostObjects: hostObjects).result.output
+    }
+
+    /// Renders a reusable parsed template with explicit root host objects.
+    /// - Parameters:
+    ///   - template: An immutable parsed template.
+    ///   - context: Ordinary typed values available to the template.
+    ///   - hostObjects: Root bindings exposing explicitly registered properties.
+    ///   - templates: Explicit parsed partials.
+    /// - Returns: The complete rendered output.
+    /// - Throws: Invalid bindings, callback, runtime, quota or cancellation errors.
+    public func render(_ template: LiquidTemplate, context: LiquidObject = [:], hostObjects: [LiquidHostObject],
+                       templates: [String: LiquidTemplate] = [:]) async throws -> String {
+        try Task.checkCancellation()
+        try limits.validate()
+        let sourceBytes = try checkSources(template.source, partials: templates.values.map(\.source))
+        return try await perform(template.ast, context: context,
+            loader: TemplateLoader(templates: templates.mapValues(\.ast)), sourceBytes: sourceBytes,
+            recovering: false, measurement: nil, hostObjects: hostObjects).result.output
+    }
+
     /// Renders a parsed template without repeating its parsing work.
     /// - Parameters:
     ///   - template: An immutable parsed template.
@@ -404,12 +440,32 @@ public struct LiquidEngine: Sendable {
     // Both legacy and exact preparation converge here: one context, budget,
     // evaluator, recovery collection, output admission and metrics snapshot.
     private func perform(_ ast: ASTNode, context: LiquidObject, loader: TemplateLoader,
-                         sourceBytes: Int, recovering: Bool, measurement: Measurement?, locateFailures: Bool = false) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+                         sourceBytes: Int, recovering: Bool, measurement: Measurement?, locateFailures: Bool = false,
+                         hostObjects: [LiquidHostObject] = []) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         let renderer = Renderer(configuration: .init(strictMode: strictFilters), limits: limits,
-            recoveryEnabled: recovering, locateFailures: locateFailures, referenceTime: referenceTime ?? Date(), filters: filters)
+            recoveryEnabled: recovering, locateFailures: locateFailures, referenceTime: referenceTime ?? Date(), filters: filters,
+            hostContextEnabled: !hostObjects.isEmpty)
         try admit(context, budget: renderer.budget)
         renderer.setTemplateLoader(loader)
-        let values = RuntimeVariables(context.entries.map { ($0.key, $0.value.runtimeValue) })
+        var roots = context.entries.map { ($0.key, $0.value.runtimeValue) }
+        var names = Set(context.entries.map { ScalarKey($0.key) })
+        for object in hostObjects {
+            try renderer.budget.filterValue(depth: 1)
+            guard !object.name.isEmpty, object.name != "self", object.name.utf8.count <= limits.outputBytes,
+                  names.insert(ScalarKey(object.name)).inserted else {
+                throw LiquidError.invalidValue("Invalid or duplicate host object name")
+            }
+            var properties = Set<ScalarKey>()
+            for property in object.properties {
+                try renderer.budget.filterValue(depth: 2)
+                guard !property.name.isEmpty, property.name.utf8.count <= limits.outputBytes,
+                      properties.insert(ScalarKey(property.name)).inserted else {
+                    throw LiquidError.invalidValue("Invalid or duplicate host property name")
+                }
+            }
+            roots.append((object.name, object))
+        }
+        let values = RuntimeVariables(roots)
         do {
             let output = try await renderer.render(ast, with: values)
             try renderer.budget.output(output)

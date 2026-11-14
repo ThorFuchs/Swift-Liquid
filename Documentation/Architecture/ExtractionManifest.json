@@ -2632,6 +2632,31 @@
         "Documentation/LQ1/UNEXECUTED-CASE-REVIEW.md"
       ],
       "qualification": "Exact-main release lanes, reviewed performance evidence and publication remain required; this record grants no release acceptance."
+    },
+    {
+      "area": "Explicit host property bindings",
+      "scopeDecision": "Add opt-in, checked-Sendable asynchronous root property bindings without changing the ordinary value domain, existing render overloads, or Shopify fixture selection.",
+      "changes": [
+        "Route explicit host property lookups through invocation-owned budgets and cancellation checks while rejecting direct object use and preserving ordinary lookup behavior.",
+        "Retain callback failures and provide public source/parsed consumer, isolation, cancellation, naming and budget tests."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+NodeRendering.swift",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Examples/READMEConsumer/Sources/LiquidREADMEConsumer/main.swift",
+        "README.md",
+        "Documentation/HostObjects.md",
+        "Documentation/README.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md"
+      ],
+      "qualification": "Host properties do not constitute the complete Drop contract or admit excluded conformance cases; all historical conformance and performance holds remain."
     }
   ]
 }

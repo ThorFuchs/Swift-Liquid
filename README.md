@@ -128,6 +128,26 @@ Supply partials as sources or parsed templates. HTML escaping is explicit: use
 `escape` or `escape_once` when inserting text into HTML. Read the
 [rendering and partials guide](https://thorfuchs.github.io/Swift-Liquid/documentation/documentation/renderingandpartials/).
 
+## Expose host properties
+
+Supply explicitly named, checked-Sendable asynchronous properties without
+reflection or an implicit loader:
+
+```swift
+import Liquid
+
+let product = LiquidHostObject("product", properties: [
+    LiquidHostProperty("title") { "A Swift guide" }
+])
+let output = try await LiquidEngine().render(
+    template: "{{ product.title | escape }}", hostObjects: [product]
+)
+print(output) // A Swift guide
+```
+
+See [host properties](Documentation/HostObjects.md) for the supported operations,
+callback boundaries and differences from Shopify Drop objects.
+
 ## Supply JSON and custom filters
 
 ```swift
