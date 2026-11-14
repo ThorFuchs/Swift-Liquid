@@ -7,6 +7,8 @@
 - Follow Shopify partial-name evaluation and lazy selected-partial parsing for
   source dictionaries; provide an explicit host resolver and retain the
   byte-exact registry profile. Isolated render retains original host inputs.
+- Add the opt-in closed system environment for bounded resident values,
+  descriptors and representations, with explicit host-owned trust boundaries.
 - Improve syntax and runtime diagnostics, nested comments, arithmetic, filters,
   and scope compatibility with the pinned Ruby reference.
 - Record the independent Shopify suite's raw verdict alongside a reviewed
