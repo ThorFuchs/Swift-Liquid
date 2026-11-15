@@ -32,6 +32,16 @@ struct LiquidREADMEConsumer {
         }
 
         do {
+            let product = LiquidHostObject("product", properties: [
+                LiquidHostProperty("title") { "A Swift guide" }
+            ])
+            let output = try await LiquidEngine().render(
+                template: "{{ product.title | escape }}", hostObjects: [product]
+            )
+            print(output) // A Swift guide
+        }
+
+        do {
             let value = try LiquidValue(json: #"{"name":"Ada"}"#)
             if case .object(let context) = value {
                 let engine = try LiquidEngine(filters: [

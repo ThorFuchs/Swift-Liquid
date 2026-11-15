@@ -22,9 +22,10 @@ extension Renderer {
         case .literal(let value):
             return try renderStringify(try evaluateValue(value))
         case .variable(let name):
-            return try renderStringify(context.getVariable(name.string) ?? NSNull())
+            return try renderStringify(ordinaryHostValue(context.getVariable(name.string) ?? NSNull()))
         case .access:
-            if !systemContextEnabled, let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return try renderStringify(context.getVariable(path) ?? NSNull())
             }
             return try renderStringify(try await evaluateExpressionFast(expression))
@@ -52,13 +53,14 @@ extension Renderer {
             return try evaluateValue(value)
 
         case .variable(let name):
-            return context.getVariable(name.string) ?? NSNull()
+            return try ordinaryHostValue(context.getVariable(name.string) ?? NSNull())
 
         case .systemAccess(let base, let property):
             return try systemAccess(property, from: try await evaluateExpressionFast(base))
 
         case .access(let expr, let key, let command):
-            if !systemContextEnabled, let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return context.getVariable(path) ?? NSNull()
             }
             // Handle bracket notation sentinel: .access(.variable(""), key)
@@ -66,17 +68,32 @@ extension Renderer {
             if case .variable(let name) = expr, name.string.isEmpty {
                 let keyValue = try await evaluateExpressionFast(key)
                 let varName = stringify(keyValue)
-                return context.getLiteralVariable(varName) ?? NSNull()
+                return try ordinaryHostValue(context.getLiteralVariable(varName) ?? NSNull())
+            }
+            if hostContextEnabled, case .variable(let name) = expr,
+               let object = context.getLiteralVariable(name.string) as? LiquidHostObject {
+                try budget.step()
+                let property: String
+                if case .literal(.string(let keyName)) = key {
+                    property = keyName.string
+                } else {
+                    let dynamic = try await evaluateExpressionFast(key)
+                    guard let string = dynamic as? String else {
+                        throw LiquidError.invalidValue("Host properties require a string key")
+                    }
+                    property = string
+                }
+                return try await hostProperty(object, key: property)
             }
             let baseValue = systemPrimary(try await evaluateExpressionFast(expr))
             switch key {
             case .literal(.string(let keyName)):
-                return evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string, command: command)
+                return try ordinaryHostValue(evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string, command: command))
             case .literal(.number(let number, _)):
-                return evaluateAccessValueWithIndex(baseValue: baseValue, index: integerValue(number) ?? Int.max)
+                return try ordinaryHostValue(evaluateAccessValueWithIndex(baseValue: baseValue, index: integerValue(number) ?? Int.max))
             default:
                 let keyValue = try await evaluateExpressionFast(key)
-                return try await evaluateAccessValueWithKey(baseValue: baseValue, keyValue: keyValue)
+                return try await ordinaryHostValue(evaluateAccessValueWithKey(baseValue: baseValue, keyValue: keyValue))
             }
 
         case .filtered(let expr, let filters):
@@ -260,9 +277,10 @@ extension Renderer {
         case .literal(let value):
             return try evaluateValue(value)
         case .variable(let name):
-            return context.getVariable(name.string) ?? NSNull()
+            return try ordinaryHostValue(context.getVariable(name.string) ?? NSNull())
         case .access:
-            if !systemContextEnabled, let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)
