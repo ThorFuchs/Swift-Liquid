@@ -129,3 +129,10 @@ The separate `boolean-drop` lane accepts only the root-level portable
 mode and without partials. It checks 22 fixed cases against the pinned reference
 and upstream comparator. This targeted evidence does not alter the full-suite
 selector, its exclusions, or the reviewed reference conflicts.
+
+The separate `number-drop` lane accepts only a root-level portable `NumberDrop`
+marker with exactly one native-width integer `value`, in raising mode and
+without partials. It checks three fixed cases against the pinned reference and
+upstream comparator. The suite's additional JSON test filter has a separate
+object policy and is not qualified by these cases. This lane does not alter the
+full-suite selector, its exclusions, or reviewed reference conflicts.

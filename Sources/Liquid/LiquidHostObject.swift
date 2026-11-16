@@ -66,7 +66,7 @@ public struct LiquidHostIndexer: Sendable {
 /// A named root binding exposing only explicitly supplied host properties.
 ///
 /// Exact and dynamic properties use string keys; an optional indexer accepts
-/// typed string and integer keys. An explicitly boxed Boolean can participate
+/// typed string and integer keys. An explicitly boxed Boolean or integer can participate
 /// in value operations. Other host objects must be accessed through a property.
 /// Host objects cannot be returned by a property in this profile.
 public struct LiquidHostObject: Sendable {
@@ -76,6 +76,7 @@ public struct LiquidHostObject: Sendable {
     internal let dynamicProperties: [LiquidHostDynamicProperty]
     internal let indexer: LiquidHostIndexer?
     internal let booleanValue: Bool?
+    internal let numberValue: Int?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -87,6 +88,7 @@ public struct LiquidHostObject: Sendable {
         self.dynamicProperties = []
         self.indexer = nil
         self.booleanValue = nil
+        self.numberValue = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -102,6 +104,7 @@ public struct LiquidHostObject: Sendable {
         self.dynamicProperties = dynamicProperties
         self.indexer = nil
         self.booleanValue = nil
+        self.numberValue = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -118,6 +121,7 @@ public struct LiquidHostObject: Sendable {
         self.dynamicProperties = dynamicProperties
         self.indexer = indexer
         self.booleanValue = nil
+        self.numberValue = nil
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -132,5 +136,21 @@ public struct LiquidHostObject: Sendable {
         self.dynamicProperties = []
         self.indexer = nil
         self.booleanValue = booleanValue
+        self.numberValue = nil
+    }
+
+    /// Creates a boxed integer host binding with no exposed properties.
+    /// Numeric value operations use `numberValue`; property access remains
+    /// object access and yields a missing value for every key.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - numberValue: Native-width integer represented by this host object.
+    public init(_ name: String, numberValue: Int) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = numberValue
     }
 }

@@ -473,7 +473,7 @@ public struct LiquidEngine: Sendable {
                     }
                 }
                 if object.indexer != nil { try renderer.budget.filterValue(depth: 2) }
-                if object.booleanValue != nil { try renderer.budget.filterValue(depth: 2) }
+                if object.booleanValue != nil || object.numberValue != nil { try renderer.budget.filterValue(depth: 2) }
                 roots.append((object.name, object))
             }
         }

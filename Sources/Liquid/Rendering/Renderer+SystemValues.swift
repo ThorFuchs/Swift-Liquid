@@ -13,6 +13,7 @@ internal struct SystemRuntimeValue {
 extension Renderer {
     internal func systemPrimary(_ value: Any) -> Any {
         if hostContextEnabled, let boolean = value as? RuntimeHostBoolean { return boolean.value }
+        if hostContextEnabled, let number = value as? RuntimeHostNumber { return number.value }
         return (value as? SystemRuntimeValue)?.primary ?? value
     }
 

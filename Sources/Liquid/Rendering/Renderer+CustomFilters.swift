@@ -66,6 +66,7 @@ internal struct FilterValueBridge {
         }
         switch value {
         case let value as RuntimeHostBoolean: return .bool(value.value)
+        case let value as RuntimeHostNumber: return .integer(value.value)
         case let wrapped as SystemRuntimeValue where allowSystemValues:
             return try read(wrapped.primary, depth: depth + 1)
         case let html as SafeHTML where allowSystemValues:

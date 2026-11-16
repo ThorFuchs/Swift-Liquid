@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/boxedNumberPreservesNumericAndObjectBehavior()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedNumbersInvocationScoped()": null,
     "LiquidTests.HostObjectTests/boxedBooleanKeepsReferenceTruthinessEqualityAndFilters()": null,
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedBooleansInvocationScoped()": null,
     "LiquidTests.HostObjectTests/typedIndexerPreservesKeysAndPropertyPrecedence()": null,
@@ -373,6 +375,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedNumbersInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedBooleansInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepIndexersInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepDynamicFamiliesInvocationScoped()",

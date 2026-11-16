@@ -117,3 +117,11 @@ checks 22 fixed pinned BooleanDrop cases with the upstream comparator and pinned
 Ruby reference. The lane hashes each fixture and safely decodes only the selected
 YAML nodes, without evaluating fixture-supplied Ruby. Results remain separate
 from the unchanged full-suite selection and historical exclusions.
+
+## Fixed NumberDrop cases
+
+`Scripts/ci.py --lane number-drop --spec-path PATH --reference-path PATH` runs
+three fixed, checksum-bound NumberDrop cases using the pinned Ruby reference and
+unchanged upstream comparator. It disables dynamic Ruby evaluation and admits
+only the explicit native-width integer shape. Results are separate from the
+unchanged full-suite selector and historical exclusions.

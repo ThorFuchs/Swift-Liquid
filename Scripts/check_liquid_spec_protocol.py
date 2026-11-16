@@ -144,6 +144,17 @@ class ProtocolTests(unittest.TestCase):
             marker = {'_instantiate': 'BooleanDrop', 'params': params}
             self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['error']['code'], -32602)
 
+    def test_portable_number_drop_keeps_numeric_and_object_boundaries(self):
+        source = "{{ drop }}|{% if drop %}T{% else %}F{% endif %}|{{ drop | plus: 1 }}|{{ drop | size }}|[{{ drop.size }}]|{% assign x = drop | default: 'no' %}[{{ x.size }}]"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        for value, expected in [(0, '0|T|1|0|[]|[]'), (41, '41|T|42|0|[]|[]'), (-2, '-2|T|-1|0|[]|[]')]:
+            marker = {'_instantiate': 'NumberDrop', 'params': {'value': value}}
+            result = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['result']
+            self.assertEqual(result, {'output': expected, 'errors': []})
+        for params in [{}, {'value': True}, {'value': 1.5}, {'value': None}, {'value': 1, 'extra': 1}]:
+            marker = {'_instantiate': 'NumberDrop', 'params': params}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

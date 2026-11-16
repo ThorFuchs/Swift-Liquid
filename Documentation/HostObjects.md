@@ -67,6 +67,15 @@ The binding remains an object for property access and has no exposed properties;
 assignment and a selected `default` preserve that boundary. This profile does not
 provide arbitrary boxed host values or return nested host objects.
 
+A host can also create `LiquidHostObject("count", numberValue: 42)` for a
+boxed native-width integer. Numeric operations, comparisons and output use
+that integer; zero is truthy. The binding remains an object for property
+access, and `size` returns zero rather than the byte size of an ordinary
+integer. Assignment and a selected `default` keep the object boundary.
+The built-in `json` filter and custom filters receive the represented integer;
+the additional JSON test filter in the pinned Ruby suite has a separate object
+policy and is not covered by the targeted NumberDrop qualification.
+
 Properties can return admitted primitive values, arrays or objects. Other host
 objects are not ordinary values and must be accessed through their explicitly
 registered properties. This does not implement the complete Shopify Drop contract.

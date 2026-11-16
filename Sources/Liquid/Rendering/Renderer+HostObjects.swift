@@ -7,6 +7,10 @@ internal struct RuntimeHostBoolean: Sendable {
     let value: Bool
 }
 
+internal struct RuntimeHostNumber: Sendable {
+    let value: Int
+}
+
 extension Renderer {
     @inline(__always)
     internal func canUseStaticPath(_ path: String) -> Bool {
@@ -14,7 +18,7 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(value is RuntimeSelf)
     }
 
     @inline(__always)
@@ -22,6 +26,7 @@ extension Renderer {
         guard hostContextEnabled else { return value }
         if let host = value as? LiquidHostObject {
             if let boolean = host.booleanValue { return RuntimeHostBoolean(value: boolean) }
+            if let number = host.numberValue { return RuntimeHostNumber(value: number) }
             throw LiquidError.invalidValue("A host object must be accessed through an exposed property")
         }
         return value

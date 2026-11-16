@@ -89,3 +89,10 @@ from a functional test.
 An explicit Boolean host binding preserves the Boolean value for Liquid value
 operations while keeping property access on the host-object boundary. This is a
 bounded extension, not support for arbitrary nested or boxed Drop values.
+
+## Boxed integer extension
+
+An explicit native-width integer binding uses its integer for arithmetic and
+comparison while retaining the object boundary through assignment, property
+access, `size` and a selected `default`. It does not add nested host objects or
+arbitrary Ruby integer support.

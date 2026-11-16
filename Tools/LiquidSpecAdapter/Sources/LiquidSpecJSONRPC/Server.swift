@@ -137,6 +137,11 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                     throw WireFailure.invalid("BooleanDrop requires exactly one Boolean value")
                 }
                 hosts.append(LiquidHostObject(entry.key, booleanValue: value))
+            case "NumberDrop":
+                guard parameters.entries.count == 1, case .integer(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("NumberDrop requires exactly one integer value")
+                }
+                hosts.append(LiquidHostObject(entry.key, numberValue: value))
             default: throw WireFailure.invalid("Unsupported standard drop marker")
             }
         } else {

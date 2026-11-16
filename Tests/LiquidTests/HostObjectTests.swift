@@ -45,6 +45,48 @@ private actor DynamicAccessCounter {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func boxedNumberPreservesNumericAndObjectBehavior() async throws {
+        let engine = LiquidEngine()
+        let source = "{{ d }}|{% if d %}T{% else %}F{% endif %}|{% if d == 0 %}Z{% else %}N{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{{ d | plus: 1 }}|{{ d | size }}|{{ d | first }}|{{ d | last }}|[{{ d.size }}]|[{{ d[0] }}]"
+        for (value, expected) in [(0, "0|T|Z|N|1|0|||[]|[]"), (41, "41|T|N|N|42|0|||[]|[]"), (-2, "-2|T|N|N|-1|0|||[]|[]")] {
+            let host = LiquidHostObject("d", numberValue: value)
+            for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+                #expect(try await engine.render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+                #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+                let aliases = "{% assign x = d %}[{{ x.size }}]|[{{ self.d.size }}]|{{ self.d }}|{% assign x = d | default: 'no' %}[{{ x.size }}]|{{ x }}"
+                #expect(try await engine.render(template: aliases, hostObjects: [host], syntaxMode: mode) == "[]|[]|\(value)|[]|\(value)")
+                #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: [host], templates: ["p": "{{ d }}"], syntaxMode: mode) == String(value))
+            }
+        }
+        for value in [Int.min, Int.max] {
+            #expect(try await engine.render(template: "{{ d }}", hostObjects: [LiquidHostObject("d", numberValue: value)]) == String(value))
+        }
+        let custom = try LiquidEngine(filters: [LiquidFilter("is_integer") { value, _, _ in
+            if case .integer = value { return "integer" }; return "wrong"
+        }])
+        #expect(try await custom.render(template: "{{ d | is_integer }}", hostObjects: [LiquidHostObject("d", numberValue: 0)]) == "integer")
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 1)).render(template: "{{ d }}", hostObjects: [LiquidHostObject("d", numberValue: 0)])
+        }
+    }
+
+    @Test func concurrentRendersKeepBoxedNumbersInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ d | plus: 1 }}")
+        let outputs = try await withThrowingTaskGroup(of: Int.self) { group in
+            for index in 0..<32 {
+                group.addTask {
+                    let text = try await engine.render(template, hostObjects: [LiquidHostObject("d", numberValue: index)])
+                    return Int(text) ?? -1
+                }
+            }
+            var values: [Int] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(outputs.sorted() == Array(1...32))
+    }
+
     @Test func boxedBooleanKeepsReferenceTruthinessEqualityAndFilters() async throws {
         let engine = LiquidEngine()
         let source = "{{ d }}|{% if d %}T{% else %}F{% endif %}|{% if d == true %}T{% else %}F{% endif %}|{% if d == blank %}T{% else %}F{% endif %}|{% if d == empty %}T{% else %}F{% endif %}|{{ d | default: 'fallback' }}|{{ d | default: 'fallback', allow_false: true }}|{{ d | upcase }}|{{ d | first }}|{{ d | last }}|{{ d | size }}"

@@ -73,7 +73,7 @@ extension Renderer {
             if hostContextEnabled, case .variable(let name) = expr,
                let object = context.getLiteralVariable(name.string) as? LiquidHostObject {
                 try budget.step()
-                if object.booleanValue != nil {
+                if object.booleanValue != nil || object.numberValue != nil {
                     _ = try await evaluateExpressionFast(key)
                     return NSNull()
                 }
@@ -88,7 +88,7 @@ extension Renderer {
                 return try await hostIndex(object, key: .other)
             }
             let unconvertedBase = try await evaluateExpressionFast(expr)
-            if unconvertedBase is RuntimeHostBoolean {
+            if unconvertedBase is RuntimeHostBoolean || unconvertedBase is RuntimeHostNumber {
                 _ = try await evaluateExpressionFast(key)
                 return NSNull()
             }

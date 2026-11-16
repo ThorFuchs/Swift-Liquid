@@ -163,6 +163,10 @@ module LQ1
           boolean = value.to_liquid_value
           raise OperationalError, 'BooleanDrop value is not Boolean' unless boolean == true || boolean == false
           { '_instantiate' => 'BooleanDrop', 'params' => { 'value' => boolean } }
+        elsif defined?(StandardNumberDrop) && value.instance_of?(StandardNumberDrop)
+          number = value.to_liquid_value
+          raise OperationalError, 'NumberDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)
+          { '_instantiate' => 'NumberDrop', 'params' => { 'value' => number } }
         else
           value
         end
