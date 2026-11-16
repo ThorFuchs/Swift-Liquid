@@ -13,6 +13,7 @@ internal struct RuntimeHostNumber: Sendable {
 
 internal struct RuntimeHostString: Sendable {
     let value: String?
+    let identity: RuntimeHostStringIdentity
 }
 
 extension Renderer {
@@ -31,7 +32,7 @@ extension Renderer {
         if let host = value as? LiquidHostObject {
             if let boolean = host.booleanValue { return RuntimeHostBoolean(value: boolean) }
             if let number = host.numberValue { return RuntimeHostNumber(value: number) }
-            if let string = host.stringValue { return RuntimeHostString(value: string.value) }
+            if let string = host.stringValue { return RuntimeHostString(value: string.value, identity: string.identity) }
             throw LiquidError.invalidValue("A host object must be accessed through an exposed property")
         }
         return value

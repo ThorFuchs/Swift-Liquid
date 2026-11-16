@@ -2817,6 +2817,7 @@
       "scopeDecision": "Add explicit string or nil boxes and direct boxed-string elements in finite root arrays; keep arbitrary nested host graphs, pinned fixtures, the full-suite selector and all holds unchanged.",
       "changes": [
         "Retain object behavior for access, non-iteration, first/last/size and default while using represented values for truthiness, equality and string operations.",
+        "Keep boxed-string checks out of the ordinary no-host render path where the evaluator has invocation context; preserve Ruby's asymmetric left-element array equality and stable boxed identity with bounded, cancellable comparison.",
         "Report nil string conversion and non-UTF-8 decoded bytes as invalid-value errors without claiming Ruby exception-class or binary-value equivalence.",
         "Compare boxed and ordinary strings by exact scalar value in uniq while retaining the first object or ordinary value.",
         "Admit finite mixed root arrays with per-render work, value, depth, byte and cancellation boundaries; reject arbitrary nested host markers.",

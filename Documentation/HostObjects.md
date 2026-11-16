@@ -96,7 +96,9 @@ Each element is admitted and charged for every render; ordinary `.value`
 elements can contain ordinary Liquid arrays and objects. Boxed elements are
 permitted directly in this root array, not inside arbitrary nested containers or
 as callback results. `uniq` compares represented values while retaining the
-first element, including its object identity for later access.
+first element, including its object identity for later access. Array equality
+follows Ruby's left-element comparison: a boxed string and an ordinary string
+can compare differently when their order is reversed.
 
 Properties can return admitted primitive values, arrays or objects. Other host
 objects are not ordinary values and must be accessed through their explicitly

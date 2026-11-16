@@ -71,7 +71,7 @@ extension Renderer {
         if let key {
             // compact('key'): remove items where item[key] is nil
             return array.filter { item in
-                if item is RuntimeHostString { return false }
+                if hostContextEnabled && item is RuntimeHostString { return false }
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
                 return !(systemPrimary(val) is NSNull)
@@ -79,7 +79,7 @@ extension Renderer {
         }
 
         return array.compactMap { item -> Any? in
-            if item is RuntimeHostString { return item }
+            if hostContextEnabled && item is RuntimeHostString { return item }
             if systemPrimary(item) is NSNull { return nil }
             return item
         }
@@ -90,7 +90,7 @@ extension Renderer {
         var seen = Set<RuntimeEqualityKey>()
         var unique: [Any] = []
         let items = flattenArray(array)
-        let hasBoxedStrings = items.contains { $0 is RuntimeHostString }
+        let hasBoxedStrings = hostContextEnabled && items.contains { $0 is RuntimeHostString }
         for item in items {
             try budget.step()
             let selected: Any
@@ -148,7 +148,7 @@ extension Renderer {
         for item in array {
             try Task.checkCancellation()
             let itemValue: Any?
-            if item is RuntimeHostString {
+            if hostContextEnabled && item is RuntimeHostString {
                 itemValue = nil
             } else if let string = systemPrimary(item) as? String {
                 itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
@@ -189,7 +189,7 @@ extension Renderer {
         var result: [Any] = []
         result.reserveCapacity(array.count)
         for item in array {
-            if item is RuntimeHostString {
+            if hostContextEnabled && item is RuntimeHostString {
                 result.append(propertyName == "to_liquid" ? item : NSNull())
             } else if let selfValue = item as? RuntimeSelf {
                 result.append(selfValue.lookup(propertyName) ?? NSNull())
@@ -212,7 +212,7 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
-        if object is RuntimeHostString { return nil }
+        if hostContextEnabled && object is RuntimeHostString { return nil }
         let object = systemPrimary(object)
         // Handle different object types
         if let val = dictValue(object, forKey: key) { return val }

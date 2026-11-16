@@ -74,8 +74,11 @@ public enum LiquidHostArrayElement: Sendable {
     case boxedString(String?)
 }
 
+internal final class RuntimeHostStringIdentity: Sendable {}
+
 internal struct LiquidHostStringBox: Sendable {
     let value: String?
+    let identity = RuntimeHostStringIdentity()
 }
 
 /// A named root binding exposing only explicitly supplied host properties.

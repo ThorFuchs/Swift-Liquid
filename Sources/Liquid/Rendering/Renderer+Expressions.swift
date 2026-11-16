@@ -325,9 +325,9 @@ extension Renderer {
     internal func evaluateBinaryValues(leftValue: Any, op: BinaryOp, rightValue: Any) async throws -> Any {
         switch op {
         case .equals:
-            return isEqual(leftValue, rightValue)
+            return try isEqual(leftValue, rightValue)
         case .notEquals:
-            return !isEqual(leftValue, rightValue)
+            return try !isEqual(leftValue, rightValue)
         case .lessThan:
             return try isLess(leftValue, rightValue)
         case .lessThanOrEqual:
@@ -341,7 +341,7 @@ extension Renderer {
         case .or:
             return isTruthy(leftValue) || isTruthy(rightValue)
         case .contains:
-            return contains(leftValue, rightValue)
+            return try contains(leftValue, rightValue)
         case .plus:
             return try add(leftValue, rightValue)
         case .minus:

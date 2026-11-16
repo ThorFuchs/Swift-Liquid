@@ -46,7 +46,7 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
-        if let boxed = input as? RuntimeHostString {
+        if hostContextEnabled, let boxed = input as? RuntimeHostString {
             if filter.arguments.isEmpty, filter.namedArguments.isEmpty {
                 if filter.name.equals("size") { return 0 }
                 if filter.name.equals("first") || filter.name.equals("last") { return NSNull() }
@@ -830,11 +830,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !(hostContextEnabled && $0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // Array of strings: substring matching
                     for item in array {
-                        if item is RuntimeHostString { continue }
+                        if hostContextEnabled && item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return item }
@@ -889,11 +889,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !(hostContextEnabled && $0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // String array: substring matching
                     for (index, item) in array.enumerated() {
-                        if item is RuntimeHostString { continue }
+                        if hostContextEnabled && item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return index }
@@ -984,7 +984,7 @@ extension Renderer {
                     }
                     // String array: substring matching
                     for item in array {
-                        if item is RuntimeHostString { continue }
+                        if hostContextEnabled && item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String, str.contains(property) { return true }
                     }
                     return false
@@ -1008,7 +1008,7 @@ extension Renderer {
                 else { items = [value] }
                 for item in items {
                     try budget.step()
-                    if isDictLike(item) || item is RuntimeHostString { continue } // A missing key selects nil.
+                    if isDictLike(item) || (hostContextEnabled && item is RuntimeHostString) { continue } // A missing key selects nil.
                     if systemPrimary(item) is String || systemPrimary(item) is Int {
                         throw RenderError.custom("cannot select the property ''")
                     }
@@ -1064,7 +1064,7 @@ extension Renderer {
                 // For string arrays, do substring matching
                 if let searchStr = property {
                     // If array has non-string items (nil, bool, int), throw or return empty
-                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !(hostContextEnabled && $0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString {
                         if array.contains(where: { systemPrimary($0) is Int }) {
                             throw RenderError.typeError(expected: "string or hash", actual: "Int", operation: "reject")
@@ -1073,7 +1073,7 @@ extension Renderer {
                     }
                     var result: [Any] = []
                     for item in array {
-                        if item is RuntimeHostString { result.append(item) }
+                        if hostContextEnabled && item is RuntimeHostString { result.append(item) }
                         else if let str = systemPrimary(item) as? String {
                             if !str.contains(searchStr) { result.append(item) }
                         } else {

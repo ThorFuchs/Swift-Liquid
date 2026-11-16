@@ -155,7 +155,7 @@ extension Renderer {
 
     internal func renderFor(variable: InlineString, collection: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams) async throws -> String {
         let rawCollection = try await evaluateExpression(collection)
-        let collectionValue = rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
+        let collectionValue = hostContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
         let forloopName = "\(variable.string)-\(expressionToPath(collection))"
 
         // Build collection key for offset:continue tracking
@@ -373,7 +373,7 @@ extension Renderer {
 
     internal func renderTableRow(variable: InlineString, collection: LiquidExpression, body: [ASTNode], params: TableRowParams) async throws -> String {
         let rawCollection = try await evaluateExpression(collection)
-        let collectionValue = rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
+        let collectionValue = hostContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
         if collectionValue is NSNull || (collectionValue as? Bool) == false { return "" }
 
         func tableInteger(_ expression: LiquidExpression) async throws -> Int {
@@ -1031,7 +1031,7 @@ extension Renderer {
                 // earlier branch bodies may have changed either expression.
                 let caseValue = try await evaluateExpression(value)
                 let whenValue = try await evaluateExpression(expression)
-                if isEqual(caseValue, whenValue) {
+                if try isEqual(caseValue, whenValue) {
                     anyPrecedingWhenMatched = true
                     output += try await renderNodeListFast(nodes)
                 }

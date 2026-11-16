@@ -105,7 +105,7 @@ extension Renderer {
     // values use Ruby's inspected representation. Keep this separate from
     // expression coercion and retain cancellation at composite boundaries.
     internal func renderStringify(_ value: Any) throws -> String {
-        if let box = value as? RuntimeHostString, box.value == nil {
+        if hostContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
             throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
         }
         if value is RuntimeObject || value is [String: Any] || value is [Any] {
@@ -117,7 +117,7 @@ extension Renderer {
 
     private func renderCompositeUnescaped(_ value: Any) throws -> String {
         try Task.checkCancellation()
-        if let box = value as? RuntimeHostString, box.value == nil {
+        if hostContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
             throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
         }
         if let array = value as? [Any] {
@@ -288,9 +288,13 @@ extension Renderer {
         }
     }
     
-    internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+    internal func isEqual(_ left: Any, _ right: Any) throws -> Bool {
         let left = systemPrimary(left)
         let right = systemPrimary(right)
+        if hostContextEnabled, let leftArray = left as? [Any], let rightArray = right as? [Any],
+           (try containsBoxedString(leftArray) || containsBoxedString(rightArray)) {
+            return try boxedArrayEqual(leftArray, rightArray)
+        }
         if left is RuntimeNonFinite || right is RuntimeNonFinite {
             if left is Bool || right is Bool { return false }
             guard (left is RuntimeNonFinite || left is Double || left is Int),
@@ -644,7 +648,50 @@ extension Renderer {
         return parts
     }
 
-    internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
+    // Ruby arrays dispatch equality to each left-hand element. A boxed
+    // string can compare equal to a plain string even though the reverse
+    // comparison does not, so a symmetric hash key is insufficient here.
+    private func containsBoxedString(_ array: [Any]) throws -> Bool {
+        for value in array {
+            try budget.step()
+            if value is RuntimeHostString { return true }
+            if let child = value as? [Any], try containsBoxedString(child) { return true }
+        }
+        return false
+    }
+
+    private func boxedArrayEqual(_ left: [Any], _ right: [Any]) throws -> Bool {
+        guard left.count == right.count else { return false }
+        for (lhs, rhs) in zip(left, right) {
+            try budget.step()
+            if let boxed = lhs as? RuntimeHostString {
+                if let other = rhs as? RuntimeHostString {
+                    if boxed.identity === other.identity { continue }
+                    guard let leftText = boxed.value, let rightText = other.value,
+                          leftText.utf8.elementsEqual(rightText.utf8) else { return false }
+                    continue
+                }
+                guard let leftText = boxed.value else { return false }
+                let rightText: String
+                if rhs is [Any] || rhs is RuntimeObject || rhs is [String: Any] {
+                    rightText = try rubyInspect(rhs)
+                } else {
+                    rightText = stringifyUnescapedPreservingSafeHTML(rhs)
+                }
+                if !leftText.utf8.elementsEqual(rightText.utf8) { return false }
+            } else if rhs is RuntimeHostString {
+                return false
+            } else if let leftChild = lhs as? [Any] {
+                guard let rightChild = rhs as? [Any], try boxedArrayEqual(leftChild, rightChild) else { return false }
+            } else {
+                if rhs is [Any] { return false }
+                if try !isEqual(lhs, rhs) { return false }
+            }
+        }
+        return true
+    }
+
+    internal func contains(_ haystack: Any, _ needle: Any) throws -> Bool {
         let haystack = systemPrimary(haystack); let needle = systemPrimary(needle)
         // Shopify: contains with false/nil/undefined needle always returns false
         if needle is Bool || needle is NSNull { return false }
@@ -654,7 +701,7 @@ extension Renderer {
             return str.range(of: stringify(needle), options: .literal) != nil
         }
         if let array = haystack as? [Any] {
-            return array.contains { isEqual($0, needle) }
+            return try array.contains { try isEqual($0, needle) }
         }
         return false
     }

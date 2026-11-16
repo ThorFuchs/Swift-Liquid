@@ -489,7 +489,7 @@ public struct LiquidEngine: Sendable {
                         case .boxedString(let value):
                             try renderer.budget.filterValue(depth: 2)
                             if let value { try bridge.key(value) }
-                            values.append(RuntimeHostString(value: value))
+                            values.append(RuntimeHostString(value: value, identity: RuntimeHostStringIdentity()))
                         }
                     }
                     roots.append((object.name, values))

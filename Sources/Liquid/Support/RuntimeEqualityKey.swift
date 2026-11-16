@@ -10,7 +10,6 @@ internal indirect enum RuntimeEqualityKey: Hashable {
 
     static func make(_ value: Any) -> Self? {
         if let wrapped = value as? SystemRuntimeValue { return make(wrapped.primary) }
-        if let wrapped = value as? RuntimeHostString { return wrapped.value.map { .string(ScalarKey($0)) } ?? .null }
         switch value {
         case is NSNull: return .null
         case let value as Bool: return .boolean(value)
@@ -27,6 +26,7 @@ internal indirect enum RuntimeEqualityKey: Hashable {
             return .array(keys)
         case let object as RuntimeObject: return members(Array(object))
         case let object as [String: Any]: return members(object.map { (key: $0.key, value: $0.value) })
+        case let wrapped as RuntimeHostString: return wrapped.value.map { .string(ScalarKey($0)) } ?? .null
         default: return nil
         }
     }
