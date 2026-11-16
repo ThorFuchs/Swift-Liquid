@@ -2886,7 +2886,7 @@
       ],
       "qualification": "Targeted outcomes remain separate from full-suite, reference-conflict, performance and release acceptance."
     },
-{
+    {
       "area": "Bounded integer-valued nested host nodes and standard NestedDrop",
       "scopeDecision": "Add explicit typed node results and bounded access; preserve fixtures, full-suite selector, prior branches and all existing holds.",
       "changes": [

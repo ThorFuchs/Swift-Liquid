@@ -70,6 +70,9 @@ public struct LiquidHostNodeProperty: Sendable {
     internal let body: @Sendable () async throws -> LiquidHostNodeResult
 
     /// Creates an asynchronous operation returning a value, node, self or missing.
+    /// - Parameters:
+    ///   - name: Exact property name, checked when the node is admitted.
+    ///   - body: Trusted asynchronous operation invoked for that name.
     public init(_ name: String, _ body: @escaping @Sendable () async throws -> LiquidHostNodeResult) {
         self.name = name
         self.body = body
