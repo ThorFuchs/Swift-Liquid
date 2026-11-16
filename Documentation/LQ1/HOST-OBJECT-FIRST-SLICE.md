@@ -22,6 +22,13 @@ case changes the existing missing-variable policy. Integer-keyed host access,
 iteration, object identity, recursive host values, object-level coercion and
 Shopify's complete Drop semantics are deliberately outside this slice.
 
+The later dynamic-family extension adds explicitly registered nonempty UTF-8
+prefixes. Exact properties win, then the longest matching prefix; unmatched
+keys do not call host code. Each prefix and lookup is charged to the invocation
+budget, and a nil callback result means missing. This enables bounded string-key
+property families; it does not add unrestricted reflection or the other Drop
+capabilities above.
+
 Using the host object itself as an output, condition, filter input, assignment
 or other value must fail explicitly until object-level behavior is specified.
 An implementation must not expose Swift's `Mirror`, type names or callback

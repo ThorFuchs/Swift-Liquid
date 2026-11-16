@@ -2674,6 +2674,33 @@
         "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md"
       ],
       "qualification": "Host properties do not constitute the complete Drop contract or admit excluded conformance cases; all historical conformance and performance holds remain."
+    },
+    {
+      "area": "Bounded dynamic host properties and MethodDrop",
+      "scopeDecision": "Add explicitly scoped dynamic string-key property families and a narrow portable standard MethodDrop adapter; preserve the primitive domain, pinned fixtures and all unrelated holds.",
+      "changes": [
+        "Admit nonempty exact prefixes under invocation budgets; exact properties win and longest matching prefix selects one cancellable checked-Sendable callback.",
+        "Transport only the exact standard MethodDrop marker and implement its bounded echo, square and double property behavior without reflection or fixture-derived lookup registration.",
+        "Qualify fixed pinned examples separately without evaluating fixture generator expressions; retain the original full-suite exclusions and raw reference conflicts."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/MethodDropCases.json",
+        "Tools/LiquidSpecAdapter/check_method_drop.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted case outcomes and source-bound checks are separate from full-suite, performance and release acceptance."
     }
   ]
 }

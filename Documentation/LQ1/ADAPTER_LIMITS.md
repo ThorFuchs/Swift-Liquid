@@ -104,3 +104,11 @@ primitive-JSON cases remain eligible, including object/array formatting probes.
 Actual Ruby classes, symbol keys, cycles and numeric-domain violations receive
 specific preflight reasons. `SPEC_RUNS.json.featurePolicies` records this choice;
 it does not advertise general Ruby runtime type support.
+
+The separate `method-drop` lane accepts the portable root-level
+`_instantiate: MethodDrop` marker with empty parameters in raising mode without
+partials. It constructs a bounded native host binding for the standard echo,
+square and double families; non-native integer inputs or overflow are operational
+domain failures. Unsupported, nested or malformed markers are rejected. This
+is not bidirectional Drop RPC, arbitrary Ruby transport, or a declaration of
+complete Drop support. The original full-suite selection remains unchanged.

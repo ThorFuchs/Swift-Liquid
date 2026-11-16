@@ -65,11 +65,59 @@ private func rejectMarkers(_ value: LiquidValue, depth: Int = 0) throws {
     guard depth <= 64 else { throw WireFailure.invalid("Wire value nesting exceeds 64") }
     switch value {
     case .object(let value):
-        guard value["_rpc_drop"] == nil else { throw WireFailure.invalid("Drop callbacks are unsupported") }
+        guard value["_rpc_drop"] == nil, value["_instantiate"] == nil else { throw WireFailure.invalid("Unsupported or nested drop marker") }
         for entry in value.entries { try rejectMarkers(entry.value, depth: depth + 1) }
     case .array(let values): for value in values { try rejectMarkers(value, depth: depth + 1) }
     default: break
     }
+}
+
+// The portable standard MethodDrop, not a general Ruby object bridge.
+// Its property family is explicitly bounded by the engine's name and work limits.
+private func methodDrop(_ name: String) -> LiquidHostObject {
+    let lookup: @Sendable (String) async throws -> LiquidValue? = { key in
+        let parts = key.split(separator: "_", maxSplits: 1, omittingEmptySubsequences: false)
+        guard parts.count == 2, !parts[1].isEmpty,
+              parts[1].utf8.allSatisfy({ (48...57).contains($0) }) else { return nil }
+        guard let number = Int(parts[1]) else { throw LiquidError.invalidValue("MethodDrop integer outside native Int domain") }
+        let result: Int
+        switch parts[0] {
+        case "echo": result = number
+        case "square":
+            let (value, overflow) = number.multipliedReportingOverflow(by: number)
+            guard !overflow else { throw LiquidError.invalidValue("MethodDrop integer overflow") }
+            result = value
+        case "double":
+            let (value, overflow) = number.multipliedReportingOverflow(by: 2)
+            guard !overflow else { throw LiquidError.invalidValue("MethodDrop integer overflow") }
+            result = value
+        default: return nil
+        }
+        return .string(String(result))
+    }
+    return LiquidHostObject(name, dynamicProperties: [
+        LiquidHostDynamicProperty(prefix: "echo_", body: lookup),
+        LiquidHostDynamicProperty(prefix: "square_", body: lookup),
+        LiquidHostDynamicProperty(prefix: "double_", body: lookup)
+    ])
+}
+
+private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [LiquidHostObject]) {
+    var values: [LiquidObject.Entry] = []
+    var hosts: [LiquidHostObject] = []
+    for entry in input.entries {
+        if case .object(let marker) = entry.value, marker["_instantiate"] != nil {
+            guard marker.entries.count == 2, marker["_instantiate"] == .string("MethodDrop"),
+                  case .object(let parameters)? = marker["params"], parameters.entries.isEmpty else {
+                throw WireFailure.invalid("Unsupported standard drop marker")
+            }
+            hosts.append(methodDrop(entry.key))
+        } else {
+            try rejectMarkers(entry.value)
+            values.append(entry)
+        }
+    }
+    return (LiquidObject(values), hosts)
 }
 private func problem(_ error: Error) -> LiquidValue {
     var fields: [LiquidObject.Entry] = []
@@ -181,8 +229,7 @@ private struct Server {
                 catch { result = ["template_id": nil, "error": problem(error)] }
             case "render":
                 guard initialized, let compiled = slot, string(params["template_id"]) == compiled.id else { throw WireFailure.invalid("Unknown or stale template ID; compile first") }
-                let context = try object(params["environment"])
-                try rejectMarkers(.object(context))
+                let (context, hostObjects) = try admitEnvironment(object(params["environment"]))
                 let options = try object(params["options"])
                 try admitKeys(options, allowed: ["strict_errors", "resource_limits", "registers"])
                 let resourceLimits = try object(options["resource_limits"])
@@ -209,7 +256,12 @@ private struct Server {
                 }
                 let engine = LiquidEngine(limits: profile, referenceTime: reference)
                 do {
-                    if recovering {
+                    if !hostObjects.isEmpty {
+                        guard !recovering, compiled.partials.isEmpty else {
+                            throw WireFailure.invalid("MethodDrop requires raising mode and no partials")
+                        }
+                        result = ["output": .string(try await engine.render(compiled.root, context: context, hostObjects: hostObjects)), "errors": []]
+                    } else if recovering {
                         let rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)
                         result = ["output": .string(rendered.output), "errors": .array(rendered.diagnostics.map { diagnostic in
                             var fields: [LiquidObject.Entry] = [.init("type", "render_error"), .init("message", .string(diagnostic.message))]

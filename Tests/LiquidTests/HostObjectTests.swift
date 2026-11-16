@@ -38,9 +38,87 @@ private actor HostReleaseGate {
 }
 
 private enum HostProbeError: Error { case failed }
+private actor DynamicAccessCounter {
+    private(set) var keys: [String] = []
+    func record(_ key: String) { keys.append(key) }
+}
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func dynamicFamiliesAreExplicitExactAndDeterministic() async throws {
+        let host = LiquidHostObject("drop", properties: [LiquidHostProperty("op_fixed") { "fixed" }], dynamicProperties: [
+            LiquidHostDynamicProperty(prefix: "op_") { key in .string("general:" + key) },
+            LiquidHostDynamicProperty(prefix: "op_deep_") { key in .string("specific:" + key) },
+            LiquidHostDynamicProperty(prefix: "missing_") { _ in nil }
+        ])
+        let source = "{{ drop.op_fixed }}|{{ drop.op_any }}|{{ drop.op_deep_x }}|[{{ drop.missing_x }}]|[{{ drop.secret }}]"
+        let expected = "fixed|general:op_any|specific:op_deep_x|[]|[]"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await LiquidEngine().render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+            #expect(try await LiquidEngine().render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+        }
+        let unicode = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "café_") { _ in "matched" }])
+        #expect(try await LiquidEngine().render(template: "{{ drop['café_x'] }}|[{{ drop['cafe\u{301}_x'] }}]", hostObjects: [unicode]) == "matched|[]")
+        let empty = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "") { _ in nil }])
+        let duplicate = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "x") { _ in nil }, LiquidHostDynamicProperty(prefix: "x") { _ in nil }])
+        for invalid in [empty, duplicate] {
+            await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "", hostObjects: [invalid]) }
+        }
+    }
+
+    @Test func cancellationAndDynamicFamilyResultsUseInvocationBudgets() async throws {
+        let oversized = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "x_") { _ in [1, 2, 3] }])
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 3)).render(template: "{{ drop.x_a }}", hostObjects: [oversized])
+        }
+        let gate = HostGate()
+        let blocked = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "x_") { _ in
+            await gate.signal(); try await Task.sleep(for: .seconds(30)); return "unexpected"
+        }])
+        let task = Task { try await LiquidEngine().render(template: "{{ drop.x_a }}", hostObjects: [blocked]) }
+        await gate.waitUntilEntered(); task.cancel()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        let throwsHost = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "x_") { _ in throw HostProbeError.failed }])
+        await #expect(throws: HostProbeError.self) { try await LiquidEngine().render(template: "{{ drop.x_a }}", hostObjects: [throwsHost]) }
+    }
+
+    @Test func cancellationAfterDynamicFamilyReturnsKeepsReuse() async throws {
+        let counter = DynamicAccessCounter()
+        let host = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "ok_") { key in
+            await counter.record(key); return .string(key)
+        }])
+        let source = "{{ drop.ok_one }}|[{{ drop.secret }}]|{{ drop.ok_two }}"
+        #expect(try await LiquidEngine().render(template: source, hostObjects: [host]) == "ok_one|[]|ok_two")
+        #expect(await counter.keys == ["ok_one", "ok_two"])
+        let gate = HostReleaseGate()
+        let blocked = LiquidHostObject("drop", dynamicProperties: [LiquidHostDynamicProperty(prefix: "x_") { _ in
+            await gate.suspend(); return "must not escape"
+        }])
+        let task = Task { try await LiquidEngine().render(template: "{{ drop.x_a }}", hostObjects: [blocked]) }
+        await gate.waitUntilEntered(); task.cancel(); await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(try await LiquidEngine().render(template: "{{ drop.ok_reused }}", hostObjects: [host]) == "ok_reused")
+    }
+
+    @Test func concurrentRendersKeepDynamicFamiliesInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ drop.value_key }}")
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<32 {
+                group.addTask {
+                    let object = LiquidHostObject("drop", dynamicProperties: [
+                        LiquidHostDynamicProperty(prefix: "value_") { _ in .integer(index) }
+                    ])
+                    return try await engine.render(template, hostObjects: [object])
+                }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(outputs) == Set((0..<32).map(String.init)))
+    }
+
     @Test func propertiesSupportSourceParsedDynamicKeysAndPartials() async throws {
         let object = LiquidHostObject("product", properties: [
             LiquidHostProperty("title") { "Swift" },

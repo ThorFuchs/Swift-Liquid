@@ -152,7 +152,16 @@ module LQ1
     end
     def render(id, environment, options)
       registers = { 'current_time' => options.fetch(:registers).fetch(:current_time).iso8601 }
-      result = send_request('render', 'template_id' => id, 'environment' => environment,
+      # Only the pinned standard MethodDrop has an admitted portable marker.
+      # Do not flatten other Ruby objects or invoke arbitrary serialization hooks.
+      wire_environment = environment.transform_values do |value|
+        if defined?(StandardMethodDrop) && value.instance_of?(StandardMethodDrop)
+          { '_instantiate' => 'MethodDrop', 'params' => {} }
+        else
+          value
+        end
+      end
+      result = send_request('render', 'template_id' => id, 'environment' => wire_environment,
         'options' => { 'strict_errors' => options.fetch(:strict_errors), 'registers' => registers })
       @detail = result.fetch('errors', [])
       @observed = @detail.empty? ? 'successful-render' : 'recovered-error'

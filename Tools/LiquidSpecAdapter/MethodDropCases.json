@@ -1,0 +1,12 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "fixture": "specs/basics/drops.yml",
+  "fixtureSHA256": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+  "cases": [
+    {"name": "drop_method_echo", "line": 143},
+    {"name": "drop_method_square", "line": 154},
+    {"name": "drop_method_double", "line": 164}
+  ],
+  "generatedCases": "held: fixture generator expressions are not evaluated"
+}

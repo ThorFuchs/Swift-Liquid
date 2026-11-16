@@ -107,6 +107,23 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'value': 2**63}})['error']['code'], -32602)
         self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'value': {'_rpc_drop': 'fake'}}})['error']['code'], -32602)
 
+    def test_portable_method_drop_is_explicit_bounded_and_not_a_callback(self):
+        template = self.peer.compile("{{ drop.echo_42 }}|{{ drop.square_5 }}|{{ drop.double_7 }}|{{ drop[key] }}|[{{ drop.secret }}]|[{{ drop.echo_bad }}]")['result']['template_id']
+        marker = {'_instantiate': 'MethodDrop', 'params': {}}
+        rendered = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker, 'key': 'square_12'}})['result']
+        self.assertEqual(rendered, {'output': '42|25|14|144|[]|[]', 'errors': []})
+        for invalid in [{'_instantiate': 'OtherDrop', 'params': {}},
+                        {'_instantiate': 'MethodDrop', 'params': {'extra': 1}},
+                        {'_instantiate': 'MethodDrop', 'params': {}, 'extra': 1},
+                        {'nested': marker}, {'_rpc_drop': 'external'}]:
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': invalid}})['error']['code'], -32602)
+        overflow = self.peer.compile('{{ drop.square_9223372036854775807 }}')['result']['template_id']
+        error = self.peer.request('render', {'template_id': overflow, 'environment': {'drop': marker}})['result']
+        self.assertIsNone(error['output']); self.assertEqual(error['error']['type'], 'domain_error')
+        template = self.peer.compile('{{ drop.echo_42 }}')['result']['template_id']
+        recovered = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}, 'options': {'strict_errors': False}})['result']
+        self.assertIsNone(recovered['output']); self.assertEqual(recovered['error']['type'], 'operational_error')
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

@@ -82,3 +82,15 @@ Five further individually identified cases cover a comment-only filesystem
 callback, three missing-file diagnostics and the pinned loader's exact
 100,000-character `LongString` materialization. Their narrowly checked feature
 exceptions never bypass unrelated transport checks or change the comparator.
+
+## Fixed MethodDrop cases
+
+`Scripts/ci.py --lane method-drop --spec-path PATH --reference-path PATH` runs
+three individually pinned, non-generated MethodDrop fixtures through Shopify's
+unchanged `AdapterRunner` comparator against both Swift and the pinned Ruby
+reference. The lane checks fixture bytes and identity and uses safe YAML loading;
+it does not invoke the upstream loader that evaluates fixture generator
+expressions. The two generated MethodDrop variants remain held. This separate
+result does not change the full-suite selector, raw verdict, five reviewed
+conflicts, or claims about other Drop classes. Optional `--output-root` places
+the receipt, per-case result, protocol checks and RPC trace outside the checkout.

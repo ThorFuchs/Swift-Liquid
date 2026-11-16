@@ -27,6 +27,28 @@ unregistered property is Liquid null; a callback can explicitly return null.
 Only registered properties can be called. Integer keys on host objects are not
 supported by this profile.
 
+Applications can also register `LiquidHostDynamicProperty` families with a
+nonempty, exact UTF-8 prefix and an async callback. Exact properties take
+precedence; among matching families the longest prefix wins. An unmatching key
+never reaches a callback. The callback receives the complete key and returns
+either an admitted `LiquidValue` or nil for a missing property; `.null` is an
+explicit null. Empty and duplicate prefixes fail when rendering begins. Prefix
+registrations and lookup work are charged to the invocation's existing value
+and step capacities. As with exact properties, host code is trusted and must
+apply any additional key validation appropriate to its exposed family.
+
+```swift
+let dynamic = LiquidHostObject("example", dynamicProperties: [
+    LiquidHostDynamicProperty(prefix: "greet_") { key in
+        .string("Hello, " + key.dropFirst("greet_".count))
+    }
+])
+let rendered = try await LiquidEngine().render(
+    template: "{{ example.greet_Ada }}", hostObjects: [dynamic]
+)
+// Hello, Ada
+```
+
 Properties can return admitted primitive values, arrays or objects. This first
 profile does not return nested host objects and does not define the host object's
 own truthiness, stringification, iteration, filter behavior or identity. Using

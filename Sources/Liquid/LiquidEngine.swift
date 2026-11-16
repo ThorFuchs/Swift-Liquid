@@ -464,6 +464,14 @@ public struct LiquidEngine: Sendable {
                         throw LiquidError.invalidValue("Invalid or duplicate host property name")
                     }
                 }
+                var prefixes = Set<ScalarKey>()
+                for property in object.dynamicProperties {
+                    try renderer.budget.filterValue(depth: 2)
+                    guard !property.prefix.isEmpty, property.prefix.utf8.count <= limits.outputBytes,
+                          prefixes.insert(ScalarKey(property.prefix)).inserted else {
+                        throw LiquidError.invalidValue("Invalid or duplicate host dynamic property prefix")
+                    }
+                }
                 roots.append((object.name, object))
             }
         }

@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/cancellationAfterDynamicFamilyReturnsKeepsReuse()": null,
+    "LiquidTests.HostObjectTests/dynamicFamiliesAreExplicitExactAndDeterministic()": null,
+    "LiquidTests.HostObjectTests/cancellationAndDynamicFamilyResultsUseInvocationBudgets()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepDynamicFamiliesInvocationScoped()": null,
     "LiquidTests.LiquidSpecRegressionTests/finiteDoubleRenderingPreservesSignificantDigits()": null,
     "LiquidTests.HostObjectTests/propertiesSupportSourceParsedDynamicKeysAndPartials()": null,
     "LiquidTests.HostObjectTests/namesRemainExactAndBindingsAreValidated()": null,
@@ -364,6 +368,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepDynamicFamiliesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostBindingsIndependent()",
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
     "LiquidTests.CustomFilterTests/concurrentRendersKeepFilterConfigurationsIsolated()",
@@ -385,6 +390,8 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationAfterDynamicFamilyReturnsKeepsReuse()",
+    "LiquidTests.HostObjectTests/cancellationAndDynamicFamilyResultsUseInvocationBudgets()",
     "LiquidTests.HostObjectTests/cancellationDuringSuspendingPropertyPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationAfterUncooperativeHostReturns()",
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",
