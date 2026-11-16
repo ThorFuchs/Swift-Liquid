@@ -116,6 +116,20 @@ private func indexDrop(_ name: String) -> LiquidHostObject {
     })
 }
 
+// StringDrop is a closed portable test-object shape, never arbitrary Ruby state.
+private func stringDropValue(_ parameters: LiquidObject) throws -> String? {
+    guard parameters.entries.count <= 1 else { throw WireFailure.invalid("Unsupported StringDrop parameters") }
+    guard let value = parameters["value"] else {
+        guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported StringDrop parameters") }
+        return nil
+    }
+    switch value {
+    case .null: return nil
+    case .string(let text): return text
+    default: throw WireFailure.invalid("StringDrop value must be text or null")
+    }
+}
+
 private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [LiquidHostObject]) {
     var values: [LiquidObject.Entry] = []
     var hosts: [LiquidHostObject] = []
@@ -142,8 +156,28 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                     throw WireFailure.invalid("NumberDrop requires exactly one integer value")
                 }
                 hosts.append(LiquidHostObject(entry.key, numberValue: value))
+            case "StringDrop":
+                hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
             default: throw WireFailure.invalid("Unsupported standard drop marker")
             }
+        } else if case .array(let array) = entry.value, array.contains(where: { element in
+            if case .object(let object) = element { return object["_instantiate"] != nil }
+            return false
+        }) {
+            var elements: [LiquidHostArrayElement] = []
+            for value in array {
+                if case .object(let marker) = value, marker["_instantiate"] != nil {
+                    guard marker.entries.count == 2, string(marker["_instantiate"]) == "StringDrop",
+                          case .object(let parameters)? = marker["params"] else {
+                        throw WireFailure.invalid("Unsupported or malformed nested drop marker")
+                    }
+                    elements.append(.boxedString(try stringDropValue(parameters)))
+                } else {
+                    try rejectMarkers(value)
+                    elements.append(.value(value))
+                }
+            }
+            hosts.append(LiquidHostObject(entry.key, array: elements))
         } else {
             try rejectMarkers(entry.value)
             values.append(entry)

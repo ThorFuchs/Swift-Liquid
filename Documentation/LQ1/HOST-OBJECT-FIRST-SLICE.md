@@ -96,3 +96,12 @@ An explicit native-width integer binding uses its integer for arithmetic and
 comparison while retaining the object boundary through assignment, property
 access, `size` and a selected `default`. It does not add nested host objects or
 arbitrary Ruby integer support.
+
+## Boxed string extension
+
+An explicit string or nil box preserves object-specific access, iteration,
+filter and `default` behavior while using its represented value for truthiness
+and comparison. A separately admitted finite root array permits ordinary
+values and direct boxed-string elements; it is not a general nested host graph.
+Nil string conversion reports `LiquidError.invalidValue`, without claiming to
+reproduce Ruby exception classes.

@@ -136,3 +136,13 @@ without partials. It checks three fixed cases against the pinned reference and
 upstream comparator. The suite's additional JSON test filter has a separate
 object policy and is not qualified by these cases. This lane does not alter the
 full-suite selector, its exclusions, or reviewed reference conflicts.
+
+The separate `string-drop` lane admits portable `StringDrop` markers at the
+root and as direct elements of a root array, with text or nil values. It does
+not admit arbitrary nested markers, callbacks or recursive host graphs. Five
+fixed, hash-pinned cases run through the upstream comparator and pinned Ruby
+reference. Nil text conversion reports a Swift domain error rather than the
+Ruby exception class, and non-UTF-8 decoded bytes remain outside the typed
+string domain. The suite's additional JSON test filter's object policy remains
+unqualified. This lane leaves the full-suite selector, exclusions and
+reviewed reference conflicts unchanged.

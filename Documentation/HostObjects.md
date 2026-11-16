@@ -65,16 +65,38 @@ expose a boxed Boolean. Conditions, comparisons, output and standard filters use
 the supplied Boolean value, including `blank`, `empty`, and `default` semantics.
 The binding remains an object for property access and has no exposed properties;
 assignment and a selected `default` preserve that boundary. This profile does not
-provide arbitrary boxed host values or return nested host objects.
+provide arbitrary boxed host values or return nested host objects from callbacks.
 
 A host can also create `LiquidHostObject("count", numberValue: 42)` for a
 boxed native-width integer. Numeric operations, comparisons and output use
 that integer; zero is truthy. The binding remains an object for property
 access, and `size` returns zero rather than the byte size of an ordinary
 integer. Assignment and a selected `default` keep the object boundary.
-The built-in `json` filter and custom filters receive the represented integer;
-the additional JSON test filter in the pinned Ruby suite has a separate object
-policy and is not covered by the targeted NumberDrop qualification.
+The standard profile does not register `json` as a built-in filter; custom
+filters receive the represented integer. The pinned Ruby suite supplies an
+additional JSON test filter with a separate object policy, which is not covered
+by the targeted NumberDrop qualification.
+
+A boxed string is created with `LiquidHostObject("name", stringValue: "Ada")`;
+its represented string drives truthiness, comparison and string filters, while
+property access remains missing. A boxed empty string is truthy and remains the
+selected object under `default`. Its `size` is zero, `first` and `last` are
+missing, and it is not an iterable string. A nil-valued box compares as nil but
+fails direct or string-filter conversion with `LiquidError.invalidValue`;
+this reports the failure without claiming Ruby's native exception type.
+Base64 decoding rejects invalid encoding; a decoded byte sequence that is not
+UTF-8 is outside this typed-string contract and reports an invalid-value error.
+The standard profile does not register `json` as a built-in filter; custom
+filters receive the represented string or null. The pinned suite's additional
+JSON test filter uses a different object policy and remains separately unqualified.
+
+For a finite root array containing boxed strings, use
+`LiquidHostObject("items", array: [.value("Ada"), .boxedString("Ada")])`.
+Each element is admitted and charged for every render; ordinary `.value`
+elements can contain ordinary Liquid arrays and objects. Boxed elements are
+permitted directly in this root array, not inside arbitrary nested containers or
+as callback results. `uniq` compares represented values while retaining the
+first element, including its object identity for later access.
 
 Properties can return admitted primitive values, arrays or objects. Other host
 objects are not ordinary values and must be accessed through their explicitly

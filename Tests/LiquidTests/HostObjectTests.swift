@@ -45,6 +45,100 @@ private actor DynamicAccessCounter {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func boxedStringPreservesObjectSensitiveBehavior() async throws {
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (value, expected) in [("abc", "abc|T|N|N|abc|0|||[]|[]|empty|ABC"),
+                                      ("", "|T|E|B||0|||[]|[]|empty|")] {
+                let host = LiquidHostObject("d", stringValue: value)
+                let source = "{{ d }}|{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{{ d | default: 'fallback' }}|{{ d | size }}|{{ d | first }}|{{ d | last }}|[{{ d.size }}]|[{{ d[0] }}]|{% for item in d %}{{ item }}{% else %}empty{% endfor %}|{{ d | upcase }}"
+                #expect(try await engine.render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+                #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+                let aliases = "{% assign x = d | default: 'fallback' %}[{{ x.size }}]|[{{ self.d.size }}]|{{ x }}"
+                #expect(try await engine.render(template: aliases, hostObjects: [host], syntaxMode: mode) == "[]|[]|\(value)")
+                let noFallback = "{% assign x = d | default %}[{{ x.size }}]|[{{ x }}]"
+                #expect(try await engine.render(template: noFallback, hostObjects: [host], syntaxMode: mode) == "[]|[\(value)]")
+                let extraOption = "{% assign x = d | default: 'fallback', 'extra' %}[{{ x.size }}]|[{{ x }}]"
+                #expect(try await engine.render(template: extraOption, hostObjects: [host], syntaxMode: mode) == "[]|[\(value)]")
+                #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: [host], templates: ["p": "{{ d }}"], syntaxMode: mode) == value)
+            }
+            let nilHost = LiquidHostObject("d", stringValue: nil)
+            let nilSource = "{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{{ d | default: 'fallback' }}|{{ d | size }}"
+            #expect(try await engine.render(template: nilSource, hostObjects: [nilHost], syntaxMode: mode) == "F|N|B|fallback|0")
+            let collectionFilters = "{{ d | compact | size }}|{{ d | reverse | size }}|{{ d | sort | size }}|{{ d | uniq | size }}|{{ d | map: 'value' | size }}|{{ d | where: 'value' | size }}|{{ d | reject: 'value' | size }}"
+            #expect(try await engine.render(template: collectionFilters, hostObjects: [nilHost], syntaxMode: mode) == "1|1|1|1|1|0|1")
+            let noFallback = "{% assign x = d | default %}[{{ x.size }}]|[{{ x }}]"
+            #expect(try await engine.render(template: noFallback, hostObjects: [nilHost], syntaxMode: mode) == "[0]|[]")
+            let preserveNil = "{% assign x = d | default: 'fallback', allow_false: true %}[{{ x.size }}]|[{{ x }}]"
+            await #expect(throws: LiquidError.self) { try await engine.render(template: preserveNil, hostObjects: [nilHost], syntaxMode: mode) }
+            for source in ["{{ d }}", "{{ d | upcase }}", "{{ d | append: 'x' }}", "{{ d | join: ',' }}", "{{ d | reverse }}", "{{ d | base64_decode }}"] {
+                await #expect(throws: LiquidError.self) { try await engine.render(template: source, hostObjects: [nilHost], syntaxMode: mode) }
+            }
+        }
+        #expect(try await engine.render(template: "{{ d | base64_decode }}", hostObjects: [LiquidHostObject("d", stringValue: "YWJj")]) == "abc")
+        #expect(try await engine.render(template: "{{ d | base64_url_safe_decode }}", hostObjects: [LiquidHostObject("d", stringValue: "YQ")]) == "a")
+        for (source, value) in [("{{ d | base64_decode }}", "abc"), ("{{ d | base64_url_safe_decode }}", "YR=="), ("{{ d | base64_url_safe_decode }}", "abc")] {
+            await #expect(throws: (any Error).self) { try await engine.render(template: source, hostObjects: [LiquidHostObject("d", stringValue: value)]) }
+        }
+        let custom = try LiquidEngine(filters: [LiquidFilter("kind") { value, _, _ in
+            switch value { case .string: return "string"; case .null: return "null"; default: return "wrong" }
+        }])
+        #expect(try await custom.render(template: "{{ d | kind }}", hostObjects: [LiquidHostObject("d", stringValue: "a")]) == "string")
+        #expect(try await custom.render(template: "{{ d | kind }}", hostObjects: [LiquidHostObject("d", stringValue: nil)]) == "null")
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 1)).render(template: "{{ d }}", hostObjects: [LiquidHostObject("d", stringValue: "x")])
+        }
+    }
+
+    @Test func boxedStringsInExplicitArraysPreserveFirstIdentity() async throws {
+        let engine = LiquidEngine()
+        let firstDrop = LiquidHostObject("a", array: [.boxedString("foo"), .value("foo"), .boxedString("bar")])
+        let firstPlain = LiquidHostObject("a", array: [.value("foo"), .boxedString("foo"), .boxedString("bar")])
+        let source = "{{ a | uniq }}|{% assign u = a | uniq %}{{ u | size }}|[{{ u[0].size }}]"
+        #expect(try await engine.render(template: source, hostObjects: [firstDrop]) == "foobar|2|[]")
+        #expect(try await engine.render(template: source, hostObjects: [firstPlain]) == "foobar|2|[3]")
+        let unicode = LiquidHostObject("a", array: [.value("é"), .boxedString("e\u{301}"), .boxedString("é")])
+        #expect(try await engine.render(template: "{{ a | uniq | size }}", hostObjects: [unicode]) == "2")
+        let property = LiquidHostObject("a", array: [.boxedString("abc"), .boxedString("def"), .value("abc")])
+        #expect(try await engine.render(template: "{% assign u = a | uniq: 'a' %}{{ u | size }}|[{{ u[0].size }}]", hostObjects: [property]) == "2|[]")
+        let objects = LiquidHostObject("a", array: [.boxedString("abc"), .boxedString(nil)])
+        #expect(try await engine.render(template: "{{ a | compact | size }}|{{ a | map: 'value' | size }}|{{ a | where: 'a' | size }}|{{ a | reject: 'a' | size }}", hostObjects: [objects]) == "2|2|0|2")
+        #expect(try await engine.render(template: "[{{ a | find: 'a' }}]|[{{ a | find_index: 'a' }}]|{{ a | has: 'a' }}", hostObjects: [objects]) == "[]|[]|false")
+        #expect(try await engine.render(template: "{% assign x = d | map: 'to_liquid' %}[{{ x[0].size }}]", hostObjects: [LiquidHostObject("d", stringValue: "abc")]) == "[]")
+        let nilFirst = LiquidHostObject("a", array: [.boxedString(nil), .value(.null)])
+        let plainNilFirst = LiquidHostObject("a", array: [.value(.null), .boxedString(nil)])
+        #expect(try await engine.render(template: "{{ a | uniq: 'a' | size }}", hostObjects: [nilFirst]) == "0")
+        await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ a | uniq }}", hostObjects: [nilFirst]) }
+        #expect(try await engine.render(template: "{{ a | uniq }}", hostObjects: [plainNilFirst]) == "")
+        await #expect(throws: LiquidError.self) { try await engine.render(template: "{{ a | join: ',' }}", hostObjects: [nilFirst]) }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 2)).render(template: "{{ a }}", hostObjects: [firstDrop])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(outputBytes: 2)).render(template: "{{ a }}", hostObjects: [LiquidHostObject("a", array: [.boxedString("abc")])])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await engine.render(template: "{{ a }}", hostObjects: [LiquidHostObject("a", array: [.value(.number(.infinity))])])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(nestingDepth: 1)).render(template: "{{ a }}", hostObjects: [LiquidHostObject("a", array: [.boxedString("x")])])
+        }
+    }
+
+    @Test func concurrentRendersKeepBoxedStringsInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ d | upcase }}")
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<32 {
+                group.addTask { try await engine.render(template, hostObjects: [LiquidHostObject("d", stringValue: "s\(index)")]) }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(outputs) == Set((0..<32).map { "S\($0)" }))
+    }
+
     @Test func boxedNumberPreservesNumericAndObjectBehavior() async throws {
         let engine = LiquidEngine()
         let source = "{{ d }}|{% if d %}T{% else %}F{% endif %}|{% if d == 0 %}Z{% else %}N{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{{ d | plus: 1 }}|{{ d | size }}|{{ d | first }}|{{ d | last }}|[{{ d.size }}]|[{{ d[0] }}]"

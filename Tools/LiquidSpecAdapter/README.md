@@ -125,3 +125,12 @@ three fixed, checksum-bound NumberDrop cases using the pinned Ruby reference and
 unchanged upstream comparator. It disables dynamic Ruby evaluation and admits
 only the explicit native-width integer shape. Results are separate from the
 unchanged full-suite selector and historical exclusions.
+
+## Fixed StringDrop cases
+
+`Scripts/ci.py --lane string-drop --spec-path PATH --reference-path PATH`
+checks five fixed StringDrop cases, including the two direct array-element
+cases, against the unchanged upstream comparator and pinned Ruby reference.
+The lane verifies exact source digests and identities, decodes only selected
+YAML nodes as data and forbids dynamic Ruby evaluation. It does not change
+the full-suite selector or admit arbitrary nested host objects.

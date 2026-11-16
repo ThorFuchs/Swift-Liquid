@@ -105,6 +105,9 @@ extension Renderer {
     // values use Ruby's inspected representation. Keep this separate from
     // expression coercion and retain cancellation at composite boundaries.
     internal func renderStringify(_ value: Any) throws -> String {
+        if let box = value as? RuntimeHostString, box.value == nil {
+            throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
+        }
         if value is RuntimeObject || value is [String: Any] || value is [Any] {
             let result = try renderCompositeUnescaped(value)
             return autoEscapeEnabled ? HTMLEscape.escape(result) : result
@@ -114,6 +117,9 @@ extension Renderer {
 
     private func renderCompositeUnescaped(_ value: Any) throws -> String {
         try Task.checkCancellation()
+        if let box = value as? RuntimeHostString, box.value == nil {
+            throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
+        }
         if let array = value as? [Any] {
             var output = ""
             for item in array { output += try renderCompositeUnescaped(item) }

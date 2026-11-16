@@ -71,6 +71,7 @@ extension Renderer {
         if let key {
             // compact('key'): remove items where item[key] is nil
             return array.filter { item in
+                if item is RuntimeHostString { return false }
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
                 return !(systemPrimary(val) is NSNull)
@@ -78,6 +79,7 @@ extension Renderer {
         }
 
         return array.compactMap { item -> Any? in
+            if item is RuntimeHostString { return item }
             if systemPrimary(item) is NSNull { return nil }
             return item
         }
@@ -87,9 +89,22 @@ extension Renderer {
         guard let array = value as? [Any] else { return value }
         var seen = Set<RuntimeEqualityKey>()
         var unique: [Any] = []
-        for item in flattenArray(array) {
+        let items = flattenArray(array)
+        let hasBoxedStrings = items.contains { $0 is RuntimeHostString }
+        for item in items {
             try budget.step()
-            let selected = key.map { dictValue(item, forKey: $0) ?? NSNull() } ?? item
+            let selected: Any
+            if let key, hasBoxedStrings {
+                let primary = systemPrimary(item)
+                if primary is NSNull { return NSNull() }
+                if let string = primary as? String {
+                    selected = string.range(of: key, options: .literal) == nil ? NSNull() : key as Any
+                } else {
+                    selected = dictValue(item, forKey: key) ?? NSNull()
+                }
+            } else {
+                selected = key.map { dictValue(item, forKey: $0) ?? NSNull() } ?? item
+            }
             guard let identity = RuntimeEqualityKey.make(selected) else { throw LiquidError.invalidValue("Unsupported value for uniq") }
             if seen.insert(identity).inserted { unique.append(item) }
         }
@@ -133,7 +148,9 @@ extension Renderer {
         for item in array {
             try Task.checkCancellation()
             let itemValue: Any?
-            if let string = systemPrimary(item) as? String {
+            if item is RuntimeHostString {
+                itemValue = nil
+            } else if let string = systemPrimary(item) as? String {
                 itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
             } else {
                 itemValue = getObjectProperty(item, key: property)
@@ -172,7 +189,9 @@ extension Renderer {
         var result: [Any] = []
         result.reserveCapacity(array.count)
         for item in array {
-            if let selfValue = item as? RuntimeSelf {
+            if item is RuntimeHostString {
+                result.append(propertyName == "to_liquid" ? item : NSNull())
+            } else if let selfValue = item as? RuntimeSelf {
                 result.append(selfValue.lookup(propertyName) ?? NSNull())
             } else if isDictLike(item) {
                 result.append(dictValue(item, forKey: propertyName) as Any? ?? NSNull())
@@ -193,6 +212,7 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
+        if object is RuntimeHostString { return nil }
         let object = systemPrimary(object)
         // Handle different object types
         if let val = dictValue(object, forKey: key) { return val }

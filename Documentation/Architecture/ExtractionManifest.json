@@ -2811,6 +2811,44 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted outcomes do not change the full-suite selection or historical conformance, performance and release holds."
+    },
+    {
+      "area": "Boxed string host values and finite mixed arrays",
+      "scopeDecision": "Add explicit string or nil boxes and direct boxed-string elements in finite root arrays; keep arbitrary nested host graphs, pinned fixtures, the full-suite selector and all holds unchanged.",
+      "changes": [
+        "Retain object behavior for access, non-iteration, first/last/size and default while using represented values for truthiness, equality and string operations.",
+        "Report nil string conversion and non-UTF-8 decoded bytes as invalid-value errors without claiming Ruby exception-class or binary-value equivalence.",
+        "Compare boxed and ordinary strings by exact scalar value in uniq while retaining the first object or ordinary value.",
+        "Admit finite mixed root arrays with per-render work, value, depth, byte and cancellation boundaries; reject arbitrary nested host markers.",
+        "Safely select five exact pinned StringDrop cases, including two direct array-element cases, and compare against the upstream comparator and pinned Ruby reference.",
+        "The standard profile does not register json as a built-in filter; custom filters receive represented values. This corrects the earlier NumberDrop wording and leaves the pinned suite JSON test filter object policy unqualified."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Rendering/Renderer+SystemValues.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+CustomFilters.swift",
+        "Sources/Liquid/Support/RuntimeEqualityKey.swift",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter/StringDropCases.json",
+        "Tools/LiquidSpecAdapter/check_string_drop.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted outcomes remain separate from full-suite, reference-conflict, performance and release acceptance."
     }
   ]
 }

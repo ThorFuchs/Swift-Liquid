@@ -46,6 +46,68 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if let boxed = input as? RuntimeHostString {
+            if filter.arguments.isEmpty, filter.namedArguments.isEmpty {
+                if filter.name.equals("size") { return 0 }
+                if filter.name.equals("first") || filter.name.equals("last") { return NSNull() }
+            }
+            if filter.name.equals("default"), filter.arguments.count <= 2 {
+                let fallback: Any = filter.arguments.isEmpty ? "" : try await evaluateFilterArgumentFast(filter.arguments[0])
+                var allowFalse = false
+                if filter.arguments.count == 2 {
+                    let options = try await evaluateFilterArgumentFast(filter.arguments[1])
+                    if let option = dictValue(options, forKey: "allow_false") { allowFalse = isTruthy(option) }
+                }
+                if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
+                    allowFalse = isTruthy(try await evaluateExpression(allow))
+                }
+                return boxed.value == nil && !allowFalse ? fallback : input
+            }
+            if let text = boxed.value, filter.arguments.isEmpty, filter.namedArguments.isEmpty,
+               filter.name.equals("base64_decode") || filter.name.equals("base64_url_safe_decode") {
+                let urlSafe = filter.name.equals("base64_url_safe_decode")
+                let normalized = urlSafe ? text.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/") : text
+                let padding = urlSafe && !normalized.contains("=") ? (4 - normalized.utf8.count % 4) % 4 : 0
+                let padded = normalized + String(repeating: "=", count: padding)
+                guard let decoded = Data(base64Encoded: padded) else {
+                    throw RenderError.custom("invalid base64 provided to \(filter.name.string)")
+                }
+                let canonical = decoded.base64EncodedString()
+                let expected = urlSafe && !normalized.contains("=") ? canonical.trimmingCharacters(in: CharacterSet(charactersIn: "=")) : canonical
+                guard normalized == expected else {
+                    throw RenderError.custom("invalid base64 provided to \(filter.name.string)")
+                }
+                guard let result = String(data: decoded, encoding: .utf8) else {
+                    throw LiquidError.invalidValue("Decoded boxed string is not valid UTF-8")
+                }
+                return result
+            }
+            if filter.namedArguments.isEmpty {
+                let name = filter.name.string
+                if ["reverse", "sort", "sort_natural", "concat"].contains(name) {
+                    return try await applyFilterCore(filter, to: [input] as [Any])
+                }
+                if ["compact", "uniq", "map", "where", "reject", "find", "find_index", "has"].contains(name) {
+                    let evaluated = try await evaluateFilterArgumentsFast(filter.arguments)
+                    let args = evaluated.map { systemPrimary($0) }
+                    try validateFilterArgs(filter.name, args: args)
+                    switch name {
+                    case "compact": return args.first == nil || args.first is NSNull ? [input] as [Any] : [] as [Any]
+                    case "uniq": return boxed.value == nil && args.first != nil && !(args.first is NSNull) ? NSNull() : [input] as [Any]
+                    case "map": return [((args.first as? String) == "to_liquid" ? input : NSNull())] as [Any]
+                    case "where": return [] as [Any]
+                    case "reject": return [input] as [Any]
+                    case "find", "find_index": return NSNull()
+                    case "has": return false
+                    default: break
+                    }
+                }
+            }
+            if boxed.value == nil && (Self.inspectingStringFilters.contains(filter.name.string) ||
+                ["split", "slice", "join", "date", "base64_decode", "base64_url_safe_decode"].contains(filter.name.string)) {
+                throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
+            }
+        }
         if input is RuntimeHostNumber {
             if filter.name.equals("size"), filter.arguments.isEmpty, filter.namedArguments.isEmpty { return 0 }
             if filter.name.equals("default"), filter.arguments.count == 1 {
@@ -768,10 +830,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // Array of strings: substring matching
                     for item in array {
+                        if item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return item }
@@ -826,10 +889,11 @@ extension Renderer {
                     }
                 } else {
                     // Non-dict array: must be pure strings (no nil/bool/int mixed in)
-                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString { return NSNull() }
                     // String array: substring matching
                     for (index, item) in array.enumerated() {
+                        if item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String {
                             if hasTarget {
                                 if areValuesEqual(str, args[1]) { return index }
@@ -920,6 +984,7 @@ extension Renderer {
                     }
                     // String array: substring matching
                     for item in array {
+                        if item is RuntimeHostString { continue }
                         if let str = systemPrimary(item) as? String, str.contains(property) { return true }
                     }
                     return false
@@ -943,7 +1008,7 @@ extension Renderer {
                 else { items = [value] }
                 for item in items {
                     try budget.step()
-                    if isDictLike(item) { continue } // A missing hash key selects nil.
+                    if isDictLike(item) || item is RuntimeHostString { continue } // A missing key selects nil.
                     if systemPrimary(item) is String || systemPrimary(item) is Int {
                         throw RenderError.custom("cannot select the property ''")
                     }
@@ -999,7 +1064,7 @@ extension Renderer {
                 // For string arrays, do substring matching
                 if let searchStr = property {
                     // If array has non-string items (nil, bool, int), throw or return empty
-                    let hasNonString = array.contains { !(systemPrimary($0) is String) }
+                    let hasNonString = array.contains { !($0 is RuntimeHostString) && !(systemPrimary($0) is String) }
                     if hasNonString {
                         if array.contains(where: { systemPrimary($0) is Int }) {
                             throw RenderError.typeError(expected: "string or hash", actual: "Int", operation: "reject")
@@ -1008,7 +1073,8 @@ extension Renderer {
                     }
                     var result: [Any] = []
                     for item in array {
-                        if let str = systemPrimary(item) as? String {
+                        if item is RuntimeHostString { result.append(item) }
+                        else if let str = systemPrimary(item) as? String {
                             if !str.contains(searchStr) { result.append(item) }
                         } else {
                             result.append(item)

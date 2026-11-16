@@ -63,10 +63,25 @@ public struct LiquidHostIndexer: Sendable {
     }
 }
 
+/// One element in an explicitly supplied host array.
+///
+/// Boxed strings retain object behavior; ordinary values use `LiquidValue`.
+/// Host arrays do not admit arbitrary nested host objects.
+public enum LiquidHostArrayElement: Sendable {
+    /// An ordinary Liquid value, including an ordinary array or object.
+    case value(LiquidValue)
+    /// A string-backed host object; nil represents a missing string value.
+    case boxedString(String?)
+}
+
+internal struct LiquidHostStringBox: Sendable {
+    let value: String?
+}
+
 /// A named root binding exposing only explicitly supplied host properties.
 ///
 /// Exact and dynamic properties use string keys; an optional indexer accepts
-/// typed string and integer keys. An explicitly boxed Boolean or integer can participate
+/// typed string and integer keys. An explicitly boxed Boolean, integer or string can participate
 /// in value operations. Other host objects must be accessed through a property.
 /// Host objects cannot be returned by a property in this profile.
 public struct LiquidHostObject: Sendable {
@@ -77,6 +92,8 @@ public struct LiquidHostObject: Sendable {
     internal let indexer: LiquidHostIndexer?
     internal let booleanValue: Bool?
     internal let numberValue: Int?
+    internal let stringValue: LiquidHostStringBox?
+    internal let arrayValues: [LiquidHostArrayElement]?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -89,6 +106,8 @@ public struct LiquidHostObject: Sendable {
         self.indexer = nil
         self.booleanValue = nil
         self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -105,6 +124,8 @@ public struct LiquidHostObject: Sendable {
         self.indexer = nil
         self.booleanValue = nil
         self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -122,6 +143,8 @@ public struct LiquidHostObject: Sendable {
         self.indexer = indexer
         self.booleanValue = nil
         self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -137,6 +160,8 @@ public struct LiquidHostObject: Sendable {
         self.indexer = nil
         self.booleanValue = booleanValue
         self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
     }
 
     /// Creates a boxed integer host binding with no exposed properties.
@@ -152,5 +177,40 @@ public struct LiquidHostObject: Sendable {
         self.indexer = nil
         self.booleanValue = nil
         self.numberValue = numberValue
+        self.stringValue = nil
+        self.arrayValues = nil
+    }
+
+    /// Creates a boxed string host binding with no exposed properties.
+    /// A nil value follows the boxed-string nil behavior, including a failed
+    /// direct string conversion; it is not an ordinary null input.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - stringValue: String represented by this host object, or nil.
+    public init(_ name: String, stringValue: String?) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = LiquidHostStringBox(value: stringValue)
+        self.arrayValues = nil
+    }
+
+    /// Creates an explicit finite root array containing ordinary values and
+    /// boxed string elements. It does not expose arbitrary host objects.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - array: Ordered elements admitted separately for each render.
+    public init(_ name: String, array: [LiquidHostArrayElement]) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = array
     }
 }

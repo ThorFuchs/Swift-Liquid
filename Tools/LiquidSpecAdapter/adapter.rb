@@ -152,7 +152,7 @@ module LQ1
     end
     def render(id, environment, options)
       registers = { 'current_time' => options.fetch(:registers).fetch(:current_time).iso8601 }
-      # Only the pinned standard MethodDrop has an admitted portable marker.
+      # Encode only explicitly admitted standard Drop shapes.
       # Do not flatten other Ruby objects or invoke arbitrary serialization hooks.
       wire_environment = environment.transform_values do |value|
         if defined?(StandardMethodDrop) && value.instance_of?(StandardMethodDrop)
@@ -167,6 +167,24 @@ module LQ1
           number = value.to_liquid_value
           raise OperationalError, 'NumberDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)
           { '_instantiate' => 'NumberDrop', 'params' => { 'value' => number } }
+        elsif defined?(StandardStringDrop) && value.instance_of?(StandardStringDrop)
+          text = value.to_liquid_value
+          raise OperationalError, 'StringDrop value is not text or nil' unless text.nil? || text.instance_of?(String)
+          { '_instantiate' => 'StringDrop', 'params' => { 'value' => text } }
+        elsif defined?(StandardStringDrop) && value.instance_of?(Array) && value.any? { |element| element.instance_of?(StandardStringDrop) }
+          value.map do |element|
+            if element.instance_of?(StandardStringDrop)
+              text = element.to_liquid_value
+              raise OperationalError, 'StringDrop value is not text or nil' unless text.nil? || text.instance_of?(String)
+              { '_instantiate' => 'StringDrop', 'params' => { 'value' => text } }
+            elsif element.nil? || element.instance_of?(TrueClass) || element.instance_of?(FalseClass) || element.instance_of?(String) ||
+                  (element.instance_of?(Integer) && element.between?(-(2**63), 2**63 - 1)) ||
+                  (element.instance_of?(Float) && element.finite?)
+              element
+            else
+              raise OperationalError, 'Unsupported value in StringDrop array'
+            end
+          end
         else
           value
         end

@@ -155,6 +155,24 @@ class ProtocolTests(unittest.TestCase):
             marker = {'_instantiate': 'NumberDrop', 'params': params}
             self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['error']['code'], -32602)
 
+    def test_portable_string_drop_preserves_object_and_array_identity(self):
+        source = "{{ d }}|{{ d | size }}|[{{ d.size }}]|{% assign u = a | uniq %}{{ u }}|[{{ u[0].size }}]"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        drop = lambda value: {'_instantiate': 'StringDrop', 'params': {'value': value}}
+        for array, expected in [([drop('foo'), 'foo', drop('bar')], 'text|0|[]|foobar|[]'),
+                                (['foo', drop('foo'), drop('bar')], 'text|0|[]|foobar|[3]')]:
+            result = self.peer.request('render', {'template_id': template, 'environment': {'d': drop('text'), 'a': array}})['result']
+            self.assertEqual(result, {'output': expected, 'errors': []})
+        nil_template = self.peer.compile("{% if d %}T{% else %}F{% endif %}|{% if d == blank %}B{% endif %}|{% if d == empty %}E{% endif %}", options={'error_mode': 'strict2'})['result']['template_id']
+        for marker in [drop(None), {'_instantiate': 'StringDrop', 'params': {}}]:
+            result = self.peer.request('render', {'template_id': nil_template, 'environment': {'d': marker}})['result']
+            self.assertEqual(result, {'output': 'F|B|', 'errors': []})
+        for params in [{'value': 1}, {'value': True}, {'value': 'x', 'extra': 1}, {'bad': None}]:
+            marker = {'_instantiate': 'StringDrop', 'params': params}
+            self.assertEqual(self.peer.request('render', {'template_id': nil_template, 'environment': {'d': marker}})['error']['code'], -32602)
+        for invalid in [[{'nested': drop('x')}], [[drop('x')]], [drop('x'), {'_instantiate': 'NumberDrop', 'params': {'value': 1}}]]:
+            self.assertEqual(self.peer.request('render', {'template_id': nil_template, 'environment': {'a': invalid}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

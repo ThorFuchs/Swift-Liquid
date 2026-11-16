@@ -1,0 +1,81 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 114
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_string_renders"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 127
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_string_works_with_filters"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 166
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "truthiness_stringdrop_with_value_nil"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6034
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFilterTest#test_uniq_0b90eef9"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6155
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFilterTest#test_uniq_879d03c3"
+    }
+  ]
+}

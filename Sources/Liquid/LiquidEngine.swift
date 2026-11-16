@@ -474,7 +474,28 @@ public struct LiquidEngine: Sendable {
                 }
                 if object.indexer != nil { try renderer.budget.filterValue(depth: 2) }
                 if object.booleanValue != nil || object.numberValue != nil { try renderer.budget.filterValue(depth: 2) }
-                roots.append((object.name, object))
+                if let string = object.stringValue {
+                    try renderer.budget.filterValue(depth: 2)
+                    if let value = string.value, value.utf8.count > limits.outputBytes { throw LiquidError.limitExceeded("outputBytes") }
+                }
+                if let elements = object.arrayValues {
+                    guard elements.count <= renderer.budget.remainingValues else { throw LiquidError.limitExceeded("contextValues") }
+                    var bridge = FilterValueBridge(budget: renderer.budget)
+                    var values: [Any] = []
+                    values.reserveCapacity(elements.count)
+                    for element in elements {
+                        switch element {
+                        case .value(let value): values.append(try bridge.write(value, depth: 2))
+                        case .boxedString(let value):
+                            try renderer.budget.filterValue(depth: 2)
+                            if let value { try bridge.key(value) }
+                            values.append(RuntimeHostString(value: value))
+                        }
+                    }
+                    roots.append((object.name, values))
+                } else {
+                    roots.append((object.name, object))
+                }
             }
         }
         let values = RuntimeVariables(roots)
