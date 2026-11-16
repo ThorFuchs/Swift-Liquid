@@ -157,6 +157,8 @@ module LQ1
       wire_environment = environment.transform_values do |value|
         if defined?(StandardMethodDrop) && value.instance_of?(StandardMethodDrop)
           { '_instantiate' => 'MethodDrop', 'params' => {} }
+        elsif defined?(StandardIndexDrop) && value.instance_of?(StandardIndexDrop)
+          { '_instantiate' => 'IndexDrop', 'params' => {} }
         else
           value
         end

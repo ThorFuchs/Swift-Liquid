@@ -472,6 +472,7 @@ public struct LiquidEngine: Sendable {
                         throw LiquidError.invalidValue("Invalid or duplicate host dynamic property prefix")
                     }
                 }
+                if object.indexer != nil { try renderer.budget.filterValue(depth: 2) }
                 roots.append((object.name, object))
             }
         }

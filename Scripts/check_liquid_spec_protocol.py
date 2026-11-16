@@ -124,6 +124,15 @@ class ProtocolTests(unittest.TestCase):
         recovered = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}, 'options': {'strict_errors': False}})['result']
         self.assertIsNone(recovered['output']); self.assertEqual(recovered['error']['type'], 'operational_error')
 
+    def test_portable_index_drop_keeps_string_integer_and_other_keys_distinct(self):
+        source = "{{ drop[0] }}|{{ drop[1] }}|{{ drop[-1] }}|{{ drop[-6] }}|{{ drop[-7] }}|{{ drop['0'] }}|[{{ drop[''] }}]|{{ drop.foo }}|{{ drop[true] }}|{{ drop[1.0] }}|{{ drop[1.5] }}|{{ drop[missing] }}"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        marker = {'_instantiate': 'IndexDrop', 'params': {}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['result']
+        self.assertEqual(result, {'output': 'zero|one|five|zero|unknown|0|[]|foo|unknown|unknown|unknown|unknown', 'errors': []})
+        for invalid in [{'_instantiate': 'IndexDrop', 'params': {'extra': 1}}, {'nested': marker}]:
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': invalid}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

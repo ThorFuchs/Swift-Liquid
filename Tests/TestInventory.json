@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/typedIndexerPreservesKeysAndPropertyPrecedence()": null,
+    "LiquidTests.HostObjectTests/cancellationAndIndexerResultsUseInvocationBudgets()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepIndexersInvocationScoped()": null,
     "LiquidTests.HostObjectTests/cancellationAfterDynamicFamilyReturnsKeepsReuse()": null,
     "LiquidTests.HostObjectTests/dynamicFamiliesAreExplicitExactAndDeterministic()": null,
     "LiquidTests.HostObjectTests/cancellationAndDynamicFamilyResultsUseInvocationBudgets()": null,
@@ -368,6 +371,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepIndexersInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepDynamicFamiliesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostBindingsIndependent()",
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
@@ -390,6 +394,7 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationAndIndexerResultsUseInvocationBudgets()",
     "LiquidTests.HostObjectTests/cancellationAfterDynamicFamilyReturnsKeepsReuse()",
     "LiquidTests.HostObjectTests/cancellationAndDynamicFamilyResultsUseInvocationBudgets()",
     "LiquidTests.HostObjectTests/cancellationDuringSuspendingPropertyPreservesReuse()",

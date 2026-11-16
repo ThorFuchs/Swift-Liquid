@@ -45,6 +45,62 @@ private actor DynamicAccessCounter {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func typedIndexerPreservesKeysAndPropertyPrecedence() async throws {
+        let host = LiquidHostObject("drop", properties: [LiquidHostProperty("fixed") { "exact" }],
+            dynamicProperties: [LiquidHostDynamicProperty(prefix: "dyn_") { key in key == "dyn_missing" ? nil : "dynamic" }],
+            indexer: LiquidHostIndexer { key in
+                switch key {
+                case .integer(let value): return .string("i:\(value)")
+                case .string(let value): return .string("s:\(value)")
+                case .other: return "other"
+                }
+            })
+        let source = "{{ drop[0] }}|{{ drop[-1] }}|{{ drop['0'] }}|{{ drop.fixed }}|{{ drop.dyn_key }}|[{{ drop.dyn_missing }}]|{{ drop[true] }}|{{ drop[1.5] }}|{{ drop[missing] }}"
+        let expected = "i:0|i:-1|s:0|exact|dynamic|[]|other|other|other"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await LiquidEngine().render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+            #expect(try await LiquidEngine().render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+            #expect(try await LiquidEngine().render(template: "{{ drop[key] }}", context: ["key": 0], hostObjects: [host], syntaxMode: mode) == "i:0")
+            #expect(try await LiquidEngine().render(template: "{{ drop[key] }}", context: ["key": "0"], hostObjects: [host], syntaxMode: mode) == "s:0")
+            #expect(try await LiquidEngine().render(template: "{{ drop[key] }}", context: ["key": false], hostObjects: [host], syntaxMode: mode) == "other")
+        }
+        let oldHost = LiquidHostObject("drop", properties: [])
+        await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "{{ drop[0] }}", hostObjects: [oldHost]) }
+    }
+
+    @Test func cancellationAndIndexerResultsUseInvocationBudgets() async throws {
+        let oversized = LiquidHostObject("drop", indexer: LiquidHostIndexer { _ in [1, 2, 3] })
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 3)).render(template: "{{ drop[0] }}", hostObjects: [oversized])
+        }
+        let gate = HostReleaseGate()
+        let blocked = LiquidHostObject("drop", indexer: LiquidHostIndexer { _ in
+            await gate.suspend(); return "must not escape"
+        })
+        let task = Task { try await LiquidEngine().render(template: "{{ drop[0] }}", hostObjects: [blocked]) }
+        await gate.waitUntilEntered(); task.cancel(); await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        let throwing = LiquidHostObject("drop", indexer: LiquidHostIndexer { _ in throw HostProbeError.failed })
+        await #expect(throws: HostProbeError.self) { try await LiquidEngine().render(template: "{{ drop[0] }}", hostObjects: [throwing]) }
+    }
+
+    @Test func concurrentRendersKeepIndexersInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ drop[0] }}")
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<32 {
+                group.addTask {
+                    let host = LiquidHostObject("drop", indexer: LiquidHostIndexer { _ in .integer(index) })
+                    return try await engine.render(template, hostObjects: [host])
+                }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(outputs) == Set((0..<32).map(String.init)))
+    }
+
     @Test func dynamicFamiliesAreExplicitExactAndDeterministic() async throws {
         let host = LiquidHostObject("drop", properties: [LiquidHostProperty("op_fixed") { "fixed" }], dynamicProperties: [
             LiquidHostDynamicProperty(prefix: "op_") { key in .string("general:" + key) },

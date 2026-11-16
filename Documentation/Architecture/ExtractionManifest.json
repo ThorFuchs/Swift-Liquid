@@ -2720,6 +2720,34 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted results do not change historical full-suite, conformance, performance or release holds."
+    },
+    {
+      "area": "Typed host indexing and standard IndexDrop",
+      "scopeDecision": "Add an opt-in checked-Sendable typed-key indexer while retaining existing host-property behavior, pinned fixtures, the full-suite selector and all holds.",
+      "changes": [
+        "Preserve string, integer and other key categories without coercion; exact and dynamic string properties retain precedence, and indexers share invocation budgets and cancellation.",
+        "Represent the portable IndexDrop with explicit bounded native host code, preserving Ruby's negative index and unknown-key behavior without reflection.",
+        "Add a fixture-hash-bound targeted lane for three fixed upstream cases and rerun the existing MethodDrop lane without evaluating fixture expressions."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter/IndexDropCases.json",
+        "Tools/LiquidSpecAdapter/check_index_drop.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted outcomes remain separate from full-suite, performance and release acceptance."
     }
   ]
 }

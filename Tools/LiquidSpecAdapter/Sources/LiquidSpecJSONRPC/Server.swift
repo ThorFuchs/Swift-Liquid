@@ -102,16 +102,34 @@ private func methodDrop(_ name: String) -> LiquidHostObject {
     ])
 }
 
+// The portable standard IndexDrop uses typed keys; it does not expose Ruby reflection.
+private func indexDrop(_ name: String) -> LiquidHostObject {
+    let words = ["zero", "one", "two", "three", "four", "five"]
+    return LiquidHostObject(name, indexer: LiquidHostIndexer { key in
+        switch key {
+        case .string(let value): return .string(value)
+        case .integer(let value):
+            guard value >= -words.count, value < words.count else { return "unknown" }
+            return .string(words[value < 0 ? words.count + value : value])
+        case .other: return "unknown"
+        }
+    })
+}
+
 private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [LiquidHostObject]) {
     var values: [LiquidObject.Entry] = []
     var hosts: [LiquidHostObject] = []
     for entry in input.entries {
         if case .object(let marker) = entry.value, marker["_instantiate"] != nil {
-            guard marker.entries.count == 2, marker["_instantiate"] == .string("MethodDrop"),
+            guard marker.entries.count == 2, let kind = string(marker["_instantiate"]),
                   case .object(let parameters)? = marker["params"], parameters.entries.isEmpty else {
                 throw WireFailure.invalid("Unsupported standard drop marker")
             }
-            hosts.append(methodDrop(entry.key))
+            switch kind {
+            case "MethodDrop": hosts.append(methodDrop(entry.key))
+            case "IndexDrop": hosts.append(indexDrop(entry.key))
+            default: throw WireFailure.invalid("Unsupported standard drop marker")
+            }
         } else {
             try rejectMarkers(entry.value)
             values.append(entry)
@@ -258,7 +276,7 @@ private struct Server {
                 do {
                     if !hostObjects.isEmpty {
                         guard !recovering, compiled.partials.isEmpty else {
-                            throw WireFailure.invalid("MethodDrop requires raising mode and no partials")
+                            throw WireFailure.invalid("Standard Drop requires raising mode and no partials")
                         }
                         result = ["output": .string(try await engine.render(compiled.root, context: context, hostObjects: hostObjects)), "errors": []]
                     } else if recovering {

@@ -24,8 +24,8 @@ collisions with the ordinary context, duplicate property names, empty names and
 the reserved root `self` are rejected at render entry. A template may access
 registered properties through dotted names or dynamic string brackets. An
 unregistered property is Liquid null; a callback can explicitly return null.
-Only registered properties can be called. Integer keys on host objects are not
-supported by this profile.
+Only registered properties can be called. Hosts without an indexer continue to
+reject non-string keys.
 
 Applications can also register `LiquidHostDynamicProperty` families with a
 nonempty, exact UTF-8 prefix and an async callback. Exact properties take
@@ -36,6 +36,17 @@ explicit null. Empty and duplicate prefixes fail when rendering begins. Prefix
 registrations and lookup work are charged to the invocation's existing value
 and step capacities. As with exact properties, host code is trusted and must
 apply any additional key validation appropriate to its exposed family.
+
+For typed access, a host may explicitly provide a `LiquidHostIndexer`. It receives
+`LiquidHostIndexKey.string`, `.integer`, or `.other`; the engine does not
+coerce integers into strings or silently convert other key types. Exact and
+matching dynamic string properties have precedence. When a dynamic family
+matches, a nil result remains missing rather than invoking the indexer. If no
+string property matches, the indexer may receive any string key, including an
+empty one, so the trusted host must enforce its own access policy. Integer and
+other keys reach only an explicitly installed indexer. Indexer registration,
+invocation, returned values and cancellation use the same per-render budgets
+and boundaries as other host callbacks.
 
 ```swift
 let dynamic = LiquidHostObject("example", dynamicProperties: [

@@ -116,3 +116,10 @@ generated MethodDrop fixtures. For the generated cases it recognizes only their
 two exact pinned shapes and exhaustively constructs their declared integer
 ranges; it does not evaluate fixture expressions or replay the full suite's
 random stream. The original full-suite selection remains unchanged.
+
+The separate `index-drop` lane accepts the portable root-level
+`_instantiate: IndexDrop` marker with empty parameters in raising mode without
+partials. String and integer keys remain distinct; other types follow the
+standard object's unknown-key behavior. Its three fixed pinned fixtures run
+through the same unmodified upstream comparator and Ruby reference. This is
+still not general Drop or bidirectional RPC support.

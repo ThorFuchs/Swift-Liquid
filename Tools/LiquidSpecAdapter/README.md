@@ -100,3 +100,12 @@ closed on changed shapes. Its separate results do not change the full-suite
 selector, raw verdict, five reviewed conflicts, or claims about other Drop
 classes. Optional `--output-root` places the receipt, per-case result, protocol
 checks and RPC trace outside the checkout.
+
+## Fixed IndexDrop cases
+
+`Scripts/ci.py --lane index-drop --spec-path PATH --reference-path PATH` runs
+the three pinned, fixed IndexDrop cases through the same upstream comparator
+and Ruby reference. It verifies the fixture digest and identities, reads YAML as
+data, and disables dynamic Ruby evaluation. Protocol checks also exercise
+negative, string, boolean, floating-point and missing keys. The result is
+separate from the unchanged full-suite selector and its historical exclusions.

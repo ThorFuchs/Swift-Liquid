@@ -73,17 +73,15 @@ extension Renderer {
             if hostContextEnabled, case .variable(let name) = expr,
                let object = context.getLiteralVariable(name.string) as? LiquidHostObject {
                 try budget.step()
-                let property: String
                 if case .literal(.string(let keyName)) = key {
-                    property = keyName.string
-                } else {
-                    let dynamic = try await evaluateExpressionFast(key)
-                    guard let string = dynamic as? String else {
-                        throw LiquidError.invalidValue("Host properties require a string key")
-                    }
-                    property = string
+                    return try await hostProperty(object, key: keyName.string)
                 }
-                return try await hostProperty(object, key: property)
+                let dynamic = systemPrimary(try await evaluateExpressionFast(key))
+                if let string = dynamic as? String { return try await hostProperty(object, key: string) }
+                guard object.indexer != nil else { throw LiquidError.invalidValue("Host properties require a string key") }
+                if dynamic is Bool { return try await hostIndex(object, key: .other) }
+                if let integer = dynamic as? Int { return try await hostIndex(object, key: .integer(integer)) }
+                return try await hostIndex(object, key: .other)
             }
             let baseValue = systemPrimary(try await evaluateExpressionFast(expr))
             switch key {

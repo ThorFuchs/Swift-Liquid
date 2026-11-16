@@ -50,7 +50,10 @@ extension Renderer {
                 }
             }
         }
-        guard selected != nil || dynamic != nil else { return NSNull() }
+        guard selected != nil || dynamic != nil else {
+            guard object.indexer != nil else { return NSNull() }
+            return try await hostIndex(object, key: .string(key), missingIndexerIsError: false)
+        }
         let result: LiquidValue?
         do {
             if let selected { result = try await selected.body() }
@@ -60,6 +63,25 @@ extension Renderer {
             try Task.checkCancellation()
             throw error
         }
+        try budget.step()
+        guard let result else { return NSNull() }
+        var bridge = FilterValueBridge(budget: budget)
+        return try bridge.write(result)
+    }
+
+    internal func hostIndex(_ object: LiquidHostObject, key: LiquidHostIndexKey,
+                            missingIndexerIsError: Bool = true) async throws -> Any {
+        try budget.step()
+        guard let indexer = object.indexer else {
+            if missingIndexerIsError { throw LiquidError.invalidValue("Host properties require a string key") }
+            return NSNull()
+        }
+        if case .string(let value) = key, value.utf8.count > budget.limits.outputBytes {
+            throw LiquidError.limitExceeded("outputBytes")
+        }
+        let result: LiquidValue?
+        do { result = try await indexer.body(key) }
+        catch { try Task.checkCancellation(); throw error }
         try budget.step()
         guard let result else { return NSNull() }
         var bridge = FilterValueBridge(budget: budget)

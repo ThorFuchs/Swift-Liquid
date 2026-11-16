@@ -39,16 +39,42 @@ public struct LiquidHostDynamicProperty: Sendable {
     }
 }
 
+/// A typed key supplied to an explicitly registered host indexer.
+public enum LiquidHostIndexKey: Sendable, Equatable {
+    /// A string key, retaining its exact Unicode spelling.
+    case string(String)
+    /// An integer key in the native Int domain.
+    case integer(Int)
+    /// A key of another Liquid type; no coercion is performed.
+    case other
+}
+
+/// An explicit asynchronous handler for host-object indexing.
+///
+/// The handler is trusted application code and must enforce its own exposure
+/// policy. All string and integer keys, and the `other` category, can reach it.
+public struct LiquidHostIndexer: Sendable {
+    internal let body: @Sendable (LiquidHostIndexKey) async throws -> LiquidValue?
+
+    /// Creates an indexer. Return nil for a missing value or `.null` for Liquid null.
+    /// - Parameter body: Computes one admitted value for the typed key.
+    public init(_ body: @escaping @Sendable (LiquidHostIndexKey) async throws -> LiquidValue?) {
+        self.body = body
+    }
+}
+
 /// A named root binding exposing only explicitly supplied host properties.
 ///
-/// This first profile supports string-keyed property access. The object itself
-/// is not a Liquid value: output, conditions, filters and assignments must use a
-/// property. Host objects cannot be returned by a property in this profile.
+/// Exact and dynamic properties use string keys; an optional indexer accepts
+/// typed string and integer keys. The object itself is not a Liquid value:
+/// output, conditions, filters and assignments must use a property. Host
+/// objects cannot be returned by a property in this profile.
 public struct LiquidHostObject: Sendable {
     /// The exact name of the root binding supplied to a render.
     public let name: String
     internal let properties: [LiquidHostProperty]
     internal let dynamicProperties: [LiquidHostDynamicProperty]
+    internal let indexer: LiquidHostIndexer?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -58,6 +84,7 @@ public struct LiquidHostObject: Sendable {
         self.name = name
         self.properties = properties
         self.dynamicProperties = []
+        self.indexer = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -71,5 +98,21 @@ public struct LiquidHostObject: Sendable {
         self.name = name
         self.properties = properties
         self.dynamicProperties = dynamicProperties
+        self.indexer = nil
+    }
+
+    /// Creates a host binding with an explicit typed-key indexer.
+    /// Exact and dynamic string properties have precedence over the indexer.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - properties: Explicit exact string properties.
+    ///   - dynamicProperties: Explicit nonempty-prefix string property families.
+    ///   - indexer: Trusted handler for otherwise unhandled typed keys.
+    public init(_ name: String, properties: [LiquidHostProperty] = [],
+                dynamicProperties: [LiquidHostDynamicProperty] = [], indexer: LiquidHostIndexer) {
+        self.name = name
+        self.properties = properties
+        self.dynamicProperties = dynamicProperties
+        self.indexer = indexer
     }
 }

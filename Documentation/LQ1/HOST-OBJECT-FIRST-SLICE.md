@@ -29,6 +29,14 @@ budget, and a nil callback result means missing. This enables bounded string-key
 property families; it does not add unrestricted reflection or the other Drop
 capabilities above.
 
+A subsequent explicit indexer extension accepts typed string and integer keys
+and groups all other key types as `.other`. Existing hosts retain their prior
+string-only behavior. Exact and dynamic string properties win over the indexer;
+a matching callback returning nil does not trigger a second callback. Hosts
+deliberately installing an indexer control the exposure policy for all keys it
+receives. This extension adds no object materialization, iteration, recursive
+host objects or implicit reflection.
+
 Using the host object itself as an output, condition, filter input, assignment
 or other value must fail explicitly until object-level behavior is specified.
 An implementation must not expose Swift's `Mirror`, type names or callback
