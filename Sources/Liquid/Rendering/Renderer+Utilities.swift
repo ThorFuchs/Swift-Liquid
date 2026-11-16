@@ -29,22 +29,6 @@ extension Renderer {
         if let exponent = full.firstIndex(of: "e"), !full[..<exponent].contains(".") {
             return String(full[..<exponent]) + ".0" + full[exponent...]
         }
-        // Detect floating-point noise: patterns like "7.8999999999999995" or "3.0000000000000004"
-        // These have 16 significant digits and end with runs of 9s or 0s followed by small digits
-        if full.count >= 16, let dotIndex = full.firstIndex(of: ".") {
-            let decimals = String(full[full.index(after: dotIndex)...])
-            // Check for trailing noise: many 9s or 0s near the end
-            if decimals.count >= 13 {
-                let last5 = String(decimals.suffix(5))
-                let nineCount = last5.filter { $0 == "9" }.count
-                let zeroCount = last5.filter { $0 == "0" }.count
-                if nineCount >= 4 || zeroCount >= 4 {
-                    // Round to 10 significant digits to eliminate noise
-                    let rounded = String(format: "%.10g", num)
-                    return rounded
-                }
-            }
-        }
         return full
     }
 
@@ -493,6 +477,53 @@ extension Renderer {
         return nil
     }
 
+    // Liquid converts floats to decimal before arithmetic, then converts the
+    // result back to Float. Fall back to the existing binary path when the
+    // finite Foundation decimal domain cannot represent an operand or result.
+    private enum DecimalOperation { case add, subtract, multiply, modulo }
+
+    private func decimalArithmetic(_ left: Any, _ right: Any, operation: DecimalOperation, binaryResult: Double) -> Double? {
+        func operand(_ value: Any) -> Decimal? {
+            let primary = systemPrimary(value)
+            let text: String
+            if let integer = primary as? Int { text = String(integer) }
+            else {
+                let number = numericValue(primary) ?? 0
+                guard number.isFinite else { return nil }
+                text = String(number)
+            }
+            guard let decimal = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")) else { return nil }
+            if let floating = primary as? Double,
+               Double(NSDecimalNumber(decimal: decimal).stringValue) != floating { return nil }
+            return decimal
+        }
+        guard var l = operand(left), var r = operand(right) else { return nil }
+        var result = Decimal.zero
+        let status: Decimal.CalculationError
+        switch operation {
+        case .add: status = NSDecimalAdd(&result, &l, &r, .plain)
+        case .subtract: status = NSDecimalSubtract(&result, &l, &r, .plain)
+        case .multiply: status = NSDecimalMultiply(&result, &l, &r, .plain)
+        case .modulo:
+            guard r != .zero else { return nil }
+            var quotient = Decimal.zero
+            let division = NSDecimalDivide(&quotient, &l, &r, .down)
+            guard division == .noError || division == .lossOfPrecision else { return nil }
+            var whole = Decimal.zero
+            NSDecimalRound(&whole, &quotient, 0, .down)
+            var product = Decimal.zero
+            guard NSDecimalMultiply(&product, &whole, &r, .plain) == .noError else { return nil }
+            status = NSDecimalSubtract(&result, &l, &product, .plain)
+        }
+        guard status == .noError else { return nil }
+        // NSDecimalNumber.doubleValue can round a decimal to the wrong adjacent
+        // Double. Swift's decimal parser preserves the nearest representable one.
+        guard let number = Double(NSDecimalNumber(decimal: result).stringValue) else { return nil }
+        // Decimal does not reliably retain the IEEE sign of zero.
+        if number == 0 && binaryResult == 0 { return binaryResult }
+        return number.isFinite ? number : nil
+    }
+
     internal func add(_ left: Any, _ right: Any) throws -> Any {
         if let l = left as? Int, let r = right as? Int {
             let (result, overflow) = l.addingReportingOverflow(r)
@@ -502,7 +533,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l + r
+        let binaryResult = l + r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .add, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -516,7 +548,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l - r
+        let binaryResult = l - r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .subtract, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -530,7 +563,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l * r
+        let binaryResult = l * r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .multiply, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -574,7 +608,8 @@ extension Renderer {
             throw RenderError.divisionByZero()
         }
         let remainder = l.truncatingRemainder(dividingBy: r)
-        let result = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
+        let binaryResult = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .modulo, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) {
             return try checkedInteger(result)
         }

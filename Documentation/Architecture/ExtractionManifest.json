@@ -2632,6 +2632,23 @@
         "Documentation/LQ1/UNEXECUTED-CASE-REVIEW.md"
       ],
       "qualification": "Exact-main release lanes, reviewed performance evidence and publication remain required; this record grants no release acceptance."
+    },
+    {
+      "area": "Finite floating-point rendering precision",
+      "scopeDecision": "Preserve the significant digits of admitted binary Double values rather than rounding based on their decimal spelling; retain the existing finite-number domain.",
+      "changes": [
+        "Remove the suffix-based ten-significant-digit formatting heuristic while retaining whole-number and exponent presentation.",
+        "Use checked decimal arithmetic for addition, subtraction, multiplication and modulo when Foundation can represent operands and result; otherwise retain the prior bounded binary fallback.",
+        "Convert decimal results through their decimal string so arithmetic and sum do not use NSDecimalNumber's imprecise Double conversion.",
+        "Exercise public source, parsed-template and diagnostic rendering in every parser mode against pinned Ruby reference outputs."
+      ],
+      "files": [
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Tests/LiquidTests/LiquidSpecRegressionTests.swift",
+        "Tests/TestInventory.json"
+      ],
+      "qualification": "Affected native, documentation and conformance evidence is recorded for the actual source; performance and release holds remain intact."
     }
   ]
 }

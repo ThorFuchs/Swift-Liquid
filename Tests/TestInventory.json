@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LiquidSpecRegressionTests/finiteDoubleRenderingPreservesSignificantDigits()": null,
     "LiquidTests.LiquidSpecRegressionTests/floatingZeroDivisionPreservesShopifySpecialValues()": null,
     "LiquidTests.LiquidSpecRegressionTests/laxConditionalParenthesesUseRubyFragmentSemantics()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/openingMarkupConsumesTheOuterDelimiterBeforeTheBody()": null,

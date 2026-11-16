@@ -350,7 +350,8 @@ extension Renderer {
                 else if let floating = number as? Double, floating.isFinite { text = String(floating) }
                 else { decimalExact = false; continue }
                 if var operand = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")) {
-                    if let floating = number as? Double, NSDecimalNumber(decimal: operand).doubleValue != floating {
+                    if let floating = number as? Double,
+                       Double(NSDecimalNumber(decimal: operand).stringValue) != floating {
                         decimalExact = false
                         continue
                     }
@@ -362,7 +363,9 @@ extension Renderer {
                 } else { decimalExact = false }
             }
         }
-        if hasFloat && decimalExact { return NSDecimalNumber(decimal: decimalResult).doubleValue }
+        if hasFloat && decimalExact, let value = Double(NSDecimalNumber(decimal: decimalResult).stringValue), value.isFinite {
+            return value
+        }
         return result
     }
     
