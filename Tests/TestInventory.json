@@ -2,6 +2,15 @@
   "schemaVersion": 1,
   "functions": {
     "LiquidTests.LiquidSpecRegressionTests/finiteDoubleRenderingPreservesSignificantDigits()": null,
+    "LiquidTests.HostObjectTests/propertiesSupportSourceParsedDynamicKeysAndPartials()": null,
+    "LiquidTests.HostObjectTests/namesRemainExactAndBindingsAreValidated()": null,
+    "LiquidTests.HostObjectTests/hostObjectsCannotEscapeAsValues()": null,
+    "LiquidTests.HostObjectTests/ordinaryContextKeepsItsExistingBehavior()": null,
+    "LiquidTests.HostObjectTests/callbackValuesUseExistingBudgets()": null,
+    "LiquidTests.HostObjectTests/cancellationDuringSuspendingPropertyPreservesReuse()": null,
+    "LiquidTests.HostObjectTests/cancellationAfterUncooperativeHostReturns()": null,
+    "LiquidTests.HostObjectTests/unexpectedCallbackErrorsRemainErrors()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepHostBindingsIndependent()": null,
     "LiquidTests.LiquidSpecRegressionTests/floatingZeroDivisionPreservesShopifySpecialValues()": null,
     "LiquidTests.LiquidSpecRegressionTests/laxConditionalParenthesesUseRubyFragmentSemantics()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/openingMarkupConsumesTheOuterDelimiterBeforeTheBody()": null,
@@ -355,6 +364,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepHostBindingsIndependent()",
     "LiquidTests.CaseReevaluationTests/concurrentRendersKeepCaseReevaluationInvocationOwned(mode:)",
     "LiquidTests.CustomFilterTests/concurrentRendersKeepFilterConfigurationsIsolated()",
     "LiquidTests.DateFormattingTests/concurrentRendersKeepDateFormatsInvocationOwned()",
@@ -375,6 +385,8 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationDuringSuspendingPropertyPreservesReuse()",
+    "LiquidTests.HostObjectTests/cancellationAfterUncooperativeHostReturns()",
     "LiquidTests.AdversarialTests/jsonEscapesAndTruncatedContainersRetainByteEvidence(seed:)",
     "LiquidTests.AdversarialTests/jsonNestingHasAnExactPublicBoundary()",
     "LiquidTests.AdversarialTests/quotedDelimitersAndOpaqueBlocksDoNotBecomeExecutable(seed:)",

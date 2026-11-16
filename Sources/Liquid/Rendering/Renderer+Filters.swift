@@ -222,9 +222,10 @@ extension Renderer {
         case .literal(let value):
             return try evaluateValue(value)
         case .variable(let name):
-            return context.getVariable(name.string) ?? NSNull()
+            return try ordinaryHostValue(context.getVariable(name.string) ?? NSNull())
         case .access:
-            if !systemContextEnabled, let path = expression.staticVariablePath {
+            if !systemContextEnabled, let path = expression.staticVariablePath,
+               (!hostContextEnabled || canUseStaticPath(path)) {
                 return context.getVariable(path) ?? NSNull()
             }
             return try await evaluateExpressionFast(expression)
