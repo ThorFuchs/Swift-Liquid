@@ -105,3 +105,12 @@ and comparison. A separately admitted finite root array permits ordinary
 values and direct boxed-string elements; it is not a general nested host graph.
 Nil string conversion reports `LiquidError.invalidValue`, without claiming to
 reproduce Ruby exception classes.
+
+## Finite host sequence extension
+
+An explicitly supplied immutable sequence snapshot is admitted per invocation
+against existing value, depth, byte, work and cancellation limits. Loop
+iterations use the existing iteration quota. Size, first, last, count, min,
+max, sort and to_liquid are exposed without reflection; ordering uses the
+engine's comparable scalar domain. This bounded snapshot is not a streaming or arbitrary
+`AsyncSequence` bridge, and it does not add nested host objects.

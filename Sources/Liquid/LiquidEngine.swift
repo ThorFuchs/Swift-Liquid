@@ -479,7 +479,16 @@ public struct LiquidEngine: Sendable {
                     try renderer.budget.filterValue(depth: 2)
                     if let value = string.value, value.utf8.count > limits.outputBytes { throw LiquidError.limitExceeded("outputBytes") }
                 }
-                if let elements = object.arrayValues {
+                if let sequence = object.sequenceValue {
+                    renderer.hostSequenceContextEnabled = true
+                    guard sequence.displayName.utf8.count <= limits.outputBytes else { throw LiquidError.limitExceeded("outputBytes") }
+                    guard sequence.values.count <= renderer.budget.remainingValues else { throw LiquidError.limitExceeded("contextValues") }
+                    var bridge = FilterValueBridge(budget: renderer.budget)
+                    var values: [Any] = []
+                    values.reserveCapacity(sequence.values.count)
+                    for value in sequence.values { values.append(try bridge.write(value, depth: 2)) }
+                    roots.append((object.name, RuntimeHostSequence(values: values, displayName: sequence.displayName)))
+                } else if let elements = object.arrayValues {
                     guard elements.count <= renderer.budget.remainingValues else { throw LiquidError.limitExceeded("contextValues") }
                     var bridge = FilterValueBridge(budget: renderer.budget)
                     var values: [Any] = []

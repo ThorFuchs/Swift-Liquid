@@ -45,6 +45,95 @@ private actor DynamicAccessCounter {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func finiteHostSequencePreservesReferenceOperations() async throws {
+        let engine = LiquidEngine()
+        let host = LiquidHostObject("d", sequence: ["first", "second", "third"], displayName: "ExampleSequence")
+        let source = "{{ d.size }}|{{ d.first }}|{{ d.last }}|[{{ d[0] }}]|[{{ d.unknown }}]|{{ d | size }}|{{ d | first }}|{{ d | last }}|{{ d | join: ',' }}|{{ d | reverse | join: ',' }}"
+        let expected = "3|first|third|[]|[]|3|first|third|first,second,third|third,second,first"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+            #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+            let loops = "{% for x in d %}{{ forloop.index }}:{{ x }};{% endfor %}|{% for x in d limit: 1 offset: 1 %}{{ x }}{% endfor %}|{% for x in d reversed %}{{ x }};{% endfor %}"
+            #expect(try await engine.render(template: loops, hostObjects: [host], syntaxMode: mode) == "1:first;2:second;3:third;|second|third;second;first;")
+            let methods = "{{ d.count }}|{{ d.min }}|{{ d.max }}|{{ d.sort | join: ',' }}|{% if d.to_liquid == d %}same{% endif %}|[{{ d.length }}]"
+            #expect(try await engine.render(template: methods, hostObjects: [host], syntaxMode: mode) == "3|first|third|first,second,third|same|[]")
+            let row = "{% tablerow x in d cols: 2 %}{{ x }}{% endtablerow %}"
+            #expect(try await engine.render(template: row, hostObjects: [host], syntaxMode: mode) == "<tr class=\"row1\">\n<td class=\"col1\">first</td><td class=\"col2\">second</td></tr>\n<tr class=\"row2\"><td class=\"col1\">third</td></tr>\n")
+            let aliases = "{% assign x = d %}{{ x.size }}|{{ self.d.first }}|{% if x == d %}same{% else %}different{% endif %}|{% if d contains 'first' %}yes{% endif %}|{{ d }}"
+            #expect(try await engine.render(template: aliases, hostObjects: [host], syntaxMode: mode) == "3|first|same|yes|ExampleSequence")
+            #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: [host], templates: ["p": "{{ d.last }}"], syntaxMode: mode) == "third")
+        }
+        let unordered = LiquidHostObject("d", sequence: ["z", "a", "m"])
+        #expect(try await engine.render(template: "{{ d.min }}|{{ d.max }}|{{ d.sort | join: ',' }}", hostObjects: [unordered]) == "a|z|a,m,z")
+        let incompatible = LiquidHostObject("d", sequence: ["a", 1])
+        await #expect(throws: (any Error).self) { try await engine.render(template: "{{ d.sort }}", hostObjects: [incompatible]) }
+        let empty = LiquidHostObject("d", sequence: [], displayName: "EmptySequence")
+        let emptySource = "{% if d %}truthy{% endif %}|{% if d == empty %}empty{% else %}not empty{% endif %}|{{ d | default: 'fallback' }}|{{ d.size }}|[{{ d.first }}]|{% for x in d %}{{ x }}{% else %}none{% endfor %}"
+        #expect(try await engine.render(template: emptySource, hostObjects: [empty]) == "truthy|not empty|EmptySequence|0|[]|none")
+        let custom = try LiquidEngine(filters: [LiquidFilter("host_count") { value, _, _ in
+            if case .array(let values) = value { return .integer(values.count) }; return "wrong"
+        }])
+        #expect(try await custom.render(template: "{{ d | host_count }}", hostObjects: [host]) == "3")
+    }
+
+    @Test func finiteHostSequenceHonorsIterationAndAdmissionLimits() async throws {
+        let host = LiquidHostObject("d", sequence: ["a", "b", "c"])
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(loopIterations: 2)).render(template: "{% for x in d %}{{ x }}{% endfor %}", hostObjects: [host])
+        }
+        #expect(try await LiquidEngine(limits: .init(loopIterations: 1)).render(template: "{% for x in d limit: 1 %}{{ x }}{% endfor %}", hostObjects: [host]) == "a")
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 3)).render(template: "{{ d.size }}", hostObjects: [host])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine().render(template: "{{ d.size }}", hostObjects: [LiquidHostObject("d", sequence: [.number(.infinity)])])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(nestingDepth: 1)).render(template: "{{ d.size }}", hostObjects: [host])
+        }
+        let many = LiquidHostObject("d", sequence: Array(repeating: .integer(1), count: 100))
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(renderSteps: 10, contextValues: 200)).render(template: "static", hostObjects: [many])
+        }
+        let ordered = LiquidHostObject("d", sequence: (0..<40).reversed().map { .integer($0) })
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(renderSteps: 70, contextValues: 100)).render(template: "{{ d.sort | size }}", hostObjects: [ordered])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(outputBytes: 2)).render(template: "ok", hostObjects: [LiquidHostObject("d", sequence: [], displayName: "large")])
+        }
+    }
+
+    @Test func cancellationDuringHostSequenceIterationPreservesReuse() async throws {
+        let gate = HostReleaseGate()
+        let filter = LiquidFilter("pause_sequence") { value, _, _ in
+            await gate.suspend()
+            return value
+        }
+        let engine = try LiquidEngine(filters: [filter])
+        let host = LiquidHostObject("d", sequence: ["one", "two", "three"])
+        let task = Task { try await engine.render(template: "{% for x in d %}{{ x | pause_sequence }}{% endfor %}", hostObjects: [host]) }
+        await gate.waitUntilEntered()
+        task.cancel()
+        await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(try await engine.render(template: "{% for x in d %}{{ x }}{% endfor %}", hostObjects: [host]) == "onetwothree")
+    }
+
+    @Test func concurrentRendersKeepHostSequencesInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{% for x in d %}{{ x }},{% endfor %}")
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<24 {
+                group.addTask { try await engine.render(template, hostObjects: [LiquidHostObject("d", sequence: [.integer(index)])]) }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(outputs) == Set((0..<24).map { "\($0)," }))
+    }
+
     @Test func boxedStringPreservesObjectSensitiveBehavior() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {

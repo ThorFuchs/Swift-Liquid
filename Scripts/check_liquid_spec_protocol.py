@@ -173,6 +173,18 @@ class ProtocolTests(unittest.TestCase):
         for invalid in [[{'nested': drop('x')}], [[drop('x')]], [drop('x'), {'_instantiate': 'NumberDrop', 'params': {'value': 1}}]]:
             self.assertEqual(self.peer.request('render', {'template_id': nil_template, 'environment': {'a': invalid}})['error']['code'], -32602)
 
+    def test_portable_sequence_drop_has_bounded_object_iteration(self):
+        source = "{{ d.size }}|{{ d.first }}|{{ d.last }}|[{{ d[0] }}]|{{ d | size }}|{{ d | join: ',' }}|{% for x in d %}{{ forloop.index }}:{{ x }};{% endfor %}|{% assign x = d %}{{ x.last }}"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        marker = {'_instantiate': 'SequenceDrop', 'params': {}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']
+        self.assertEqual(result, {'output': '3|first|third|[]|3|first,second,third|1:first;2:second;3:third;|third', 'errors': []})
+        for bad in [{'extra': 1}, {'values': ['changed']}]:
+            marker = {'_instantiate': 'SequenceDrop', 'params': bad}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['error']['code'], -32602)
+        nested = {'_instantiate': 'SequenceDrop', 'params': {}}
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': [nested]}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

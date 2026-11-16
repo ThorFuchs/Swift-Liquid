@@ -61,6 +61,7 @@ extension Renderer {
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
         let value = systemPrimary(value)
+        if hostSequenceContextEnabled, let sequence = value as? RuntimeHostSequence { return sequence.displayName }
         switch value {
         case let number as RuntimeNonFinite:
             if number.value.isNaN { return "NaN" }
@@ -306,6 +307,10 @@ extension Renderer {
             return left.scope === right.scope
         }
         if left is RuntimeSelf || right is RuntimeSelf { return false }
+        if hostSequenceContextEnabled {
+            if let lhs = left as? RuntimeHostSequence, let rhs = right as? RuntimeHostSequence { return lhs.identity === rhs.identity }
+            if left is RuntimeHostSequence || right is RuntimeHostSequence { return false }
+        }
         // Ruby's blank and empty comparison literals are predicates, not
         // values that compare equal to themselves or to each other.
         if left is LiquidSpecialValue && right is LiquidSpecialValue { return false }
@@ -699,6 +704,9 @@ extension Renderer {
 
         if let str = haystack as? String {
             return str.range(of: stringify(needle), options: .literal) != nil
+        }
+        if hostSequenceContextEnabled, let sequence = haystack as? RuntimeHostSequence {
+            return try sequence.values.contains { try isEqual($0, needle) }
         }
         if let array = haystack as? [Any] {
             return try array.contains { try isEqual($0, needle) }

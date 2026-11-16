@@ -134,3 +134,11 @@ cases, against the unchanged upstream comparator and pinned Ruby reference.
 The lane verifies exact source digests and identities, decodes only selected
 YAML nodes as data and forbids dynamic Ruby evaluation. It does not change
 the full-suite selector or admit arbitrary nested host objects.
+
+## Fixed SequenceDrop cases
+
+`Scripts/ci.py --lane sequence-drop --spec-path PATH --reference-path PATH`
+checks five fixed, hash-pinned SequenceDrop cases using the unchanged upstream
+comparator and pinned Ruby reference. It loads selected YAML nodes as data and
+disables dynamic Ruby evaluation. The finite snapshot and its results do not
+change the full-suite selector or admit arbitrary host iterators.

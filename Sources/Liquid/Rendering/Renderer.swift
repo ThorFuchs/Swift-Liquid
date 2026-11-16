@@ -105,6 +105,7 @@ internal final class Renderer {
     internal let systemContextEnabled: Bool
     internal let hostContextEnabled: Bool
     internal var boxedStringContextEnabled = false
+    internal var hostSequenceContextEnabled = false
 
 
     internal var templateLoader: TemplateLoader?

@@ -164,7 +164,9 @@ extension Renderer {
 
         // Convert collection to array (full, unsliced)
         var fullItems: [Any] = []
-        if let range = collectionValue as? RuntimeRange {
+        if hostSequenceContextEnabled, let sequence = collectionValue as? RuntimeHostSequence {
+            fullItems = sequence.values
+        } else if let range = collectionValue as? RuntimeRange {
             fullItems = range.values
         } else if let array = collectionValue as? [Any] {
             fullItems = array
@@ -406,7 +408,9 @@ extension Renderer {
         
         // Convert collection to array
         var items: [Any] = []
-        if let range = collectionValue as? RuntimeRange {
+        if hostSequenceContextEnabled, let sequence = collectionValue as? RuntimeHostSequence {
+            items = sequence.values
+        } else if let range = collectionValue as? RuntimeRange {
             items = range.values
         } else if let array = collectionValue as? [Any] {
             items = array

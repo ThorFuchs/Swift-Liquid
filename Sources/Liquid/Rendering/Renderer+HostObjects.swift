@@ -16,6 +16,15 @@ internal struct RuntimeHostString: Sendable {
     let identity: RuntimeHostStringIdentity
 }
 
+internal final class RuntimeHostSequenceIdentity {}
+
+// Contents are admitted and owned by a single renderer invocation.
+internal struct RuntimeHostSequence {
+    let values: [Any]
+    let displayName: String
+    let identity = RuntimeHostSequenceIdentity()
+}
+
 extension Renderer {
     @inline(__always)
     internal func canUseStaticPath(_ path: String) -> Bool {
@@ -23,7 +32,7 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(hostSequenceContextEnabled && value is RuntimeHostSequence) && !(value is RuntimeSelf)
     }
 
     @inline(__always)
@@ -36,6 +45,31 @@ extension Renderer {
             throw LiquidError.invalidValue("A host object must be accessed through an exposed property")
         }
         return value
+    }
+
+    internal func hostSequenceAccess(_ sequence: RuntimeHostSequence, key: Any) throws -> Any {
+        try budget.step()
+        guard let key = systemPrimary(key) as? String else { return NSNull() }
+        switch key {
+        case "size", "count": return sequence.values.count
+        case "first": return sequence.values.first ?? NSNull()
+        case "last": return sequence.values.last ?? NSNull()
+        case "to_liquid": return sequence
+        case "sort":
+            return try sequence.values.sorted { left, right in
+                try budget.step()
+                return try compareValues(left, right) < 0
+            }
+        case "min", "max":
+            guard var selected = sequence.values.first else { return NSNull() }
+            for value in sequence.values.dropFirst() {
+                try budget.step()
+                let comparison = try compareValues(value, selected)
+                if key == "min" ? comparison < 0 : comparison > 0 { selected = value }
+            }
+            return selected
+        default: return NSNull()
+        }
     }
 
     private func hasExactPrefix(_ key: String, _ prefix: String) throws -> Bool {

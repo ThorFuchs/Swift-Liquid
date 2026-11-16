@@ -1,6 +1,10 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/finiteHostSequencePreservesReferenceOperations()": null,
+    "LiquidTests.HostObjectTests/finiteHostSequenceHonorsIterationAndAdmissionLimits()": null,
+    "LiquidTests.HostObjectTests/cancellationDuringHostSequenceIterationPreservesReuse()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepHostSequencesInvocationScoped()": null,
     "LiquidTests.HostObjectTests/ordinaryHostArraysRetainTheirExistingStepBudget()": null,
     "LiquidTests.HostObjectTests/boxedStringPreservesObjectSensitiveBehavior()": null,
     "LiquidTests.HostObjectTests/boxedStringsInExplicitArraysPreserveFirstIdentity()": null,
@@ -379,6 +383,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepHostSequencesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedStringsInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedNumbersInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedBooleansInvocationScoped()",
@@ -405,6 +410,7 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationDuringHostSequenceIterationPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationAndIndexerResultsUseInvocationBudgets()",
     "LiquidTests.HostObjectTests/cancellationAfterDynamicFamilyReturnsKeepsReuse()",
     "LiquidTests.HostObjectTests/cancellationAndDynamicFamilyResultsUseInvocationBudgets()",

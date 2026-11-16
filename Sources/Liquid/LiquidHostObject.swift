@@ -81,11 +81,16 @@ internal struct LiquidHostStringBox: Sendable {
     let identity = RuntimeHostStringIdentity()
 }
 
+internal struct LiquidHostSequenceBox: Sendable {
+    let values: [LiquidValue]
+    let displayName: String
+}
+
 /// A named root binding exposing only explicitly supplied host properties.
 ///
 /// Exact and dynamic properties use string keys; an optional indexer accepts
-/// typed string and integer keys. An explicitly boxed Boolean, integer or string can participate
-/// in value operations. Other host objects must be accessed through a property.
+/// typed string and integer keys. Explicit boxed values and finite sequences
+/// participate in value operations. Other host objects require property access.
 /// Host objects cannot be returned by a property in this profile.
 public struct LiquidHostObject: Sendable {
     /// The exact name of the root binding supplied to a render.
@@ -97,6 +102,7 @@ public struct LiquidHostObject: Sendable {
     internal let numberValue: Int?
     internal let stringValue: LiquidHostStringBox?
     internal let arrayValues: [LiquidHostArrayElement]?
+    internal let sequenceValue: LiquidHostSequenceBox?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -111,6 +117,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = nil
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -129,6 +136,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = nil
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -148,6 +156,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = nil
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -165,6 +174,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = nil
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates a boxed integer host binding with no exposed properties.
@@ -182,6 +192,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = numberValue
         self.stringValue = nil
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates a boxed string host binding with no exposed properties.
@@ -199,6 +210,7 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = LiquidHostStringBox(value: stringValue)
         self.arrayValues = nil
+        self.sequenceValue = nil
     }
 
     /// Creates an explicit finite root array containing ordinary values and
@@ -215,5 +227,25 @@ public struct LiquidHostObject: Sendable {
         self.numberValue = nil
         self.stringValue = nil
         self.arrayValues = array
+        self.sequenceValue = nil
+    }
+
+    /// Creates a finite, immutable, invocation-admitted host sequence.
+    /// Elements are ordinary Liquid values. Iteration and admission use the
+    /// operation's work, value, depth and cancellation limits.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - sequence: Ordered snapshot of ordinary Liquid values.
+    ///   - displayName: Text rendered for the sequence object itself.
+    public init(_ name: String, sequence: [LiquidValue], displayName: String = "LiquidHostSequence") {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
+        self.sequenceValue = LiquidHostSequenceBox(values: sequence, displayName: displayName)
     }
 }

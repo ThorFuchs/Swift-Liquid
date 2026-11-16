@@ -88,6 +88,9 @@ extension Renderer {
                 return try await hostIndex(object, key: .other)
             }
             let unconvertedBase = try await evaluateExpressionFast(expr)
+            if hostSequenceContextEnabled, let sequence = unconvertedBase as? RuntimeHostSequence {
+                return try hostSequenceAccess(sequence, key: try await evaluateExpressionFast(key))
+            }
             if unconvertedBase is RuntimeHostBoolean || unconvertedBase is RuntimeHostNumber || (boxedStringContextEnabled && unconvertedBase is RuntimeHostString) {
                 _ = try await evaluateExpressionFast(key)
                 return NSNull()

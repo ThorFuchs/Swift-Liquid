@@ -146,3 +146,11 @@ Ruby exception class, and non-UTF-8 decoded bytes remain outside the typed
 string domain. The suite's additional JSON test filter's object policy remains
 unqualified. This lane leaves the full-suite selector, exclusions and
 reviewed reference conflicts unchanged.
+
+The separate `sequence-drop` lane accepts only the portable root-level
+`SequenceDrop` marker with empty parameters, in raising mode and without
+partials. Its fixed standard sequence is represented by a bounded immutable
+snapshot, and five hash-pinned cases run against the unchanged comparator and
+pinned Ruby reference. This does not advertise general Drop RPC, streaming or
+the suite's additional JSON test filter, and does not alter the full-suite
+selector, historical exclusions or reviewed reference conflicts.

@@ -158,6 +158,9 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                 hosts.append(LiquidHostObject(entry.key, numberValue: value))
             case "StringDrop":
                 hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
+            case "SequenceDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported SequenceDrop parameters") }
+                hosts.append(LiquidHostObject(entry.key, sequence: ["first", "second", "third"], displayName: "StandardSequenceDrop"))
             default: throw WireFailure.invalid("Unsupported standard drop marker")
             }
         } else if case .array(let array) = entry.value, array.contains(where: { element in

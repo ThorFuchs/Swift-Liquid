@@ -2851,6 +2851,40 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted outcomes remain separate from full-suite, reference-conflict, performance and release acceptance."
+    },
+    {
+      "area": "Finite host sequence and standard SequenceDrop",
+      "scopeDecision": "Add an explicit finite immutable host-sequence snapshot; do not add arbitrary streaming, nested host graphs, fixture changes or full-suite selector changes.",
+      "changes": [
+        "Admit each ordinary sequence element per render against existing value, work, depth, byte and cancellation boundaries; use existing loop quotas and cancellation checkpoints for each emitted item.",
+        "Preserve sequence object truthiness, explicit string rendering, identity and supported enumerable properties while charging iteration and comparisons; support standard array filters.",
+        "Implement the pinned standard SequenceDrop as a fixed native snapshot and validate five exact fixture identities and source digests against the unchanged upstream comparator and pinned Ruby reference.",
+        "Preserve the full-suite selection, historical exclusions, pinned fixtures, reference conflicts and existing performance and release holds."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+ControlFlow.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+Utilities.swift",
+        "Sources/Liquid/Rendering/Renderer+CustomFilters.swift",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter/SequenceDropCases.json",
+        "Tools/LiquidSpecAdapter/check_sequence_drop.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted outcomes remain separate from full-suite, reference-conflict, performance and release acceptance."
     }
   ]
 }

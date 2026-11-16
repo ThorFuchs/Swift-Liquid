@@ -100,6 +100,20 @@ first element, including its object identity for later access. Array equality
 follows Ruby's left-element comparison: a boxed string and an ordinary string
 can compare differently when their order is reversed.
 
+A finite host sequence is created with
+`LiquidHostObject("items", sequence: ["first", "second", "third"], displayName: "Items")`.
+The sequence is an immutable snapshot, not an arbitrary or streaming iterator.
+Each render admits every element against its value, depth, byte and work limits
+before rendering. The existing loop-iteration limit applies to each emitted loop
+iteration, and admission and iteration check task cancellation. `size`, `first`
+and `last` are exposed properties and filters. The properties `count`, `min`,
+`max`, `sort` and `to_liquid` are also supported; ordering uses the engine's
+comparable scalar domain and reports unsupported comparisons as errors. Other
+properties are missing. The sequence object remains truthy even when the snapshot is empty, and its
+explicit display name is rendered when the object itself is output. Custom
+filters receive an ordinary array snapshot. No callback or mutable iterator is
+retained by a parsed template or shared between renders.
+
 Properties can return admitted primitive values, arrays or objects. Other host
 objects are not ordinary values and must be accessed through their explicitly
 registered properties. This does not implement the complete Shopify Drop contract.

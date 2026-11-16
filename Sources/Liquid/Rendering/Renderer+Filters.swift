@@ -46,6 +46,24 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if hostSequenceContextEnabled, let sequence = input as? RuntimeHostSequence {
+            if filter.arguments.isEmpty, filter.namedArguments.isEmpty {
+                if filter.name.equals("size") { return sequence.values.count }
+                if filter.name.equals("first") { return sequence.values.first ?? NSNull() }
+                if filter.name.equals("last") { return sequence.values.last ?? NSNull() }
+            }
+            if filter.name.equals("default"), filter.arguments.count <= 2 {
+                _ = try await evaluateFilterArgumentsFast(filter.arguments)
+                if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
+                    _ = try await evaluateExpression(allow)
+                }
+                return input
+            }
+            let arrayFilters: Set<String> = ["join", "reverse", "sort", "sort_natural", "uniq", "compact", "map", "where", "reject", "find", "find_index", "has", "sum", "concat"]
+            if arrayFilters.contains(filter.name.string) {
+                return try await applyFilterCore(filter, to: sequence.values)
+            }
+        }
         if boxedStringContextEnabled, let boxed = input as? RuntimeHostString {
             if filter.arguments.isEmpty, filter.namedArguments.isEmpty {
                 if filter.name.equals("size") { return 0 }
