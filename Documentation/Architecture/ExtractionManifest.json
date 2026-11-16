@@ -2748,6 +2748,37 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted outcomes remain separate from full-suite, performance and release acceptance."
+    },
+    {
+      "area": "Boxed Boolean host values and standard BooleanDrop",
+      "scopeDecision": "Add an explicit checked-Sendable Boolean host binding and targeted fixed-case adapter without altering pinned fixtures or the full-suite selector.",
+      "changes": [
+        "Preserve boxed host identity across assignment and selected default while applying its Boolean value to truthiness, equality and standard filter operations.",
+        "Admit only the exact portable BooleanDrop marker with one Boolean parameter; reject malformed or unsupported markers.",
+        "Safely load and qualify 22 hash-pinned fixture nodes against the upstream comparator and pinned Ruby reference without evaluating fixture-provided expressions."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Rendering/Renderer+SystemValues.swift",
+        "Sources/Liquid/Rendering/Renderer+Expressions.swift",
+        "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+CustomFilters.swift",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter/BooleanDropCases.json",
+        "Tools/LiquidSpecAdapter/check_boolean_drop.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted case outcomes do not change the full-suite selection, its reference conflicts, or performance and release holds."
     }
   ]
 }

@@ -46,6 +46,12 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if let boxed = input as? RuntimeHostBoolean, filter.name.equals("default"), filter.arguments.count == 1 {
+            let fallback = try await evaluateFilterArgumentFast(filter.arguments[0])
+            if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value,
+               systemPrimary(try await evaluateExpression(allow)) as? Bool == true { return input }
+            return boxed.value ? input : fallback
+        }
         if let wrapped = input as? SystemRuntimeValue, filter.name.equals("default"), !filter.arguments.isEmpty {
             let fallback = try await evaluateFilterArgumentFast(filter.arguments[0])
             if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value,

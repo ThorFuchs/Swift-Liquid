@@ -66,15 +66,16 @@ public struct LiquidHostIndexer: Sendable {
 /// A named root binding exposing only explicitly supplied host properties.
 ///
 /// Exact and dynamic properties use string keys; an optional indexer accepts
-/// typed string and integer keys. The object itself is not a Liquid value:
-/// output, conditions, filters and assignments must use a property. Host
-/// objects cannot be returned by a property in this profile.
+/// typed string and integer keys. An explicitly boxed Boolean can participate
+/// in value operations. Other host objects must be accessed through a property.
+/// Host objects cannot be returned by a property in this profile.
 public struct LiquidHostObject: Sendable {
     /// The exact name of the root binding supplied to a render.
     public let name: String
     internal let properties: [LiquidHostProperty]
     internal let dynamicProperties: [LiquidHostDynamicProperty]
     internal let indexer: LiquidHostIndexer?
+    internal let booleanValue: Bool?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -85,6 +86,7 @@ public struct LiquidHostObject: Sendable {
         self.properties = properties
         self.dynamicProperties = []
         self.indexer = nil
+        self.booleanValue = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -99,6 +101,7 @@ public struct LiquidHostObject: Sendable {
         self.properties = properties
         self.dynamicProperties = dynamicProperties
         self.indexer = nil
+        self.booleanValue = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -114,5 +117,20 @@ public struct LiquidHostObject: Sendable {
         self.properties = properties
         self.dynamicProperties = dynamicProperties
         self.indexer = indexer
+        self.booleanValue = nil
+    }
+
+    /// Creates a boxed Boolean host binding with no exposed properties.
+    /// Boolean value operations use `booleanValue`, while property access
+    /// remains object access and yields a missing value for every key.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - booleanValue: Boolean represented by this host object.
+    public init(_ name: String, booleanValue: Bool) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = booleanValue
     }
 }

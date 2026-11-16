@@ -159,6 +159,10 @@ module LQ1
           { '_instantiate' => 'MethodDrop', 'params' => {} }
         elsif defined?(StandardIndexDrop) && value.instance_of?(StandardIndexDrop)
           { '_instantiate' => 'IndexDrop', 'params' => {} }
+        elsif defined?(StandardBooleanDrop) && value.instance_of?(StandardBooleanDrop)
+          boolean = value.to_liquid_value
+          raise OperationalError, 'BooleanDrop value is not Boolean' unless boolean == true || boolean == false
+          { '_instantiate' => 'BooleanDrop', 'params' => { 'value' => boolean } }
         else
           value
         end

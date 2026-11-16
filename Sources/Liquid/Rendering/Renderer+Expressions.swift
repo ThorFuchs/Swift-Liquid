@@ -73,6 +73,10 @@ extension Renderer {
             if hostContextEnabled, case .variable(let name) = expr,
                let object = context.getLiteralVariable(name.string) as? LiquidHostObject {
                 try budget.step()
+                if object.booleanValue != nil {
+                    _ = try await evaluateExpressionFast(key)
+                    return NSNull()
+                }
                 if case .literal(.string(let keyName)) = key {
                     return try await hostProperty(object, key: keyName.string)
                 }
@@ -83,7 +87,12 @@ extension Renderer {
                 if let integer = dynamic as? Int { return try await hostIndex(object, key: .integer(integer)) }
                 return try await hostIndex(object, key: .other)
             }
-            let baseValue = systemPrimary(try await evaluateExpressionFast(expr))
+            let unconvertedBase = try await evaluateExpressionFast(expr)
+            if unconvertedBase is RuntimeHostBoolean {
+                _ = try await evaluateExpressionFast(key)
+                return NSNull()
+            }
+            let baseValue = systemPrimary(unconvertedBase)
             switch key {
             case .literal(.string(let keyName)):
                 return try ordinaryHostValue(evaluateAccessValueWithStringKey(baseValue: baseValue, key: keyName.string, command: command))

@@ -109,3 +109,11 @@ and Ruby reference. It verifies the fixture digest and identities, reads YAML as
 data, and disables dynamic Ruby evaluation. Protocol checks also exercise
 negative, string, boolean, floating-point and missing keys. The result is
 separate from the unchanged full-suite selector and its historical exclusions.
+
+## Fixed BooleanDrop cases
+
+`Scripts/ci.py --lane boolean-drop --spec-path PATH --reference-path PATH`
+checks 22 fixed pinned BooleanDrop cases with the upstream comparator and pinned
+Ruby reference. The lane hashes each fixture and safely decodes only the selected
+YAML nodes, without evaluating fixture-supplied Ruby. Results remain separate
+from the unchanged full-suite selection and historical exclusions.

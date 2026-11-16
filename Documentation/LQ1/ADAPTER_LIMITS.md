@@ -123,3 +123,9 @@ partials. String and integer keys remain distinct; other types follow the
 standard object's unknown-key behavior. Its three fixed pinned fixtures run
 through the same unmodified upstream comparator and Ruby reference. This is
 still not general Drop or bidirectional RPC support.
+
+The separate `boolean-drop` lane accepts only the root-level portable
+`BooleanDrop` marker with exactly one Boolean `value` parameter, in raising
+mode and without partials. It checks 22 fixed cases against the pinned reference
+and upstream comparator. This targeted evidence does not alter the full-suite
+selector, its exclusions, or the reviewed reference conflicts.

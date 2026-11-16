@@ -45,6 +45,48 @@ private actor DynamicAccessCounter {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func boxedBooleanKeepsReferenceTruthinessEqualityAndFilters() async throws {
+        let engine = LiquidEngine()
+        let source = "{{ d }}|{% if d %}T{% else %}F{% endif %}|{% if d == true %}T{% else %}F{% endif %}|{% if d == blank %}T{% else %}F{% endif %}|{% if d == empty %}T{% else %}F{% endif %}|{{ d | default: 'fallback' }}|{{ d | default: 'fallback', allow_false: true }}|{{ d | upcase }}|{{ d | first }}|{{ d | last }}|{{ d | size }}"
+        for (value, expected) in [(true, "true|T|T|F|F|true|true|TRUE|||0"),
+                                  (false, "false|F|F|T|F|fallback|false|FALSE|||0")] {
+            let host = LiquidHostObject("d", booleanValue: value)
+            for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+                #expect(try await engine.render(template: source, hostObjects: [host], syntaxMode: mode) == expected)
+                #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [host]) == expected)
+                let aliases = "{% assign x = d %}{{ x }}|[{{ x.value }}]|[{{ self.d.value }}]|{{ self.d }}|{{ d | default: 'no', allow_false: true }}"
+                #expect(try await engine.render(template: aliases, hostObjects: [host], syntaxMode: mode) == "\(value ? "true" : "false")|[]|[]|\(value ? "true" : "false")|\(value ? "true" : "false")")
+                #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: [host], templates: ["p": "{{ d }}"], syntaxMode: mode) == (value ? "true" : "false"))
+                let selected = "{% assign x = d | default: 'fallback', allow_false: true %}[{{ x.value }}]|{{ x }}"
+                #expect(try await engine.render(template: selected, hostObjects: [host], syntaxMode: mode) == "[]|\(value ? "true" : "false")")
+                let referenceControls = "{% if true == d %}T{% else %}F{% endif %}|{% unless d %}T{% else %}F{% endunless %}|{{ d | append: '!' }}|{{ d | plus: 1 }}|{% for x in d %}{{ x }}{% else %}empty{% endfor %}"
+                #expect(try await engine.render(template: referenceControls, hostObjects: [host], syntaxMode: mode) == (value ? "T|F|true!|1|empty" : "F|T|false!|1|empty"))
+            }
+        }
+        let custom = try LiquidEngine(filters: [LiquidFilter("is_boolean") { value, _, _ in
+            if case .bool = value { return "boolean" }; return "wrong"
+        }])
+        #expect(try await custom.render(template: "{{ d | is_boolean }}", hostObjects: [LiquidHostObject("d", booleanValue: false)]) == "boolean")
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 1)).render(template: "{{ d }}", hostObjects: [LiquidHostObject("d", booleanValue: true)])
+        }
+    }
+
+    @Test func concurrentRendersKeepBoxedBooleansInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{% if d %}T{% else %}F{% endif %}")
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<32 {
+                group.addTask { try await engine.render(template, hostObjects: [LiquidHostObject("d", booleanValue: index.isMultiple(of: 2))]) }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(outputs.filter { $0 == "T" }.count == 16)
+        #expect(outputs.filter { $0 == "F" }.count == 16)
+    }
+
     @Test func typedIndexerPreservesKeysAndPropertyPrecedence() async throws {
         let host = LiquidHostObject("drop", properties: [LiquidHostProperty("fixed") { "exact" }],
             dynamicProperties: [LiquidHostDynamicProperty(prefix: "dyn_") { key in key == "dyn_missing" ? nil : "dynamic" }],

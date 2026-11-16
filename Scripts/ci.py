@@ -54,7 +54,7 @@ def source_revision(archive_provenance=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop', 'boolean-drop'], default='native')
     parser.add_argument('--output-root', type=Path,
                         help='External artifacts root for isolated liquid-spec or conformance-console runs')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
@@ -65,7 +65,7 @@ def main():
     if args.archive_provenance is not None and args.lane != 'native':
         parser.error('--archive-provenance is only for native qualification of a source export')
     if args.output_root is not None:
-        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop']:
+        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop', 'boolean-drop']:
             parser.error('--output-root is supported only for isolated conformance lanes')
         if args.output_root.resolve().is_relative_to(ROOT):
             parser.error('--output-root must be outside the source checkout')
@@ -147,10 +147,10 @@ def main():
             run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
             run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')
             run([sys.executable, '-B', 'Scripts/check_conformance_console.py'], 'console-contract')
-        elif args.lane in ['method-drop', 'index-drop']:
+        elif args.lane in ['method-drop', 'index-drop', 'boolean-drop']:
             if not args.spec_path or not args.reference_path:
                 raise RuntimeError(f'{args.lane} requires --spec-path and --reference-path')
-            policy_name = 'MethodDropCases.json' if args.lane == 'method-drop' else 'IndexDropCases.json'
+            policy_name = {'method-drop': 'MethodDropCases.json', 'index-drop': 'IndexDropCases.json', 'boolean-drop': 'BooleanDropCases.json'}[args.lane]
             policy = json.loads((ROOT / 'Tools/LiquidSpecAdapter' / policy_name).read_text())
             for label, path, pin in [('spec', args.spec_path, policy['specPin']),
                                      ('reference', args.reference_path, policy['referencePin'])]:
@@ -166,7 +166,7 @@ def main():
                 run(['ruby', 'Tools/LiquidSpecAdapter/check_method_drop_materializer.rb'], 'materializer')
             run([sys.executable, '-B', 'Scripts/check_liquid_spec_protocol.py', binary], 'protocol')
             run(['ruby', '-I', str(args.spec_path.resolve() / 'lib'), 'Tools/LiquidSpecAdapter/check_bridge.rb'], 'bridge')
-            case_script = 'check_method_drop.rb' if args.lane == 'method-drop' else 'check_index_drop.rb'
+            case_script = {'method-drop': 'check_method_drop.rb', 'index-drop': 'check_index_drop.rb', 'boolean-drop': 'check_boolean_drop.rb'}[args.lane]
             run(['ruby', '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
                  str(ROOT / 'Tools/LiquidSpecAdapter' / case_script), binary, str(args.spec_path.resolve()), str(output / 'cases.json')], 'cases')
             receipt['pins'] = {'spec': policy['specPin'], 'ruby': policy['referencePin']}
@@ -213,7 +213,7 @@ def main():
     receipt['sourceQualified'] = receipt['sourceUnchanged'] and receipt['sourceRevision']['clean']
     if not receipt['sourceUnchanged']:
         receipt.update(status='failed', error='Source changed during qualification')
-    elif args.lane in ['method-drop', 'index-drop'] and not receipt['sourceQualified']:
+    elif args.lane in ['method-drop', 'index-drop', 'boolean-drop'] and not receipt['sourceQualified']:
         receipt.update(status='failed', error='Targeted Drop qualification requires a clean committed source')
     (output / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
     display = {k: v for k, v in receipt.items() if k not in ['sources', 'commands']}

@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import Foundation
 
+// Invocation-local representation; do not expose the host object through
+// reflection or silently replace it in the caller's input.
+internal struct RuntimeHostBoolean: Sendable {
+    let value: Bool
+}
+
 extension Renderer {
     @inline(__always)
     internal func canUseStaticPath(_ path: String) -> Bool {
@@ -8,13 +14,14 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeSelf)
     }
 
     @inline(__always)
     internal func ordinaryHostValue(_ value: Any) throws -> Any {
         guard hostContextEnabled else { return value }
-        guard !(value is LiquidHostObject) else {
+        if let host = value as? LiquidHostObject {
+            if let boolean = host.booleanValue { return RuntimeHostBoolean(value: boolean) }
             throw LiquidError.invalidValue("A host object must be accessed through an exposed property")
         }
         return value

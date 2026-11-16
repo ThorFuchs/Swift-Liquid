@@ -83,3 +83,9 @@ Final source qualification must include the affected `Scripts/ci.py` lanes,
 public consumer checks, documentation and the extraction adaptation record.
 Timing remains a separately admitted measurement; no performance verdict follows
 from a functional test.
+
+## Boxed Boolean extension
+
+An explicit Boolean host binding preserves the Boolean value for Liquid value
+operations while keeping property access on the host-object boundary. This is a
+bounded extension, not support for arbitrary nested or boxed Drop values.

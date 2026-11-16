@@ -133,6 +133,17 @@ class ProtocolTests(unittest.TestCase):
         for invalid in [{'_instantiate': 'IndexDrop', 'params': {'extra': 1}}, {'nested': marker}]:
             self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': invalid}})['error']['code'], -32602)
 
+    def test_portable_boolean_drop_keeps_value_and_object_boundaries(self):
+        source = "{{ drop }}|{% if drop %}T{% else %}F{% endif %}|{% if drop == blank %}B{% endif %}|{% if drop == empty %}E{% endif %}|{{ drop | default: 'x' }}|{{ drop | default: 'x', allow_false: true }}|{{ drop | size }}|[{{ drop.value }}]"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        for value, expected in [(True, 'true|T|||true|true|0|[]'), (False, 'false|F|B||x|false|0|[]')]:
+            marker = {'_instantiate': 'BooleanDrop', 'params': {'value': value}}
+            result = self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['result']
+            self.assertEqual(result, {'output': expected, 'errors': []})
+        for params in [{}, {'value': 1}, {'value': None}, {'value': True, 'extra': 1}]:
+            marker = {'_instantiate': 'BooleanDrop', 'params': params}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'drop': marker}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

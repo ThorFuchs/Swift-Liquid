@@ -12,7 +12,8 @@ internal struct SystemRuntimeValue {
 
 extension Renderer {
     internal func systemPrimary(_ value: Any) -> Any {
-        (value as? SystemRuntimeValue)?.primary ?? value
+        if hostContextEnabled, let boolean = value as? RuntimeHostBoolean { return boolean.value }
+        return (value as? SystemRuntimeValue)?.primary ?? value
     }
 
     internal func systemRuntime(_ value: LiquidSystemValue, depth: Int = 1) throws -> Any {

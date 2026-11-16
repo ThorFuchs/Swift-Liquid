@@ -122,12 +122,21 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
     for entry in input.entries {
         if case .object(let marker) = entry.value, marker["_instantiate"] != nil {
             guard marker.entries.count == 2, let kind = string(marker["_instantiate"]),
-                  case .object(let parameters)? = marker["params"], parameters.entries.isEmpty else {
+                  case .object(let parameters)? = marker["params"] else {
                 throw WireFailure.invalid("Unsupported standard drop marker")
             }
             switch kind {
-            case "MethodDrop": hosts.append(methodDrop(entry.key))
-            case "IndexDrop": hosts.append(indexDrop(entry.key))
+            case "MethodDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported MethodDrop parameters") }
+                hosts.append(methodDrop(entry.key))
+            case "IndexDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported IndexDrop parameters") }
+                hosts.append(indexDrop(entry.key))
+            case "BooleanDrop":
+                guard parameters.entries.count == 1, case .bool(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("BooleanDrop requires exactly one Boolean value")
+                }
+                hosts.append(LiquidHostObject(entry.key, booleanValue: value))
             default: throw WireFailure.invalid("Unsupported standard drop marker")
             }
         } else {

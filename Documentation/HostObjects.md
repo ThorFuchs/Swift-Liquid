@@ -60,11 +60,16 @@ let rendered = try await LiquidEngine().render(
 // Hello, Ada
 ```
 
-Properties can return admitted primitive values, arrays or objects. This first
-profile does not return nested host objects and does not define the host object's
-own truthiness, stringification, iteration, filter behavior or identity. Using
-the host object itself as a value fails rather than silently flattening it. It
-does not implement the complete Shopify Drop contract.
+A host can explicitly create `LiquidHostObject("flag", booleanValue: false)` to
+expose a boxed Boolean. Conditions, comparisons, output and standard filters use
+the supplied Boolean value, including `blank`, `empty`, and `default` semantics.
+The binding remains an object for property access and has no exposed properties;
+assignment and a selected `default` preserve that boundary. This profile does not
+provide arbitrary boxed host values or return nested host objects.
+
+Properties can return admitted primitive values, arrays or objects. Other host
+objects are not ordinary values and must be accessed through their explicitly
+registered properties. This does not implement the complete Shopify Drop contract.
 
 Callbacks are trusted application code and may suspend. Captured state must be
 Sendable; the host must synchronize any state shared between concurrent renders.
