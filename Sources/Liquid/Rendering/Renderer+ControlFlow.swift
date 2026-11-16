@@ -155,7 +155,7 @@ extension Renderer {
 
     internal func renderFor(variable: InlineString, collection: LiquidExpression, body: [ASTNode], empty: [ASTNode]?, params: ForParams) async throws -> String {
         let rawCollection = try await evaluateExpression(collection)
-        let collectionValue = hostContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
+        let collectionValue = boxedStringContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
         let forloopName = "\(variable.string)-\(expressionToPath(collection))"
 
         // Build collection key for offset:continue tracking
@@ -373,7 +373,7 @@ extension Renderer {
 
     internal func renderTableRow(variable: InlineString, collection: LiquidExpression, body: [ASTNode], params: TableRowParams) async throws -> String {
         let rawCollection = try await evaluateExpression(collection)
-        let collectionValue = hostContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
+        let collectionValue = boxedStringContextEnabled && rawCollection is RuntimeHostString ? NSNull() : systemPrimary(rawCollection)
         if collectionValue is NSNull || (collectionValue as? Bool) == false { return "" }
 
         func tableInteger(_ expression: LiquidExpression) async throws -> Int {

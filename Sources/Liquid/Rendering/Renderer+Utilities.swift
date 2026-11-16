@@ -105,7 +105,7 @@ extension Renderer {
     // values use Ruby's inspected representation. Keep this separate from
     // expression coercion and retain cancellation at composite boundaries.
     internal func renderStringify(_ value: Any) throws -> String {
-        if hostContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
+        if boxedStringContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
             throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
         }
         if value is RuntimeObject || value is [String: Any] || value is [Any] {
@@ -117,7 +117,7 @@ extension Renderer {
 
     private func renderCompositeUnescaped(_ value: Any) throws -> String {
         try Task.checkCancellation()
-        if hostContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
+        if boxedStringContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
             throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
         }
         if let array = value as? [Any] {
@@ -291,7 +291,7 @@ extension Renderer {
     internal func isEqual(_ left: Any, _ right: Any) throws -> Bool {
         let left = systemPrimary(left)
         let right = systemPrimary(right)
-        if hostContextEnabled, let leftArray = left as? [Any], let rightArray = right as? [Any],
+        if boxedStringContextEnabled, let leftArray = left as? [Any], let rightArray = right as? [Any],
            (try containsBoxedString(leftArray) || containsBoxedString(rightArray)) {
             return try boxedArrayEqual(leftArray, rightArray)
         }

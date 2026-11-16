@@ -475,6 +475,7 @@ public struct LiquidEngine: Sendable {
                 if object.indexer != nil { try renderer.budget.filterValue(depth: 2) }
                 if object.booleanValue != nil || object.numberValue != nil { try renderer.budget.filterValue(depth: 2) }
                 if let string = object.stringValue {
+                    renderer.boxedStringContextEnabled = true
                     try renderer.budget.filterValue(depth: 2)
                     if let value = string.value, value.utf8.count > limits.outputBytes { throw LiquidError.limitExceeded("outputBytes") }
                 }
@@ -487,6 +488,7 @@ public struct LiquidEngine: Sendable {
                         switch element {
                         case .value(let value): values.append(try bridge.write(value, depth: 2))
                         case .boxedString(let value):
+                            renderer.boxedStringContextEnabled = true
                             try renderer.budget.filterValue(depth: 2)
                             if let value { try bridge.key(value) }
                             values.append(RuntimeHostString(value: value, identity: RuntimeHostStringIdentity()))

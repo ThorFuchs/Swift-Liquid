@@ -23,7 +23,7 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(value is RuntimeHostString) && !(value is [Any]) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(value is RuntimeSelf)
     }
 
     @inline(__always)

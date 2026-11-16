@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/ordinaryHostArraysRetainTheirExistingStepBudget()": null,
     "LiquidTests.HostObjectTests/boxedStringPreservesObjectSensitiveBehavior()": null,
     "LiquidTests.HostObjectTests/boxedStringsInExplicitArraysPreserveFirstIdentity()": null,
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedStringsInvocationScoped()": null,

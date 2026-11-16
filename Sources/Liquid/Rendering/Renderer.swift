@@ -104,6 +104,7 @@ internal final class Renderer {
     internal let customFilters: [ScalarKey: LiquidFilter]
     internal let systemContextEnabled: Bool
     internal let hostContextEnabled: Bool
+    internal var boxedStringContextEnabled = false
 
 
     internal var templateLoader: TemplateLoader?

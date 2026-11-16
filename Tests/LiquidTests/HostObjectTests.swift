@@ -136,6 +136,14 @@ struct HostObjectTests {
         }
     }
 
+    @Test func ordinaryHostArraysRetainTheirExistingStepBudget() async throws {
+        let values = Array(repeating: LiquidValue.integer(1), count: 200)
+        let context: LiquidObject = ["a": .array(values), "b": .array(values)]
+        let engine = LiquidEngine(limits: .init(renderSteps: 40, contextValues: 500))
+        let host = LiquidHostObject("h", properties: [])
+        #expect(try await engine.render(template: "{% if a == b %}equal{% endif %}", context: context, hostObjects: [host]) == "equal")
+    }
+
     @Test func concurrentRendersKeepBoxedStringsInvocationScoped() async throws {
         let engine = LiquidEngine()
         let template = try LiquidTemplate("{{ d | upcase }}")

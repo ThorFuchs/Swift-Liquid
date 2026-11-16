@@ -88,7 +88,7 @@ extension Renderer {
                 return try await hostIndex(object, key: .other)
             }
             let unconvertedBase = try await evaluateExpressionFast(expr)
-            if unconvertedBase is RuntimeHostBoolean || unconvertedBase is RuntimeHostNumber || unconvertedBase is RuntimeHostString {
+            if unconvertedBase is RuntimeHostBoolean || unconvertedBase is RuntimeHostNumber || (boxedStringContextEnabled && unconvertedBase is RuntimeHostString) {
                 _ = try await evaluateExpressionFast(key)
                 return NSNull()
             }
