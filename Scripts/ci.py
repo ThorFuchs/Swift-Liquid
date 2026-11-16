@@ -161,6 +161,7 @@ def main():
             binary_dir = run(swift() + ['build', '-c', 'release', '--package-path', 'Tools/LiquidSpecAdapter', '--show-bin-path'], 'adapter-location').strip().splitlines()[-1]
             binary = str(Path(binary_dir) / 'LiquidSpecJSONRPC')
             receipt['binarySHA256'] = hashlib.sha256(Path(binary).read_bytes()).hexdigest()
+            run(['ruby', 'Tools/LiquidSpecAdapter/check_method_drop_materializer.rb'], 'materializer')
             run([sys.executable, '-B', 'Scripts/check_liquid_spec_protocol.py', binary], 'protocol')
             run(['ruby', '-I', str(args.spec_path.resolve() / 'lib'), 'Tools/LiquidSpecAdapter/check_bridge.rb'], 'bridge')
             run(['ruby', '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),

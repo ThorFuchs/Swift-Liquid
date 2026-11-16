@@ -111,4 +111,8 @@ partials. It constructs a bounded native host binding for the standard echo,
 square and double families; non-native integer inputs or overflow are operational
 domain failures. Unsupported, nested or malformed markers are rejected. This
 is not bidirectional Drop RPC, arbitrary Ruby transport, or a declaration of
-complete Drop support. The original full-suite selection remains unchanged.
+complete Drop support. The targeted lane verifies the three fixed and two
+generated MethodDrop fixtures. For the generated cases it recognizes only their
+two exact pinned shapes and exhaustively constructs their declared integer
+ranges; it does not evaluate fixture expressions or replay the full suite's
+random stream. The original full-suite selection remains unchanged.

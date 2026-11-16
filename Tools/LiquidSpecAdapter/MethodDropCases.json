@@ -8,5 +8,9 @@
     {"name": "drop_method_square", "line": 154},
     {"name": "drop_method_double", "line": 164}
   ],
-  "generatedCases": "held: fixture generator expressions are not evaluated"
+  "generatedCases": [
+    {"name": "drop_method_square_random", "line": 174, "minimum": 1, "maximum": 100},
+    {"name": "drop_method_echo_random", "line": 191, "minimum": 1, "maximum": 1000}
+  ],
+  "generatedPolicy": "Exhaustively construct each declared integer domain with a closed, hash-bound implementation; never evaluate fixture expressions."
 }

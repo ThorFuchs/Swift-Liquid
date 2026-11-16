@@ -83,14 +83,20 @@ callback, three missing-file diagnostics and the pinned loader's exact
 100,000-character `LongString` materialization. Their narrowly checked feature
 exceptions never bypass unrelated transport checks or change the comparator.
 
-## Fixed MethodDrop cases
+## MethodDrop cases
 
 `Scripts/ci.py --lane method-drop --spec-path PATH --reference-path PATH` runs
-three individually pinned, non-generated MethodDrop fixtures through Shopify's
-unchanged `AdapterRunner` comparator against both Swift and the pinned Ruby
-reference. The lane checks fixture bytes and identity and uses safe YAML loading;
-it does not invoke the upstream loader that evaluates fixture generator
-expressions. The two generated MethodDrop variants remain held. This separate
-result does not change the full-suite selector, raw verdict, five reviewed
-conflicts, or claims about other Drop classes. Optional `--output-root` places
-the receipt, per-case result, protocol checks and RPC trace outside the checkout.
+three fixed and two generated MethodDrop fixtures through Shopify's unchanged
+`AdapterRunner` comparator against both Swift and the pinned Ruby reference.
+For the two generated fixtures, the lane checks their exact pinned shapes and
+then exhaustively constructs their declared integer ranges (100 square inputs
+and 1,000 echo inputs) using a closed implementation. It never evaluates fixture
+expressions or invokes the upstream loader that does so. This is exhaustive for
+the two declared input ranges, not a replay of the full suite's random-number
+sequence. It is recorded as two fixture variants and 1,100 materializations.
+
+The lane checks fixture bytes and identity, uses safe YAML loading, and fails
+closed on changed shapes. Its separate results do not change the full-suite
+selector, raw verdict, five reviewed conflicts, or claims about other Drop
+classes. Optional `--output-root` places the receipt, per-case result, protocol
+checks and RPC trace outside the checkout.

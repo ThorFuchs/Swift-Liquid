@@ -2701,6 +2701,25 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted case outcomes and source-bound checks are separate from full-suite, performance and release acceptance."
+    },
+    {
+      "area": "Generated MethodDrop fixture materialization",
+      "scopeDecision": "Qualify only the two pinned generated MethodDrop fixtures without evaluating fixture-provided expressions or changing the existing full-suite selector.",
+      "changes": [
+        "Reject changed fixture bytes, identities, generated shapes, domains, and unsupported inputs; construct values using two explicitly authored operations rather than interpreting fixture text.",
+        "Exhaustively compare the 100 square and 1,000 echo inputs against the unchanged upstream comparator and pinned Ruby reference, retaining case and materialization counts separately.",
+        "Retain the three fixed MethodDrop fixtures and their targeted checks, including protocol, cancellation, source and reference guards."
+      ],
+      "files": [
+        "Tools/LiquidSpecAdapter/MethodDropCases.json",
+        "Tools/LiquidSpecAdapter/method_drop_materializer.rb",
+        "Tools/LiquidSpecAdapter/check_method_drop_materializer.rb",
+        "Tools/LiquidSpecAdapter/check_method_drop.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/ci.py",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "Targeted results do not change historical full-suite, conformance, performance or release holds."
     }
   ]
 }
