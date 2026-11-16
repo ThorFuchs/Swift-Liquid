@@ -63,6 +63,53 @@ public struct LiquidHostIndexer: Sendable {
     }
 }
 
+/// One explicitly named nested-node operation.
+public struct LiquidHostNodeProperty: Sendable {
+    /// The exact property name; validated when the node is admitted.
+    public let name: String
+    internal let body: @Sendable () async throws -> LiquidHostNodeResult
+
+    /// Creates an asynchronous operation returning a value, node, self or missing.
+    public init(_ name: String, _ body: @escaping @Sendable () async throws -> LiquidHostNodeResult) {
+        self.name = name
+        self.body = body
+    }
+}
+
+/// The result of one explicit nested-node operation.
+public enum LiquidHostNodeResult: Sendable {
+    /// An ordinary typed Liquid value.
+    case value(LiquidValue)
+    /// A separately supplied node; copies retain its identity.
+    case node(LiquidHostNode)
+    /// The current node, preserving its identity and admitted capabilities.
+    case current
+    /// A missing property.
+    case missing
+}
+
+internal final class RuntimeHostNodeIdentity: Sendable {}
+
+/// An explicit integer-valued host node with bounded property access.
+///
+/// The integer is used for rendering, truthiness and comparison; this profile
+/// does not declare a Ruby `to_number` conversion. Property callbacks are trusted
+/// Sendable application code and are invoked only for explicit names.
+public struct LiquidHostNode: Sendable {
+    internal let integerValue: Int
+    internal let properties: [LiquidHostNodeProperty]
+    internal let identity = RuntimeHostNodeIdentity()
+
+    /// Creates a node. Property names and limits are validated on admission.
+    /// - Parameters:
+    ///   - integerValue: Integer represented by the node.
+    ///   - properties: Explicit operations in declaration order.
+    public init(integerValue: Int, properties: [LiquidHostNodeProperty] = []) {
+        self.integerValue = integerValue
+        self.properties = properties
+    }
+}
+
 /// One element in an explicitly supplied host array.
 ///
 /// Boxed strings retain object behavior; ordinary values use `LiquidValue`.
@@ -89,9 +136,9 @@ internal struct LiquidHostSequenceBox: Sendable {
 /// A named root binding exposing only explicitly supplied host properties.
 ///
 /// Exact and dynamic properties use string keys; an optional indexer accepts
-/// typed string and integer keys. Explicit boxed values and finite sequences
-/// participate in value operations. Other host objects require property access.
-/// Host objects cannot be returned by a property in this profile.
+/// typed string and integer keys. Explicit boxed values, nested nodes and finite
+/// sequences participate in value operations. Other objects require property access.
+/// Ordinary host properties return Liquid values; explicit node properties can return nodes.
 public struct LiquidHostObject: Sendable {
     /// The exact name of the root binding supplied to a render.
     public let name: String
@@ -103,6 +150,7 @@ public struct LiquidHostObject: Sendable {
     internal let stringValue: LiquidHostStringBox?
     internal let arrayValues: [LiquidHostArrayElement]?
     internal let sequenceValue: LiquidHostSequenceBox?
+    internal let nodeValue: LiquidHostNode?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -118,6 +166,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -137,6 +186,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -157,6 +207,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -175,6 +226,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a boxed integer host binding with no exposed properties.
@@ -193,6 +245,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a boxed string host binding with no exposed properties.
@@ -211,6 +264,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = LiquidHostStringBox(value: stringValue)
         self.arrayValues = nil
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates an explicit finite root array containing ordinary values and
@@ -228,6 +282,7 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = array
         self.sequenceValue = nil
+        self.nodeValue = nil
     }
 
     /// Creates a finite, immutable, invocation-admitted host sequence.
@@ -247,5 +302,23 @@ public struct LiquidHostObject: Sendable {
         self.stringValue = nil
         self.arrayValues = nil
         self.sequenceValue = LiquidHostSequenceBox(values: sequence, displayName: displayName)
+        self.nodeValue = nil
+    }
+
+    /// Creates a root binding for an explicitly supplied nested host node.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - node: Integer-valued node with explicitly registered operations.
+    public init(_ name: String, node: LiquidHostNode) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
+        self.sequenceValue = nil
+        self.nodeValue = node
     }
 }

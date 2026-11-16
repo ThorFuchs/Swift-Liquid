@@ -154,3 +154,11 @@ snapshot, and five hash-pinned cases run against the unchanged comparator and
 pinned Ruby reference. This does not advertise general Drop RPC, streaming or
 the suite's additional JSON test filter, and does not alter the full-suite
 selector, historical exclusions or reviewed reference conflicts.
+
+
+The separate `nested-drop` lane admits only a root-level standard `NestedDrop`
+marker with one native-width integer value. It checks five fixed, hash-pinned
+cases with the upstream comparator and pinned Ruby reference, without changing
+the full-suite selector. `nested` retains the current node; `square` creates a
+new node and reports native integer overflow. Ruby arbitrary-precision arithmetic
+and the suite's separate object-sensitive JSON filter are outside this lane.

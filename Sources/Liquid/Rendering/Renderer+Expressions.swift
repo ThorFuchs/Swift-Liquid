@@ -88,6 +88,9 @@ extension Renderer {
                 return try await hostIndex(object, key: .other)
             }
             let unconvertedBase = try await evaluateExpressionFast(expr)
+            if hostNodeContextEnabled, let node = unconvertedBase as? RuntimeHostNode {
+                return try await hostNodeAccess(node, key: try await evaluateExpressionFast(key))
+            }
             if hostSequenceContextEnabled, let sequence = unconvertedBase as? RuntimeHostSequence {
                 return try hostSequenceAccess(sequence, key: try await evaluateExpressionFast(key))
             }

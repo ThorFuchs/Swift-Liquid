@@ -130,6 +130,19 @@ private func stringDropValue(_ parameters: LiquidObject) throws -> String? {
     }
 }
 
+// A closed, integer-valued model of Shopify's StandardNestedDrop.
+private func nestedDropNode(_ value: Int) -> LiquidHostNode {
+    LiquidHostNode(integerValue: value, properties: [
+        LiquidHostNodeProperty("nested") { .current },
+        LiquidHostNodeProperty("to_liquid") { .current },
+        LiquidHostNodeProperty("square") {
+            let (result, overflow) = value.multipliedReportingOverflow(by: value)
+            guard !overflow else { throw LiquidError.invalidValue("NestedDrop integer overflow") }
+            return .node(nestedDropNode(result))
+        },
+    ])
+}
+
 private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [LiquidHostObject]) {
     var values: [LiquidObject.Entry] = []
     var hosts: [LiquidHostObject] = []
@@ -158,6 +171,11 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                 hosts.append(LiquidHostObject(entry.key, numberValue: value))
             case "StringDrop":
                 hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
+            case "NestedDrop":
+                guard parameters.entries.count == 1, case .integer(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("NestedDrop requires exactly one integer value")
+                }
+                hosts.append(LiquidHostObject(entry.key, node: nestedDropNode(value)))
             case "SequenceDrop":
                 guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported SequenceDrop parameters") }
                 hosts.append(LiquidHostObject(entry.key, sequence: ["first", "second", "third"], displayName: "StandardSequenceDrop"))

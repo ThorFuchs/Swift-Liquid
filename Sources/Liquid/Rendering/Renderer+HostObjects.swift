@@ -16,6 +16,11 @@ internal struct RuntimeHostString: Sendable {
     let identity: RuntimeHostStringIdentity
 }
 
+internal struct RuntimeHostNode: Sendable {
+    let node: LiquidHostNode
+    let depth: Int
+}
+
 internal final class RuntimeHostSequenceIdentity {}
 
 // Contents are admitted and owned by a single renderer invocation.
@@ -32,7 +37,7 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(hostSequenceContextEnabled && value is RuntimeHostSequence) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(hostSequenceContextEnabled && value is RuntimeHostSequence) && !(hostNodeContextEnabled && value is RuntimeHostNode) && !(value is RuntimeSelf)
     }
 
     @inline(__always)
@@ -45,6 +50,51 @@ extension Renderer {
             throw LiquidError.invalidValue("A host object must be accessed through an exposed property")
         }
         return value
+    }
+
+    internal func admitHostNode(_ node: LiquidHostNode, depth: Int, chargeRoot: Bool = true) throws -> RuntimeHostNode {
+        if chargeRoot { try budget.filterValue(depth: depth) }
+        guard budget.remainingValues > 0, node.properties.count < budget.remainingValues else {
+            throw LiquidError.limitExceeded("contextValues")
+        }
+        try budget.filterValue(depth: depth + 1)
+        var names = Set<ScalarKey>()
+        for property in node.properties {
+            try budget.filterValue(depth: depth + 1)
+            guard !property.name.isEmpty, property.name.utf8.count <= budget.limits.outputBytes,
+                  names.insert(ScalarKey(property.name)).inserted else {
+                throw LiquidError.invalidValue("Invalid or duplicate host node property")
+            }
+        }
+        return RuntimeHostNode(node: node, depth: depth)
+    }
+
+    internal func hostNodeAccess(_ runtime: RuntimeHostNode, key: Any) async throws -> Any {
+        try budget.step()
+        guard let key = systemPrimary(key) as? String else { return NSNull() }
+        guard key.utf8.count <= budget.limits.outputBytes else { throw LiquidError.limitExceeded("outputBytes") }
+        let wanted = ScalarKey(key)
+        var found: LiquidHostNodeProperty?
+        for property in runtime.node.properties {
+            try budget.step()
+            if ScalarKey(property.name) == wanted { found = property; break }
+        }
+        guard let found else { return NSNull() }
+        let result: LiquidHostNodeResult
+        do { result = try await found.body() }
+        catch { try Task.checkCancellation(); throw error }
+        try budget.step()
+        let nextDepth = runtime.depth + 1
+        switch result {
+        case .missing: return NSNull()
+        case .current:
+            try budget.filterValue(depth: nextDepth)
+            return RuntimeHostNode(node: runtime.node, depth: nextDepth)
+        case .node(let node): return try admitHostNode(node, depth: nextDepth)
+        case .value(let value):
+            var bridge = FilterValueBridge(budget: budget)
+            return try bridge.write(value, depth: nextDepth)
+        }
     }
 
     internal func hostSequenceAccess(_ sequence: RuntimeHostSequence, key: Any) throws -> Any {

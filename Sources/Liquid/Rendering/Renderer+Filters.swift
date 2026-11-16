@@ -19,6 +19,15 @@ extension Renderer {
         "remove", "remove_first", "remove_last", "append", "prepend", "squish"
     ]
 
+    private static let hostNodeNumericFilters: Set<String> = [
+        "abs", "plus", "minus", "times", "divided_by", "modulo", "round", "ceil", "floor", "at_least", "at_most"
+    ]
+
+    private func filterArgumentPrimary(_ value: Any, name: InlineString) -> Any {
+        if hostNodeContextEnabled, value is RuntimeHostNode, Self.hostNodeNumericFilters.contains(name.string) { return 0 }
+        return systemPrimary(value)
+    }
+
     // MARK: - Filter Application
     
     internal func applyFilter(_ filter: Filter, to value: Any, isChained: Bool = false, chainPosition: Int = 0) async throws -> Any {
@@ -46,6 +55,19 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if hostNodeContextEnabled, input is RuntimeHostNode {
+            if filter.name.equals("size"), filter.arguments.isEmpty, filter.namedArguments.isEmpty { return 0 }
+            if filter.name.equals("default"), filter.arguments.count <= 2 {
+                _ = try await evaluateFilterArgumentsFast(filter.arguments)
+                if let allow = filter.namedArguments.first(where: { $0.name == "allow_false" })?.value {
+                    _ = try await evaluateExpression(allow)
+                }
+                return input
+            }
+            if Self.hostNodeNumericFilters.contains(filter.name.string) {
+                return try await applyFilterCore(filter, to: 0)
+            }
+        }
         if hostSequenceContextEnabled, let sequence = input as? RuntimeHostSequence {
             if filter.arguments.isEmpty, filter.namedArguments.isEmpty {
                 if filter.name.equals("size") { return sequence.values.count }
@@ -190,7 +212,7 @@ extension Renderer {
                 argument = literalArgument
             } else {
                 let evaluated = try await evaluateFilterArgumentFast(filter.arguments[0])
-                argument = filter.name.equals("default") ? evaluated : systemPrimary(evaluated)
+                argument = filter.name.equals("default") ? evaluated : filterArgumentPrimary(evaluated, name: filter.name)
             }
             if let builtinKind = filter.builtinKind,
                let result = try applyBuiltinFilterSingleArgument(kind: builtinKind, to: value, argument: argument) {
@@ -199,7 +221,7 @@ extension Renderer {
             return try await applyFilterInternal(filterName: filter.name, to: value, args: [argument])
         default:
             let evaluated = try await evaluateFilterArgumentsFast(filter.arguments)
-            let args = filter.name.equals("default") ? evaluated : evaluated.map { systemPrimary($0) }
+            let args = filter.name.equals("default") ? evaluated : evaluated.map { filterArgumentPrimary($0, name: filter.name) }
             return try await applyFilterInternal(filterName: filter.name, to: value, args: args)
         }
     }

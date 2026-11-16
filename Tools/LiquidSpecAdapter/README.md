@@ -142,3 +142,14 @@ checks five fixed, hash-pinned SequenceDrop cases using the unchanged upstream
 comparator and pinned Ruby reference. It loads selected YAML nodes as data and
 disables dynamic Ruby evaluation. The finite snapshot and its results do not
 change the full-suite selector or admit arbitrary host iterators.
+
+
+## Fixed NestedDrop cases
+
+`Scripts/ci.py --lane nested-drop --spec-path PATH --reference-path PATH`
+checks five fixed, hash-pinned cases using the unchanged upstream comparator and
+pinned Ruby reference. It safely reads selected YAML nodes and forbids dynamic
+Ruby evaluation. This targeted lane does not change the full-suite selector.
+The portable marker is root-level only and uses a native-width integer; the
+reference's arbitrary-precision integers and extra JSON test filter remain
+outside its qualified scope.

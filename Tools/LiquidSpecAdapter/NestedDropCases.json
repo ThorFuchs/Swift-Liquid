@@ -1,0 +1,86 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 398
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_nested_returns_self"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 410
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_nested_chained_self"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 421
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_nested_square_returns_new_drop"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 436
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_nested_square_chained"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 449
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_nested_mixed_chain"
+    }
+  ]
+}

@@ -65,7 +65,7 @@ expose a boxed Boolean. Conditions, comparisons, output and standard filters use
 the supplied Boolean value, including `blank`, `empty`, and `default` semantics.
 The binding remains an object for property access and has no exposed properties;
 assignment and a selected `default` preserve that boundary. This profile does not
-provide arbitrary boxed host values or return nested host objects from callbacks.
+provide arbitrary boxed host values.
 
 A host can also create `LiquidHostObject("count", numberValue: 42)` for a
 boxed native-width integer. Numeric operations, comparisons and output use
@@ -114,9 +114,41 @@ explicit display name is rendered when the object itself is output. Custom
 filters receive an ordinary array snapshot. No callback or mutable iterator is
 retained by a parsed template or shared between renders.
 
-Properties can return admitted primitive values, arrays or objects. Other host
-objects are not ordinary values and must be accessed through their explicitly
-registered properties. This does not implement the complete Shopify Drop contract.
+A host can expose a bounded, integer-valued node with explicitly registered
+nested properties:
+
+```swift
+let node = LiquidHostNode(integerValue: 3, properties: [
+    LiquidHostNodeProperty("nested") { .current },
+    LiquidHostNodeProperty("square") {
+        .node(LiquidHostNode(integerValue: 9))
+    }
+])
+let result = try await LiquidEngine().render(
+    template: "{{ item.nested.square }}",
+    hostObjects: [LiquidHostObject("item", node: node)]
+)
+// 9
+```
+
+`.current` returns the same node with its properties intact; `.node` returns an
+explicitly supplied node, `.value` returns an ordinary admitted Liquid value,
+and `.missing` reports a missing property. Every transition is charged against
+the render's work, value and nesting limits, including repeated returns of the
+same node. Property names are exact and checked for emptiness, duplicates and
+byte limits; callbacks and their returned values are checked for cancellation
+and resource limits. Other key types do not invoke a property. No callback is
+retained by a parsed template. This is not reflection or a general recursive
+host graph or container protocol.
+
+The node's native-width integer is its representation for output, comparisons,
+truthiness and custom filters. A node remains an object for property access and
+assignment. As in Shopify's standard NestedDrop, it does not provide numeric
+conversion: built-in arithmetic filters coerce it to zero, including when used
+as an argument. The suite's extra JSON test filter is outside this contract.
+Hosts must handle integer overflow in their callbacks. Properties can also
+return ordinary admitted primitive values, arrays or objects. This does not
+implement the complete Shopify Drop contract.
 
 Callbacks are trusted application code and may suspend. Captured state must be
 Sendable; the host must synchronize any state shared between concurrent renders.

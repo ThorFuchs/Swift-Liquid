@@ -114,3 +114,14 @@ iterations use the existing iteration quota. Size, first, last, count, min,
 max, sort and to_liquid are exposed without reflection; ordering uses the
 engine's comparable scalar domain. This bounded snapshot is not a streaming or arbitrary
 `AsyncSequence` bridge, and it does not add nested host objects.
+
+
+## Explicit integer-valued nested nodes
+
+A separate opt-in `LiquidHostNode` capability supports exact named callbacks
+returning the current node, an explicitly constructed node, an admitted ordinary
+value or missing. Each transition uses invocation-owned work, value and nesting
+budgets, including cycles, with cancellation checked around callbacks. Integer
+materialization does not grant numeric conversion to built-in arithmetic filters.
+This narrow capability does not expose arbitrary objects or nested host values in
+ordinary containers. Existing fixture, conformance and release holds remain.

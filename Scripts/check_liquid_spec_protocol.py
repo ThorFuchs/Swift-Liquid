@@ -185,6 +185,20 @@ class ProtocolTests(unittest.TestCase):
         nested = {'_instantiate': 'SequenceDrop', 'params': {}}
         self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': [nested]}})['error']['code'], -32602)
 
+    def test_portable_nested_drop_preserves_identity_and_bounds(self):
+        source = "{{ d.nested.square.nested }}|{{ d.square.square }}|[{{ d.value }}]|{{ d | plus: 1 }}|{{ 5 | plus: d }}"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        marker = {'_instantiate': 'NestedDrop', 'params': {'value': 3}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']
+        self.assertEqual(result, {'output': '9|81|[]|1|5', 'errors': []})
+        for invalid in [{}, {'value': True}, {'value': '3'}, {'value': 3, 'extra': 1}]:
+            marker = {'_instantiate': 'NestedDrop', 'params': invalid}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['error']['code'], -32602)
+        marker = {'_instantiate': 'NestedDrop', 'params': {'value': 3}}
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': [marker]}})['error']['code'], -32602)
+        marker = {'_instantiate': 'NestedDrop', 'params': {'value': 9223372036854775807}}
+        self.assertIsNotNone(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']['error'])
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

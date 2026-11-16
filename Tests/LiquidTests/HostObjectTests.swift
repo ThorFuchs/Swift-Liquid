@@ -43,8 +43,89 @@ private actor DynamicAccessCounter {
     func record(_ key: String) { keys.append(key) }
 }
 
+private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
+    LiquidHostNode(integerValue: value, properties: [
+        LiquidHostNodeProperty("self") { .current },
+        LiquidHostNodeProperty("plain") { .value(.integer(value)) },
+        LiquidHostNodeProperty("next") {
+            let (next, overflow) = value.addingReportingOverflow(1)
+            guard !overflow else { throw LiquidError.invalidValue("Node overflow") }
+            return .node(makeIntegerNode(next))
+        },
+        LiquidHostNodeProperty("missing") { .missing }
+    ])
+}
+
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func nestedHostNodesPreserveAccessValuesAndAliases() async throws {
+        let engine = LiquidEngine()
+        let root = LiquidHostObject("d", node: makeIntegerNode(3))
+        let source = "{{ d }}|{{ d.self.self }}|{{ d.next.next }}|{{ d.self.next.self }}|[{{ d.missing }}]|[{{ d.unknown }}]|[{{ d[0] }}]|{{ d | size }}|{{ d | plus: 1 }}|{{ 5 | plus: d }}"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, hostObjects: [root], syntaxMode: mode) == "3|3|5|4|[]|[]|[]|0|1|5")
+            #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: [root]) == "3|3|5|4|[]|[]|[]|0|1|5")
+            let aliases = "{% assign x = d.self %}{{ x.next }}|{% assign y = d | default %}{{ y.next }}|{{ self.d.self.next }}|{% if d.self == d %}equal{% endif %}|[{{ d.plain.self }}]"
+            #expect(try await engine.render(template: aliases, hostObjects: [root], syntaxMode: mode) == "4|4|4|equal|[]")
+            #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: [root], templates: ["p": "{{ d.self.next }}"], syntaxMode: mode) == "4")
+        }
+        let custom = try LiquidEngine(filters: [LiquidFilter("node_kind") { value, _, _ in
+            if case .integer = value { return "integer" }; return "wrong"
+        }])
+        #expect(try await custom.render(template: "{{ d.self | node_kind }}", hostObjects: [root]) == "integer")
+    }
+
+    @Test func nestedHostNodeAdmissionAndDepthRemainBounded() async throws {
+        let root = LiquidHostObject("d", node: makeIntegerNode(1))
+        let source = "{% assign x = d %}{% for i in (1..limit) %}{% assign x = x.self %}{% endfor %}{{ x }}"
+        let parsed = try LiquidTemplate(source)
+        #expect(try await LiquidEngine(limits: .init(nestingDepth: 12)).render(parsed, context: ["limit": 6], hostObjects: [root]) == "1")
+        #expect(try await LiquidEngine(limits: .init(nestingDepth: 4)).render(parsed, context: ["limit": 2], hostObjects: [root]) == "1")
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(nestingDepth: 4)).render(parsed, context: ["limit": 6], hostObjects: [root])
+        }
+        await #expect(throws: LiquidError.self) {
+            try await LiquidEngine(limits: .init(contextValues: 2)).render(template: "{{ d }}", hostObjects: [root])
+        }
+        let duplicate = LiquidHostNode(integerValue: 1, properties: [LiquidHostNodeProperty("x") { .missing }, LiquidHostNodeProperty("x") { .missing }])
+        let parent = LiquidHostObject("d", node: LiquidHostNode(integerValue: 0, properties: [LiquidHostNodeProperty("child") { .node(duplicate) }]))
+        await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "{{ d.child }}", hostObjects: [parent]) }
+        let badValue = LiquidHostObject("d", node: LiquidHostNode(integerValue: 0, properties: [LiquidHostNodeProperty("bad") { .value(.number(.infinity)) }]))
+        await #expect(throws: LiquidError.self) { try await LiquidEngine().render(template: "{{ d.bad }}", hostObjects: [badValue]) }
+    }
+
+    @Test func cancellationDuringNestedHostAccessPreservesReuse() async throws {
+        let gate = HostReleaseGate()
+        let suspended = LiquidHostObject("d", node: LiquidHostNode(integerValue: 3, properties: [LiquidHostNodeProperty("next") {
+            await gate.suspend()
+            return .current
+        }]))
+        let engine = LiquidEngine()
+        let task = Task { try await engine.render(template: "{{ d.next.next }}", hostObjects: [suspended]) }
+        await gate.waitUntilEntered()
+        task.cancel()
+        await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(try await engine.render(template: "{{ d.self.next }}", hostObjects: [LiquidHostObject("d", node: makeIntegerNode(3))]) == "4")
+    }
+
+    @Test func concurrentRendersKeepHostNodesInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ d.self.next }}")
+        let outputs = try await withThrowingTaskGroup(of: Int.self) { group in
+            for index in 0..<24 {
+                group.addTask {
+                    let result = try await engine.render(template, hostObjects: [LiquidHostObject("d", node: makeIntegerNode(index))])
+                    return Int(result) ?? -1
+                }
+            }
+            var values: [Int] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(outputs.sorted() == Array(1...24))
+    }
+
     @Test func finiteHostSequencePreservesReferenceOperations() async throws {
         let engine = LiquidEngine()
         let host = LiquidHostObject("d", sequence: ["first", "second", "third"], displayName: "ExampleSequence")
