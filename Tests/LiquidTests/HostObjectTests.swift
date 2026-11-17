@@ -77,6 +77,12 @@ struct HostObjectTests {
         #expect(try await engine.render(template: rejected, hostObjects: hosts) == "0|0|1|1")
         let distinct = "{% assign a = d | reverse %}{% assign b = e | reverse %}{% assign both = a | concat: b %}{% assign same = a | concat: a %}{{ both | uniq | size }}|{{ same | uniq | size }}|{{ both | where: 'to_liquid', d | size }}"
         #expect(try await engine.render(template: distinct, hostObjects: hosts) == "2|1|1")
+        let mixedContext: LiquidObject = ["strings": ["foo", "bar"], "hashes": [["foo": true]]]
+        let mixed = "{% assign a = d | reverse %}{% assign b = a | concat: strings %}{{ b | reject: 'foo' | size }}|{% assign c = strings | concat: a %}{{ c | reject: 'foo' | size }}|{% assign h = a | concat: hashes %}{{ h | reject: 'foo' | size }}|{{ h | reject: 'to_liquid', d | size }}"
+        #expect(try await engine.render(template: mixed, context: mixedContext, hostObjects: hosts) == "2|2|1|1")
+        let boxedMixed = hosts + [LiquidHostObject("boxed", array: [.boxedString("abc")])]
+        let boxedSource = "{% assign a = d | reverse %}{% assign both = a | concat: boxed %}{{ both | reject: 'to_liquid' | size }}"
+        #expect(try await engine.render(template: boxedSource, hostObjects: boxedMixed) == "0")
         let firstLast = "{% assign a = d | first %}{% assign b = d | last %}{% if a == nil %}N{% endif %}|{% if b == nil %}N{% endif %}"
         #expect(try await engine.render(template: firstLast, hostObjects: hosts) == "N|N")
         let empty = LiquidHostObject("d", opaqueDisplayName: "")

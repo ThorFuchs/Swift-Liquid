@@ -1107,11 +1107,23 @@ extension Renderer {
             let targetArg: Any? = args.count > 1 ? args[1] : nil
             let hasTarget = args.count > 1 && !(targetArg is NSNull)
 
-            if hostOpaqueContextEnabled, !array.isEmpty, array.allSatisfy({ $0 is RuntimeHostOpaque }), let property {
+            if hostOpaqueContextEnabled, array.contains(where: { $0 is RuntimeHostOpaque }),
+               array.allSatisfy({ $0 is RuntimeHostOpaque || (boxedStringContextEnabled && $0 is RuntimeHostString) || isDictLike($0) || systemPrimary($0) is String }), let property {
                 var retained: [Any] = []
                 for item in array {
                     try budget.step()
-                    let value = getObjectProperty(item, key: property)
+                    let value: Any?
+                    if item is RuntimeHostOpaque {
+                        value = getObjectProperty(item, key: property)
+                    } else if boxedStringContextEnabled && item is RuntimeHostString {
+                        value = ScalarKey(property) == ScalarKey("to_liquid") ? item : nil
+                    } else if isDictLike(item) {
+                        value = dictValue(item, forKey: property)
+                    } else if let string = systemPrimary(item) as? String {
+                        value = string.range(of: property, options: .literal) == nil ? nil : property
+                    } else {
+                        value = nil
+                    }
                     let selected = hasTarget ? areValuesEqual(value, targetArg) : value.map { isTruthy($0) } ?? false
                     if !selected { retained.append(item) }
                 }
