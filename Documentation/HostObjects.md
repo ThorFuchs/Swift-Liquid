@@ -121,8 +121,9 @@ is used for output and string filters, not equality or numeric conversion.
 Only `to_liquid` is exposed and returns the same object; other properties and
 indexes are missing. Assignment and `default` retain its identity, and two
 separate objects compare unequal even when their display texts agree. It does
-not iterate. Custom typed filters receive the display text as a string, so this
-boundary does not preserve object identity. Display bytes and value admission
+not iterate. Collection filters treat it as one element and preserve its
+identity without exposing internal properties. Custom typed filters receive the
+display text as a string, so this boundary does not preserve object identity. Display bytes and value admission
 use the existing invocation limits. This is not an arbitrary-object bridge.
 
 A host can expose a bounded, integer-valued node with explicitly registered

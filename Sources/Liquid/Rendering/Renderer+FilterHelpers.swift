@@ -72,6 +72,7 @@ extension Renderer {
             // compact('key'): remove items where item[key] is nil
             return array.filter { item in
                 if boxedStringContextEnabled && item is RuntimeHostString { return false }
+                if hostOpaqueContextEnabled && item is RuntimeHostOpaque { return getObjectProperty(item, key: key) != nil }
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
                 return !(systemPrimary(val) is NSNull)
@@ -102,6 +103,8 @@ extension Renderer {
                 } else {
                     selected = dictValue(item, forKey: key) ?? NSNull()
                 }
+            } else if hostOpaqueContextEnabled, item is RuntimeHostOpaque, let key {
+                selected = getObjectProperty(item, key: key) ?? NSNull()
             } else {
                 selected = key.map { dictValue(item, forKey: $0) ?? NSNull() } ?? item
             }
@@ -189,7 +192,9 @@ extension Renderer {
         var result: [Any] = []
         result.reserveCapacity(array.count)
         for item in array {
-            if boxedStringContextEnabled && item is RuntimeHostString {
+            if hostOpaqueContextEnabled && item is RuntimeHostOpaque {
+                result.append(ScalarKey(propertyName) == ScalarKey("to_liquid") ? item : NSNull())
+            } else if boxedStringContextEnabled && item is RuntimeHostString {
                 result.append(propertyName == "to_liquid" ? item : NSNull())
             } else if let selfValue = item as? RuntimeSelf {
                 result.append(selfValue.lookup(propertyName) ?? NSNull())
@@ -212,6 +217,7 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
+        if hostOpaqueContextEnabled && object is RuntimeHostOpaque { return ScalarKey(key) == ScalarKey("to_liquid") ? object : nil }
         if boxedStringContextEnabled && object is RuntimeHostString { return nil }
         let object = systemPrimary(object)
         // Handle different object types
@@ -241,6 +247,10 @@ extension Renderer {
         // Unwrap the values
         let valueA = a!
         let valueB = b!
+        if hostOpaqueContextEnabled {
+            if let lhs = valueA as? RuntimeHostOpaque, let rhs = valueB as? RuntimeHostOpaque { return lhs.identity === rhs.identity }
+            if valueA is RuntimeHostOpaque || valueB is RuntimeHostOpaque { return false }
+        }
         
         // Compare based on types
         switch (valueA, valueB) {

@@ -55,9 +55,14 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
-        if hostOpaqueContextEnabled, input is RuntimeHostOpaque,
-           filter.arguments.isEmpty, filter.namedArguments.isEmpty,
-           filter.name.equals("first") || filter.name.equals("last") { return NSNull() }
+        if hostOpaqueContextEnabled, input is RuntimeHostOpaque {
+            if filter.arguments.isEmpty, filter.namedArguments.isEmpty,
+               filter.name.equals("first") || filter.name.equals("last") { return NSNull() }
+            let collectionFilters: Set<String> = ["reverse", "sort", "sort_natural", "concat", "compact", "uniq", "map", "where", "reject", "find", "find_index", "has"]
+            if collectionFilters.contains(filter.name.string) {
+                return try await applyFilterCore(filter, to: [input] as [Any])
+            }
+        }
         if hostNodeContextEnabled, input is RuntimeHostNode {
             if filter.name.equals("size"), filter.arguments.isEmpty, filter.namedArguments.isEmpty { return 0 }
             if filter.name.equals("default"), filter.arguments.count <= 2 {
@@ -1051,7 +1056,7 @@ extension Renderer {
                 else { items = [value] }
                 for item in items {
                     try budget.step()
-                    if isDictLike(item) || (boxedStringContextEnabled && item is RuntimeHostString) { continue } // A missing key selects nil.
+                    if isDictLike(item) || (boxedStringContextEnabled && item is RuntimeHostString) || (hostOpaqueContextEnabled && item is RuntimeHostOpaque) { continue } // A missing key selects nil.
                     if systemPrimary(item) is String || systemPrimary(item) is Int {
                         throw RenderError.custom("cannot select the property ''")
                     }
@@ -1101,6 +1106,17 @@ extension Renderer {
             // Treat NSNull second arg as undefined → truthy check
             let targetArg: Any? = args.count > 1 ? args[1] : nil
             let hasTarget = args.count > 1 && !(targetArg is NSNull)
+
+            if hostOpaqueContextEnabled, !array.isEmpty, array.allSatisfy({ $0 is RuntimeHostOpaque }), let property {
+                var retained: [Any] = []
+                for item in array {
+                    try budget.step()
+                    let value = getObjectProperty(item, key: property)
+                    let selected = hasTarget ? areValuesEqual(value, targetArg) : value.map { isTruthy($0) } ?? false
+                    if !selected { retained.append(item) }
+                }
+                return retained
+            }
 
             // For non-dict arrays
             if property == nil || !array.contains(where: { isDictLike($0) }) {

@@ -68,6 +68,15 @@ struct HostObjectTests {
             #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: hosts) == expected)
             #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: hosts, templates: ["p": "{{ d }}"], syntaxMode: mode) == "opaque")
         }
+        let collectionFilters = "{{ d | reverse | size }}|{{ d | sort | size }}|{{ d | compact | size }}|{{ d | uniq | size }}|{{ d | map: 'foo' | size }}|{{ d | where: 'foo' | size }}|{{ d | reject: 'foo' | size }}"
+        let collectionOutput = try await engine.render(template: collectionFilters, hostObjects: hosts)
+        #expect(collectionOutput == "1|1|1|1|1|0|1")
+        let collectionIdentity = "{% assign r = d | reverse %}{% assign u = d | uniq %}{% assign m = d | map: 'to_liquid' %}{% if r[0] == d %}E{% endif %}|{% if u[0] == d %}E{% endif %}|{% if m[0] == d %}E{% endif %}|{% assign hidden = d | map: 'displayName' %}[{{ hidden[0] }}]"
+        #expect(try await engine.render(template: collectionIdentity, hostObjects: hosts) == "E|E|E|[]")
+        let rejected = "{{ d | reject: 'to_liquid' | size }}|{{ d | reject: 'to_liquid', d | size }}|{{ d | reject: 'to_liquid', e | size }}|{{ d | reverse | reject: 'foo' | size }}"
+        #expect(try await engine.render(template: rejected, hostObjects: hosts) == "0|0|1|1")
+        let distinct = "{% assign a = d | reverse %}{% assign b = e | reverse %}{% assign both = a | concat: b %}{% assign same = a | concat: a %}{{ both | uniq | size }}|{{ same | uniq | size }}|{{ both | where: 'to_liquid', d | size }}"
+        #expect(try await engine.render(template: distinct, hostObjects: hosts) == "2|1|1")
         let firstLast = "{% assign a = d | first %}{% assign b = d | last %}{% if a == nil %}N{% endif %}|{% if b == nil %}N{% endif %}"
         #expect(try await engine.render(template: firstLast, hostObjects: hosts) == "N|N")
         let empty = LiquidHostObject("d", opaqueDisplayName: "")

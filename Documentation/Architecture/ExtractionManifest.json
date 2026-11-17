@@ -2957,6 +2957,8 @@
         "Sources/Liquid/Rendering/Renderer+Utilities.swift",
         "Sources/Liquid/Rendering/Renderer+CustomFilters.swift",
         "Sources/Liquid/Rendering/Renderer+Filters.swift",
+        "Sources/Liquid/Rendering/Renderer+FilterHelpers.swift",
+        "Sources/Liquid/Support/RuntimeEqualityKey.swift",
         "Tests/LiquidTests/HostObjectTests.swift",
         "Tests/TestInventory.json",
         "Tools/LiquidSpecAdapter/OpaqueDropCases.json",
