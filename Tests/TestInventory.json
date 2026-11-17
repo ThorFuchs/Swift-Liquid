@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/opaqueHostObjectPreservesIdentityAndObjectBehavior()": null,
+    "LiquidTests.HostObjectTests/opaqueHostObjectAdmissionHonorsLimits()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepOpaqueObjectsInvocationScoped()": null,
     "LiquidTests.HostObjectTests/typedNullPreservesLiquidNilBehaviorAcrossModes()": null,
     "LiquidTests.HostObjectTests/nestedHostNodesPreserveAccessValuesAndAliases()": null,
     "LiquidTests.HostObjectTests/nestedHostNodeAdmissionAndDepthRemainBounded()": null,
@@ -388,6 +391,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepOpaqueObjectsInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostNodesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostSequencesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepBoxedStringsInvocationScoped()",

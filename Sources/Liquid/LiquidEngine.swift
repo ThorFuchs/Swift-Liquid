@@ -479,7 +479,12 @@ public struct LiquidEngine: Sendable {
                     try renderer.budget.filterValue(depth: 2)
                     if let value = string.value, value.utf8.count > limits.outputBytes { throw LiquidError.limitExceeded("outputBytes") }
                 }
-                if let node = object.nodeValue {
+                if let displayName = object.opaqueDisplayName {
+                    renderer.hostOpaqueContextEnabled = true
+                    try renderer.budget.filterValue(depth: 2)
+                    guard displayName.utf8.count <= limits.outputBytes else { throw LiquidError.limitExceeded("outputBytes") }
+                    roots.append((object.name, RuntimeHostOpaque(displayName: displayName)))
+                } else if let node = object.nodeValue {
                     renderer.hostNodeContextEnabled = true
                     roots.append((object.name, try renderer.admitHostNode(node, depth: 1, chargeRoot: false)))
                 } else if let sequence = object.sequenceValue {

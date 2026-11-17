@@ -199,6 +199,19 @@ class ProtocolTests(unittest.TestCase):
         marker = {'_instantiate': 'NestedDrop', 'params': {'value': 9223372036854775807}}
         self.assertIsNotNone(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']['error'])
 
+    def test_portable_opaque_drop_keeps_identity_and_rejects_other_shapes(self):
+        source = "{{ d }}|[{{ d.size }}]|{% if d %}T{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == 'opaque' %}E{% else %}N{% endif %}|{% if d == e %}E{% else %}N{% endif %}|{% assign x = d.to_liquid %}{% if d == x %}E{% endif %}|{{ d | size }}|{{ d | upcase }}|{{ d | plus: 1 }}"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        marker = {'_instantiate': 'OpaqueDrop', 'params': {}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'d': marker, 'e': marker}})['result']
+        self.assertEqual(result, {'output': 'opaque|[]|T|N|N|N|E|0|OPAQUE|1', 'errors': []})
+        for bad in [{'value': None}, {'value': 'opaque'}, {'extra': 1}]:
+            marker = {'_instantiate': 'OpaqueDrop', 'params': bad}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['error']['code'], -32602)
+        marker = {'_instantiate': 'OpaqueDrop', 'params': {}}
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': [marker]}})['error']['code'], -32602)
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': {'_instantiate': 'OpaqueDrop'}}})['error']['code'], -32602)
+
     def test_portable_nil_drop_is_present_null_and_rejects_other_shapes(self):
         source = "[{{ d }}]|{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% endif %}|{{ d | default: 'fallback' }}|{{ d | plus: 1 }}"
         template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']

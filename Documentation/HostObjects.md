@@ -114,6 +114,17 @@ explicit display name is rendered when the object itself is output. Custom
 filters receive an ordinary array snapshot. No callback or mutable iterator is
 retained by a parsed template or shared between renders.
 
+An explicit opaque object is created with
+`LiquidHostObject("item", opaqueDisplayName: "opaque")`. It stays truthy and
+neither blank nor empty, even if its display text is empty. Its display text
+is used for output and string filters, not equality or numeric conversion.
+Only `to_liquid` is exposed and returns the same object; other properties and
+indexes are missing. Assignment and `default` retain its identity, and two
+separate objects compare unequal even when their display texts agree. It does
+not iterate. Custom typed filters receive the display text as a string, so this
+boundary does not preserve object identity. Display bytes and value admission
+use the existing invocation limits. This is not an arbitrary-object bridge.
+
 A host can expose a bounded, integer-valued node with explicitly registered
 nested properties:
 

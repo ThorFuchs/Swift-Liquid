@@ -55,6 +55,9 @@ extension Renderer {
             return input
         }
         if filter.name.equals("h") { return try await applyFilterCore(Filter(name: "escape", arguments: filter.arguments, namedArguments: filter.namedArguments), to: input) }
+        if hostOpaqueContextEnabled, input is RuntimeHostOpaque,
+           filter.arguments.isEmpty, filter.namedArguments.isEmpty,
+           filter.name.equals("first") || filter.name.equals("last") { return NSNull() }
         if hostNodeContextEnabled, input is RuntimeHostNode {
             if filter.name.equals("size"), filter.arguments.isEmpty, filter.namedArguments.isEmpty { return 0 }
             if filter.name.equals("default"), filter.arguments.count <= 2 {

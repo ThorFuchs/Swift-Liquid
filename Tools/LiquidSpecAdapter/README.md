@@ -163,3 +163,12 @@ upstream comparator, while forbidding dynamic Ruby evaluation. The exact
 standard NilDrop's `to_liquid` yields nil; the root-only portable marker is
 admitted as a present typed null. This does not change the full-suite selector
 or admit arbitrary nested markers or other host classes as null.
+
+
+## Fixed OpaqueDrop cases
+
+`Scripts/ci.py --lane opaque-drop --spec-path PATH --reference-path PATH` checks
+three fixed, hash-pinned cases against the pinned Ruby reference with the
+unchanged upstream comparator. It safely reads selected YAML nodes and forbids
+dynamic Ruby evaluation. The root-only marker has empty parameters and does
+not change the full-suite selector or qualify the suite's extra JSON test filter.

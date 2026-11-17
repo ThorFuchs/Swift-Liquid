@@ -16,6 +16,13 @@ internal struct RuntimeHostString: Sendable {
     let identity: RuntimeHostStringIdentity
 }
 
+internal final class RuntimeHostOpaqueIdentity: Sendable {}
+
+internal struct RuntimeHostOpaque: Sendable {
+    let displayName: String
+    let identity = RuntimeHostOpaqueIdentity()
+}
+
 internal struct RuntimeHostNode: Sendable {
     let node: LiquidHostNode
     let depth: Int
@@ -37,7 +44,7 @@ extension Renderer {
         guard hostContextEnabled else { return true }
         let root = String(path.prefix { $0 != "." })
         let value = context.getLiteralVariable(root)
-        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(hostSequenceContextEnabled && value is RuntimeHostSequence) && !(hostNodeContextEnabled && value is RuntimeHostNode) && !(value is RuntimeSelf)
+        return root != "self" && !(value is LiquidHostObject) && !(value is RuntimeHostBoolean) && !(value is RuntimeHostNumber) && !(boxedStringContextEnabled && (value is RuntimeHostString || value is [Any])) && !(hostSequenceContextEnabled && value is RuntimeHostSequence) && !(hostNodeContextEnabled && value is RuntimeHostNode) && !(hostOpaqueContextEnabled && value is RuntimeHostOpaque) && !(value is RuntimeSelf)
     }
 
     @inline(__always)
@@ -95,6 +102,14 @@ extension Renderer {
             var bridge = FilterValueBridge(budget: budget)
             return try bridge.write(value, depth: nextDepth)
         }
+    }
+
+    internal func hostOpaqueAccess(_ opaque: RuntimeHostOpaque, key: Any) throws -> Any {
+        try budget.step()
+        guard let key = systemPrimary(key) as? String else { return NSNull() }
+        guard key.utf8.count <= budget.limits.outputBytes else { throw LiquidError.limitExceeded("outputBytes") }
+        if ScalarKey(key) == ScalarKey("to_liquid") { return opaque }
+        return NSNull()
     }
 
     internal func hostSequenceAccess(_ sequence: RuntimeHostSequence, key: Any) throws -> Any {

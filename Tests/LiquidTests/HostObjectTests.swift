@@ -58,6 +58,47 @@ private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func opaqueHostObjectPreservesIdentityAndObjectBehavior() async throws {
+        let engine = LiquidEngine()
+        let hosts = [LiquidHostObject("d", opaqueDisplayName: "opaque"), LiquidHostObject("e", opaqueDisplayName: "opaque")]
+        let source = "{{ d }}|[{{ d.size }}]|[{{ d.unknown }}]|[{{ d[0] }}]|{% if d %}T{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{% if d == 'opaque' %}E{% else %}N{% endif %}|{% if 'opaque' == d %}E{% else %}N{% endif %}|{% if d == d %}E{% endif %}|{% if d == e %}E{% else %}N{% endif %}|{% assign x = d.to_liquid %}{% if d == x %}E{% endif %}|{{ d | size }}|{{ d | upcase }}|{{ d | plus: 1 }}|{{ 5 | plus: d }}|{% for item in d %}bad{% else %}none{% endfor %}"
+        let expected = "opaque|[]|[]|[]|T|N|N|N|N|E|N|E|0|OPAQUE|1|5|none"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            #expect(try await engine.render(template: source, hostObjects: hosts, syntaxMode: mode) == expected)
+            #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), hostObjects: hosts) == expected)
+            #expect(try await engine.render(template: "{% render 'p' %}", hostObjects: hosts, templates: ["p": "{{ d }}"], syntaxMode: mode) == "opaque")
+        }
+        let firstLast = "{% assign a = d | first %}{% assign b = d | last %}{% if a == nil %}N{% endif %}|{% if b == nil %}N{% endif %}"
+        #expect(try await engine.render(template: firstLast, hostObjects: hosts) == "N|N")
+        let empty = LiquidHostObject("d", opaqueDisplayName: "")
+        #expect(try await engine.render(template: "{% if d %}T{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{% assign x = d | default: 'fallback' %}{% if x == d %}E{% endif %}", hostObjects: [empty]) == "T|N|E")
+        #expect(try await engine.render(template: "{{ d | plus: 1 }}", hostObjects: [LiquidHostObject("d", opaqueDisplayName: "123")]) == "1")
+        let custom = try LiquidEngine(filters: [LiquidFilter("opaque_text") { value, _, _ in
+            if case .string(let text) = value { return .string(text) }; return "wrong"
+        }])
+        #expect(try await custom.render(template: "{{ d | opaque_text }}", hostObjects: hosts) == "opaque")
+    }
+
+    @Test func opaqueHostObjectAdmissionHonorsLimits() async throws {
+        let host = LiquidHostObject("d", opaqueDisplayName: "opaque")
+        await #expect(throws: LiquidError.self) { try await LiquidEngine(limits: .init(contextValues: 1)).render(template: "{{ d }}", hostObjects: [host]) }
+        await #expect(throws: LiquidError.self) { try await LiquidEngine(limits: .init(outputBytes: 5)).render(template: "{{ d }}", hostObjects: [host]) }
+    }
+
+    @Test func concurrentRendersKeepOpaqueObjectsInvocationScoped() async throws {
+        let engine = LiquidEngine()
+        let template = try LiquidTemplate("{{ d }}|{% assign x = d %}{% if x == d %}E{% endif %}")
+        let results = try await withThrowingTaskGroup(of: String.self) { group in
+            for index in 0..<24 {
+                group.addTask { try await engine.render(template, hostObjects: [LiquidHostObject("d", opaqueDisplayName: String(index))]) }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(results) == Set((0..<24).map { "\($0)|E" }))
+    }
+
     @Test func typedNullPreservesLiquidNilBehaviorAcrossModes() async throws {
         let source = "[{{ d }}]|{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{% if d == nil %}equal{% endif %}|{{ d | default: 'fallback' }}|{{ d | plus: 1 }}|{% assign x = d %}[{{ x }}]"
         let context: LiquidObject = ["d": .null]

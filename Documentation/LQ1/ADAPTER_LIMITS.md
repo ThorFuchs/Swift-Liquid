@@ -170,3 +170,12 @@ with empty parameters. The pinned standard class returns Liquid nil from
 runtime object type. Three fixed cases use the pinned reference and unchanged
 comparator. This is specific to that exact class; arbitrary Drop objects and
 nested markers are not flattened. The full-suite selector and holds are unchanged.
+
+
+The separate `opaque-drop` lane accepts only the standard root-level
+`OpaqueDrop` marker with empty parameters. Its display text is not a represented
+value: equality retains identity, numeric conversion is absent, and it does
+not iterate. Three fixed cases run with the pinned Ruby reference and unchanged
+comparator. General Drop RPC, arbitrary nested markers and the suite's extra
+JSON test filter remain outside this lane. The full-suite selector and holds
+are unchanged.

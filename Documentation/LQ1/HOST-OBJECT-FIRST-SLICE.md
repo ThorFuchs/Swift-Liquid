@@ -125,3 +125,12 @@ budgets, including cycles, with cancellation checked around callbacks. Integer
 materialization does not grant numeric conversion to built-in arithmetic filters.
 This narrow capability does not expose arbitrary objects or nested host values in
 ordinary containers. Existing fixture, conformance and release holds remain.
+
+
+## Explicit opaque host objects
+
+A root-level opaque host object supplies display text without materializing a
+primitive value. It is truthy, non-iterable and compared by identity;
+`to_liquid` preserves that identity. A typed custom filter receives display
+text, which deliberately ends the opaque-object boundary. This does not
+provide reflection, arbitrary Drop RPC or nested opaque host graphs.

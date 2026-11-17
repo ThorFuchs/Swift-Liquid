@@ -154,6 +154,7 @@ public struct LiquidHostObject: Sendable {
     internal let arrayValues: [LiquidHostArrayElement]?
     internal let sequenceValue: LiquidHostSequenceBox?
     internal let nodeValue: LiquidHostNode?
+    internal let opaqueDisplayName: String?
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -170,6 +171,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -190,6 +192,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -211,6 +214,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -230,6 +234,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a boxed integer host binding with no exposed properties.
@@ -249,6 +254,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a boxed string host binding with no exposed properties.
@@ -268,6 +274,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates an explicit finite root array containing ordinary values and
@@ -286,6 +293,7 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = array
         self.sequenceValue = nil
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
     }
 
     /// Creates a finite, immutable, invocation-admitted host sequence.
@@ -306,6 +314,26 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = LiquidHostSequenceBox(values: sequence, displayName: displayName)
         self.nodeValue = nil
+        self.opaqueDisplayName = nil
+    }
+
+    /// Creates an opaque, non-iterable object with explicitly supplied display text.
+    /// Object equality uses identity; the display text is not a represented value.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - opaqueDisplayName: Text rendered for this object.
+    public init(_ name: String, opaqueDisplayName: String) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = nil
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
+        self.sequenceValue = nil
+        self.nodeValue = nil
+        self.opaqueDisplayName = opaqueDisplayName
     }
 
     /// Creates a root binding for an explicitly supplied nested host node.
@@ -323,5 +351,6 @@ public struct LiquidHostObject: Sendable {
         self.arrayValues = nil
         self.sequenceValue = nil
         self.nodeValue = node
+        self.opaqueDisplayName = nil
     }
 }

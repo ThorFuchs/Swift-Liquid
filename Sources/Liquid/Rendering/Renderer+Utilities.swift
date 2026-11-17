@@ -62,6 +62,7 @@ extension Renderer {
     internal func stringifyUnescaped(_ value: Any) -> String {
         let value = systemPrimary(value)
         if hostSequenceContextEnabled, let sequence = value as? RuntimeHostSequence { return sequence.displayName }
+        if hostOpaqueContextEnabled, let opaque = value as? RuntimeHostOpaque { return opaque.displayName }
         switch value {
         case let number as RuntimeNonFinite:
             if number.value.isNaN { return "NaN" }
@@ -307,6 +308,10 @@ extension Renderer {
             return left.scope === right.scope
         }
         if left is RuntimeSelf || right is RuntimeSelf { return false }
+        if hostOpaqueContextEnabled {
+            if let lhs = left as? RuntimeHostOpaque, let rhs = right as? RuntimeHostOpaque { return lhs.identity === rhs.identity }
+            if left is RuntimeHostOpaque || right is RuntimeHostOpaque { return false }
+        }
         if hostSequenceContextEnabled {
             if let lhs = left as? RuntimeHostSequence, let rhs = right as? RuntimeHostSequence { return lhs.identity === rhs.identity }
             if left is RuntimeHostSequence || right is RuntimeHostSequence { return false }
@@ -743,6 +748,7 @@ extension Renderer {
     
     internal func isNilOrEmpty(_ value: Any) -> Bool {
         let value = systemPrimary(value)
+        if hostOpaqueContextEnabled, value is RuntimeHostOpaque { return false }
         switch value {
         case is NSNull:
             return true
