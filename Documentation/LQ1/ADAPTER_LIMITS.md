@@ -162,3 +162,11 @@ cases with the upstream comparator and pinned Ruby reference, without changing
 the full-suite selector. `nested` retains the current node; `square` creates a
 new node and reports native integer overflow. Ruby arbitrary-precision arithmetic
 and the suite's separate object-sensitive JSON filter are outside this lane.
+
+
+The separate `nil-drop` lane admits a root-level standard `NilDrop` marker
+with empty parameters. The pinned standard class returns Liquid nil from
+`to_liquid`, so this marker is admitted as a present typed null, without a new
+runtime object type. Three fixed cases use the pinned reference and unchanged
+comparator. This is specific to that exact class; arbitrary Drop objects and
+nested markers are not flattened. The full-suite selector and holds are unchanged.

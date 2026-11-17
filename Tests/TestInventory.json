@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/typedNullPreservesLiquidNilBehaviorAcrossModes()": null,
     "LiquidTests.HostObjectTests/nestedHostNodesPreserveAccessValuesAndAliases()": null,
     "LiquidTests.HostObjectTests/nestedHostNodeAdmissionAndDepthRemainBounded()": null,
     "LiquidTests.HostObjectTests/cancellationDuringNestedHostAccessPreservesReuse()": null,

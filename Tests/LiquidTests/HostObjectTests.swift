@@ -58,6 +58,18 @@ private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func typedNullPreservesLiquidNilBehaviorAcrossModes() async throws {
+        let source = "[{{ d }}]|{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% else %}N{% endif %}|{% if d == nil %}equal{% endif %}|{{ d | default: 'fallback' }}|{{ d | plus: 1 }}|{% assign x = d %}[{{ x }}]"
+        let context: LiquidObject = ["d": .null]
+        let engine = LiquidEngine()
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let expected = "[]|F|N|B|equal|fallback|1|[]"
+            #expect(try await engine.render(template: source, context: context, syntaxMode: mode) == expected)
+            #expect(try await engine.render(LiquidTemplate(source, syntaxMode: mode), context: context) == expected)
+            #expect(try await engine.render(template: "{% render 'p' %}", context: context, templates: ["p": "[{{ d }}]"], syntaxMode: mode) == "[]")
+        }
+    }
+
     @Test func nestedHostNodesPreserveAccessValuesAndAliases() async throws {
         let engine = LiquidEngine()
         let root = LiquidHostObject("d", node: makeIntegerNode(3))

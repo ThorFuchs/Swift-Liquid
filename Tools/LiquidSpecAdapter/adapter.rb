@@ -167,6 +167,9 @@ module LQ1
           number = value.to_liquid_value
           raise OperationalError, 'NumberDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)
           { '_instantiate' => 'NumberDrop', 'params' => { 'value' => number } }
+        elsif defined?(StandardNilDrop) && value.instance_of?(StandardNilDrop)
+          raise OperationalError, 'Unexpected NilDrop conversion' unless value.to_liquid.nil?
+          { '_instantiate' => 'NilDrop', 'params' => {} }
         elsif defined?(StandardNestedDrop) && value.instance_of?(StandardNestedDrop)
           number = value.to_liquid_value
           raise OperationalError, 'NestedDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)

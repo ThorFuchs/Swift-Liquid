@@ -199,6 +199,21 @@ class ProtocolTests(unittest.TestCase):
         marker = {'_instantiate': 'NestedDrop', 'params': {'value': 9223372036854775807}}
         self.assertIsNotNone(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']['error'])
 
+    def test_portable_nil_drop_is_present_null_and_rejects_other_shapes(self):
+        source = "[{{ d }}]|{% if d %}T{% else %}F{% endif %}|{% if d == empty %}E{% else %}N{% endif %}|{% if d == blank %}B{% endif %}|{{ d | default: 'fallback' }}|{{ d | plus: 1 }}"
+        template = self.peer.compile(source, options={'error_mode': 'strict2'})['result']['template_id']
+        marker = {'_instantiate': 'NilDrop', 'params': {}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']
+        self.assertEqual(result, {'output': '[]|F|N|B|fallback|1', 'errors': []})
+        ordinary = self.peer.request('render', {'template_id': template, 'environment': {'d': None}})['result']
+        self.assertEqual(result, ordinary)
+        for bad in [{'value': None}, {'value': False}, {'extra': 1}]:
+            marker = {'_instantiate': 'NilDrop', 'params': bad}
+            self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['error']['code'], -32602)
+        marker = {'_instantiate': 'NilDrop', 'params': {}}
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': [marker]}})['error']['code'], -32602)
+        self.assertEqual(self.peer.request('render', {'template_id': template, 'environment': {'d': {'_instantiate': 'NilDrop'}}})['error']['code'], -32602)
+
     def test_modes_and_unknown_options_do_not_change_library_defaults(self):
         for mode in ['lax', 'strict', 'strict2']:
             self.assertIn('template_id', self.peer.compile('ok', options={'error_mode': mode})['result'])

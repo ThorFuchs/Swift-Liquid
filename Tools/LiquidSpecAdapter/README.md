@@ -153,3 +153,13 @@ Ruby evaluation. This targeted lane does not change the full-suite selector.
 The portable marker is root-level only and uses a native-width integer; the
 reference's arbitrary-precision integers and extra JSON test filter remain
 outside its qualified scope.
+
+
+## Fixed NilDrop cases
+
+`Scripts/ci.py --lane nil-drop --spec-path PATH --reference-path PATH` checks
+three fixed, hash-pinned cases with the pinned Ruby reference and unchanged
+upstream comparator, while forbidding dynamic Ruby evaluation. The exact
+standard NilDrop's `to_liquid` yields nil; the root-only portable marker is
+admitted as a present typed null. This does not change the full-suite selector
+or admit arbitrary nested markers or other host classes as null.
