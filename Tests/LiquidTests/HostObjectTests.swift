@@ -58,6 +58,71 @@ private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func optedInHostWithBindingPreservesPartialRecoveryAndIsolation() async throws {
+        let host = LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { key in
+            if key == .string("visible") { return "yes" }
+            if key == .string("bad") { throw LiquidHostFailure("host denied") }
+            return nil
+        })
+        let engine = LiquidEngine()
+        let source = "{% render 'card' with source %}"
+        let partial = "{{ card.visible }}|{{ card.bad }}|[{{ card.name }}]"
+        let result = try await engine.renderWithDiagnostics(template: source, hostObjects: [host], templates: ["card": partial], syntaxMode: .strict2)
+        #expect(result.output == "yes|Liquid error (card line 1): host denied|[]")
+        #expect(result.diagnostics.count == 1)
+        #expect(result.diagnostics.first?.message == "host denied")
+        #expect(result.diagnostics.first?.templateName == "card")
+        #expect(result.diagnostics.first?.line == 1)
+        let root = try LiquidTemplate(source, syntaxMode: .strict2)
+        let selected = LiquidTemplateNameResolver(select: { name in name == "card" ? "CARD" : nil }, missing: { _ in "missing" })
+        let parsedResult = try await engine.renderWithDiagnostics(root, hostObjects: [host], partialSources: ["CARD": partial], resolver: selected)
+        #expect(parsedResult.output == result.output)
+        #expect(parsedResult.diagnostics.first?.templateName == "card")
+        let parsedPartial = try LiquidTemplate(partial, syntaxMode: .strict2)
+        let storedResult = try await engine.renderWithDiagnostics(root, hostObjects: [host], templates: ["card": parsedPartial])
+        #expect(storedResult.output == result.output)
+        for invalid in ["{{ source }}", "{% assign x = source %}{{ x }}", "{% include 'card' with source %}", "{% render 'card', card: source %}"] {
+            await #expect(throws: LiquidError.self) { try await engine.render(template: invalid, hostObjects: [host], templates: ["card": partial]) }
+        }
+        let ordinary = LiquidHostObject("source", indexer: LiquidHostIndexer { _ in "yes" })
+        await #expect(throws: LiquidError.self) { try await engine.render(template: source, hostObjects: [ordinary], templates: ["card": partial]) }
+        await #expect(throws: LiquidError.self) { try await engine.render(template: source, hostObjects: [host], templates: ["card": "{{ card }}"]) }
+    }
+
+    @Test func cancellationDuringOptedInPartialHostAccessPreservesReuse() async throws {
+        let gate = HostReleaseGate()
+        let host = LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { _ in
+            await gate.suspend()
+            throw LiquidHostFailure("late")
+        })
+        let engine = LiquidEngine()
+        let task = Task { try await engine.renderWithDiagnostics(template: "{% render 'card' with source %}", hostObjects: [host], templates: ["card": "{{ card.bad }}"]) }
+        await gate.waitUntilEntered()
+        task.cancel()
+        await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        let healthy = LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { _ in "ok" })
+        #expect(try await engine.render(template: "{% render 'card' with source %}", hostObjects: [healthy], templates: ["card": "{{ card.visible }}"]) == "ok")
+    }
+
+    @Test func concurrentRendersKeepOptedInPartialHostBindingsIndependent() async throws {
+        let engine = LiquidEngine()
+        let root = try LiquidTemplate("{% render 'card' with source %}", syntaxMode: .strict2)
+        let partial = try LiquidTemplate("{{ card.value }}", syntaxMode: .strict2)
+        let outputs = try await withThrowingTaskGroup(of: String.self) { group in
+            for i in 0..<24 {
+                group.addTask {
+                    let host = LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { _ in .integer(i) })
+                    return try await engine.render(root, hostObjects: [host], templates: ["card": partial])
+                }
+            }
+            var values: [String] = []
+            for try await value in group { values.append(value) }
+            return values
+        }
+        #expect(Set(outputs) == Set((0..<24).map(String.init)))
+    }
+
     @Test func explicitHostFailuresUseRaisingAndDiagnosticPolicies() async throws {
         let exact = LiquidHostObject("host", properties: [LiquidHostProperty("bad") { throw LiquidHostFailure("host denied") }])
         let indexed = LiquidHostObject("host", indexer: LiquidHostIndexer { _ in throw LiquidHostFailure("host denied") })

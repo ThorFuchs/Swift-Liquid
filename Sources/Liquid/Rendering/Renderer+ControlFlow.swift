@@ -687,7 +687,7 @@ extension Renderer {
         if case .exact = templateLoader { isExact = true } else { isExact = false }
         let forExpression = withVars?.forExpression ?? (isExact ? withVars?["_for"] : nil)
         let hasForIteration = forExpression != nil
-        let earlyBindings = isExact ? try await evaluateIncludeBindings(with: withVars, shopify: false, shareBindings: false) : nil
+        let earlyBindings = isExact ? try await evaluateIncludeBindings(with: withVars, shopify: false, shareBindings: false, allowHostWithBinding: isRender) : nil
 
         var templateName = template.string
 
@@ -769,7 +769,7 @@ extension Renderer {
 
         let bindings: (variables: RuntimeVariables, withValue: Any?, forValue: Any?)
         if let earlyBindings { bindings = earlyBindings }
-        else { bindings = try await evaluateIncludeBindings(with: withVars, shopify: true, shareBindings: !isRender) }
+        else { bindings = try await evaluateIncludeBindings(with: withVars, shopify: true, shareBindings: !isRender, allowHostWithBinding: isRender) }
 
         let diagnosticName: String
         switch templateLoader {
@@ -966,7 +966,7 @@ extension Renderer {
     }
 
     internal func evaluateIncludeBindings(
-        with withVars: PartialBindings?, shopify: Bool, shareBindings: Bool
+        with withVars: PartialBindings?, shopify: Bool, shareBindings: Bool, allowHostWithBinding: Bool
     ) async throws -> (variables: RuntimeVariables, withValue: Any?, forValue: Any?) {
         guard let withVars else {
             return ([:], nil, nil)
@@ -976,7 +976,7 @@ extension Renderer {
         evaluatedVariables.reserveCapacity(withVars.count)
 
         if shopify {
-            let withValue: Any? = if let expression = withVars.withExpression { try await evaluateExpression(expression) } else { nil }
+            let withValue: Any? = if let expression = withVars.withExpression { try await evaluatePartialWithBinding(expression, allowHost: allowHostWithBinding) } else { nil }
             let forValue: Any? = if let expression = withVars.forExpression { try await evaluateExpression(expression) } else { nil }
             if shareBindings { context.pushScope() }
             defer { if shareBindings { context.popScope() } }
@@ -994,9 +994,18 @@ extension Renderer {
         }
 
         let withValue: Any?
-        if let withExpression = withVars.withExpression ?? withVars["_with"] { withValue = try await evaluateExpression(withExpression) }
+        if let withExpression = withVars.withExpression ?? withVars["_with"] { withValue = try await evaluatePartialWithBinding(withExpression, allowHost: allowHostWithBinding) }
         else { withValue = nil }
         return (evaluatedVariables, withValue, nil)
+    }
+
+    private func evaluatePartialWithBinding(_ expression: LiquidExpression, allowHost: Bool) async throws -> Any {
+        if allowHost, case .variable(let name) = expression,
+           let host = context.getVariable(name.string) as? LiquidHostObject, host.permitsPartialWithBinding {
+            try budget.step()
+            return host
+        }
+        return try await evaluateExpression(expression)
     }
 
     internal func defaultTemplateAlias(for templatePath: String) -> String {

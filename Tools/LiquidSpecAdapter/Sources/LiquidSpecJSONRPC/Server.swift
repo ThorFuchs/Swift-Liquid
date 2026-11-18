@@ -173,7 +173,7 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                 hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
             case "ErrorDrop":
                 guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported ErrorDrop parameters") }
-                hosts.append(LiquidHostObject(entry.key, indexer: LiquidHostIndexer { _ in
+                hosts.append(LiquidHostObject(entry.key, partialBindingIndexer: LiquidHostIndexer { _ in
                     throw LiquidHostFailure("ErrorDrop: access triggered an error")
                 }))
             case "OpaqueDrop":
@@ -327,7 +327,12 @@ private struct Server {
                 catch { result = ["template_id": nil, "error": problem(error)] }
             case "render":
                 guard initialized, let compiled = slot, string(params["template_id"]) == compiled.id else { throw WireFailure.invalid("Unknown or stale template ID; compile first") }
-                let (context, hostObjects) = try admitEnvironment(object(params["environment"]))
+                let environment = try object(params["environment"])
+                let (context, hostObjects) = try admitEnvironment(environment)
+                let errorDropOnly = hostObjects.allSatisfy { host in
+                    guard case .object(let marker)? = environment[host.name] else { return false }
+                    return string(marker["_instantiate"]) == "ErrorDrop"
+                }
                 let options = try object(params["options"])
                 try admitKeys(options, allowed: ["strict_errors", "resource_limits", "registers"])
                 let resourceLimits = try object(options["resource_limits"])
@@ -354,19 +359,25 @@ private struct Server {
                 }
                 let engine = LiquidEngine(limits: profile, referenceTime: reference)
                 do {
-                    if !hostObjects.isEmpty {
-                        guard !recovering, compiled.partials.isEmpty else {
+                    if recovering {
+                        guard hostObjects.isEmpty || errorDropOnly else {
                             throw WireFailure.invalid("Standard Drop requires raising mode and no partials")
                         }
-                        result = ["output": .string(try await engine.render(compiled.root, context: context, hostObjects: hostObjects)), "errors": []]
-                    } else if recovering {
-                        let rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)
+                        let rendered: LiquidRenderResult
+                        if hostObjects.isEmpty {
+                            rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)
+                        } else {
+                            rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, hostObjects: hostObjects, partialSources: compiled.partials, resolver: compiled.resolver)
+                        }
                         result = ["output": .string(rendered.output), "errors": .array(rendered.diagnostics.map { diagnostic in
                             var fields: [LiquidObject.Entry] = [.init("type", "render_error"), .init("message", .string(diagnostic.message))]
                             if let line = diagnostic.line { fields.append(.init("line", .integer(line))) }
                             if let name = diagnostic.templateName { fields.append(.init("template_name", .string(name))) }
                             return .object(.init(fields))
                         })]
+                    } else if !hostObjects.isEmpty {
+                        guard compiled.partials.isEmpty else { throw WireFailure.invalid("Standard Drop requires no partials in raising mode") }
+                        result = ["output": .string(try await engine.render(compiled.root, context: context, hostObjects: hostObjects)), "errors": []]
                     } else { result = ["output": .string(try await engine.renderLocatingFailures(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)), "errors": []] }
                 } catch { result = ["output": nil, "error": problem(error), "errors": []] }
             case "quit": slot = nil; quitting = true; result = [:]

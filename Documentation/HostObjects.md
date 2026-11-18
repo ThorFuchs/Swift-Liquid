@@ -60,6 +60,15 @@ let rendered = try await LiquidEngine().render(
 // Hello, Ada
 ```
 
+An indexed object can opt into a direct `render ... with` binding with
+`LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { key in ... })`.
+Only the registered typed-key handler is available in the partial. The object
+itself remains unavailable as a Liquid value: output, assignment, `include`
+bindings and named-argument bindings do not transfer it. A direct `with` binding
+may be forwarded to another rendered partial under the same limits. Objects
+created with the ordinary indexer initializer do not opt in. This is not a
+recursive host graph or an implicit conversion to a dictionary.
+
 A host can explicitly create `LiquidHostObject("flag", booleanValue: false)` to
 expose a boxed Boolean. Conditions, comparisons, output and standard filters use
 the supplied Boolean value, including `blank`, `empty`, and `default` semantics.

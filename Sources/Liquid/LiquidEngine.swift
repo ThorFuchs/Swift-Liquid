@@ -238,6 +238,21 @@ public struct LiquidEngine: Sendable {
         try await performSources(template, context: context, sources: partialSources, resolver: resolver, recovering: true).result
     }
 
+    /// Renders a parsed root with explicit host objects, source partials and diagnostics.
+    /// - Parameters:
+    ///   - template: An immutable parsed root.
+    ///   - context: Ordinary typed values available to the template.
+    ///   - hostObjects: Explicit root host objects.
+    ///   - partialSources: Named sources parsed on first selection.
+    ///   - resolver: Optional policy for resolving supplied partial names.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Syntax, admission, limit, unexpected host or cancellation errors.
+    public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], hostObjects: [LiquidHostObject],
+                                      partialSources: [String: String], resolver: LiquidTemplateNameResolver? = nil) async throws -> LiquidRenderResult {
+        try await performSources(template, context: context, sources: partialSources, resolver: resolver,
+                                 recovering: true, hostObjects: hostObjects).result
+    }
+
     /// Parses and renders source with opt-in timing and cumulative budget observations.
     /// Uses the same throwing behavior as `render`; failures return no metrics.
     /// - Parameters:
@@ -464,13 +479,13 @@ public struct LiquidEngine: Sendable {
     }
 
     private func performSources(_ template: LiquidTemplate, context: LiquidObject, sources: [String: String], resolver: LiquidTemplateNameResolver?,
-                                recovering: Bool, locateFailures: Bool = false) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
+                                recovering: Bool, locateFailures: Bool = false, hostObjects: [LiquidHostObject] = []) async throws -> (result: LiquidRenderResult, metrics: LiquidRenderMetrics?) {
         try Task.checkCancellation()
         let sourceBytes = try checkSources(template.source, partials: Array(sources.values))
         return try await perform(template.ast, context: context,
             loader: .sources(.init(sources: sources, syntaxMode: template.syntaxMode,
                                    extensionProfile: template.extensionProfile, limits: limits, resolver: resolver)),
-            sourceBytes: sourceBytes, recovering: recovering, measurement: nil, locateFailures: locateFailures)
+            sourceBytes: sourceBytes, recovering: recovering, measurement: nil, locateFailures: locateFailures, hostObjects: hostObjects)
     }
 
     // Both legacy and exact preparation converge here: one context, budget,
