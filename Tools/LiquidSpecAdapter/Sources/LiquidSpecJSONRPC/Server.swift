@@ -171,6 +171,11 @@ private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [L
                 hosts.append(LiquidHostObject(entry.key, numberValue: value))
             case "StringDrop":
                 hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
+            case "ErrorDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported ErrorDrop parameters") }
+                hosts.append(LiquidHostObject(entry.key, indexer: LiquidHostIndexer { _ in
+                    throw LiquidHostFailure("ErrorDrop: access triggered an error")
+                }))
             case "OpaqueDrop":
                 guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported OpaqueDrop parameters") }
                 hosts.append(LiquidHostObject(entry.key, opaqueDisplayName: "opaque"))

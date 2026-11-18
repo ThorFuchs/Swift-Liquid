@@ -179,3 +179,12 @@ not iterate. Three fixed cases run with the pinned Ruby reference and unchanged
 comparator. General Drop RPC, arbitrary nested markers and the suite's extra
 JSON test filter remain outside this lane. The full-suite selector and holds
 are unchanged.
+
+
+The `error-drop` lane admits the exact root-level standard `ErrorDrop` with
+empty parameters for one fixed raising-mode case. It records the actual
+expected render error separately from successful renders, verifies the error
+class and compares the original pattern with the unchanged upstream comparator.
+Inline ErrorDrop inside a partial, aliases of unboxed hosts and the full-suite
+selector remain outside this lane. Existing conformance and performance holds
+remain in force.

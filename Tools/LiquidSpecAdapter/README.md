@@ -172,3 +172,13 @@ three fixed, hash-pinned cases against the pinned Ruby reference with the
 unchanged upstream comparator. It safely reads selected YAML nodes and forbids
 dynamic Ruby evaluation. The root-only marker has empty parameters and does
 not change the full-suite selector or qualify the suite's extra JSON test filter.
+
+
+## Fixed raising ErrorDrop case
+
+`Scripts/ci.py --lane error-drop --spec-path PATH --reference-path PATH` checks
+one fixed, hash-pinned raising-mode case against the pinned Ruby reference and
+unchanged upstream comparator. The runner additionally requires an actual
+render-error outcome, so a missing expected error cannot become a pass. It reads
+selected YAML as data and forbids dynamic Ruby evaluation. Inline partial
+recovery and general Drop RPC remain outside this lane.

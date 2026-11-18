@@ -37,6 +37,7 @@ or `escape_once` when inserting text into HTML.
 - <doc:ErrorRecovery>
 - ``LiquidRenderResult``
 - ``LiquidDiagnostic``
+- ``LiquidHostFailure``
 
 ### Application filters
 

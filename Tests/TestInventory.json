@@ -1,6 +1,8 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/explicitHostFailuresUseRaisingAndDiagnosticPolicies()": null,
+    "LiquidTests.HostObjectTests/cancellationTakesPrecedenceOverExplicitHostFailure()": null,
     "LiquidTests.HostObjectTests/opaqueHostObjectPreservesIdentityAndObjectBehavior()": null,
     "LiquidTests.HostObjectTests/opaqueHostObjectAdmissionHonorsLimits()": null,
     "LiquidTests.HostObjectTests/concurrentRendersKeepOpaqueObjectsInvocationScoped()": null,
@@ -420,6 +422,7 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationTakesPrecedenceOverExplicitHostFailure()",
     "LiquidTests.HostObjectTests/cancellationDuringNestedHostAccessPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationDuringHostSequenceIterationPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationAndIndexerResultsUseInvocationBudgets()",

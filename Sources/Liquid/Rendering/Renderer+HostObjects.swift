@@ -89,7 +89,14 @@ extension Renderer {
         guard let found else { return NSNull() }
         let result: LiquidHostNodeResult
         do { result = try await found.body() }
-        catch { try Task.checkCancellation(); throw error }
+        catch {
+            try Task.checkCancellation()
+            if let failure = error as? LiquidHostFailure {
+                try budget.output(failure.message)
+                throw RenderError.custom(failure.message)
+            }
+            throw error
+        }
         try budget.step()
         let nextDepth = runtime.depth + 1
         switch result {
@@ -178,6 +185,10 @@ extension Renderer {
             else { return NSNull() }
         } catch {
             try Task.checkCancellation()
+            if let failure = error as? LiquidHostFailure {
+                try budget.output(failure.message)
+                throw RenderError.custom(failure.message)
+            }
             throw error
         }
         try budget.step()
@@ -198,7 +209,14 @@ extension Renderer {
         }
         let result: LiquidValue?
         do { result = try await indexer.body(key) }
-        catch { try Task.checkCancellation(); throw error }
+        catch {
+            try Task.checkCancellation()
+            if let failure = error as? LiquidHostFailure {
+                try budget.output(failure.message)
+                throw RenderError.custom(failure.message)
+            }
+            throw error
+        }
         try budget.step()
         guard let result else { return NSNull() }
         var bridge = FilterValueBridge(budget: budget)
