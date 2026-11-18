@@ -26,6 +26,16 @@ struct ZeroDivisionDiagnosticTests {
         let result = try await engine.renderWithDiagnostics(template: "{% render 'p' %}", templates: ["p": partial])
         #expect(result.output.contains("Liquid error (p line 2): divided by 0"))
         #expect(result.diagnostics.count == 1 && result.diagnostics.first?.line == 2)
+        let suffixed = try await engine.renderWithDiagnostics(template: "{% render 'p' %}", templates: ["p.liquid": partial])
+        #expect(suffixed.output == result.output && suffixed.diagnostics.first?.templateName == "p")
+        let root = try LiquidTemplate("{% render 'p' %}")
+        let resolver = LiquidTemplateNameResolver(select: { $0 == "p" ? "P.liquid" : nil }, missing: { _ in "missing" })
+        let mapped = try await engine.renderWithDiagnostics(root, partialSources: ["P.liquid": partial], resolver: resolver)
+        #expect(mapped.output == result.output && mapped.diagnostics.first?.templateName == "p")
+        let registry = try LiquidTemplateRegistry([.init("p.liquid", .raw(partial))])
+        let exact = try await engine.renderWithDiagnostics(template: "{% render 'p' %}", registry: registry)
+        #expect(exact.output.contains("Liquid error (p.liquid line 2): divided by 0"))
+        #expect(exact.diagnostics.first?.templateName == "p.liquid")
     }
 
     @Test func floatZeroMatchesRubyAndCancellationRemainsTerminal() async throws {

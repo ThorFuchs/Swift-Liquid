@@ -40,7 +40,7 @@ extension Renderer {
                 diagnosticName = diagnosticTemplateNameStack.last ?? currentTemplatePath
             } else {
                 location = node.renderLocation
-                diagnosticName = currentTemplatePath
+                diagnosticName = diagnosticTemplateNameStack.last ?? currentTemplatePath
             }
             let message = error.message
             diagnostics.append(.init(message: message, line: location?.line, templateName: diagnosticName))

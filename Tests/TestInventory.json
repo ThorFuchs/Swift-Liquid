@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/optedInHostWithBindingPreservesPartialRecoveryAndIsolation()": null,
+    "LiquidTests.HostObjectTests/cancellationDuringOptedInPartialHostAccessPreservesReuse()": null,
+    "LiquidTests.HostObjectTests/concurrentRendersKeepOptedInPartialHostBindingsIndependent()": null,
     "LiquidTests.HostObjectTests/explicitHostFailuresUseRaisingAndDiagnosticPolicies()": null,
     "LiquidTests.HostObjectTests/cancellationTakesPrecedenceOverExplicitHostFailure()": null,
     "LiquidTests.HostObjectTests/opaqueHostObjectPreservesIdentityAndObjectBehavior()": null,
@@ -393,6 +396,7 @@
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
   "threadFunctions": [
+    "LiquidTests.HostObjectTests/concurrentRendersKeepOptedInPartialHostBindingsIndependent()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepOpaqueObjectsInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostNodesInvocationScoped()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepHostSequencesInvocationScoped()",
@@ -422,6 +426,7 @@
     "LiquidTests.RegistryConformanceAuditTests/concurrentRendersAndRegistryAuditPreserveRequestIsolation()"
   ],
   "adversarialFunctions": [
+    "LiquidTests.HostObjectTests/cancellationDuringOptedInPartialHostAccessPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationTakesPrecedenceOverExplicitHostFailure()",
     "LiquidTests.HostObjectTests/cancellationDuringNestedHostAccessPreservesReuse()",
     "LiquidTests.HostObjectTests/cancellationDuringHostSequenceIterationPreservesReuse()",

@@ -169,6 +169,7 @@ public struct LiquidHostObject: Sendable {
     internal let sequenceValue: LiquidHostSequenceBox?
     internal let nodeValue: LiquidHostNode?
     internal let opaqueDisplayName: String?
+    internal let permitsPartialWithBinding: Bool
 
     /// Creates a host binding. Names and collisions are validated for each render.
     /// - Parameters:
@@ -186,6 +187,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a binding with exact properties and explicitly scoped dynamic families.
@@ -207,6 +209,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a host binding with an explicit typed-key indexer.
@@ -229,6 +232,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a boxed Boolean host binding with no exposed properties.
@@ -249,6 +253,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a boxed integer host binding with no exposed properties.
@@ -269,6 +274,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a boxed string host binding with no exposed properties.
@@ -289,6 +295,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates an explicit finite root array containing ordinary values and
@@ -308,6 +315,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a finite, immutable, invocation-admitted host sequence.
@@ -329,6 +337,27 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = LiquidHostSequenceBox(values: sequence, displayName: displayName)
         self.nodeValue = nil
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
+    }
+
+    /// Creates an indexed host binding that may be passed to a rendered partial
+    /// using a direct `with` binding. It remains inaccessible as a Liquid value.
+    /// - Parameters:
+    ///   - name: Root binding name, distinct from ordinary context names.
+    ///   - partialBindingIndexer: Trusted typed-key handler for this binding.
+    public init(_ name: String, partialBindingIndexer: LiquidHostIndexer) {
+        self.name = name
+        self.properties = []
+        self.dynamicProperties = []
+        self.indexer = partialBindingIndexer
+        self.booleanValue = nil
+        self.numberValue = nil
+        self.stringValue = nil
+        self.arrayValues = nil
+        self.sequenceValue = nil
+        self.nodeValue = nil
+        self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = true
     }
 
     /// Creates an opaque, non-iterable object with explicitly supplied display text.
@@ -348,6 +377,7 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = nil
         self.opaqueDisplayName = opaqueDisplayName
+        self.permitsPartialWithBinding = false
     }
 
     /// Creates a root binding for an explicitly supplied nested host node.
@@ -366,5 +396,6 @@ public struct LiquidHostObject: Sendable {
         self.sequenceValue = nil
         self.nodeValue = node
         self.opaqueDisplayName = nil
+        self.permitsPartialWithBinding = false
     }
 }

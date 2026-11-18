@@ -185,6 +185,9 @@ The `error-drop` lane admits the exact root-level standard `ErrorDrop` with
 empty parameters for one fixed raising-mode case. It records the actual
 expected render error separately from successful renders, verifies the error
 class and compares the original pattern with the unchanged upstream comparator.
-Inline ErrorDrop inside a partial, aliases of unboxed hosts and the full-suite
-selector remain outside this lane. Existing conformance and performance holds
-remain in force.
+The separate `error-drop-inline` lane checks the pinned inline partial case with
+one explicitly permitted `render ... with` host binding. It requires an actual
+recovered diagnostic from both engines as well as the original expected output;
+recovery is not counted as an error-free render. Other standard Drop markers
+retain their existing adapter recovery restrictions. The full-suite selector and
+existing conformance and performance holds remain unchanged.

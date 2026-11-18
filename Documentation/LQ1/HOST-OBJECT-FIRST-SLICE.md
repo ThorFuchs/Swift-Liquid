@@ -143,3 +143,13 @@ Trusted callbacks may opt into Liquid diagnostic recovery by throwing
 use the render's output limit, and arbitrary host errors remain terminal.
 The source and parsed-template diagnostic overloads accept explicit host roots.
 This does not permit unboxed host objects to escape through aliases or containers.
+
+
+## Explicit host bindings in rendered partials
+
+An indexed root object can opt in to direct `render ... with` binding. The
+partial can access only its registered typed-key handler; the object cannot be
+rendered, assigned, passed as a named argument, or transferred by `include`.
+The existing limits, cancellation and unexpected-error behavior continue to
+apply. A parsed-root diagnostic overload supports explicitly supplied source
+partials and resolver. This does not admit arbitrary nested host values.

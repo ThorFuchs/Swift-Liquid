@@ -1,0 +1,22 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "cases": [
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5008
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "featureTags": [
+        "drops",
+        "inline_errors",
+        "strict2_parsing"
+      ],
+      "name": "RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430"
+    }
+  ]
+}

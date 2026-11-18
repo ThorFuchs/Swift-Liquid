@@ -181,4 +181,15 @@ one fixed, hash-pinned raising-mode case against the pinned Ruby reference and
 unchanged upstream comparator. The runner additionally requires an actual
 render-error outcome, so a missing expected error cannot become a pass. It reads
 selected YAML as data and forbids dynamic Ruby evaluation. Inline partial
-recovery and general Drop RPC remain outside this lane.
+recovery is covered by a separate targeted lane; general Drop RPC remains outside
+this lane.
+
+
+## Fixed inline ErrorDrop case
+
+`Scripts/ci.py --lane error-drop-inline --spec-path PATH --reference-path PATH`
+checks one hash-pinned inline partial case through the unchanged comparator and
+pinned Ruby reference. The runner separately requires the actual recovered
+diagnostic from both engines; it is not counted as an error-free render. It
+reads only selected YAML nodes and forbids dynamic Ruby evaluation. The
+full-suite selector and all historical holds remain unchanged.

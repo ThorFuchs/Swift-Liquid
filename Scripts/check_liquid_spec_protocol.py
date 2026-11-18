@@ -199,6 +199,15 @@ class ProtocolTests(unittest.TestCase):
         marker = {'_instantiate': 'NestedDrop', 'params': {'value': 9223372036854775807}}
         self.assertIsNotNone(self.peer.request('render', {'template_id': template, 'environment': {'d': marker}})['result']['error'])
 
+    def test_portable_error_drop_recovers_through_explicit_partial_binding(self):
+        template = self.peer.compile("{% render 'foo' with errors %}", options={'error_mode': 'strict2'}, filesystem={'foo': '{{ foo.standard_error }}'})['result']['template_id']
+        marker = {'_instantiate': 'ErrorDrop', 'params': {}}
+        result = self.peer.request('render', {'template_id': template, 'environment': {'errors': marker}, 'options': {'strict_errors': False}})['result']
+        self.assertEqual(result['output'], 'Liquid error (foo line 1): ErrorDrop: access triggered an error')
+        self.assertEqual(len(result['errors']), 1)
+        self.assertEqual(result['errors'][0], {'type': 'render_error', 'message': 'ErrorDrop: access triggered an error', 'line': 1, 'template_name': 'foo'})
+        self.assertIsNone(self.peer.request('render', {'template_id': template, 'environment': {'errors': marker}})['result']['output'])
+
     def test_portable_error_drop_returns_render_error_without_hiding_protocol_failures(self):
         template = self.peer.compile("{{ d.foo }}", options={'error_mode': 'strict2'})['result']['template_id']
         marker = {'_instantiate': 'ErrorDrop', 'params': {}}
