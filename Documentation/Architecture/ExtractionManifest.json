@@ -2973,6 +2973,34 @@
         "Documentation/LQ1/ADAPTER_LIMITS.md"
       ],
       "qualification": "Targeted results do not change the full-suite exclusions or existing conformance, performance and release holds."
+    },
+    {
+      "area": "Explicit recoverable host failures and raising ErrorDrop",
+      "scopeDecision": "Add opt-in typed host failure recovery and qualify one exact raising-mode standard ErrorDrop case; retain inline partial and full-suite holds.",
+      "changes": [
+        "Convert only LiquidHostFailure to a recoverable Liquid runtime error after checking cancellation and message limits; all unexpected host errors and operational failures remain terminal.",
+        "Add source and parsed-template diagnostics overloads for explicit root host objects, with source-location and partial diagnostics.",
+        "Select the exact pinned expected-error case without evaluating fixture expressions, and separately require an actual render error to prevent missing-error false passes."
+      ],
+      "files": [
+        "Sources/Liquid/LiquidHostObject.swift",
+        "Sources/Liquid/LiquidEngine.swift",
+        "Sources/Liquid/Rendering/Renderer+HostObjects.swift",
+        "Sources/Liquid/Documentation.docc/Liquid.md",
+        "Tests/LiquidTests/HostObjectTests.swift",
+        "Tests/TestInventory.json",
+        "Tools/LiquidSpecAdapter/ErrorDropCases.json",
+        "Tools/LiquidSpecAdapter/check_error_drop.rb",
+        "Tools/LiquidSpecAdapter/Sources/LiquidSpecJSONRPC/Server.swift",
+        "Tools/LiquidSpecAdapter/adapter.rb",
+        "Tools/LiquidSpecAdapter/README.md",
+        "Scripts/check_liquid_spec_protocol.py",
+        "Scripts/ci.py",
+        "Documentation/HostObjects.md",
+        "Documentation/LQ1/HOST-OBJECT-FIRST-SLICE.md",
+        "Documentation/LQ1/ADAPTER_LIMITS.md"
+      ],
+      "qualification": "The raising expected-error case does not count as a successful render or change the full-suite selector, historical exclusions or release holds."
     }
   ]
 }

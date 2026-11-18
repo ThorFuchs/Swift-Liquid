@@ -166,7 +166,12 @@ Callbacks are trusted application code and may suspend. Captured state must be
 Sendable; the host must synchronize any state shared between concurrent renders.
 The engine checks cancellation around each callback and charges the invocation's
 existing work and value budgets. A callback that does not cooperate cannot be
-preempted. Unexpected callback errors propagate rather than becoming output.
+preempted. A callback may explicitly throw `LiquidHostFailure` to produce a recoverable
+Liquid runtime failure. Throwing render APIs surface it as `LiquidError.rendering`;
+`renderWithDiagnostics` overloads accepting `hostObjects` retain its message and
+source location as a diagnostic. This applies to exact properties, dynamic
+families, indexers and node properties. Cancellation takes precedence, and
+quota errors and unexpected callback errors still propagate unchanged.
 These limits are logical capacities, not a process-memory or wall-clock guarantee.
 
 The parsed-template overload accepts explicit parsed partials; the source

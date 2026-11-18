@@ -134,3 +134,12 @@ primitive value. It is truthy, non-iterable and compared by identity;
 `to_liquid` preserves that identity. A typed custom filter receives display
 text, which deliberately ends the opaque-object boundary. This does not
 provide reflection, arbitrary Drop RPC or nested opaque host graphs.
+
+
+## Explicit recoverable host failures
+
+Trusted callbacks may opt into Liquid diagnostic recovery by throwing
+`LiquidHostFailure`. Cancellation is checked before conversion, message bytes
+use the render's output limit, and arbitrary host errors remain terminal.
+The source and parsed-template diagnostic overloads accept explicit host roots.
+This does not permit unboxed host objects to escape through aliases or containers.

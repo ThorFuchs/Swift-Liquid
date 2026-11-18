@@ -177,6 +177,42 @@ public struct LiquidEngine: Sendable {
             sourceBytes: sourceBytes, recovering: true, measurement: nil).result
     }
 
+    /// Renders source with explicit host objects and recovered Liquid diagnostics.
+    /// - Parameters:
+    ///   - template: Liquid source parsed for this invocation.
+    ///   - context: Ordinary typed values available to the template.
+    ///   - hostObjects: Explicit root host objects.
+    ///   - templates: Explicit partial sources.
+    ///   - syntaxMode: Parser mode applied to the root and its partials.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Syntax, unexpected host, invalid-value, quota or cancellation errors.
+    public func renderWithDiagnostics(template: String, context: LiquidObject = [:], hostObjects: [LiquidHostObject],
+                                      templates: [String: String] = [:], syntaxMode: LiquidSyntaxMode = .lax) async throws -> LiquidRenderResult {
+        let sourceBytes = try checkSources(template, partials: Array(templates.values))
+        let root = try LiquidTemplate(template, syntaxMode: syntaxMode, limits: limits)
+        return try await perform(root.ast, context: context,
+            loader: .sources(.init(sources: templates, syntaxMode: syntaxMode, extensionProfile: .standard, limits: limits)),
+            sourceBytes: sourceBytes, recovering: true, measurement: nil, hostObjects: hostObjects).result
+    }
+
+    /// Renders a parsed template with explicit host objects and recovered diagnostics.
+    /// - Parameters:
+    ///   - template: An immutable parsed root.
+    ///   - context: Ordinary typed values available to the template.
+    ///   - hostObjects: Explicit root host objects.
+    ///   - templates: Explicit parsed partials.
+    /// - Returns: Complete output and recovered diagnostics.
+    /// - Throws: Unexpected host, invalid-value, quota or cancellation errors.
+    public func renderWithDiagnostics(_ template: LiquidTemplate, context: LiquidObject = [:], hostObjects: [LiquidHostObject],
+                                      templates: [String: LiquidTemplate] = [:]) async throws -> LiquidRenderResult {
+        try Task.checkCancellation()
+        try limits.validate()
+        let sourceBytes = try checkSources(template.source, partials: templates.values.map(\.source))
+        return try await perform(template.ast, context: context,
+            loader: TemplateLoader(templates: templates.mapValues(\.ast)), sourceBytes: sourceBytes,
+            recovering: true, measurement: nil, hostObjects: hostObjects).result
+    }
+
     /// Renders a reusable template and returns output together with recovered errors.
     /// - Parameters:
     ///   - template: An immutable parsed template, reused without parsing.

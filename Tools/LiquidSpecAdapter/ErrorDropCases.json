@@ -1,0 +1,22 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 346
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_error_raises"
+    }
+  ]
+}

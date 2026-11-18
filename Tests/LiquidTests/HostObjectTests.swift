@@ -58,6 +58,48 @@ private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func explicitHostFailuresUseRaisingAndDiagnosticPolicies() async throws {
+        let exact = LiquidHostObject("host", properties: [LiquidHostProperty("bad") { throw LiquidHostFailure("host denied") }])
+        let indexed = LiquidHostObject("host", indexer: LiquidHostIndexer { _ in throw LiquidHostFailure("host denied") })
+        let dynamic = LiquidHostObject("host", dynamicProperties: [LiquidHostDynamicProperty(prefix: "bad") { _ in throw LiquidHostFailure("host denied") }])
+        let node = LiquidHostObject("host", node: LiquidHostNode(integerValue: 1, properties: [LiquidHostNodeProperty("bad") { throw LiquidHostFailure("host denied") }]))
+        let engine = LiquidEngine()
+        for host in [exact, indexed, dynamic, node] {
+            let failure = await #expect(throws: LiquidError.self) { try await engine.render(template: "A{{ host.bad }}B", hostObjects: [host], syntaxMode: .strict2) }
+            guard case .rendering("host denied")? = failure else { Issue.record("Expected explicit host rendering failure"); continue }
+            let result = try await engine.renderWithDiagnostics(template: "A{{ host.bad }}B", hostObjects: [host], syntaxMode: .strict2)
+            #expect(result.output == "ALiquid error (line 1): host deniedB")
+            #expect(result.diagnostics.count == 1)
+            #expect(result.diagnostics.first?.message == "host denied")
+            #expect(result.diagnostics.first?.line == 1)
+            let parsed = try LiquidTemplate("{% render 'card' %}", syntaxMode: .strict2)
+            let partial = try LiquidTemplate("start\n{{ host.bad }}", syntaxMode: .strict2)
+            let partialResult = try await engine.renderWithDiagnostics(parsed, hostObjects: [host], templates: ["card": partial])
+            #expect(partialResult.output == "start\nLiquid error (card line 2): host denied")
+            #expect(partialResult.diagnostics.first?.templateName == "card")
+            #expect(partialResult.diagnostics.first?.line == 2)
+        }
+        let unexpected = LiquidHostObject("host", properties: [LiquidHostProperty("bad") { throw HostProbeError.failed }])
+        await #expect(throws: HostProbeError.self) { try await engine.renderWithDiagnostics(template: "{{ host.bad }}", hostObjects: [unexpected]) }
+        let oversized = LiquidHostObject("h", properties: [LiquidHostProperty("x") { throw LiquidHostFailure(String(repeating: "a", count: 32)) }])
+        await #expect(throws: LiquidError.self) { try await LiquidEngine(limits: .init(outputBytes: 16)).renderWithDiagnostics(template: "{{ h.x }}", hostObjects: [oversized]) }
+    }
+
+    @Test func cancellationTakesPrecedenceOverExplicitHostFailure() async throws {
+        let gate = HostReleaseGate()
+        let host = LiquidHostObject("host", properties: [LiquidHostProperty("bad") {
+            await gate.suspend()
+            throw LiquidHostFailure("late")
+        }])
+        let engine = LiquidEngine()
+        let task = Task { try await engine.renderWithDiagnostics(template: "{{ host.bad }}", hostObjects: [host]) }
+        await gate.waitUntilEntered()
+        task.cancel()
+        await gate.finish()
+        await #expect(throws: CancellationError.self) { try await task.value }
+        #expect(try await engine.render(template: "{{ host.good }}", hostObjects: [LiquidHostObject("host", properties: [LiquidHostProperty("good") { "ok" }])]) == "ok")
+    }
+
     @Test func opaqueHostObjectPreservesIdentityAndObjectBehavior() async throws {
         let engine = LiquidEngine()
         let hosts = [LiquidHostObject("d", opaqueDisplayName: "opaque"), LiquidHostObject("e", opaqueDisplayName: "opaque")]

@@ -63,6 +63,20 @@ public struct LiquidHostIndexer: Sendable {
     }
 }
 
+/// An explicitly recoverable failure reported by a trusted host callback.
+///
+/// Other callback errors propagate unchanged. Cancellation and exhausted limits
+/// remain terminal and are never converted to recovered host failures.
+public struct LiquidHostFailure: Error, Sendable, Equatable, CustomStringConvertible {
+    /// The explanation included in a Liquid error or diagnostic.
+    public let message: String
+    /// Creates an explicitly recoverable host failure.
+    /// - Parameter message: Explanation retained in the error and diagnostic.
+    public init(_ message: String) { self.message = message }
+    /// The host's explanation.
+    public var description: String { message }
+}
+
 /// One explicitly named nested-node operation.
 public struct LiquidHostNodeProperty: Sendable {
     /// The exact property name; validated when the node is admitted.
