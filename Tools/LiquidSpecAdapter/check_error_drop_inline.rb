@@ -99,7 +99,7 @@ File.open(output + '.trace.jsonl', 'w') do |trace|
           fixture.fetch('expected') == 'Liquid error (foo line 1): ErrorDrop: access triggered an error' && fixture.fetch('filesystem') == { 'foo' => '{{ foo.standard_error }}' } && fixture['render_errors'] == true && item.fetch('renderMode') == 'inline' &&
           %w[strict2 lax].include?(item.fetch('parserMode'))
         features = item.fetch('featureTags').reject { |tag| tag.end_with?('_parsing') }.map(&:to_sym)
-        spec = Liquid::Spec::LazySpec.new(name: item.fetch('name'), template: fixture.fetch('template'), expected: fixture.fetch('expected'), render_errors: true,
+        spec = Liquid::Spec::LazySpec.new(name: item.fetch('name'), template: fixture.fetch('template'), expected: fixture.fetch('expected'), render_errors: true, complexity: fixture.fetch('complexity'),
           error_mode: item.fetch('parserMode').to_sym, features: features, raw_environment: environment, raw_filesystem: fixture.fetch('filesystem'),
           source_file: path, line_number: line)
         bridge.case_key = item.fetch('caseID')
