@@ -62,9 +62,9 @@ File.open(output + '.trace.jsonl', 'w') do |trace|
   reference.on_render do |ctx, assigns, opts|
     context = Liquid::Context.build(static_environments: assigns,
       registers: Liquid::Registers.new(opts.fetch(:registers)), rethrow_errors: opts.fetch(:strict_errors))
-    output = ctx.fetch(:template).render(context)
+    rendered_output = ctx.fetch(:template).render(context)
     reference_errors = ctx.fetch(:template).errors
-    output
+    rendered_output
   end
   reference.ensure_setup!
   begin
