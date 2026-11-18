@@ -1,0 +1,337 @@
+{
+  "specPin": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+  "referencePin": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 19
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_boolean_true_renders"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 32
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_boolean_false_renders"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 45
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_boolean_true_is_truthy"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 58
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "drop_boolean_false_is_falsy"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 363
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "name": "drop_boolean_false_not_empty"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 186
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "truthiness_booleandrop_with_value_true"
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 197
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "truthiness_booleandrop_with_value_false"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5352
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFiltersTest#test_default_18953643"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5370
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFiltersTest#test_default_ce94fa11"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5388
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFiltersTest#test_default_handle_false_b5a82ccc"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5400
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "StandardFiltersTest#test_default_handle_false_d4715f99"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8523
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_if_tag_calls_to_liquid_value_1a8da583"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8551
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_if_tag_calls_to_liquid_value_2914c337"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8643
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_if_tag_calls_to_liquid_value_e162081a"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8657
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_if_tag_calls_to_liquid_value_ebf53802"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8671
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8781
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8795
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8856
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8870
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a"
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/variable_type_filters.yml",
+        "line": 384
+      },
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "name": "filter_booleandrop_first_last_size"
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby_lax/variable_type_filters.yml",
+        "line": 500
+      },
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "featureTags": [
+        "drops",
+        "lax_parsing"
+      ],
+      "name": "lax_filter_booleandrop_first_last_size"
+    }
+  ]
+}

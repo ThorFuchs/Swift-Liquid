@@ -4,6 +4,53 @@ import Testing
 
 @Suite("Independent liquid-spec regressions", .timeLimit(.minutes(1)))
 struct LiquidSpecRegressionTests {
+    @Test func finiteDoubleRenderingPreservesSignificantDigits() async throws {
+        let engine = LiquidEngine()
+        // Expected output verified against the pinned Shopify Ruby reference.
+        let cases: [(Double, String)] = [
+            (1.0000000000000002, "1.0000000000000002"),
+            (-1.0000000000000002, "-1.0000000000000002"),
+            (0.10000000000000002, "0.10000000000000002"),
+            (7.8999999999999995, "7.8999999999999995"),
+            (1.0000000000000004, "1.0000000000000004"),
+            (1.000000000000001, "1.000000000000001"),
+            (10000000000.000002, "10000000000.000002"),
+            (5.0, "5.0"),
+            (-0.0, "-0.0")
+        ]
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            for (value, expected) in cases {
+                let context: LiquidObject = ["value": .number(value)]
+                #expect(try await engine.render(template: "{{ value }}", context: context, syntaxMode: mode) == expected)
+                let parsed = try LiquidTemplate("{{ value }}", syntaxMode: mode)
+                #expect(try await engine.render(parsed, context: context) == expected)
+                let recovered = try await engine.renderWithDiagnostics(parsed, context: context)
+                #expect(recovered.output == expected && recovered.diagnostics.isEmpty)
+            }
+            #expect(try await engine.render(template: "{{ 1.0000000000000002 }}", syntaxMode: mode) == "1.0000000000000002")
+            let arithmetic = [
+                ("{{ 0.1 | plus: 0.2 }}", "0.3"),
+                ("{{ 9.898 | plus: 0.642 }}", "10.54"),
+                ("{{ 10.1 | minus: 2.2 }}", "7.9"),
+                ("{{ '10.1' | minus: '2.2' }}", "7.9"),
+                ("{{ 0.1 | times: 0.2 }}", "0.02"),
+                ("{{ 10.1 | modulo: 7.0 }}", "3.1"),
+                ("{{ -10.1 | modulo: 7.0 }}", "3.9"),
+                ("{{ 10.1 | modulo: -7.0 }}", "-3.9"),
+                ("{{ 0.3 | modulo: 0.1 }}", "0.0"),
+                ("{{ 0.1 | modulo: -0.3 }}", "-0.2"),
+                ("{{ -0.0 | times: 1.0 }}", "-0.0"),
+                ("{{ -0.0 | modulo: 2.0 }}", "-0.0"),
+                ("{{ 1.0000000000000002 | plus: 0.0 }}", "1.0000000000000002"),
+                ("{{ 1.0000000000000002 | minus: 0.0 }}", "1.0000000000000002")
+            ]
+            for (source, expected) in arithmetic {
+                #expect(try await engine.render(template: source, syntaxMode: mode) == expected)
+            }
+            #expect(try await engine.render(template: "{{ values | sum }}", context: ["values": [9.898, 0.642]], syntaxMode: mode) == "10.54")
+            #expect(try await engine.render(template: "{{ values | sum }}", context: ["values": [1.0000000000000002]], syntaxMode: mode) == "1.0000000000000002")
+        }
+    }
     @Test func floatingZeroDivisionPreservesShopifySpecialValues() async throws {
         let engine = LiquidEngine()
         for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {

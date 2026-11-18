@@ -152,7 +152,56 @@ module LQ1
     end
     def render(id, environment, options)
       registers = { 'current_time' => options.fetch(:registers).fetch(:current_time).iso8601 }
-      result = send_request('render', 'template_id' => id, 'environment' => environment,
+      # Encode only explicitly admitted standard Drop shapes.
+      # Do not flatten other Ruby objects or invoke arbitrary serialization hooks.
+      wire_environment = environment.transform_values do |value|
+        if defined?(StandardMethodDrop) && value.instance_of?(StandardMethodDrop)
+          { '_instantiate' => 'MethodDrop', 'params' => {} }
+        elsif defined?(StandardIndexDrop) && value.instance_of?(StandardIndexDrop)
+          { '_instantiate' => 'IndexDrop', 'params' => {} }
+        elsif defined?(StandardBooleanDrop) && value.instance_of?(StandardBooleanDrop)
+          boolean = value.to_liquid_value
+          raise OperationalError, 'BooleanDrop value is not Boolean' unless boolean == true || boolean == false
+          { '_instantiate' => 'BooleanDrop', 'params' => { 'value' => boolean } }
+        elsif defined?(StandardNumberDrop) && value.instance_of?(StandardNumberDrop)
+          number = value.to_liquid_value
+          raise OperationalError, 'NumberDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)
+          { '_instantiate' => 'NumberDrop', 'params' => { 'value' => number } }
+        elsif defined?(StandardOpaqueDrop) && value.instance_of?(StandardOpaqueDrop)
+          raise OperationalError, 'Unexpected OpaqueDrop display' unless value.to_s == 'opaque'
+          { '_instantiate' => 'OpaqueDrop', 'params' => {} }
+        elsif defined?(StandardNilDrop) && value.instance_of?(StandardNilDrop)
+          raise OperationalError, 'Unexpected NilDrop conversion' unless value.to_liquid.nil?
+          { '_instantiate' => 'NilDrop', 'params' => {} }
+        elsif defined?(StandardNestedDrop) && value.instance_of?(StandardNestedDrop)
+          number = value.to_liquid_value
+          raise OperationalError, 'NestedDrop value is not a native integer' unless number.is_a?(Integer) && number.between?(-(2**63), 2**63 - 1)
+          { '_instantiate' => 'NestedDrop', 'params' => { 'value' => number } }
+        elsif defined?(StandardSequenceDrop) && value.instance_of?(StandardSequenceDrop)
+          { '_instantiate' => 'SequenceDrop', 'params' => {} }
+        elsif defined?(StandardStringDrop) && value.instance_of?(StandardStringDrop)
+          text = value.to_liquid_value
+          raise OperationalError, 'StringDrop value is not text or nil' unless text.nil? || text.instance_of?(String)
+          { '_instantiate' => 'StringDrop', 'params' => { 'value' => text } }
+        elsif defined?(StandardStringDrop) && value.instance_of?(Array) && value.any? { |element| element.instance_of?(StandardStringDrop) }
+          value.map do |element|
+            if element.instance_of?(StandardStringDrop)
+              text = element.to_liquid_value
+              raise OperationalError, 'StringDrop value is not text or nil' unless text.nil? || text.instance_of?(String)
+              { '_instantiate' => 'StringDrop', 'params' => { 'value' => text } }
+            elsif element.nil? || element.instance_of?(TrueClass) || element.instance_of?(FalseClass) || element.instance_of?(String) ||
+                  (element.instance_of?(Integer) && element.between?(-(2**63), 2**63 - 1)) ||
+                  (element.instance_of?(Float) && element.finite?)
+              element
+            else
+              raise OperationalError, 'Unsupported value in StringDrop array'
+            end
+          end
+        else
+          value
+        end
+      end
+      result = send_request('render', 'template_id' => id, 'environment' => wire_environment,
         'options' => { 'strict_errors' => options.fetch(:strict_errors), 'registers' => registers })
       @detail = result.fetch('errors', [])
       @observed = @detail.empty? ? 'successful-render' : 'recovered-error'

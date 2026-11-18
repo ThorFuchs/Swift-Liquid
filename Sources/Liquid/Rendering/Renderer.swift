@@ -103,6 +103,11 @@ internal final class Renderer {
 
     internal let customFilters: [ScalarKey: LiquidFilter]
     internal let systemContextEnabled: Bool
+    internal let hostContextEnabled: Bool
+    internal var boxedStringContextEnabled = false
+    internal var hostSequenceContextEnabled = false
+    internal var hostNodeContextEnabled = false
+    internal var hostOpaqueContextEnabled = false
 
 
     internal var templateLoader: TemplateLoader?
@@ -125,7 +130,7 @@ internal final class Renderer {
     
     internal init(configuration: RendererConfiguration = .default, limits: LiquidLimits = .default,
                   recoveryEnabled: Bool = false, locateFailures: Bool = false, referenceTime: Date = Date(), filters: [ScalarKey: LiquidFilter] = [:],
-                  systemContextEnabled: Bool = false) {
+                  systemContextEnabled: Bool = false, hostContextEnabled: Bool = false) {
         self.referenceTime = referenceTime
         self.recoveryEnabled = recoveryEnabled
         self.locateFailures = locateFailures
@@ -135,6 +140,7 @@ internal final class Renderer {
         self.autoEscapeEnabled = configuration.autoEscape
         self.customFilters = filters
         self.systemContextEnabled = systemContextEnabled
+        self.hostContextEnabled = hostContextEnabled
         self.templateLoader = nil
         self.rootTemplatePath = nil
         self.templatePathStack = []
@@ -157,7 +163,7 @@ internal final class Renderer {
         context.setVariables(variables)
         resetTemplatePathStack()
         do {
-            if let output = try renderImmediateTemplate(node) { return output }
+            if !hostContextEnabled, let output = try renderImmediateTemplate(node) { return output }
             return try await renderNode(node)
         }
         catch let signal as LoopControlSignal {
@@ -594,6 +600,8 @@ internal final class RenderingContext {
     }
 
     private func resolve(_ component: PathComponent, from value: Any) -> Any? {
+        // A cached path must never reflect on an explicitly registered host object.
+        if value is LiquidHostObject { return nil }
         if let selfValue = value as? RuntimeSelf {
             switch component {
             case .size: return selfValue.lookup("size")

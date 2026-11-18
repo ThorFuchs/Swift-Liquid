@@ -65,11 +65,152 @@ private func rejectMarkers(_ value: LiquidValue, depth: Int = 0) throws {
     guard depth <= 64 else { throw WireFailure.invalid("Wire value nesting exceeds 64") }
     switch value {
     case .object(let value):
-        guard value["_rpc_drop"] == nil else { throw WireFailure.invalid("Drop callbacks are unsupported") }
+        guard value["_rpc_drop"] == nil, value["_instantiate"] == nil else { throw WireFailure.invalid("Unsupported or nested drop marker") }
         for entry in value.entries { try rejectMarkers(entry.value, depth: depth + 1) }
     case .array(let values): for value in values { try rejectMarkers(value, depth: depth + 1) }
     default: break
     }
+}
+
+// The portable standard MethodDrop, not a general Ruby object bridge.
+// Its property family is explicitly bounded by the engine's name and work limits.
+private func methodDrop(_ name: String) -> LiquidHostObject {
+    let lookup: @Sendable (String) async throws -> LiquidValue? = { key in
+        let parts = key.split(separator: "_", maxSplits: 1, omittingEmptySubsequences: false)
+        guard parts.count == 2, !parts[1].isEmpty,
+              parts[1].utf8.allSatisfy({ (48...57).contains($0) }) else { return nil }
+        guard let number = Int(parts[1]) else { throw LiquidError.invalidValue("MethodDrop integer outside native Int domain") }
+        let result: Int
+        switch parts[0] {
+        case "echo": result = number
+        case "square":
+            let (value, overflow) = number.multipliedReportingOverflow(by: number)
+            guard !overflow else { throw LiquidError.invalidValue("MethodDrop integer overflow") }
+            result = value
+        case "double":
+            let (value, overflow) = number.multipliedReportingOverflow(by: 2)
+            guard !overflow else { throw LiquidError.invalidValue("MethodDrop integer overflow") }
+            result = value
+        default: return nil
+        }
+        return .string(String(result))
+    }
+    return LiquidHostObject(name, dynamicProperties: [
+        LiquidHostDynamicProperty(prefix: "echo_", body: lookup),
+        LiquidHostDynamicProperty(prefix: "square_", body: lookup),
+        LiquidHostDynamicProperty(prefix: "double_", body: lookup)
+    ])
+}
+
+// The portable standard IndexDrop uses typed keys; it does not expose Ruby reflection.
+private func indexDrop(_ name: String) -> LiquidHostObject {
+    let words = ["zero", "one", "two", "three", "four", "five"]
+    return LiquidHostObject(name, indexer: LiquidHostIndexer { key in
+        switch key {
+        case .string(let value): return .string(value)
+        case .integer(let value):
+            guard value >= -words.count, value < words.count else { return "unknown" }
+            return .string(words[value < 0 ? words.count + value : value])
+        case .other: return "unknown"
+        }
+    })
+}
+
+// StringDrop is a closed portable test-object shape, never arbitrary Ruby state.
+private func stringDropValue(_ parameters: LiquidObject) throws -> String? {
+    guard parameters.entries.count <= 1 else { throw WireFailure.invalid("Unsupported StringDrop parameters") }
+    guard let value = parameters["value"] else {
+        guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported StringDrop parameters") }
+        return nil
+    }
+    switch value {
+    case .null: return nil
+    case .string(let text): return text
+    default: throw WireFailure.invalid("StringDrop value must be text or null")
+    }
+}
+
+// A closed, integer-valued model of Shopify's StandardNestedDrop.
+private func nestedDropNode(_ value: Int) -> LiquidHostNode {
+    LiquidHostNode(integerValue: value, properties: [
+        LiquidHostNodeProperty("nested") { .current },
+        LiquidHostNodeProperty("to_liquid") { .current },
+        LiquidHostNodeProperty("square") {
+            let (result, overflow) = value.multipliedReportingOverflow(by: value)
+            guard !overflow else { throw LiquidError.invalidValue("NestedDrop integer overflow") }
+            return .node(nestedDropNode(result))
+        },
+    ])
+}
+
+private func admitEnvironment(_ input: LiquidObject) throws -> (LiquidObject, [LiquidHostObject]) {
+    var values: [LiquidObject.Entry] = []
+    var hosts: [LiquidHostObject] = []
+    for entry in input.entries {
+        if case .object(let marker) = entry.value, marker["_instantiate"] != nil {
+            guard marker.entries.count == 2, let kind = string(marker["_instantiate"]),
+                  case .object(let parameters)? = marker["params"] else {
+                throw WireFailure.invalid("Unsupported standard drop marker")
+            }
+            switch kind {
+            case "MethodDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported MethodDrop parameters") }
+                hosts.append(methodDrop(entry.key))
+            case "IndexDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported IndexDrop parameters") }
+                hosts.append(indexDrop(entry.key))
+            case "BooleanDrop":
+                guard parameters.entries.count == 1, case .bool(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("BooleanDrop requires exactly one Boolean value")
+                }
+                hosts.append(LiquidHostObject(entry.key, booleanValue: value))
+            case "NumberDrop":
+                guard parameters.entries.count == 1, case .integer(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("NumberDrop requires exactly one integer value")
+                }
+                hosts.append(LiquidHostObject(entry.key, numberValue: value))
+            case "StringDrop":
+                hosts.append(LiquidHostObject(entry.key, stringValue: try stringDropValue(parameters)))
+            case "OpaqueDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported OpaqueDrop parameters") }
+                hosts.append(LiquidHostObject(entry.key, opaqueDisplayName: "opaque"))
+            case "NilDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported NilDrop parameters") }
+                values.append(.init(entry.key, .null))
+            case "NestedDrop":
+                guard parameters.entries.count == 1, case .integer(let value)? = parameters["value"] else {
+                    throw WireFailure.invalid("NestedDrop requires exactly one integer value")
+                }
+                hosts.append(LiquidHostObject(entry.key, node: nestedDropNode(value)))
+            case "SequenceDrop":
+                guard parameters.entries.isEmpty else { throw WireFailure.invalid("Unsupported SequenceDrop parameters") }
+                hosts.append(LiquidHostObject(entry.key, sequence: ["first", "second", "third"], displayName: "StandardSequenceDrop"))
+            default: throw WireFailure.invalid("Unsupported standard drop marker")
+            }
+        } else if case .array(let array) = entry.value, array.contains(where: { element in
+            if case .object(let object) = element { return object["_instantiate"] != nil }
+            return false
+        }) {
+            var elements: [LiquidHostArrayElement] = []
+            for value in array {
+                if case .object(let marker) = value, marker["_instantiate"] != nil {
+                    guard marker.entries.count == 2, string(marker["_instantiate"]) == "StringDrop",
+                          case .object(let parameters)? = marker["params"] else {
+                        throw WireFailure.invalid("Unsupported or malformed nested drop marker")
+                    }
+                    elements.append(.boxedString(try stringDropValue(parameters)))
+                } else {
+                    try rejectMarkers(value)
+                    elements.append(.value(value))
+                }
+            }
+            hosts.append(LiquidHostObject(entry.key, array: elements))
+        } else {
+            try rejectMarkers(entry.value)
+            values.append(entry)
+        }
+    }
+    return (LiquidObject(values), hosts)
 }
 private func problem(_ error: Error) -> LiquidValue {
     var fields: [LiquidObject.Entry] = []
@@ -181,8 +322,7 @@ private struct Server {
                 catch { result = ["template_id": nil, "error": problem(error)] }
             case "render":
                 guard initialized, let compiled = slot, string(params["template_id"]) == compiled.id else { throw WireFailure.invalid("Unknown or stale template ID; compile first") }
-                let context = try object(params["environment"])
-                try rejectMarkers(.object(context))
+                let (context, hostObjects) = try admitEnvironment(object(params["environment"]))
                 let options = try object(params["options"])
                 try admitKeys(options, allowed: ["strict_errors", "resource_limits", "registers"])
                 let resourceLimits = try object(options["resource_limits"])
@@ -209,7 +349,12 @@ private struct Server {
                 }
                 let engine = LiquidEngine(limits: profile, referenceTime: reference)
                 do {
-                    if recovering {
+                    if !hostObjects.isEmpty {
+                        guard !recovering, compiled.partials.isEmpty else {
+                            throw WireFailure.invalid("Standard Drop requires raising mode and no partials")
+                        }
+                        result = ["output": .string(try await engine.render(compiled.root, context: context, hostObjects: hostObjects)), "errors": []]
+                    } else if recovering {
                         let rendered = try await engine.renderWithDiagnostics(compiled.root, context: context, partialSources: compiled.partials, resolver: compiled.resolver)
                         result = ["output": .string(rendered.output), "errors": .array(rendered.diagnostics.map { diagnostic in
                             var fields: [LiquidObject.Entry] = [.init("type", "render_error"), .init("message", .string(diagnostic.message))]

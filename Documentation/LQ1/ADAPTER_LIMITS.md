@@ -104,3 +104,78 @@ primitive-JSON cases remain eligible, including object/array formatting probes.
 Actual Ruby classes, symbol keys, cycles and numeric-domain violations receive
 specific preflight reasons. `SPEC_RUNS.json.featurePolicies` records this choice;
 it does not advertise general Ruby runtime type support.
+
+The separate `method-drop` lane accepts the portable root-level
+`_instantiate: MethodDrop` marker with empty parameters in raising mode without
+partials. It constructs a bounded native host binding for the standard echo,
+square and double families; non-native integer inputs or overflow are operational
+domain failures. Unsupported, nested or malformed markers are rejected. This
+is not bidirectional Drop RPC, arbitrary Ruby transport, or a declaration of
+complete Drop support. The targeted lane verifies the three fixed and two
+generated MethodDrop fixtures. For the generated cases it recognizes only their
+two exact pinned shapes and exhaustively constructs their declared integer
+ranges; it does not evaluate fixture expressions or replay the full suite's
+random stream. The original full-suite selection remains unchanged.
+
+The separate `index-drop` lane accepts the portable root-level
+`_instantiate: IndexDrop` marker with empty parameters in raising mode without
+partials. String and integer keys remain distinct; other types follow the
+standard object's unknown-key behavior. Its three fixed pinned fixtures run
+through the same unmodified upstream comparator and Ruby reference. This is
+still not general Drop or bidirectional RPC support.
+
+The separate `boolean-drop` lane accepts only the root-level portable
+`BooleanDrop` marker with exactly one Boolean `value` parameter, in raising
+mode and without partials. It checks 22 fixed cases against the pinned reference
+and upstream comparator. This targeted evidence does not alter the full-suite
+selector, its exclusions, or the reviewed reference conflicts.
+
+The separate `number-drop` lane accepts only a root-level portable `NumberDrop`
+marker with exactly one native-width integer `value`, in raising mode and
+without partials. It checks three fixed cases against the pinned reference and
+upstream comparator. The suite's additional JSON test filter has a separate
+object policy and is not qualified by these cases. This lane does not alter the
+full-suite selector, its exclusions, or reviewed reference conflicts.
+
+The separate `string-drop` lane admits portable `StringDrop` markers at the
+root and as direct elements of a root array, with text or nil values. It does
+not admit arbitrary nested markers, callbacks or recursive host graphs. Five
+fixed, hash-pinned cases run through the upstream comparator and pinned Ruby
+reference. Nil text conversion reports a Swift domain error rather than the
+Ruby exception class, and non-UTF-8 decoded bytes remain outside the typed
+string domain. The suite's additional JSON test filter's object policy remains
+unqualified. This lane leaves the full-suite selector, exclusions and
+reviewed reference conflicts unchanged.
+
+The separate `sequence-drop` lane accepts only the portable root-level
+`SequenceDrop` marker with empty parameters, in raising mode and without
+partials. Its fixed standard sequence is represented by a bounded immutable
+snapshot, and five hash-pinned cases run against the unchanged comparator and
+pinned Ruby reference. This does not advertise general Drop RPC, streaming or
+the suite's additional JSON test filter, and does not alter the full-suite
+selector, historical exclusions or reviewed reference conflicts.
+
+
+The separate `nested-drop` lane admits only a root-level standard `NestedDrop`
+marker with one native-width integer value. It checks five fixed, hash-pinned
+cases with the upstream comparator and pinned Ruby reference, without changing
+the full-suite selector. `nested` retains the current node; `square` creates a
+new node and reports native integer overflow. Ruby arbitrary-precision arithmetic
+and the suite's separate object-sensitive JSON filter are outside this lane.
+
+
+The separate `nil-drop` lane admits a root-level standard `NilDrop` marker
+with empty parameters. The pinned standard class returns Liquid nil from
+`to_liquid`, so this marker is admitted as a present typed null, without a new
+runtime object type. Three fixed cases use the pinned reference and unchanged
+comparator. This is specific to that exact class; arbitrary Drop objects and
+nested markers are not flattened. The full-suite selector and holds are unchanged.
+
+
+The separate `opaque-drop` lane accepts only the standard root-level
+`OpaqueDrop` marker with empty parameters. Its display text is not a represented
+value: equality retains identity, numeric conversion is absent, and it does
+not iterate. Three fixed cases run with the pinned Ruby reference and unchanged
+comparator. General Drop RPC, arbitrary nested markers and the suite's extra
+JSON test filter remain outside this lane. The full-suite selector and holds
+are unchanged.

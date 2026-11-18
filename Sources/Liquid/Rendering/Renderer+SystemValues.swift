@@ -12,7 +12,11 @@ internal struct SystemRuntimeValue {
 
 extension Renderer {
     internal func systemPrimary(_ value: Any) -> Any {
-        (value as? SystemRuntimeValue)?.primary ?? value
+        if hostContextEnabled, let boolean = value as? RuntimeHostBoolean { return boolean.value }
+        if hostContextEnabled, let number = value as? RuntimeHostNumber { return number.value }
+        if hostNodeContextEnabled, let node = value as? RuntimeHostNode { return node.node.integerValue }
+        if boxedStringContextEnabled, let string = value as? RuntimeHostString { return string.value.map { $0 as Any } ?? NSNull() }
+        return (value as? SystemRuntimeValue)?.primary ?? value
     }
 
     internal func systemRuntime(_ value: LiquidSystemValue, depth: Int = 1) throws -> Any {

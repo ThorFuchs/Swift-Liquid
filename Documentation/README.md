@@ -15,6 +15,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Errors](Errors.md) | Throwing and recovered output, diagnostics, and invocation ownership |
 | [Closed system environment](SystemEnvironment.md) | Opt-in resident values, representations and trust boundaries |
 | [Custom filters](CustomFilters.md) | Typed engine-scoped callbacks, arguments, admission and failures |
+| [Host properties](HostObjects.md) | Explicit asynchronous host-property bindings and their supported operations |
 | [Inspection](Inspection.md) | AST summary, syntactic references, limits and CLI JSON schema |
 | [Metrics](Metrics.md) | Opt-in elapsed durations, logical budget counts, recovery and CLI metrics schema |
 | [Application reuse](Reuse.md) | Retained root/partial bundles, explicit domain mapping and bounded application caches |
@@ -47,6 +48,7 @@ guides that are compiled from the public Swift symbol graph.
 | [Exact registry graphs](ExactRegistryDependencies.md) | Two exact-name overloads, atomic admission and runtime parity |
 | [Dependency inspection](Dependencies.md) | Bounded explicit-bundle graph, findings, capacities and CLI schema |
 | [1.3 roadmap](Roadmap-1.3.md) | Adopted bounded partial-dependency inspection, explicit CLI mode and acceptance gates |
+| [2.1 roadmap](Roadmap-2.1.md) | Host-object conformance work and the outstanding 2.0.0 performance assessment |
 | [Upstream feature review](Architecture/UpstreamFeatureReview.md) | RhoeLiquid capabilities, implementation findings and scope decisions |
 
 Run `python3 Scripts/ci.py --lane docs` to compile the catalog. Generated files go

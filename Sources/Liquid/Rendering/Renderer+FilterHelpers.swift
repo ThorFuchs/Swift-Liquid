@@ -71,6 +71,8 @@ extension Renderer {
         if let key {
             // compact('key'): remove items where item[key] is nil
             return array.filter { item in
+                if boxedStringContextEnabled && item is RuntimeHostString { return false }
+                if hostOpaqueContextEnabled && item is RuntimeHostOpaque { return getObjectProperty(item, key: key) != nil }
                 guard isDictLike(item) else { return true }
                 guard let val = dictValue(item, forKey: key) else { return false }
                 return !(systemPrimary(val) is NSNull)
@@ -78,6 +80,7 @@ extension Renderer {
         }
 
         return array.compactMap { item -> Any? in
+            if boxedStringContextEnabled && item is RuntimeHostString { return item }
             if systemPrimary(item) is NSNull { return nil }
             return item
         }
@@ -87,9 +90,24 @@ extension Renderer {
         guard let array = value as? [Any] else { return value }
         var seen = Set<RuntimeEqualityKey>()
         var unique: [Any] = []
-        for item in flattenArray(array) {
+        let items = flattenArray(array)
+        let hasBoxedStrings = boxedStringContextEnabled && items.contains { $0 is RuntimeHostString }
+        for item in items {
             try budget.step()
-            let selected = key.map { dictValue(item, forKey: $0) ?? NSNull() } ?? item
+            let selected: Any
+            if let key, hasBoxedStrings {
+                let primary = systemPrimary(item)
+                if primary is NSNull { return NSNull() }
+                if let string = primary as? String {
+                    selected = string.range(of: key, options: .literal) == nil ? NSNull() : key as Any
+                } else {
+                    selected = dictValue(item, forKey: key) ?? NSNull()
+                }
+            } else if hostOpaqueContextEnabled, item is RuntimeHostOpaque, let key {
+                selected = getObjectProperty(item, key: key) ?? NSNull()
+            } else {
+                selected = key.map { dictValue(item, forKey: $0) ?? NSNull() } ?? item
+            }
             guard let identity = RuntimeEqualityKey.make(selected) else { throw LiquidError.invalidValue("Unsupported value for uniq") }
             if seen.insert(identity).inserted { unique.append(item) }
         }
@@ -133,7 +151,9 @@ extension Renderer {
         for item in array {
             try Task.checkCancellation()
             let itemValue: Any?
-            if let string = systemPrimary(item) as? String {
+            if boxedStringContextEnabled && item is RuntimeHostString {
+                itemValue = nil
+            } else if let string = systemPrimary(item) as? String {
                 itemValue = property.isEmpty || string.range(of: property, options: .literal) != nil ? property : nil
             } else {
                 itemValue = getObjectProperty(item, key: property)
@@ -172,7 +192,11 @@ extension Renderer {
         var result: [Any] = []
         result.reserveCapacity(array.count)
         for item in array {
-            if let selfValue = item as? RuntimeSelf {
+            if hostOpaqueContextEnabled && item is RuntimeHostOpaque {
+                result.append(ScalarKey(propertyName) == ScalarKey("to_liquid") ? item : NSNull())
+            } else if boxedStringContextEnabled && item is RuntimeHostString {
+                result.append(propertyName == "to_liquid" ? item : NSNull())
+            } else if let selfValue = item as? RuntimeSelf {
                 result.append(selfValue.lookup(propertyName) ?? NSNull())
             } else if isDictLike(item) {
                 result.append(dictValue(item, forKey: propertyName) as Any? ?? NSNull())
@@ -193,6 +217,8 @@ extension Renderer {
     }
     
     internal func getObjectProperty(_ object: Any, key: String) -> Any? {
+        if hostOpaqueContextEnabled && object is RuntimeHostOpaque { return ScalarKey(key) == ScalarKey("to_liquid") ? object : nil }
+        if boxedStringContextEnabled && object is RuntimeHostString { return nil }
         let object = systemPrimary(object)
         // Handle different object types
         if let val = dictValue(object, forKey: key) { return val }
@@ -221,6 +247,10 @@ extension Renderer {
         // Unwrap the values
         let valueA = a!
         let valueB = b!
+        if hostOpaqueContextEnabled {
+            if let lhs = valueA as? RuntimeHostOpaque, let rhs = valueB as? RuntimeHostOpaque { return lhs.identity === rhs.identity }
+            if valueA is RuntimeHostOpaque || valueB is RuntimeHostOpaque { return false }
+        }
         
         // Compare based on types
         switch (valueA, valueB) {
@@ -350,7 +380,8 @@ extension Renderer {
                 else if let floating = number as? Double, floating.isFinite { text = String(floating) }
                 else { decimalExact = false; continue }
                 if var operand = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")) {
-                    if let floating = number as? Double, NSDecimalNumber(decimal: operand).doubleValue != floating {
+                    if let floating = number as? Double,
+                       Double(NSDecimalNumber(decimal: operand).stringValue) != floating {
                         decimalExact = false
                         continue
                     }
@@ -362,7 +393,9 @@ extension Renderer {
                 } else { decimalExact = false }
             }
         }
-        if hasFloat && decimalExact { return NSDecimalNumber(decimal: decimalResult).doubleValue }
+        if hasFloat && decimalExact, let value = Double(NSDecimalNumber(decimal: decimalResult).stringValue), value.isFinite {
+            return value
+        }
         return result
     }
     

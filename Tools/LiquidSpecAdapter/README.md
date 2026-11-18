@@ -82,3 +82,93 @@ Five further individually identified cases cover a comment-only filesystem
 callback, three missing-file diagnostics and the pinned loader's exact
 100,000-character `LongString` materialization. Their narrowly checked feature
 exceptions never bypass unrelated transport checks or change the comparator.
+
+## MethodDrop cases
+
+`Scripts/ci.py --lane method-drop --spec-path PATH --reference-path PATH` runs
+three fixed and two generated MethodDrop fixtures through Shopify's unchanged
+`AdapterRunner` comparator against both Swift and the pinned Ruby reference.
+For the two generated fixtures, the lane checks their exact pinned shapes and
+then exhaustively constructs their declared integer ranges (100 square inputs
+and 1,000 echo inputs) using a closed implementation. It never evaluates fixture
+expressions or invokes the upstream loader that does so. This is exhaustive for
+the two declared input ranges, not a replay of the full suite's random-number
+sequence. It is recorded as two fixture variants and 1,100 materializations.
+
+The lane checks fixture bytes and identity, uses safe YAML loading, and fails
+closed on changed shapes. Its separate results do not change the full-suite
+selector, raw verdict, five reviewed conflicts, or claims about other Drop
+classes. Optional `--output-root` places the receipt, per-case result, protocol
+checks and RPC trace outside the checkout.
+
+## Fixed IndexDrop cases
+
+`Scripts/ci.py --lane index-drop --spec-path PATH --reference-path PATH` runs
+the three pinned, fixed IndexDrop cases through the same upstream comparator
+and Ruby reference. It verifies the fixture digest and identities, reads YAML as
+data, and disables dynamic Ruby evaluation. Protocol checks also exercise
+negative, string, boolean, floating-point and missing keys. The result is
+separate from the unchanged full-suite selector and its historical exclusions.
+
+## Fixed BooleanDrop cases
+
+`Scripts/ci.py --lane boolean-drop --spec-path PATH --reference-path PATH`
+checks 22 fixed pinned BooleanDrop cases with the upstream comparator and pinned
+Ruby reference. The lane hashes each fixture and safely decodes only the selected
+YAML nodes, without evaluating fixture-supplied Ruby. Results remain separate
+from the unchanged full-suite selection and historical exclusions.
+
+## Fixed NumberDrop cases
+
+`Scripts/ci.py --lane number-drop --spec-path PATH --reference-path PATH` runs
+three fixed, checksum-bound NumberDrop cases using the pinned Ruby reference and
+unchanged upstream comparator. It disables dynamic Ruby evaluation and admits
+only the explicit native-width integer shape. Results are separate from the
+unchanged full-suite selector and historical exclusions.
+
+## Fixed StringDrop cases
+
+`Scripts/ci.py --lane string-drop --spec-path PATH --reference-path PATH`
+checks five fixed StringDrop cases, including the two direct array-element
+cases, against the unchanged upstream comparator and pinned Ruby reference.
+The lane verifies exact source digests and identities, decodes only selected
+YAML nodes as data and forbids dynamic Ruby evaluation. It does not change
+the full-suite selector or admit arbitrary nested host objects.
+
+## Fixed SequenceDrop cases
+
+`Scripts/ci.py --lane sequence-drop --spec-path PATH --reference-path PATH`
+checks five fixed, hash-pinned SequenceDrop cases using the unchanged upstream
+comparator and pinned Ruby reference. It loads selected YAML nodes as data and
+disables dynamic Ruby evaluation. The finite snapshot and its results do not
+change the full-suite selector or admit arbitrary host iterators.
+
+
+## Fixed NestedDrop cases
+
+`Scripts/ci.py --lane nested-drop --spec-path PATH --reference-path PATH`
+checks five fixed, hash-pinned cases using the unchanged upstream comparator and
+pinned Ruby reference. It safely reads selected YAML nodes and forbids dynamic
+Ruby evaluation. This targeted lane does not change the full-suite selector.
+The portable marker is root-level only and uses a native-width integer; the
+reference's arbitrary-precision integers and extra JSON test filter remain
+outside its qualified scope.
+
+
+## Fixed NilDrop cases
+
+`Scripts/ci.py --lane nil-drop --spec-path PATH --reference-path PATH` checks
+three fixed, hash-pinned cases with the pinned Ruby reference and unchanged
+upstream comparator, while forbidding dynamic Ruby evaluation. The exact
+standard NilDrop's `to_liquid` yields nil; the root-only portable marker is
+admitted as a present typed null. This does not change the full-suite selector
+or admit arbitrary nested markers or other host classes as null.
+
+
+## Fixed OpaqueDrop cases
+
+`Scripts/ci.py --lane opaque-drop --spec-path PATH --reference-path PATH` checks
+three fixed, hash-pinned cases against the pinned Ruby reference with the
+unchanged upstream comparator. It safely reads selected YAML nodes and forbids
+dynamic Ruby evaluation. The root-only marker has empty parameters and does
+not change the full-suite selector or qualify the suite's extra JSON test filter.

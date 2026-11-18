@@ -29,22 +29,6 @@ extension Renderer {
         if let exponent = full.firstIndex(of: "e"), !full[..<exponent].contains(".") {
             return String(full[..<exponent]) + ".0" + full[exponent...]
         }
-        // Detect floating-point noise: patterns like "7.8999999999999995" or "3.0000000000000004"
-        // These have 16 significant digits and end with runs of 9s or 0s followed by small digits
-        if full.count >= 16, let dotIndex = full.firstIndex(of: ".") {
-            let decimals = String(full[full.index(after: dotIndex)...])
-            // Check for trailing noise: many 9s or 0s near the end
-            if decimals.count >= 13 {
-                let last5 = String(decimals.suffix(5))
-                let nineCount = last5.filter { $0 == "9" }.count
-                let zeroCount = last5.filter { $0 == "0" }.count
-                if nineCount >= 4 || zeroCount >= 4 {
-                    // Round to 10 significant digits to eliminate noise
-                    let rounded = String(format: "%.10g", num)
-                    return rounded
-                }
-            }
-        }
         return full
     }
 
@@ -77,6 +61,8 @@ extension Renderer {
     @inline(__always)
     internal func stringifyUnescaped(_ value: Any) -> String {
         let value = systemPrimary(value)
+        if hostSequenceContextEnabled, let sequence = value as? RuntimeHostSequence { return sequence.displayName }
+        if hostOpaqueContextEnabled, let opaque = value as? RuntimeHostOpaque { return opaque.displayName }
         switch value {
         case let number as RuntimeNonFinite:
             if number.value.isNaN { return "NaN" }
@@ -121,6 +107,9 @@ extension Renderer {
     // values use Ruby's inspected representation. Keep this separate from
     // expression coercion and retain cancellation at composite boundaries.
     internal func renderStringify(_ value: Any) throws -> String {
+        if boxedStringContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
+            throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
+        }
         if value is RuntimeObject || value is [String: Any] || value is [Any] {
             let result = try renderCompositeUnescaped(value)
             return autoEscapeEnabled ? HTMLEscape.escape(result) : result
@@ -130,6 +119,9 @@ extension Renderer {
 
     private func renderCompositeUnescaped(_ value: Any) throws -> String {
         try Task.checkCancellation()
+        if boxedStringContextEnabled, let box = value as? RuntimeHostString, box.value == nil {
+            throw LiquidError.invalidValue("A boxed string without a value cannot be converted to text")
+        }
         if let array = value as? [Any] {
             var output = ""
             for item in array { output += try renderCompositeUnescaped(item) }
@@ -298,9 +290,13 @@ extension Renderer {
         }
     }
     
-    internal func isEqual(_ left: Any, _ right: Any) -> Bool {
+    internal func isEqual(_ left: Any, _ right: Any) throws -> Bool {
         let left = systemPrimary(left)
         let right = systemPrimary(right)
+        if boxedStringContextEnabled, let leftArray = left as? [Any], let rightArray = right as? [Any],
+           (try containsBoxedString(leftArray) || containsBoxedString(rightArray)) {
+            return try boxedArrayEqual(leftArray, rightArray)
+        }
         if left is RuntimeNonFinite || right is RuntimeNonFinite {
             if left is Bool || right is Bool { return false }
             guard (left is RuntimeNonFinite || left is Double || left is Int),
@@ -312,6 +308,14 @@ extension Renderer {
             return left.scope === right.scope
         }
         if left is RuntimeSelf || right is RuntimeSelf { return false }
+        if hostOpaqueContextEnabled {
+            if let lhs = left as? RuntimeHostOpaque, let rhs = right as? RuntimeHostOpaque { return lhs.identity === rhs.identity }
+            if left is RuntimeHostOpaque || right is RuntimeHostOpaque { return false }
+        }
+        if hostSequenceContextEnabled {
+            if let lhs = left as? RuntimeHostSequence, let rhs = right as? RuntimeHostSequence { return lhs.identity === rhs.identity }
+            if left is RuntimeHostSequence || right is RuntimeHostSequence { return false }
+        }
         // Ruby's blank and empty comparison literals are predicates, not
         // values that compare equal to themselves or to each other.
         if left is LiquidSpecialValue && right is LiquidSpecialValue { return false }
@@ -493,6 +497,53 @@ extension Renderer {
         return nil
     }
 
+    // Liquid converts floats to decimal before arithmetic, then converts the
+    // result back to Float. Fall back to the existing binary path when the
+    // finite Foundation decimal domain cannot represent an operand or result.
+    private enum DecimalOperation { case add, subtract, multiply, modulo }
+
+    private func decimalArithmetic(_ left: Any, _ right: Any, operation: DecimalOperation, binaryResult: Double) -> Double? {
+        func operand(_ value: Any) -> Decimal? {
+            let primary = systemPrimary(value)
+            let text: String
+            if let integer = primary as? Int { text = String(integer) }
+            else {
+                let number = numericValue(primary) ?? 0
+                guard number.isFinite else { return nil }
+                text = String(number)
+            }
+            guard let decimal = Decimal(string: text, locale: Locale(identifier: "en_US_POSIX")) else { return nil }
+            if let floating = primary as? Double,
+               Double(NSDecimalNumber(decimal: decimal).stringValue) != floating { return nil }
+            return decimal
+        }
+        guard var l = operand(left), var r = operand(right) else { return nil }
+        var result = Decimal.zero
+        let status: Decimal.CalculationError
+        switch operation {
+        case .add: status = NSDecimalAdd(&result, &l, &r, .plain)
+        case .subtract: status = NSDecimalSubtract(&result, &l, &r, .plain)
+        case .multiply: status = NSDecimalMultiply(&result, &l, &r, .plain)
+        case .modulo:
+            guard r != .zero else { return nil }
+            var quotient = Decimal.zero
+            let division = NSDecimalDivide(&quotient, &l, &r, .down)
+            guard division == .noError || division == .lossOfPrecision else { return nil }
+            var whole = Decimal.zero
+            NSDecimalRound(&whole, &quotient, 0, .down)
+            var product = Decimal.zero
+            guard NSDecimalMultiply(&product, &whole, &r, .plain) == .noError else { return nil }
+            status = NSDecimalSubtract(&result, &l, &product, .plain)
+        }
+        guard status == .noError else { return nil }
+        // NSDecimalNumber.doubleValue can round a decimal to the wrong adjacent
+        // Double. Swift's decimal parser preserves the nearest representable one.
+        guard let number = Double(NSDecimalNumber(decimal: result).stringValue) else { return nil }
+        // Decimal does not reliably retain the IEEE sign of zero.
+        if number == 0 && binaryResult == 0 { return binaryResult }
+        return number.isFinite ? number : nil
+    }
+
     internal func add(_ left: Any, _ right: Any) throws -> Any {
         if let l = left as? Int, let r = right as? Int {
             let (result, overflow) = l.addingReportingOverflow(r)
@@ -502,7 +553,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l + r
+        let binaryResult = l + r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .add, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -516,7 +568,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l - r
+        let binaryResult = l - r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .subtract, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -530,7 +583,8 @@ extension Renderer {
         let hasFloat = isFloatLike(left) || isFloatLike(right)
         let l = numericValue(left) ?? 0
         let r = numericValue(right) ?? 0
-        let result = l * r
+        let binaryResult = l * r
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .multiply, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) { return try checkedInteger(result) }
         return result
     }
@@ -574,7 +628,8 @@ extension Renderer {
             throw RenderError.divisionByZero()
         }
         let remainder = l.truncatingRemainder(dividingBy: r)
-        let result = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
+        let binaryResult = remainder != 0 && ((remainder < 0) != (r < 0)) ? remainder + r : remainder
+        let result = (hasFloat ? decimalArithmetic(left, right, operation: .modulo, binaryResult: binaryResult) : nil) ?? binaryResult
         if !hasFloat, result == result.rounded(.towardZero) {
             return try checkedInteger(result)
         }
@@ -603,7 +658,50 @@ extension Renderer {
         return parts
     }
 
-    internal func contains(_ haystack: Any, _ needle: Any) -> Bool {
+    // Ruby arrays dispatch equality to each left-hand element. A boxed
+    // string can compare equal to a plain string even though the reverse
+    // comparison does not, so a symmetric hash key is insufficient here.
+    private func containsBoxedString(_ array: [Any]) throws -> Bool {
+        for value in array {
+            try budget.step()
+            if value is RuntimeHostString { return true }
+            if let child = value as? [Any], try containsBoxedString(child) { return true }
+        }
+        return false
+    }
+
+    private func boxedArrayEqual(_ left: [Any], _ right: [Any]) throws -> Bool {
+        guard left.count == right.count else { return false }
+        for (lhs, rhs) in zip(left, right) {
+            try budget.step()
+            if let boxed = lhs as? RuntimeHostString {
+                if let other = rhs as? RuntimeHostString {
+                    if boxed.identity === other.identity { continue }
+                    guard let leftText = boxed.value, let rightText = other.value,
+                          leftText.utf8.elementsEqual(rightText.utf8) else { return false }
+                    continue
+                }
+                guard let leftText = boxed.value else { return false }
+                let rightText: String
+                if rhs is [Any] || rhs is RuntimeObject || rhs is [String: Any] {
+                    rightText = try rubyInspect(rhs)
+                } else {
+                    rightText = stringifyUnescapedPreservingSafeHTML(rhs)
+                }
+                if !leftText.utf8.elementsEqual(rightText.utf8) { return false }
+            } else if rhs is RuntimeHostString {
+                return false
+            } else if let leftChild = lhs as? [Any] {
+                guard let rightChild = rhs as? [Any], try boxedArrayEqual(leftChild, rightChild) else { return false }
+            } else {
+                if rhs is [Any] { return false }
+                if try !isEqual(lhs, rhs) { return false }
+            }
+        }
+        return true
+    }
+
+    internal func contains(_ haystack: Any, _ needle: Any) throws -> Bool {
         let haystack = systemPrimary(haystack); let needle = systemPrimary(needle)
         // Shopify: contains with false/nil/undefined needle always returns false
         if needle is Bool || needle is NSNull { return false }
@@ -612,8 +710,11 @@ extension Renderer {
         if let str = haystack as? String {
             return str.range(of: stringify(needle), options: .literal) != nil
         }
+        if hostSequenceContextEnabled, let sequence = haystack as? RuntimeHostSequence {
+            return try sequence.values.contains { try isEqual($0, needle) }
+        }
         if let array = haystack as? [Any] {
-            return array.contains { isEqual($0, needle) }
+            return try array.contains { try isEqual($0, needle) }
         }
         return false
     }
@@ -647,6 +748,7 @@ extension Renderer {
     
     internal func isNilOrEmpty(_ value: Any) -> Bool {
         let value = systemPrimary(value)
+        if hostOpaqueContextEnabled, value is RuntimeHostOpaque { return false }
         switch value {
         case is NSNull:
             return true

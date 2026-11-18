@@ -65,6 +65,14 @@ internal struct FilterValueBridge {
             return .string(text)
         }
         switch value {
+        case let value as RuntimeHostBoolean: return .bool(value.value)
+        case let value as RuntimeHostNumber: return .integer(value.value)
+        case let value as RuntimeHostNode: return .integer(value.node.integerValue)
+        case let value as RuntimeHostSequence: return try read(value.values, depth: depth + 1)
+        case let value as RuntimeHostOpaque: try key(value.displayName); return .string(value.displayName)
+        case let value as RuntimeHostString:
+            if let text = value.value { try key(text); return .string(text) }
+            return .null
         case let wrapped as SystemRuntimeValue where allowSystemValues:
             return try read(wrapped.primary, depth: depth + 1)
         case let html as SafeHTML where allowSystemValues:

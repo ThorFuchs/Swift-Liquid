@@ -5,7 +5,7 @@ import Foundation
 // or canonically equivalent String hashing.
 internal indirect enum RuntimeEqualityKey: Hashable {
     case null, boolean(Bool), integer(Int), number(Double), string(ScalarKey)
-    case array([RuntimeEqualityKey]), object([Member]), range(Int, Int)
+    case array([RuntimeEqualityKey]), object([Member]), range(Int, Int), opaque(ObjectIdentifier)
     struct Member: Hashable { let key: ScalarKey; let value: RuntimeEqualityKey }
 
     static func make(_ value: Any) -> Self? {
@@ -26,6 +26,8 @@ internal indirect enum RuntimeEqualityKey: Hashable {
             return .array(keys)
         case let object as RuntimeObject: return members(Array(object))
         case let object as [String: Any]: return members(object.map { (key: $0.key, value: $0.value) })
+        case let wrapped as RuntimeHostString: return wrapped.value.map { .string(ScalarKey($0)) } ?? .null
+        case let opaque as RuntimeHostOpaque: return .opaque(ObjectIdentifier(opaque.identity))
         default: return nil
         }
     }
