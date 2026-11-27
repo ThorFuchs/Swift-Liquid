@@ -34,7 +34,6 @@ internal final class Lexer {
     private static let rightBracket: UInt8 = 0x5D
     private static let doubleQuote: UInt8 = 0x22
     private static let singleQuote: UInt8 = 0x27
-    private static let backslash: UInt8 = 0x5C
     private static let underscore: UInt8 = 0x5F
     private static let newline: UInt8 = 0x0A
     private static let dash: UInt8 = 0x2D // '-' for whitespace control
@@ -622,7 +621,6 @@ internal final class Lexer {
         skipWhitespace()
 
         let end = bytes.count
-        
         // Tokenize the content inside
         while byteIndex < end {
             let byte = bytes[byteIndex]
@@ -1301,67 +1299,9 @@ internal final class Lexer {
     
     private func tokenizeString(_ tokens: inout [Token], start: TokenPosition, quote: UInt8) throws(LexerError) {
         advance() // consume opening quote
-        
-        let contentStart = byteIndex
-        if let simpleContent = try tokenizeSimpleStringContent(startPosition: start.position, quote: quote) {
-            advance() // consume closing quote
-            tokens.append(Token(
-                type: .string(simpleContent),
-                position: start.position,
-                line: start.line,
-                column: start.column
-            ))
-            return
-        }
-
-        var unescapedSegmentStart = byteIndex
-        var contentBuffer: String?
-        
-        while !isAtEnd && current != quote {
-            if current == Self.backslash {
-                if contentBuffer == nil {
-                    contentBuffer = makeString(from: contentStart, to: byteIndex)
-                } else if byteIndex > unescapedSegmentStart {
-                    contentBuffer?.append(makeString(from: unescapedSegmentStart, to: byteIndex))
-                }
-                advance() // consume backslash
-                if !isAtEnd {
-                    // Handle escape sequences
-                    switch current {
-                    case 0x6E: contentBuffer?.append("\n")
-                    case 0x74: contentBuffer?.append("\t")
-                    case 0x72: contentBuffer?.append("\r")
-                    case Self.backslash: contentBuffer?.append("\\")
-                    case Self.doubleQuote: contentBuffer?.append("\"")
-                    case Self.singleQuote: contentBuffer?.append("'")
-                    default: 
-                        contentBuffer?.append("\\")
-                        contentBuffer?.append(currentScalarString())
-                    }
-                    advance()
-                    unescapedSegmentStart = byteIndex
-                }
-            } else {
-                advance()
-            }
-        }
-        
-        if isAtEnd {
-            throw LexerError.unterminatedString(position: start.position)
-        }
-        
-        let content: InlineString
-        if var buffer = contentBuffer {
-            if byteIndex > unescapedSegmentStart {
-                buffer.append(makeString(from: unescapedSegmentStart, to: byteIndex))
-            }
-            content = InlineString(buffer)
-        } else {
-            content = makeInlineString(from: contentStart, to: byteIndex)
-        }
-
+        // Liquid strings retain backslashes verbatim; they never escape a quote.
+        let content = try tokenizeSimpleStringContent(startPosition: start.position, quote: quote)
         advance() // consume closing quote
-        
         tokens.append(Token(
             type: .string(content),
             position: start.position,
@@ -1371,7 +1311,7 @@ internal final class Lexer {
     }
 
     @inline(__always)
-    private func tokenizeSimpleStringContent(startPosition: Int, quote: UInt8) throws(LexerError) -> InlineString? {
+    private func tokenizeSimpleStringContent(startPosition: Int, quote: UInt8) throws(LexerError) -> InlineString {
         let end = bytes.count
         var index = byteIndex
         var currentLine = line
@@ -1386,10 +1326,6 @@ internal final class Lexer {
                 line = currentLine
                 column = currentColumn
                 return content
-            }
-
-            if byte == Self.backslash {
-                return nil
             }
 
             index += 1

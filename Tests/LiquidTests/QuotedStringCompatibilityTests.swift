@@ -20,6 +20,26 @@ private struct QuotedStringReferenceCase: Decodable, Sendable {
 @Suite("Pinned Ruby quoted strings")
 struct QuotedStringCompatibilityTests {
     @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
+    func contextualStringsAndInspection(mode: LiquidSyntaxMode) async throws {
+        let engine = LiquidEngine()
+        let source = #"{% assign x = 'a\n' %}{% capture c %}{{ x }}{% endcapture %}{% if c == 'a\n' %}{{ c | append: '\t' }}{% endif %}|{{ obj['k\n'] }}|{{ host }}|{% include 'p\n', arg: 'v\r' %}|{% render 'p\n', arg: 'v\r' %}"#
+        let host = "h\n" + #"\n"#
+        let context: LiquidObject = ["obj": .object([#"k\n"#: "KEY"]), "host": .string(host)]
+        let partial = "{{ arg }}"
+        let parsed = try LiquidTemplate(source, syntaxMode: mode)
+        let expected = #"a\n\t|KEY|"# + host + #"|v\r|v\r"#
+        for _ in 0..<2 {
+            #expect(try await engine.render(parsed, context: context, partialSources: [#"p\n"#: partial]) == expected)
+        }
+        let inspection = try engine.inspect(parsed)
+        #expect(inspection.literalPartialNames == [#"p\n"#])
+        #expect(inspection.filterNames == ["append"])
+        let dependencies = try engine.inspectDependencies(template: source, templates: [#"p\n"#: partial], syntaxMode: mode)
+        #expect(dependencies.edges.count == 1) // repeated requests share one dependency edge
+        #expect(dependencies.edges.allSatisfy { $0.requestedName == #"p\n"# })
+    }
+
+    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
     func referenceBytesAndParsePhase(mode: LiquidSyntaxMode) async throws {
         let url = try #require(Bundle.module.url(forResource: "QuotedStringReferenceCases", withExtension: "json", subdirectory: "Fixtures"))
         let reference = try JSONDecoder().decode(QuotedStringReference.self, from: Data(contentsOf: url))
