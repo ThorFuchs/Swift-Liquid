@@ -41,6 +41,7 @@ struct LaxQuoteRecoveryReferenceTests {
                 continue
             }
             if item.outcome == "parse-error" {
+                print("RECOVERY \(mode.rawValue) \(item.name) parsed-unexpectedly")
                 Issue.record("\(item.name): expected reference parse error")
                 continue
             }
