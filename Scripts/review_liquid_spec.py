@@ -114,6 +114,16 @@ def project_standard_drop_admissions(rows):
         'method': 'Validated candidate admissions are projected to their retained SL21-01A2 exclusions only for the historical checksum.'}
 
 
+def check_generator_preparation(runs, rows):
+    expected = {case['caseID'] for case in json.loads(GENERATOR_EVIDENCE.read_text())['cases']}
+    generated = [row for row in rows if row.get('expectationMaterialization') == 'historical-seeded-closed-materialization']
+    if (runs.get('fixturePreparation') != 'inert-selection-v2; guarded standard Drop materialization; fixture expressions remain unevaluated'
+            or len(generated) != 2 or {row['caseID'] for row in generated} != expected
+            or any(not row['selected'] or row.get('admission') != 'guarded_standard_drop' for row in generated)
+            or any(row.get('expectationMaterialization') == 'deferred-excluded-generator' for row in rows)):
+        raise ValueError('Safe fixture preparation evidence missing')
+
+
 def evaluate(rows, policy):
     """Fail on a stale conflict, changed population, hidden operation, or new failure."""
     audit(rows)  # Validates unique identities and preserves unmodified raw verdicts.
@@ -206,8 +216,7 @@ def main():
         runs = json.loads((reports / 'SPEC_RUNS.json').read_text())
         rows = json.loads((reports / 'ELIGIBILITY_MATRIX.json').read_text())
         check_preparation(rows, json.loads((reports / 'PREPARATION_INVENTORY.json').read_text()))
-        if runs.get('fixturePreparation') != 'inert-selection-v1; excluded generators remain unevaluated' or sum(row.get('expectationMaterialization') == 'deferred-excluded-generator' for row in rows) != 2:
-            raise ValueError('Safe fixture preparation evidence missing')
+        check_generator_preparation(runs, rows)
         if (runs['observedRows'] != len(rows) or runs['shutdownError'] is not None
                 or sum(suite['expandedVariants'] for suite in runs['suites']) != len(rows)):
             raise ValueError('Runner population or shutdown incomplete')

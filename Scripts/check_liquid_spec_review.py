@@ -6,7 +6,8 @@ import json
 import unittest
 
 from review_liquid_spec import (POLICY, GENERATOR_EVIDENCE, DROP_EVIDENCE, eligibility_digest,
-                                historical_eligibility_digest, project_standard_drop_admissions, evaluate)
+                                historical_eligibility_digest, project_standard_drop_admissions,
+                                check_generator_preparation, evaluate)
 
 
 def examples():
@@ -115,6 +116,18 @@ class ReviewTests(unittest.TestCase):
         generated = next(row for row in changed if row['caseID'] in generators)
         generated['expectation']['output'] = 'wrong'
         with self.assertRaises(ValueError): project_standard_drop_admissions(changed)
+
+    def test_generator_preparation_requires_exact_selected_cases(self):
+        cases = json.loads(GENERATOR_EVIDENCE.read_text())['cases']
+        rows = [{'caseID': item['caseID'], 'selected': True, 'admission': 'guarded_standard_drop',
+                 'expectationMaterialization': 'historical-seeded-closed-materialization'} for item in cases]
+        runs = {'fixturePreparation': 'inert-selection-v2; guarded standard Drop materialization; fixture expressions remain unevaluated'}
+        check_generator_preparation(runs, rows)
+        with self.assertRaises(ValueError): check_generator_preparation({'fixturePreparation': 'old'}, rows)
+        changed = deepcopy(rows); changed[0]['caseID'] = 'changed'
+        with self.assertRaises(ValueError): check_generator_preparation(runs, changed)
+        changed = deepcopy(rows); changed[0]['selected'] = False
+        with self.assertRaises(ValueError): check_generator_preparation(runs, changed)
 
 
 if __name__ == '__main__':
