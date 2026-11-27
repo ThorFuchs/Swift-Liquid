@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.LaxQuoteRecoveryReferenceTests/recoveryPhaseAndBytes(mode:)": 3,
     "LiquidTests.QuotedStringCompatibilityTests/contextualStringsAndInspection(mode:)": 3,
     "LiquidTests.HostObjectTests/unregisteredHostMembersStayMissingAcrossLiquidOperations()": null,
     "LiquidTests.HostObjectTests/optedInHostWithBindingPreservesPartialRecoveryAndIsolation()": null,
