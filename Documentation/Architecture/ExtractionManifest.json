@@ -3029,6 +3029,33 @@
       "qualification": "Recovered diagnostics do not count as error-free renders; the full-suite selector, exclusions and existing conformance, performance and release holds remain unchanged."
     },
     {
+      "area": "SL21-01A inert fixture inventory and selection probe",
+      "scopeDecision": "Reproduce the pinned liquid-spec discovery, parser-mode expansion and historical selection as an isolated investigation; do not replace the full runner or change admissions.",
+      "changes": [
+        "Inventory pinned fixtures with restricted YAML classes, source locations, generator-shape checks and an explicit evaluation guard, without invoking fixture registries or callbacks.",
+        "Prepare bounded selected primitive inputs, including the exact LongString shape, and compare available wire digests to a source-bound earlier receipt.",
+        "Derive the historical 425-hold selection from the retained earlier 488-hold matrix and 63 individual admissions; preserve unverified outcomes and missing traces as limitations."
+      ],
+      "upstream": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "sources": ["lib/liquid/spec/spec_loader.rb", "lib/liquid/spec/cli/runner.rb"],
+        "license": "MIT"
+      },
+      "files": [
+        "Tools/LiquidSpecAdapter/inventory_fixtures.rb",
+        "Tools/LiquidSpecAdapter/safe_fixture_selection.rb",
+        "Tools/LiquidSpecAdapter/safe_fixture_values.rb",
+        "Tools/LiquidSpecAdapter/check_safe_fixture_preparation.rb",
+        "Scripts/compare_sl21_inventory.py",
+        "Scripts/compare_sl21_materialization.py",
+        "Scripts/check_sl21_inventory.py",
+        "Scripts/ci.py",
+        "Documentation/ControlTower/SL21-01A.md"
+      ],
+      "qualification": "Exploratory preparation evidence only: the full independent and reviewed runners still require replacement and qualification."
+    },
+    {
       "area": "Recovered partial diagnostic name provenance",
       "scopeDecision": "Apply the established Shopify requested-name and exact-registry stored-name policy to recovered errors inside partials, including opt-in host failures.",
       "changes": [
