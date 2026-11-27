@@ -394,7 +394,8 @@
     "LiquidTests.TestRendezvousGateTests/cancellationBeforeBarrierEntryReleasesSuspendedPeer()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationDuringBarrierWaitReleasesAllPeers()": null,
     "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null,
-    "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
+    "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null,
+    "LiquidTests.QuotedStringCompatibilityTests/referenceBytesAndParsePhase(mode:)": 3
   },
   "threadFunctions": [
     "LiquidTests.HostObjectTests/concurrentRendersKeepOptedInPartialHostBindingsIndependent()",
