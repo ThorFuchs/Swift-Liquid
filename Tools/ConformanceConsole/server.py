@@ -289,8 +289,10 @@ class Console:
                 valid = valid and all(c['exitCode'] == 0 for c in evidence['commands'] if c['log'] != 'liquid-spec-runner.log')
                 valid = valid and any(c['log'] == 'diagnostic-ledger.log' and c['exitCode'] == 0 for c in evidence['commands'])
                 valid = valid and evidence.get('pins') == {'spec': PINS['specPath'], 'ruby': PINS['referencePath']}
-                valid = valid and set(evidence.get('reportSHA256', {})) == {
-                    'PHASE_AND_DIAGNOSTIC_LEDGER.json', 'ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json', 'RPC_TRACES.jsonl'}
+                reports = {'PHASE_AND_DIAGNOSTIC_LEDGER.json', 'ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json', 'RPC_TRACES.jsonl'}
+                if summary.get('fixturePreparation'):
+                    reports.add('PREPARATION_INVENTORY.json')
+                valid = valid and set(evidence.get('reportSHA256', {})) == reports
                 for name, digest in evidence.get('reportSHA256', {}).items():
                     if Path(name).name != name or hashlib.sha256((matrix.parent / name).read_bytes()).hexdigest() != digest:
                         valid = False

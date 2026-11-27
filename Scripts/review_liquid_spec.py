@@ -12,15 +12,17 @@ import sys
 
 from analyze_liquid_spec import audit
 from ci import ROOT, source_revision, source_snapshot
+from safe_preparation_evidence import check as check_preparation
 
 POLICY = ROOT / 'Tools/LiquidSpecAdapter/ReviewedConflicts.json'
 CANDIDATES = ROOT / 'Tools/LiquidSpecAdapter/ExclusionCandidates.json'
+GENERATOR_EVIDENCE = ROOT / 'Tools/LiquidSpecAdapter/ExcludedGeneratorEvidence.json'
 REPORTS = ('ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json',
-           'PHASE_AND_DIAGNOSTIC_LEDGER.json', 'RPC_TRACES.jsonl')
+           'PHASE_AND_DIAGNOSTIC_LEDGER.json', 'RPC_TRACES.jsonl', 'PREPARATION_INVENTORY.json')
 COMMANDS = {'spec-pin.log', 'spec-clean.log', 'ruby-pin.log', 'ruby-clean.log',
             'swift-version.log', 'ruby-version.log', 'adapter-build.log',
             'adapter-location.log', 'protocol-tests.log', 'bridge-tests.log',
-            'diagnostic-evidence-tests.log', 'liquid-spec-runner.log', 'diagnostic-ledger.log'}
+            'safe-runner-tests.log', 'diagnostic-evidence-tests.log', 'liquid-spec-runner.log', 'diagnostic-ledger.log'}
 
 
 def sha(path):
@@ -34,10 +36,41 @@ def eligibility_digest(rows):
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode()).hexdigest()
 
 
+def historical_eligibility_digest(rows, policy):
+    """Check deferred excluded expressions against source-bound historical metadata.
+
+    This projection is used only for the historical eligibility checksum. Raw
+    rows and comparator inputs are never modified, and neither case is executed.
+    """
+    deferred = [row for row in rows if row.get('expectationMaterialization') == 'deferred-excluded-generator']
+    if not deferred:
+        return eligibility_digest(rows), None
+    evidence = json.loads(GENERATOR_EVIDENCE.read_text())
+    cases = {item['caseID']: item for item in evidence['cases']}
+    if evidence['specPin'] != policy['pins']['spec'] or evidence['seed'] != 15401 or len(cases) != 2 or len(deferred) != 2 or {row['caseID'] for row in deferred} != set(cases):
+        raise ValueError('Deferred generator evidence changed')
+    projection = []
+    for row in rows:
+        if row['caseID'] not in cases:
+            projection.append(row)
+            continue
+        item = cases[row['caseID']]
+        if (row['selected'] or row['comparison'] != 'not-executed' or row['qualificationComparison'] != 'not-executed'
+                or row['sourceDigest'] != item['sourceDigest'] or row['expectationMaterialization'] != 'deferred-excluded-generator'
+                or row['expectation'] != {'output': item['expression'], 'outputPattern': None, 'errors': {}}):
+            raise ValueError('Deferred generator identity or state changed: ' + row['caseID'])
+        projected = dict(row)
+        projected['expectation'] = dict(row['expectation'], output=item['historicalSeededOutput'])
+        projection.append(projected)
+    return eligibility_digest(projection), {'cases': sorted(cases), 'evidenceSHA256': sha(GENERATOR_EVIDENCE),
+        'rawEligibilitySHA256': eligibility_digest(rows), 'method': 'Historical seeded metadata projected only for the legacy eligibility checksum; raw excluded expressions and outcomes remain unchanged.'}
+
+
 def evaluate(rows, policy):
     """Fail on a stale conflict, changed population, hidden operation, or new failure."""
     audit(rows)  # Validates unique identities and preserves unmodified raw verdicts.
-    if len(rows) != policy['expectedPopulation'] or eligibility_digest(rows) != policy['eligibilitySHA256']:
+    current_digest, deferred_evidence = historical_eligibility_digest(rows, policy)
+    if len(rows) != policy['expectedPopulation'] or current_digest != policy['eligibilitySHA256']:
         raise ValueError('Fixture identities, eligibility, or expectations changed; review required')
     conflicts = {item['caseID']: item for item in policy['conflicts']}
     if len(conflicts) != 5 or len(policy['conflicts']) != 5:
@@ -77,7 +110,7 @@ def evaluate(rows, policy):
             'referenceConcerns': [row['caseID'] for row in rows if row['selected'] and row.get('referenceQualificationComparison') != 'matched'],
             'excludedByCategory': dict(Counter(row['observedCategory'] for row in excluded)),
             'excludedByReason': dict(Counter(row['reason'] for row in excluded)),
-            'issue': policy['issue']}
+            'issue': policy['issue'], 'deferredGeneratorEvidence': deferred_evidence}
 
 
 def main():
@@ -122,6 +155,9 @@ def main():
                 raise ValueError('Raw report checksum mismatch: ' + name)
         runs = json.loads((reports / 'SPEC_RUNS.json').read_text())
         rows = json.loads((reports / 'ELIGIBILITY_MATRIX.json').read_text())
+        check_preparation(rows, json.loads((reports / 'PREPARATION_INVENTORY.json').read_text()))
+        if runs.get('fixturePreparation') != 'inert-selection-v1; excluded generators remain unevaluated' or sum(row.get('expectationMaterialization') == 'deferred-excluded-generator' for row in rows) != 2:
+            raise ValueError('Safe fixture preparation evidence missing')
         if (runs['observedRows'] != len(rows) or runs['shutdownError'] is not None
                 or sum(suite['expandedVariants'] for suite in runs['suites']) != len(rows)):
             raise ValueError('Runner population or shutdown incomplete')

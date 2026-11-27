@@ -11,6 +11,7 @@ from pathlib import Path
 import subprocess
 import sys
 from ci import ROOT, environment, swift, source_snapshot, source_revision
+from safe_preparation_evidence import check as check_preparation
 
 PINS = {'spec': '84bf25e0edbca5f7e530574788b0f875ab331f50', 'ruby': '4e39ae4cc3da73921923c0669e0fc84a66b2f696'}
 
@@ -56,13 +57,18 @@ def main():
         receipt['binarySHA256'] = hashlib.sha256(Path(binary).read_bytes()).hexdigest()
         run([sys.executable, '-B', 'Scripts/check_liquid_spec_protocol.py', binary], 'protocol-tests')
         run([ruby, '-I', str(args.spec_path.resolve() / 'lib'), 'Tools/LiquidSpecAdapter/check_bridge.rb'], 'bridge-tests')
+        run([ruby, '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
+             'Tools/LiquidSpecAdapter/check_safe_runner.rb'], 'safe-runner-tests')
         run([sys.executable, '-B', 'Scripts/check_liquid_spec_diagnostics.py'], 'diagnostic-evidence-tests')
         command = [ruby, '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
-                   'Tools/LiquidSpecAdapter/run.rb', '--binary', binary, '--output', str(output / 'spec')]
+                   'Tools/LiquidSpecAdapter/run.rb', '--binary', binary, '--spec-path', str(args.spec_path.resolve()),
+                   '--output', str(output / 'spec')]
         result = run(command, 'liquid-spec-runner', check=False)
         receipt['runnerExitCode'] = result.returncode
         runs = json.loads((output / 'spec/SPEC_RUNS.json').read_text())
         matrix = json.loads((output / 'spec/ELIGIBILITY_MATRIX.json').read_text())
+        preparation = json.loads((output / 'spec/PREPARATION_INVENTORY.json').read_text())
+        check_preparation(matrix, preparation)
         if len(matrix) != runs['observedRows'] or sum(s['expandedVariants'] for s in runs['suites']) != len(matrix):
             raise RuntimeError('Independent suite accounting does not reconcile')
         pins = json.loads((ROOT / 'Tools/LiquidSpecAdapter/Pins.json').read_text())
@@ -70,7 +76,7 @@ def main():
             if suite['loadedSourceCases'] != pins['advertisedSourceCounts'][suite['suite']]:
                 raise RuntimeError('Pinned suite source counts changed')
         run([sys.executable, '-B', 'Scripts/analyze_liquid_spec.py', str(output / 'spec')], 'diagnostic-ledger')
-        for name in ['PHASE_AND_DIAGNOSTIC_LEDGER.json', 'ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json', 'RPC_TRACES.jsonl']:
+        for name in ['PHASE_AND_DIAGNOSTIC_LEDGER.json', 'ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json', 'RPC_TRACES.jsonl', 'PREPARATION_INVENTORY.json']:
             receipt.setdefault('reportSHA256', {})[name] = hashlib.sha256((output / 'spec' / name).read_bytes()).hexdigest()
         receipt['specRuns'] = runs['suites']
         receipt['status'] = 'passed' if result.returncode == 0 else 'failed'

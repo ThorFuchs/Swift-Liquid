@@ -5,6 +5,13 @@ It adds no products or dependencies to the root package. The companion Ruby driv
 uses Shopify's real pinned `AdapterRunner#run_single` and its unchanged comparator.
 It runs functional checks only, including the partials suite without timing.
 
+The full runner uses the pinned, inert fixture preparation and fail-closed
+selection described in [SL21-01A2](../../Documentation/ControlTower/SL21-01A2.md).
+It never invokes upstream `SpecLoader` or fixture Ruby expressions. The two
+generated Drop variants remain excluded: raw evidence retains their original
+expressions, while the reviewed eligibility checksum uses explicitly identified
+historical seeded metadata for those two excluded records only.
+
 ## Reproduce
 
 Use clean checkouts outside the repository at the commits in [Pins.json](Pins.json).

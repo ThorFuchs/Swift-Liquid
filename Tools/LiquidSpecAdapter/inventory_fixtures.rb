@@ -10,6 +10,7 @@ require 'digest'
 require 'open3'
 require 'pathname'
 require_relative 'method_drop_materializer'
+require_relative 'safe_fixture_values'
 
 module LQ1FixtureInventory
   PIN = '84bf25e0edbca5f7e530574788b0f875ab331f50'
@@ -22,6 +23,30 @@ module LQ1FixtureInventory
   FILE_KEYS = %w[_metadata specs].freeze
   METADATA_KEYS = %w[hint doc required_options render_errors minimum_complexity complexity features data_files sequential_complexity].freeze
   SPEC_KEYS = %w[name template expected expected_pattern environment filesystem complexity hint doc error_mode render_errors features errors template_name resource_limits generate url caller_location message issue exception_renderer template_factory context_klass].freeze
+  TIMESTAMPS = {
+    '2001-02-03' => 'Date',
+    '2006-05-05 10:00:00.000000000 -04:00' => 'Time',
+    '2006-06-05 10:00:00.000000000 -04:00' => 'Time',
+    '2006-07-05 10:00:00.000000000 -04:00' => 'Time'
+  }.freeze
+
+  # Keep pinned non-JSON timestamp values inert until the selector excludes
+  # them. No Date or Time object is constructed from fixture scalars.
+  class InertScalarScanner < Psych::ScalarScanner
+    def tokenize(value)
+      if value.match?(Psych::ScalarScanner::TIME) || value.match?(/^\d{4}-(?:1[012]|0\d|\d)-(?:[12]\d|3[01]|0\d|\d)$/)
+        kind = TIMESTAMPS[value]
+        raise ArgumentError, 'Unknown fixture timestamp' unless kind
+        return LQ1::SafeFixtureValues::InertTimestamp.new(kind: kind, literal: value).freeze
+      end
+      if value.match?(/^:./)
+        name = value[1..]
+        name = name[1...-1].sub(/^:/, '') if name.match?(/\A(["']).*\1\z/)
+        return LQ1::SafeFixtureValues::InertSymbol.new(name: name).freeze
+      end
+      super
+    end
+  end
 
   module NoDynamicEvaluation
     def eval(*)
@@ -46,11 +71,15 @@ module LQ1FixtureInventory
     out.strip
   end
 
-  # Psych is restricted to these built-in value types; arbitrary YAML object
-  # classes are never permitted. No fixture marker is dispatched to a registry.
+  # Timestamps and symbols remain inert; tagged objects, Range and Regexp are
+  # rejected instead of invoking their constructors.
   def self.load_data(bytes)
     require_check(bytes.bytesize <= MAX_BYTES, 'Fixture file exceeds byte limit')
-    YAML.safe_load(bytes, permitted_classes: [Symbol, Date, Time, Range, Regexp], permitted_symbols: [], aliases: true)
+    document = Psych.parse(bytes)
+    return nil unless document
+    loader = Psych::ClassLoader::Restricted.new([], [])
+    scanner = InertScalarScanner.new(loader)
+    Psych::Visitors::ToRuby.new(scanner, loader).accept(document)
   end
 
   def self.tracked_blobs(root, suite)
@@ -95,6 +124,10 @@ module LQ1FixtureInventory
       # These types require no callbacks or construction during inventory.
     when Date, Time, Range, Regexp, Symbol
       stats[:ruby_value_types] << value.class.name
+    when LQ1::SafeFixtureValues::InertTimestamp
+      stats[:ruby_value_types] << value.kind
+    when LQ1::SafeFixtureValues::InertSymbol
+      stats[:ruby_value_types] << 'Symbol'
     else
       raise "Unsupported YAML value class: #{value.class}"
     end
@@ -119,6 +152,7 @@ module LQ1FixtureInventory
       allow_long: selection[:admission] == 'materialized_long_string')
     filesystem = item['filesystem'] || {}
     require_check(filesystem.instance_of?(Hash), 'Unsupported selected filesystem')
+    require_check(!filesystem.key?('_error-message') || filesystem['_error-message'].instance_of?(String), 'Unsupported filesystem error message')
     source_files = filesystem.reject { |key, _| key == '_error-message' || key.to_s == 'instantiate' }
     require_check(source_files.all? { |key, value| key.instance_of?(String) && value.instance_of?(String) }, 'Non-string selected filesystem')
     normalized = source_files.transform_keys do |key|
@@ -171,6 +205,7 @@ module LQ1FixtureInventory
     destination = Pathname(output).expand_path
     require_check(!destination.exist?, 'Refusing to overwrite inventory')
     inventory = []
+    jobs = [] if block_given?
     files = []
     SUITES.each do |suite|
       base = root.join('specs', suite)
@@ -254,6 +289,9 @@ module LQ1FixtureInventory
               filesystemHasErrorCallback: item['filesystem'].is_a?(Hash) && item['filesystem'].key?('_error-message'),
               templateFactory: item.key?('template_factory'), resourceLimits: item.key?('resource_limits'),
               sourceHasDataFiles: !!metadata['data_files']}
+            jobs << {row: inventory.last, item: item, defaults: defaults, metadata: metadata,
+                     suiteData: suite_data, suite: suite, path: path.to_s, name: name,
+                     mode: mode, inline: !!inline, tags: tags} if block_given?
           end
         end
       end
@@ -269,6 +307,7 @@ module LQ1FixtureInventory
       selected: inventory.count { |row| row[:selection][:selected] }, generated: inventory.count { |row| row[:generated] }, templateFactories: inventory.count { |row| row[:templateFactory] },
       resourceLimits: inventory.count { |row| row[:resourceLimits] }, output: destination.to_s,
       sha256: Digest::SHA256.file(destination).hexdigest)
+    yield jobs, result if block_given?
   end
 end
 

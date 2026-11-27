@@ -6,6 +6,10 @@ require 'date'
 require 'time'
 module LQ1
   module SafeFixtureValues
+    InertTimestamp = Struct.new(:kind, :literal, keyword_init: true)
+    InertSymbol = Struct.new(:name, keyword_init: true) do
+      def to_s = name
+    end
     MAX_DEPTH = 64
     MAX_NODES = 100_000
     LONG_LENGTH = 100_000
@@ -51,6 +55,7 @@ module LQ1
         return 'transport-inapplicable: cyclic JSON value' if ancestors.key?(value.object_id)
         if value.is_a?(Hash)
           return 'transport-inapplicable: non-string object key' if value.keys.any? { |key| !key.instance_of?(String) }
+          raise ArgumentError, 'Wire object constructors are not permitted' if value.key?('_instantiate')
           if value.size == 1 && value.keys.first.start_with?('instantiate:')
             marker = value.keys.first.delete_prefix('instantiate:').delete_suffix(':')
             raise ArgumentError, "Unrecognized fixture constructor: #{marker}" unless EXCLUDED_OBJECTS.include?(marker)
@@ -66,6 +71,11 @@ module LQ1
         nil
       when Date, Time, Symbol
         "transport-inapplicable: Ruby #{value.class} has no JSON value equivalent"
+      when InertTimestamp
+        raise ArgumentError, 'Unknown inert timestamp type' unless %w[Date Time].include?(value.kind)
+        "transport-inapplicable: Ruby #{value.kind} has no JSON value equivalent"
+      when InertSymbol
+        'transport-inapplicable: Ruby Symbol has no JSON value equivalent'
       else
         raise ArgumentError, "Unknown fixture value type: #{value.class}"
       end

@@ -3056,6 +3056,34 @@
       "qualification": "Exploratory preparation evidence only: the full independent and reviewed runners still require replacement and qualification."
     },
     {
+      "area": "SL21-01A2 safe independent fixture preparation",
+      "scopeDecision": "Use inert pinned fixture selection and bounded primitive preparation in the full independent and reviewed runners without admitting additional Drop cases or changing the upstream comparator.",
+      "changes": [
+        "Keep non-JSON YAML timestamps and symbols inert, reject unsupported tagged object constructors, and guard evaluation and the fixture class registry.",
+        "Supply the unchanged upstream comparator with prepared primitive inputs only after the historical eligibility policy selects a case.",
+        "Retain the two excluded generator expressions in raw evidence and identify the source-bound historical seeded metadata used solely for the reviewed eligibility checksum."
+      ],
+      "upstream": {
+        "repository": "https://github.com/Shopify/liquid-spec",
+        "commit": "84bf25e0edbca5f7e530574788b0f875ab331f50",
+        "sources": ["lib/liquid/spec/spec_loader.rb", "lib/liquid/spec/cli/runner.rb", "lib/liquid/spec/lazy_spec.rb"],
+        "license": "MIT"
+      },
+      "files": [
+        "Tools/LiquidSpecAdapter/run.rb",
+        "Tools/LiquidSpecAdapter/inventory_fixtures.rb",
+        "Tools/LiquidSpecAdapter/safe_fixture_values.rb",
+        "Tools/LiquidSpecAdapter/safe_runner_spec.rb",
+        "Tools/LiquidSpecAdapter/check_safe_runner.rb",
+        "Tools/LiquidSpecAdapter/ExcludedGeneratorEvidence.json",
+        "Scripts/check_liquid_spec.py",
+        "Scripts/review_liquid_spec.py",
+        "Scripts/safe_preparation_evidence.py",
+        "Documentation/ControlTower/SL21-01A2.md"
+      ],
+      "qualification": "Raw and reviewed outcomes, source-bound receipts, missing historical materialization and all release holds remain separate."
+    },
+    {
       "area": "Recovered partial diagnostic name provenance",
       "scopeDecision": "Apply the established Shopify requested-name and exact-registry stored-name policy to recovered errors inside partials, including opt-in host failures.",
       "changes": [

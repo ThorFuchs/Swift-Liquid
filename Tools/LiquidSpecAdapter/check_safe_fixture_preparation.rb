@@ -13,6 +13,17 @@ module LQ1
 end
 
 module SafeFixturePreparationChecks
+  module ForbidDateConstruction
+    def strptime(*)
+      raise SecurityError, 'Date construction must not occur while reading fixtures'
+    end
+  end
+
+  module ForbidTimeConstruction
+    def utc(*)
+      raise SecurityError, 'Time construction must not occur while reading fixtures'
+    end
+  end
   def self.check(condition, message)
     raise message unless condition
   end
@@ -28,6 +39,8 @@ module SafeFixturePreparationChecks
 
   def self.run
     LQ1FixtureInventory.install_eval_guard!
+    Date.singleton_class.prepend(ForbidDateConstruction)
+    Time.singleton_class.prepend(ForbidTimeConstruction)
     [-> { binding.eval('nil') }, -> { Kernel.eval('nil') }, -> { eval('nil') }].each do |probe|
       begin
         probe.call
@@ -41,7 +54,19 @@ module SafeFixturePreparationChecks
     data = LQ1FixtureInventory.load_data(raw)
     check(data['template'].include?('fixture_expression_executed') && !$fixture_expression_executed, 'Fixture expression was executed')
     rejects('arbitrary YAML object class') { LQ1FixtureInventory.load_data('--- !ruby/object:Object {}') }
+    rejects('tagged regular expression') { LQ1FixtureInventory.load_data('--- !ruby/regexp /x/') }
+    date = LQ1FixtureInventory.load_data('value: 2001-02-03')['value']
+    time = LQ1FixtureInventory.load_data('value: 2006-05-05 10:00:00.000000000 -04:00')['value']
+    check(date.instance_of?(LQ1::SafeFixtureValues::InertTimestamp) && date.kind == 'Date', 'Date was not retained as inert metadata')
+    check(time.instance_of?(LQ1::SafeFixtureValues::InertTimestamp) && time.kind == 'Time', 'Time was not retained as inert metadata')
+    symbol = LQ1FixtureInventory.load_data('value: :fixture_name')['value']
+    check(symbol.instance_of?(LQ1::SafeFixtureValues::InertSymbol) && symbol.name == 'fixture_name', 'Symbol was not retained as inert metadata')
+    rejects('explicit Ruby symbol constructor') { LQ1FixtureInventory.load_data('value: !ruby/symbol fixture_name') }
+    rejects('unknown timestamp') { LQ1FixtureInventory.load_data('value: 2040-01-02') }
     rejects('oversized fixture') { LQ1FixtureInventory.load_data(' ' * (LQ1FixtureInventory::MAX_BYTES + 1)) }
+    expected_blob = Digest::SHA1.hexdigest("blob 4\0data".b)
+    LQ1FixtureInventory.verify_blob('data'.b, 'fixture.yml', {'fixture.yml' => expected_blob})
+    rejects('changed fixture bytes') { LQ1FixtureInventory.verify_blob('evil'.b, 'fixture.yml', {'fixture.yml' => expected_blob}) }
 
     sample = {'x' => [1, 'text', nil, true]}
     copy = LQ1::SafeFixtureValues.materialize_environment(sample)
@@ -78,7 +103,7 @@ module SafeFixturePreparationChecks
     rejects('changed generator') { LQ1::MethodDropMaterializer.bounds(square.merge('expected' => '#{system("false")}')) }
     rejects('generator bounds') { LQ1::MethodDropMaterializer.materialize(square, 101) }
     check(!$fixture_expression_executed, 'Fixture expression was executed')
-    puts 'Safe fixture preparation negative controls passed (isolated modules; full runner not yet integrated).'
+    puts 'Safe fixture preparation negative controls passed; integrated runner is checked separately.'
   end
 end
 

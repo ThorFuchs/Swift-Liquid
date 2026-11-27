@@ -60,6 +60,7 @@ def main():
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
     parser.add_argument('--spec-path', type=Path, help='Clean pinned liquid-spec checkout for the opt-in functional lane')
     parser.add_argument('--historical-matrix', type=Path, help='Retained earlier eligibility matrix for fixture-inventory reconciliation')
+    parser.add_argument('--current-receipt', type=Path, help='Optional clean independent receipt for fresh fixture-materialization comparison')
     parser.add_argument('--archive-provenance', type=Path,
                         help='Inspected producer archive provenance for a Git-free native export')
     args = parser.parse_args()
@@ -155,13 +156,22 @@ def main():
                 raise RuntimeError('fixture-inventory requires --spec-path and --historical-matrix')
             run(['ruby', 'Tools/LiquidSpecAdapter/check_safe_fixture_preparation.rb'], 'safe-fixture-preparation')
             run([sys.executable, '-B', 'Scripts/check_sl21_inventory.py'], 'identity-negative-controls')
+            run([sys.executable, '-B', 'Scripts/check_sl21_generator_evidence.py', '--matrix', str(args.historical_matrix),
+                 '--receipt', str(args.historical_matrix.parent.parent / 'receipt.json')], 'generator-evidence')
             run(['ruby', 'Tools/LiquidSpecAdapter/inventory_fixtures.rb', str(args.spec_path), str(output / 'inventory.json')], 'inventory')
             run([sys.executable, '-B', 'Scripts/compare_sl21_inventory.py', '--inventory', str(output / 'inventory.json'),
                  '--earlier-matrix', str(args.historical_matrix), '--output', str(output / 'comparison.json')], 'identity-comparison')
-            run([sys.executable, '-B', 'Scripts/compare_sl21_materialization.py', '--inventory', str(output / 'inventory.json'),
+            materialization_command = [sys.executable, '-B', 'Scripts/compare_sl21_materialization.py', '--inventory', str(output / 'inventory.json'),
                  '--historical-matrix', str(args.historical_matrix), '--historical-traces', str(args.historical_matrix.parent / 'RPC_TRACES.jsonl'),
                  '--historical-receipt', str(args.historical_matrix.parent.parent / 'receipt.json'),
-                 '--output', str(output / 'materialization.json')], 'materialization-comparison')
+                 '--output', str(output / 'materialization.json')]
+            if args.current_receipt:
+                materialization_command += ['--current-receipt', str(args.current_receipt)]
+            run(materialization_command, 'materialization-comparison')
+            if args.current_receipt:
+                run([sys.executable, '-B', 'Scripts/reconcile_sl21_outcomes.py', '--earlier-receipt', str(args.historical_matrix.parent.parent / 'receipt.json'),
+                     '--current-receipt', str(args.current_receipt), '--output', str(output / 'outcome-comparison.json')], 'outcome-comparison')
+                receipt['outcomeComparisonSHA256'] = hashlib.sha256((output / 'outcome-comparison.json').read_bytes()).hexdigest()
             receipt['inventorySHA256'] = hashlib.sha256((output / 'inventory.json').read_bytes()).hexdigest()
             receipt['comparisonSHA256'] = hashlib.sha256((output / 'comparison.json').read_bytes()).hexdigest()
             receipt['materializationSHA256'] = hashlib.sha256((output / 'materialization.json').read_bytes()).hexdigest()

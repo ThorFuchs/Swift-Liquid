@@ -5,6 +5,7 @@ import copy
 import unittest
 from compare_sl21_inventory import compare
 from compare_sl21_materialization import compare as compare_materialization
+from safe_preparation_evidence import check as check_preparation
 
 
 class IdentityComparisonTests(unittest.TestCase):
@@ -63,6 +64,18 @@ class IdentityComparisonTests(unittest.TestCase):
         traces['500']['render']['environment'] = {'sha256': 'changed', 'jsonBytes': 1}
         with self.assertRaises(ValueError):
             compare_materialization(self.inventory, self.earlier, traces)
+
+    def test_preparation_cannot_hide_changed_selection_or_generator(self):
+        item = copy.deepcopy(self.inventory['variants'][0])
+        item.update(generated=False)
+        row = {key: item[key] for key in ('caseID', 'sourceLocation', 'sourceDigest', 'parserMode', 'renderMode', 'featureTags')}
+        row.update(selected=False, reason='held', comparison='not-executed', qualificationComparison='not-executed')
+        preparation = {'status': 'INERT_INVENTORY_NOT_QUALIFICATION', 'variants': [item]}
+        self.assertTrue(check_preparation([row], preparation))
+        row['comparison'] = 'matched'
+        with self.assertRaises(ValueError): check_preparation([row], preparation)
+        row['comparison'] = 'not-executed'; item['generated'] = True
+        with self.assertRaises(ValueError): check_preparation([row], preparation)
 
 
 if __name__ == '__main__':
