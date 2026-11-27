@@ -13,6 +13,7 @@ require 'liquid/spec/deps/liquid_ruby'
 require_relative 'adapter'
 require_relative 'inventory_fixtures'
 require_relative 'safe_runner_spec'
+require_relative 'safe_fixture_selection'
 
 spec_root = ARGV.fetch(0) { abort 'Usage: check_safe_runner.rb SPEC_ROOT' }
 
@@ -47,6 +48,30 @@ begin
   raise 'Wire constructor marker was not rejected'
 rescue ArgumentError
   # A fixture cannot smuggle a Drop constructor into the public adapter.
+end
+
+drop_policy = LQ1::SafeStandardDrops.load
+candidate = drop_policy.values.find { |entry| entry.fetch('constructors').first.fetch('class') == 'BooleanDrop' }
+item = candidate.fetch('fixture')
+arguments = {case_id: candidate.fetch('caseID'), digest: candidate.fetch('sourceDigest'), tags: candidate.fetch('featureTags'),
+  mode: candidate.fetch('parserMode'), template: item.fetch('template'), environment: item.fetch('environment'),
+  filesystem: item.fetch('filesystem', {}), factory: nil, limits: {}, inline: false, errors: item.fetch('errors', {}),
+  entries: {}, drop_candidates: drop_policy, item: item}
+raise 'Guarded fixture was not selected' unless LQ1::SafeFixtureSelection.decide(**arguments)[:admission] == 'guarded_standard_drop'
+held = LQ1::SafeFixtureSelection.decide(**arguments.merge(case_id: 'unapproved-identity', factory: -> { raise 'callback executed' }))
+raise 'Unapproved identity was selected' if held[:selected]
+[
+  arguments.merge(digest: 'changed'),
+  arguments.merge(tags: arguments[:tags] + ['ruby_drops']),
+  arguments.merge(factory: -> { raise 'callback executed' }),
+  arguments.merge(item: item.merge('environment' => {'x' => {'_instantiate' => 'MethodDrop', 'params' => {}}}))
+].each do |changed|
+  begin
+    LQ1::SafeFixtureSelection.decide(**changed)
+    raise 'Changed Drop contract was accepted'
+  rescue ArgumentError
+    # Selection fails before construction or fixture callbacks.
+  end
 end
 
 # Exercise the same production inventory entry point against a modified pinned

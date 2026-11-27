@@ -1,0 +1,1217 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Historical-only projection for the reviewed checksum; candidate admission and verdicts are validated independently.",
+  "baselineCommit": "d02485da8a90daf83b3b3293c35ab09c2e11ccb5",
+  "baselineTree": "2d812a3db592e632dee62042aded959e0e76e88b",
+  "baselineMatrixSHA256": "ad7973556f6335b3574d27b29403b99a509e15dc021a1bca6bf170422ec24f3d",
+  "cases": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 19
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 32
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "false",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 45
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "yes",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 58
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "no",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 72
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "42",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 85
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "42",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 101
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "yes",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 114
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "hello",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 127
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "HELLO",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:143/drop_method_echo/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 143
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "42",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:154/drop_method_square/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 154
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "25",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:164/drop_method_double/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 164
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "14",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:174/drop_method_square_random/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 174
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "#{n * n}",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "expectationMaterialization": "deferred-excluded-generator"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:191/drop_method_echo_random/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 191
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "#{n}",
+        "outputPattern": null,
+        "errors": {}
+      },
+      "expectationMaterialization": "deferred-excluded-generator"
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:209/drop_index_integer/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 209
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "zero",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:219/drop_index_integer_one/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 219
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "one",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:229/drop_index_string/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 229
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "foo",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:242/drop_sequence_iterate/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 242
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "first second third ",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:253/drop_sequence_size/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 253
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "3",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:263/drop_sequence_first/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 263
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "first",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:273/drop_sequence_last/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 273
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "third",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:283/drop_sequence_forloop_index/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 283
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "1:first 2:second 3:third ",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 296
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "[]",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 307
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "no",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:320/drop_opaque_renders/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 320
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "opaque",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:331/drop_opaque_is_truthy/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 331
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "yes",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 346
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": null,
+        "outputPattern": null,
+        "errors": {
+          "render_error": [
+            "ErrorDrop"
+          ]
+        }
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 363
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "not",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:377/drop_opaque_not_empty/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 377
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "not",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 387
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "not",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 398
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "3",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 410
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "3",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 421
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "9",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 436
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "81",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "randomness",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/drops.yml",
+        "line": 449
+      },
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "expectation": {
+        "output": "9",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 166
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "expectation": {
+        "output": "StringDrop with value nil: truthy:no, empty:no, blank:yes",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 186
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "expectation": {
+        "output": "BooleanDrop with value \"true\": truthy:yes, empty:no, blank:no",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/basics/truthiness_matrix.yml",
+        "line": 197
+      },
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "expectation": {
+        "output": "BooleanDrop with value \"false\": truthy:no, empty:no, blank:yes",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "inline_errors",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5008
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "Liquid error (foo line 1): ErrorDrop: access triggered an error",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5352
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5370
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "bar",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5388
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "false",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 5400
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8523
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8551
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8643
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8657
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8671
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8781
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8795
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8856
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "true",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/specs.yml",
+        "line": 8870
+      },
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "expectation": {
+        "output": "TRUE",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6034
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "expectation": {
+        "output": "foobar",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/standard_filters.yml",
+        "line": 6155
+      },
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "expectation": {
+        "output": "foobar",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "strict2_parsing"
+      ],
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby/variable_type_filters.yml",
+        "line": 384
+      },
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "expectation": {
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "outputPattern": null,
+        "errors": {}
+      }
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+      "selected": false,
+      "reason": "drops: transport-inapplicable: no typed host-object/callback API",
+      "featureTags": [
+        "drops",
+        "lax_parsing"
+      ],
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "sourceLocation": {
+        "file": "specs/liquid_ruby_lax/variable_type_filters.yml",
+        "line": 500
+      },
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "expectation": {
+        "output": "drop value:true\ndrop, first:\ndrop, last:\ndrop, size:0\n",
+        "outputPattern": null,
+        "errors": {}
+      }
+    }
+  ]
+}

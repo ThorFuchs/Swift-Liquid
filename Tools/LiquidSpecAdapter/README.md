@@ -5,12 +5,14 @@ It adds no products or dependencies to the root package. The companion Ruby driv
 uses Shopify's real pinned `AdapterRunner#run_single` and its unchanged comparator.
 It runs functional checks only, including the partials suite without timing.
 
-The full runner uses the pinned, inert fixture preparation and fail-closed
-selection described in [SL21-01A2](../../Documentation/ControlTower/SL21-01A2.md).
-It never invokes upstream `SpecLoader` or fixture Ruby expressions. The two
-generated Drop variants remain excluded: raw evidence retains their original
-expressions, while the reviewed eligibility checksum uses explicitly identified
-historical seeded metadata for those two excluded records only.
+The full runner uses pinned, inert fixture preparation and fail-closed selection.
+It never invokes upstream `SpecLoader` or fixture Ruby expressions. The SL21-01B
+candidate uses the existing host-object transport only for 56 exact standard Drop
+identities, with the original global Drop exclusion retained. The two generated
+cases use closed materialization of inputs 28 and 705, derived from the retained
+seeded outputs; this does not replay the historical generator sequence. Raw
+verdicts remain separate from the reviewed historical checksum projection. See
+[SL21-01B](../../Documentation/ControlTower/SL21-01B.md).
 
 ## Reproduce
 

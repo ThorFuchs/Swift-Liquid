@@ -148,8 +148,12 @@ module LQ1FixtureInventory
 
   def self.materialized_evidence(item, selection, defaults)
     raise 'Generated fixture cannot be materialized before explicit policy' if item.key?('generate')
-    environment = LQ1::SafeFixtureValues.materialize_environment(item['environment'] || {},
-      allow_long: selection[:admission] == 'materialized_long_string')
+    environment = if selection[:admission] == 'guarded_standard_drop'
+      LQ1::SafeStandardDrops.wire_evidence(LQ1::SafeStandardDrops.description(item['environment'] || {}))
+    else
+      LQ1::SafeFixtureValues.materialize_environment(item['environment'] || {},
+        allow_long: selection[:admission] == 'materialized_long_string')
+    end
     filesystem = item['filesystem'] || {}
     require_check(filesystem.instance_of?(Hash), 'Unsupported selected filesystem')
     require_check(!filesystem.key?('_error-message') || filesystem['_error-message'].instance_of?(String), 'Unsupported filesystem error message')
@@ -164,6 +168,21 @@ module LQ1FixtureInventory
      filesystem: wire_digest(normalized),
      expectation: {output: item.key?('expected') ? item['expected'] : defaults['expected'],
                    outputPattern: item['expected_pattern'], errors: item['errors'] || {}}}
+  end
+
+  # Historical seeded outputs determine the two bounded inputs uniquely in
+  # their declared domains. This does not replay the historical random stream.
+  def self.selected_item(item, selection, case_id, digest)
+    return item unless item.key?('generate') && selection[:admission] == 'guarded_standard_drop'
+    input = {'drop_method_square_random' => 28, 'drop_method_echo_random' => 705}.fetch(item.fetch('name'))
+    materialized = LQ1::MethodDropMaterializer.materialize(item, input)
+    evidence = JSON.parse(File.read(File.join(__dir__, 'ExcludedGeneratorEvidence.json')))
+    matches = evidence.fetch('cases').select { |row| row.fetch('caseID') == case_id }
+    raise 'Historical generated evidence changed' unless evidence.fetch('seed') == 15401 && evidence.fetch('specPin') == PIN && matches.size == 1
+    prior = matches.first
+    raise 'Historical generated output changed' unless prior.fetch('sourceDigest') == digest && prior.fetch('expression') == item.fetch('expected') &&
+      prior.fetch('historicalSeededOutput') == materialized.fetch(:expected)
+    item.reject { |key, _| key == 'generate' }.merge('template' => materialized.fetch(:template), 'expected' => materialized.fetch(:expected))
   end
 
   def self.lines(document)
@@ -201,7 +220,9 @@ module LQ1FixtureInventory
     require_relative 'safe_fixture_selection'
     install_eval_guard!
     entries = LQ1::Admission.load(File.join(__dir__, 'ExclusionCandidates.json'))
+    drop_candidates = LQ1::SafeStandardDrops.load
     seen_admissions = []
+    seen_drops = []
     destination = Pathname(output).expand_path
     require_check(!destination.exist?, 'Refusing to overwrite inventory')
     inventory = []
@@ -277,19 +298,23 @@ module LQ1FixtureInventory
             case_id = "#{suite}/#{relative}:#{location[index]}/#{name}/#{mode}/#{inline ? 'inline' : 'raise'}"
             selection = LQ1::SafeFixtureSelection.decide(case_id: case_id, digest: digest, tags: tags, mode: mode,
               template: item['template'], environment: item['environment'] || {}, filesystem: item['filesystem'] || {},
-              factory: item['template_factory'], limits: item['resource_limits'], inline: inline, errors: item['errors'], entries: entries)
-            seen_admissions << case_id if selection[:admission]
-            materialized = selection[:selected] ? materialized_evidence(item, selection, defaults) : nil
+              factory: item['template_factory'], limits: item['resource_limits'], inline: inline, errors: item['errors'], entries: entries,
+              drop_candidates: drop_candidates, item: item)
+            seen_drops << case_id if selection[:admission] == 'guarded_standard_drop'
+            seen_admissions << case_id if selection[:admission] && selection[:admission] != 'guarded_standard_drop'
+            effective_item = selected_item(item, selection, case_id, digest)
+            materialized = selection[:selected] ? materialized_evidence(effective_item, selection, defaults) : nil
             inventory << {caseID: case_id,
               sourceLocation: {file: relative, line: location[index]}, sourceDigest: digest,
               parserMode: mode, renderMode: inline ? 'inline' : 'raise', featureTags: tags.sort,
               selection: selection, materialized: materialized,
               generated: item.key?('generate'), generatorData: item['generate'],
+              generatedInput: (item.key?('generate') && selection[:selected] ? {'drop_method_square_random' => 28, 'drop_method_echo_random' => 705}.fetch(item['name']) : nil),
               environment: env, filesystem: fs,
               filesystemHasErrorCallback: item['filesystem'].is_a?(Hash) && item['filesystem'].key?('_error-message'),
               templateFactory: item.key?('template_factory'), resourceLimits: item.key?('resource_limits'),
               sourceHasDataFiles: !!metadata['data_files']}
-            jobs << {row: inventory.last, item: item, defaults: defaults, metadata: metadata,
+            jobs << {row: inventory.last, item: effective_item, originalItem: item, defaults: defaults, metadata: metadata,
                      suiteData: suite_data, suite: suite, path: path.to_s, name: name,
                      mode: mode, inline: !!inline, tags: tags} if block_given?
           end
@@ -298,8 +323,9 @@ module LQ1FixtureInventory
     end
     require_check(inventory.map { |row| row[:caseID] }.uniq.size == inventory.size, 'Duplicate expanded identity')
     require_check(seen_admissions.sort == entries.keys.sort, 'Admission candidate membership differs')
+    require_check(seen_drops.sort == drop_candidates.keys.sort, 'Standard Drop admission membership differs')
     result = {schemaVersion: 1, status: 'INERT_INVENTORY_NOT_QUALIFICATION', specPin: PIN, seed: nil,
-              method: 'Psych safe_load with built-in value classes, inert eligibility preflight and bounded selected-case primitive materialization; no fixture interpolation, generator, registry constructor, factory or comparator is invoked.',
+              method: 'Restricted Psych loading, inert eligibility preflight and bounded selected-case primitive or internal Drop descriptions; two exact generated cases use a closed materializer after selection. No fixture interpolation, registry constructor, factory or comparator is invoked.',
               limits: {fileBytes: MAX_BYTES, nodesPerField: MAX_NODES, depth: MAX_DEPTH}, files: files, variants: inventory}
     destination.dirname.mkpath
     File.write(destination, JSON.pretty_generate(result) + "\n", mode: 'wx')

@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 # SPDX-License-Identifier: Apache-2.0
 require_relative 'safe_fixture_values'
+require_relative 'safe_standard_drops'
 
 module LQ1
   # AdapterRunner's comparator is unchanged. This spec only exposes prepared
   # primitive data and refuses the upstream fixture class registry and factories.
   class SafeRunnerSpec < Liquid::Spec::LazySpec
-    def initialize(prepared_environment:, **arguments)
+    def initialize(prepared_environment:, prepared_drop: false, **arguments)
       @prepared_environment = prepared_environment
+      @prepared_drop = prepared_drop
       super(**arguments.merge(raw_environment: prepared_environment, raw_template_factory: nil))
     end
 
     def instantiate_environment
+      return SafeStandardDrops.construct(@prepared_environment) if @prepared_drop
       SafeFixtureValues.materialize_environment(@prepared_environment)
     end
 

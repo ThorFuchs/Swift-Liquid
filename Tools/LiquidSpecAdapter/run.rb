@@ -22,6 +22,7 @@ require 'liquid'
 require 'active_support/all'
 require 'liquid/spec'
 require 'liquid/spec/deps/liquid_ruby'
+require 'liquid/spec/deps/standard_drops'
 require_relative 'adapter'
 require_relative 'admission'
 require_relative 'inventory_fixtures'
@@ -104,7 +105,11 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
       relative = prepared[:sourceLocation][:file]
       key = prepared[:caseID]
       environment = if selection[:selected]
-        LQ1::SafeFixtureValues.materialize_environment(item['environment'] || {}, allow_long: selection[:admission] == 'materialized_long_string')
+        if selection[:admission] == 'guarded_standard_drop'
+          LQ1::SafeStandardDrops.description(item['environment'] || {})
+        else
+          LQ1::SafeFixtureValues.materialize_environment(item['environment'] || {}, allow_long: selection[:admission] == 'materialized_long_string')
+        end
       else
         {}
       end
@@ -113,7 +118,8 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         expected: item.key?('expected') ? item['expected'] : job[:defaults]['expected'], expected_pattern: item['expected_pattern'],
         errors: item['errors'] || {}, complexity: complexity, error_mode: job[:mode].to_sym, render_errors: job[:inline],
         features: job[:tags], source_file: job[:path], line_number: prepared[:sourceLocation][:line],
-        prepared_environment: environment, raw_filesystem: selection[:selected] ? (item['filesystem'] || {}) : {}, raw_resource_limits: {})
+        prepared_environment: environment, prepared_drop: selection[:admission] == 'guarded_standard_drop',
+        raw_filesystem: selection[:selected] ? (item['filesystem'] || {}) : {}, raw_resource_limits: {})
       bridge.case_key = key
       row = { caseID: key, suite: suite, case: spec.name, parserMode: spec.error_mode, renderMode: spec.render_errors ? 'inline' : 'raise',
         featureTags: spec.features.map(&:to_s).sort, selected: false, reason: nil, adapterTransport: 'JSON-RPC 2.0 / protocol 1.0 / primitive JSON only',
@@ -121,9 +127,11 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         expectation: { output: spec.expected, outputPattern: spec.expected_pattern, errors: spec.errors },
         complexity: spec.complexity, sourceDigest: Digest::SHA256.file(spec.source_file).hexdigest, resultDigest: nil }
       admitted = selection[:admission]&.to_sym
-      seen_admissions.add(key) if admitted
+      seen_admissions.add(key) if admitted && admitted != :guarded_standard_drop
       reason = selection[:reason]
-      row[:expectationMaterialization] = 'deferred-excluded-generator' if item.key?('generate')
+      if job[:originalItem].key?('generate')
+        row[:expectationMaterialization] = admitted == :guarded_standard_drop ? 'historical-seeded-closed-materialization' : 'deferred-excluded-generator'
+      end
       if reason
         row[:reason] = reason
         row[:observedCategory] = if reason.include?('transport-inapplicable:') then 'transport-inapplicable' elsif reason.include?('unsupported-by-domain:') then 'unsupported-by-domain' elsif reason.include?('operational-error:') then 'operational-error' else 'unsupported' end
@@ -131,7 +139,11 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:qualificationComparison] = 'not-executed'
         row[:disabled] = true
       else
-        row[:selected] = true; row[:disabled] = false; row[:reason] = 'portable primitive JSON; declared parser/render modes; explicit partial map'
+        row[:selected] = true; row[:disabled] = false
+        row[:reason] = admitted == :guarded_standard_drop ?
+          'guarded standard Drop host-object transport; declared parser/render modes; explicit partial map' :
+          'portable primitive JSON; declared parser/render modes; explicit partial map'
+        row[:adapterTransport] = 'JSON-RPC 2.0 / protocol 1.0 / guarded standard Drop host objects' if admitted == :guarded_standard_drop
         row[:admission] = admitted.to_s if admitted
         adapter.set_missing_features(LQ1::MISSING_FEATURES.keys - LQ1::Admission.waived_features(admitted))
         begin
@@ -166,6 +178,16 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:referenceUpstreamVerdict][:sha256] = Digest::SHA256.hexdigest(JSON.generate(row[:referenceUpstreamVerdict]))
         row[:referenceComparison] = ref.passed? ? 'matched' : 'mismatched'
         row[:referenceQualificationComparison] = LQ1::SafeRunnerVerdict.classify(raw_passed: ref.passed?, expected: row[:expectedCategory], observed: reference_observation[:category])
+        if admitted == :guarded_standard_drop && key.include?('drop_error_raises')
+          raise 'ErrorDrop did not produce actual Liquid render errors' unless bridge.compile_outcome == 'compiled' &&
+            bridge.observed == 'render-error' && bridge.detail.is_a?(Hash) && bridge.detail['type'] == 'render_error' &&
+            reference_observation[:category] == 'render-error' && reference_observation.dig(:error, :message).to_s.include?('ErrorDrop')
+        end
+        if admitted == :guarded_standard_drop && key.include?('RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430')
+          raise 'ErrorDrop did not produce recovered diagnostics' unless bridge.compile_outcome == 'compiled' &&
+            bridge.observed == 'recovered-error' && bridge.detail == [{'type' => 'render_error', 'message' => 'ErrorDrop: access triggered an error', 'line' => 1, 'template_name' => 'foo'}] &&
+            reference_observation[:category] == 'recovered-error' && reference_observation.fetch(:errors, []).size == 1
+        end
         row[:referenceActual] = ref.output unless row[:referenceQualificationComparison] == 'matched' && row[:qualificationComparison] == 'matched'
         if row[:qualificationComparison] != 'matched'
           row[:failureCategory] = row[:referenceQualificationComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
@@ -206,7 +228,7 @@ ensure
 end
 File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n")
 report = { schemaVersion: 2, comparatorPolicy: 'comparison/upstreamVerdict preserve original result.passed?; qualificationComparison additionally rejects operational and parse/render-phase failures; supplemental dimensions never create passes', suiteVersion: Liquid::Spec::VERSION, rubyVersion: RUBY_DESCRIPTION, liquidVersion: Liquid::VERSION,
-  fixturePreparation: 'inert-selection-v1; excluded generators remain unevaluated',
+  fixturePreparation: 'inert-selection-v2; guarded standard Drop materialization; fixture expressions remain unevaluated',
   missingFeatures: LQ1::MISSING_FEATURES, featurePolicies: LQ1::FEATURE_POLICIES,
   numericDomainPolicy: 'Int64 plus finite binary Double; context is preflighted; source-literal/arithmetic mismatches require individual domain review', parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / inert fixture preparation',
   shutdownError: shutdown_error, suites: runs, gems: Gem.loaded_specs.transform_values { |s| s.version.to_s }, observedRows: rows.size }

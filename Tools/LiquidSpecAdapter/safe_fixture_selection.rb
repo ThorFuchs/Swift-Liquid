@@ -4,6 +4,7 @@
 # generator, filesystem callback, or comparator is invoked in this module.
 require_relative 'admission'
 require_relative 'safe_fixture_values'
+require_relative 'safe_standard_drops'
 
 module LQ1
   module SafeFixtureSelection
@@ -22,11 +23,25 @@ module LQ1
       kind
     end
 
-    def self.decide(case_id:, digest:, tags:, mode:, template:, environment:, filesystem:, factory:, limits:, inline:, errors:, entries:)
+    def self.decide(case_id:, digest:, tags:, mode:, template:, environment:, filesystem:, factory:, limits:, inline:, errors:, entries:, drop_candidates: {}, item: nil)
       spec = SpecView.new(template: template, raw_environment: environment, raw_filesystem: filesystem,
                           raw_template_factory: factory, raw_resource_limits: limits || {},
                           render_errors: inline, errors: errors || {})
       missing = tags.map(&:to_sym) & LQ1::MISSING_FEATURES.keys
+      if (candidate = drop_candidates[case_id])
+        raise ArgumentError, 'Overlapping admission policies' if entries.key?(case_id)
+        raise ArgumentError, 'Drop fixture feature requirements changed' unless missing == [:drops]
+        raise ArgumentError, 'Drop fixture inputs differ from selected description' unless item.instance_of?(Hash) &&
+          item['template'] == template && item.fetch('environment', {}) == environment &&
+          item.fetch('filesystem', {}) == filesystem && item.fetch('errors', {}) == (errors || {})
+        SafeStandardDrops.validate(candidate, item: item, digest: digest, tags: tags, mode: mode,
+          inline: inline, factory: factory, limits: limits)
+        raise ArgumentError, 'Drop fixture filesystem must be a plain mapping' unless filesystem.instance_of?(Hash)
+        raise ArgumentError, 'Drop fixture callback is forbidden' if filesystem.key?('_error-message')
+        rejection = SafeFixtureValues.inspect_environment(filesystem)
+        raise ArgumentError, "Drop fixture filesystem rejected: #{rejection}" if rejection
+        return {selected: true, reason: nil, admission: 'guarded_standard_drop'}
+      end
       admitted = admission(entries[case_id], spec, digest, missing)
       missing -= Admission.waived_features(admitted)
       rejection = missing.empty? ? nil : missing.map { |feature| "#{feature}: #{LQ1::MISSING_FEATURES.fetch(feature)}" }.join('; ')

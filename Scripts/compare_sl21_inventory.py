@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REVIEW = ROOT / 'Documentation/ControlTower/CONFORMANCE-DISPOSITION.json'
 ADMISSIONS = ROOT / 'Tools/LiquidSpecAdapter/ExclusionCandidates.json'
+DROP_STUDY = ROOT / 'Documentation/LQ1/STANDARD-DROPS-2.1.json'
 FIELDS = ('sourceLocation', 'sourceDigest', 'parserMode', 'renderMode', 'featureTags')
 GROUPS = {'filesystemCandidates': 'unused_filesystem_callback',
           'rangeMetadataCandidates': 'unused_resource_limits',
@@ -33,7 +34,7 @@ def unique(rows):
     return values
 
 
-def compare(inventory, earlier, holds, admissions):
+def compare(inventory, earlier, holds, admissions, drop_candidates=None):
     now = unique(inventory['variants'])
     old = unique(earlier)
     held = unique(holds['cases'])
@@ -41,6 +42,9 @@ def compare(inventory, earlier, holds, admissions):
         raise ValueError('Admission policy groups differ')
     admitted_rows = [dict(entry, expectedAdmission=kind) for key, kind in GROUPS.items() for entry in admissions[key]]
     admitted = unique(admitted_rows)
+    drops = unique(drop_candidates or [])
+    if drops and (len(drops) != 56 or not set(drops).issubset(held)):
+        raise ValueError('Standard Drop candidate population differs')
     if inventory['specPin'] != admissions['specPin'] or inventory['specPin'] != holds['baseline']['specCommit']:
         raise ValueError('Reference pins differ')
     if len(now) != 5112 or set(now) != set(old):
@@ -59,12 +63,12 @@ def compare(inventory, earlier, holds, admissions):
         if case in held and any(held[case][field] != current[field] for field in FIELDS):
             raise ValueError('Historical hold metadata differs: ' + case)
         selection = current['selection']
-        expected_selected = case not in held
+        expected_selected = case not in held or case in drops
         if selection['selected'] != expected_selected:
             raise ValueError('Selection differs: ' + case)
-        if case in held and selection['reason'] != before['reason']:
+        if case in held and case not in drops and selection['reason'] != before['reason']:
             raise ValueError('Historical exclusion reason differs: ' + case)
-        expected_admission = admitted[case]['expectedAdmission'] if case in admitted else None
+        expected_admission = 'guarded_standard_drop' if case in drops else admitted[case]['expectedAdmission'] if case in admitted else None
         if selection['admission'] != expected_admission:
             raise ValueError('Admission kind differs: ' + case)
         rows.append({'caseID': case, 'sourceDigest': current['sourceDigest'],
@@ -89,11 +93,13 @@ def main():
     earlier = json.loads(args.earlier_matrix.read_text())
     holds = json.loads(REVIEW.read_text())
     admissions = json.loads(ADMISSIONS.read_text())
-    rows = compare(inventory, earlier, holds, admissions)
+    drops = json.loads(DROP_STUDY.read_text())['cases']
+    rows = compare(inventory, earlier, holds, admissions, drops)
     result = {'schemaVersion': 1, 'status': 'IDENTITY_AND_INERT_SELECTION_ONLY',
               'limitations': 'Historical selection is reconstructed from retained evidence and compared to inert preflight. No materialized inputs or historical/current outcomes were compared.',
               'inputs': {'inventorySHA256': digest(args.inventory), 'earlierMatrixSHA256': digest(args.earlier_matrix),
-                         'holdRegisterSHA256': digest(REVIEW), 'admissionsSHA256': digest(ADMISSIONS)},
+                         'holdRegisterSHA256': digest(REVIEW), 'admissionsSHA256': digest(ADMISSIONS),
+                         'standardDropStudySHA256': digest(DROP_STUDY)},
               'rows': rows}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open('x') as stream:
