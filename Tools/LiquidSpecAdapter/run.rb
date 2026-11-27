@@ -31,12 +31,6 @@ raise 'Wrong liquid-spec version' unless Liquid::Spec::VERSION == '2.0.0'
 raise 'Only the pinned complete suite selection is supported' unless options[:suites] == LQ1FixtureInventory::SUITES && options[:seed] == 15401
 raise 'A pinned spec checkout is required' unless options[:spec_path]
 output = File.expand_path(options.fetch(:output)); FileUtils.mkdir_p(output)
-LiquidSpec.configure do |config|
-  config.error_modes = LQ1::PARSER_MODES
-  config.render_error_modes = LQ1::RENDER_MODES
-  config.missing_features = LQ1::MISSING_FEATURES.keys
-end
-
 # Evidence encoding only: never turn binary values into an engine context.
 def receipt_value(value)
   case value

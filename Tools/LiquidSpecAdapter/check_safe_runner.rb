@@ -6,11 +6,15 @@ require 'bundler/setup'
 require 'set'
 require 'liquid'
 require 'active_support/all'
+require 'tmpdir'
+require 'open3'
 require 'liquid/spec'
 require 'liquid/spec/deps/liquid_ruby'
 require_relative 'adapter'
 require_relative 'inventory_fixtures'
 require_relative 'safe_runner_spec'
+
+spec_root = ARGV.fetch(0) { abort 'Usage: check_safe_runner.rb SPEC_ROOT' }
 
 runner = Liquid::Spec::AdapterRunner.new(name: 'Safe runner negative control')
 runner.on_setup { |_ctx| }
@@ -43,5 +47,28 @@ begin
   raise 'Wire constructor marker was not rejected'
 rescue ArgumentError
   # A fixture cannot smuggle a Drop constructor into the public adapter.
+end
+
+# Exercise the same production inventory entry point against a modified pinned
+# checkout. It must reject the changed fixture before interpreting its content.
+Dir.mktmpdir('liquid-fixture-negative-') do |directory|
+  checkout = File.join(directory, 'spec')
+  [["git", "clone", "--shared", "--no-checkout", spec_root, checkout],
+   ["git", "-C", checkout, "checkout", "--detach", LQ1FixtureInventory::PIN]].each do |command|
+    _out, err, status = Open3.capture3(*command)
+    raise "Fixture negative-control setup failed: #{err}" unless status.success?
+  end
+  $fixture_negative_executed = false
+  File.open(File.join(checkout, 'specs/basics/drops.yml'), 'a') do |stream|
+    stream.write('\n# #{($fixture_negative_executed = true)}\n')
+  end
+  begin
+    LQ1FixtureInventory.run(checkout, File.join(directory, 'result.json'))
+    raise 'Changed fixture was accepted'
+  rescue ArgumentError => error
+    raise unless error.message.include?('not clean and pinned')
+  end
+  raise 'Excluded fixture content was executed' if $fixture_negative_executed
+  raise 'Changed fixture emitted an inventory' if File.exist?(File.join(directory, 'result.json'))
 end
 puts 'Integrated safe runner guards and operational-error control passed.'
