@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.HostObjectTests/unregisteredHostMembersStayMissingAcrossLiquidOperations()": null,
     "LiquidTests.HostObjectTests/optedInHostWithBindingPreservesPartialRecoveryAndIsolation()": null,
     "LiquidTests.HostObjectTests/cancellationDuringOptedInPartialHostAccessPreservesReuse()": null,
     "LiquidTests.HostObjectTests/concurrentRendersKeepOptedInPartialHostBindingsIndependent()": null,
