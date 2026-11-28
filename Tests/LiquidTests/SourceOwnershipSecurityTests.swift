@@ -119,8 +119,28 @@ struct SourceOwnershipSecurityTests {
         for size in [1_024, 4_096, 16_384, 65_536] {
             let source = "{{ '" + String(repeating: "a", count: size) + " }}"
             let start = clock.now
-            #expect(throws: LiquidError.self) { try LiquidTemplate(source, syntaxMode: .lax) }
+            do { _ = try LiquidTemplate(source, syntaxMode: .lax); Issue.record("Expected syntax rejection") }
+            catch LiquidError.syntax { }
             print("OWNERSHIP_SCAN bytes=\(source.utf8.count) duration=\(start.duration(to: clock.now))")
+        }
+    }
+
+    @Test func repeatedQuotedBoundariesRespectExactSourceLimits() async throws {
+        let unit = #"{{ 'a\n' }}"#
+        let clock = ContinuousClock()
+        for repetitions in [1, 128, 1_024] {
+            let source = String(repeating: unit, count: repetitions)
+            let bytes = source.utf8.count
+            let start = clock.now
+            let parsed = try LiquidTemplate(source, limits: .init(sourceBytes: bytes))
+            let actual = try await LiquidEngine(limits: .init(sourceBytes: bytes)).render(parsed)
+            #expect(actual == String(repeating: #"a\n"#, count: repetitions))
+            do { _ = try LiquidTemplate(source, limits: .init(sourceBytes: bytes - 1)); Issue.record("Expected source limit") }
+            catch LiquidError.limitExceeded(let name) { #expect(name == "sourceBytes") }
+            let malformed = source + "{{ 'unterminated"
+            do { _ = try LiquidTemplate(malformed); Issue.record("Expected syntax rejection") }
+            catch LiquidError.syntax { }
+            print("QUOTED_BOUNDARIES repetitions=\(repetitions) bytes=\(bytes) duration=\(start.duration(to: clock.now))")
         }
     }
 }

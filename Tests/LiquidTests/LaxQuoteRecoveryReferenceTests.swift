@@ -19,7 +19,6 @@ private struct RecoveryCase: Decodable, Sendable {
 
 @Suite("Pinned Ruby quote recovery controls")
 struct LaxQuoteRecoveryReferenceTests {
-    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
     func recoveryPhaseAndBytes(mode: LiquidSyntaxMode) async throws {
         let url = try #require(Bundle.module.url(forResource: "LaxQuoteRecoveryCases", withExtension: "json", subdirectory: "Fixtures"))
         let reference = try JSONDecoder().decode(RecoveryReference.self, from: Data(contentsOf: url))

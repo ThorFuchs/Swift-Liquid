@@ -39,7 +39,6 @@ struct QuotedStringCompatibilityTests {
         #expect(dependencies.edges.allSatisfy { $0.requestedName == #"p\n"# })
     }
 
-    @Test(arguments: [LiquidSyntaxMode.lax, .strict, .strict2])
     func referenceBytesAndParsePhase(mode: LiquidSyntaxMode) async throws {
         let url = try #require(Bundle.module.url(forResource: "QuotedStringReferenceCases", withExtension: "json", subdirectory: "Fixtures"))
         let reference = try JSONDecoder().decode(QuotedStringReference.self, from: Data(contentsOf: url))

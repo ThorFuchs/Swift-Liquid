@@ -196,7 +196,7 @@ def qualify(path, inventory_path, profile, exit_code=0):
                 not isinstance(key, str) or (value is not None and (type(value) is not int or value <= 0))
                 for key, value in expected.items()):
             raise ValueError('Invalid reviewed function inventory')
-        if profile in ['thread', 'adversarial']:
+        if profile in ['thread', 'adversarial', 'quotedReviewed']:
             selected = inventory[profile + 'Functions']
             if not isinstance(selected, list) or not selected or len(set(selected)) != len(selected):
                 raise ValueError('Invalid selected-function inventory')
