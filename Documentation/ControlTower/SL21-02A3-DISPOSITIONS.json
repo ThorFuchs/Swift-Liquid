@@ -33,7 +33,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby retains the leading literal and scans past the remaining adjacent fragment. The Swift lexer rejects the unmatched trailing quote; preserving quote ownership around subsequent source is unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -71,7 +71,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby retains the leading literal and scans past the remaining adjacent fragment. Double-quote ownership must remain inert across subsequent source; the previous shortcut was unsafe.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -116,7 +116,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby skips the unmatched single quote and reads the unterminated binding. A recovered root lookup could reach an explicitly registered host object; safe source ownership is unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -164,7 +164,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby skips the unmatched double quote and reads the unterminated binding. A recovered root lookup could reach an explicitly registered host object; safe source ownership is unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -203,7 +203,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby interprets the unmatched fragment as the nested lookup a.n. Reinterpreting the backslash as a lookup separator can invoke a host property; the owned expression range is unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -246,7 +246,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby drops the unmatched quote after a completed string. Swift rejects; it is unresolved whether the quote owns later source or is only trailing expression markup.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -306,7 +306,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "A malformed filter expression can reach a registered callback; error phase and source ownership need a bounded proof before recovery.",
+      "reason": "Ruby parses without an argument then raises a language error on render. Broadly skipping the quote may instead pass a new argument or invoke a registered filter; phase and ownership must be preserved.",
       "reference": {
         "phase": "render",
         "outcome": "render-error",
@@ -347,7 +347,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "Discarding unvalidated trailing tokens is not an authorized recovery authority; determine a bounded grammar and source ownership.",
+      "reason": "Ruby retains the leading lookup and discards later malformed tokens. Unconditional suffix suppression is forbidden; a bounded grammar and authority for the complete expression are unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -410,7 +410,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby accepts an unmatched quote on the assignment right side and the following output reads the assigned value. The guarded experiment rejected it; source ownership and callback effects remain unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -469,7 +469,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby assigns the leading literal then the following output renders it. The trailing quote can interact with later constructs; the guarded experiment rejected this control.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -519,7 +519,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby echo uses Variable recovery and reads the unterminated binding. Swift rejects; output/tag ownership and potentially registered host access remain unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -565,7 +565,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby echo keeps the leading literal despite a malformed trailing quote. Swift rejects; tag-specific recovery must preserve the same bounded source ownership as output.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -623,7 +623,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby liquid-body echo recovers the unmatched quote and reads the binding. Swift tokenizes the outer liquid body before rewriting inner tags; safe per-line ownership is unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -691,7 +691,7 @@
         125
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reason": "Ruby liquid-body assign recovers the leading literal and a subsequent echo outputs it. Swift rejects; the guarded experiment exposed the need for per-line source ownership.",
       "reference": {
         "phase": "render",
         "outcome": "output",
@@ -972,7 +972,7 @@
         67
       ],
       "classification": "UNRESOLVED_BEHAVIOR",
-      "reason": "The previous experiment crossed quote and construct boundaries; an independent subsequent frame must be proven without exposing previously protected markup.",
+      "reason": "Ruby recovers the first malformed output and independently renders the next literal output. Existing quote scanning can cross the boundary; distinguishing an independent construct from previously protected markup remains unresolved.",
       "reference": {
         "phase": "render",
         "outcome": "output",
