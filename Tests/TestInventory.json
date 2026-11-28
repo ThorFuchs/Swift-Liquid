@@ -1,6 +1,16 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SourceOwnershipSecurityTests/repeatedQuotedBoundariesRespectExactSourceLimits()": null,
+    "LiquidTests.QuotedLiteralReviewedTests/hostJSONRawAndExplicitEscapingRemainIndependent(mode:)": 3,
+    "LiquidTests.QuotedLiteralReviewedTests/allRawAndReviewedObservations(profile:mode:)": 6,
+    "LiquidTests.SourceOwnershipSecurityTests/wellFormedLiteralBytesMatchReference(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/unclosedQuoteScansMakeBoundedProgress()": null,
+    "LiquidTests.SourceOwnershipSecurityTests/protectedRegionsStayInertAndIndependentFramesExecute(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/ambiguousQuoteWitnessesFailBeforeAnyHostCapability(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/sourceLimitsAndCancellationRemainTerminal()": null,
+    "LiquidTests.QuotedMarkupSecurityTests/previouslyQuotedMarkupDoesNotInvokeHostCapabilities(mode:)": 3,
+    "LiquidTests.QuotedStringCompatibilityTests/contextualStringsAndInspection(mode:)": 3,
     "LiquidTests.HostObjectTests/unregisteredHostMembersStayMissingAcrossLiquidOperations()": null,
     "LiquidTests.HostObjectTests/optedInHostWithBindingPreservesPartialRecoveryAndIsolation()": null,
     "LiquidTests.HostObjectTests/cancellationDuringOptedInPartialHostAccessPreservesReuse()": null,
@@ -396,6 +406,18 @@
     "LiquidTests.TestRendezvousGateTests/cancellationFromThrowingBarrierParticipantDrainsPeers()": null,
     "LiquidTests.CommentDelimiterCompatibilityTests/nestedCommentsInsideLiquidKeepTheOuterCommentOpen()": null
   },
+  "quotedReviewedFunctions": [
+    "LiquidTests.SourceOwnershipSecurityTests/repeatedQuotedBoundariesRespectExactSourceLimits()",
+    "LiquidTests.QuotedLiteralReviewedTests/hostJSONRawAndExplicitEscapingRemainIndependent(mode:)",
+    "LiquidTests.QuotedLiteralReviewedTests/allRawAndReviewedObservations(profile:mode:)",
+    "LiquidTests.SourceOwnershipSecurityTests/wellFormedLiteralBytesMatchReference(mode:)",
+    "LiquidTests.SourceOwnershipSecurityTests/unclosedQuoteScansMakeBoundedProgress()",
+    "LiquidTests.SourceOwnershipSecurityTests/protectedRegionsStayInertAndIndependentFramesExecute(mode:)",
+    "LiquidTests.SourceOwnershipSecurityTests/ambiguousQuoteWitnessesFailBeforeAnyHostCapability(mode:)",
+    "LiquidTests.SourceOwnershipSecurityTests/sourceLimitsAndCancellationRemainTerminal()",
+    "LiquidTests.QuotedMarkupSecurityTests/previouslyQuotedMarkupDoesNotInvokeHostCapabilities(mode:)",
+    "LiquidTests.QuotedStringCompatibilityTests/contextualStringsAndInspection(mode:)"
+  ],
   "threadFunctions": [
     "LiquidTests.HostObjectTests/concurrentRendersKeepOptedInPartialHostBindingsIndependent()",
     "LiquidTests.HostObjectTests/concurrentRendersKeepOpaqueObjectsInvocationScoped()",

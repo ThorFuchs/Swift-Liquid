@@ -3110,6 +3110,38 @@
       "qualification": "Source-bound checks and the independent pinned case remain subject to their recorded results; conformance, performance and release holds remain."
     },
     {
+      "area": "SL21-02A quoted string byte preservation (unqualified work in progress)",
+      "scopeDecision": "Preserve literal backslashes and terminate at the matching quote; reference-backed lax recovery and full qualification remain unresolved.",
+      "changes": [
+        "Remove Swift-specific escape interpretation from the shared literal scanner while retaining its byte-slice fast path."
+      ],
+      "files": [
+        "Sources/Liquid/Syntax/Lexer.swift",
+        "Tests/LiquidTests/QuotedStringCompatibilityTests.swift",
+        "Tests/LiquidTests/Fixtures/QuotedStringReferenceCases.json",
+        "Scripts/generate_quoted_string_reference.py"
+      ],
+      "qualification": "Work in progress; the reference byte matrix retains four lax recovery failures and no conformance or release claim is made."
+    },
+    {
+      "area": "SL21-02A.4 reviewed quoted-literal qualification",
+      "scopeDecision": "Qualify the accepted narrow literal-byte profile while preserving raw reference observations and the existing inert quoted-markup security boundary; defer malformed-expression recovery.",
+      "changes": [
+        "Move unchanged raw comparison assertions into an isolated qualification package, retaining their failing raw verdict and fixture bytes.",
+        "Validate all 171 mode-expanded observations under a separately pinned reviewed policy with exact syntax, output, context and overlap accounting.",
+        "Keep operational failures distinct from reviewed syntax rejections and retain positive and negative host-capability controls."
+      ],
+      "files": [
+        "Tools/QuotedStringRawTests/Package.swift",
+        "Tests/LiquidTests/QuotedLiteralReviewedTests.swift",
+        "Tests/LiquidTests/Fixtures/SL21-02A4-ReviewedPolicy.json",
+        "Scripts/check_quoted_literal_review.py",
+        "Scripts/check_quoted_raw_observations.py",
+        "Documentation/ControlTower/SL21-02A4-SCOPE.md"
+      ],
+      "qualification": "Raw and reviewed verdicts, security reference differences, deferred recovery and exact-source receipts remain separate; no complete-conformance or release claim."
+    },
+    {
       "area": "SL21-01B guarded standard Drop fixture materialization",
       "scopeDecision": "Qualify exact pinned standard Drop cases using existing host-object transport; preserve the global Drop exclusion and do not add runtime capabilities.",
       "changes": [

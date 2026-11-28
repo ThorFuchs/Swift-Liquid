@@ -54,7 +54,7 @@ def source_revision(archive_provenance=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'quoted-literal-reviewed', 'quoted-literal-raw', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline'], default='native')
     parser.add_argument('--output-root', type=Path,
                         help='External artifacts root for isolated liquid-spec or conformance-console runs')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
@@ -67,7 +67,7 @@ def main():
     if args.archive_provenance is not None and args.lane != 'native':
         parser.error('--archive-provenance is only for native qualification of a source export')
     if args.output_root is not None:
-        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline']:
+        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'quoted-literal-reviewed', 'quoted-literal-raw', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline']:
             parser.error('--output-root is supported only for isolated conformance lanes')
         if args.output_root.resolve().is_relative_to(ROOT):
             parser.error('--output-root must be outside the source checkout')
@@ -115,6 +115,9 @@ def main():
         if not match or tuple(map(int, match.groups())) < (6, 4):
             raise RuntimeError('Swift 6.4 or later is required')
         run([sys.executable, '-B', 'Scripts/public_check.py'], 'public-check')
+        if args.lane in ['native', 'development', 'safety']:
+            run([sys.executable, '-B', 'Scripts/check_quoted_literal_review.py'], 'quoted-review-policy')
+            run([sys.executable, '-B', 'Scripts/check_quoted_literal_review_contract.py'], 'quoted-review-negative-controls')
         if args.lane in ['native', 'development']:
             run([sys.executable, '-B', 'Scripts/check_liquid_spec_review.py'], 'reviewed-conflict-contract')
             run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')
@@ -145,6 +148,24 @@ def main():
         elif args.lane == 'safety':
             run_tests(['--sanitize', 'address', '--scratch-path', '.build/address'], 'address')
             run_tests(['--sanitize', 'thread', '--scratch-path', '.build/thread', '--filter', 'concurrentRenders'], 'thread', profile='thread')
+        elif args.lane == 'quoted-literal-reviewed':
+            run([sys.executable, '-B', 'Scripts/check_quoted_literal_review.py'], 'review-policy')
+            run([sys.executable, '-B', 'Scripts/check_quoted_literal_review_contract.py'], 'review-policy-negative-controls')
+            run_tests(['--filter', 'QuotedLiteralReviewedTests|SourceOwnershipSecurityTests|QuotedMarkupSecurityTests|QuotedStringCompatibilityTests'],
+                      'reviewed-tests', profile='quotedReviewed')
+        elif args.lane == 'quoted-literal-raw':
+            run([sys.executable, '-B', 'Scripts/check_quoted_literal_review.py'], 'review-policy')
+            events = output / 'raw-tests.events.jsonl'
+            raw = run(swift() + ['test', '--package-path', 'Tools/QuotedStringRawTests', '--filter',
+                                 'referenceBytesAndParsePhase|recoveryPhaseAndBytes', '--event-stream-version', '0',
+                                 '--event-stream-output-path', str(events)], 'raw-tests', check=False)
+            receipt['rawVerdict'] = {'exitCode': raw.returncode, 'status': 'failed' if raw.returncode else 'passed'}
+            if raw.returncode != 1:
+                raise RuntimeError('Raw quoted-literal verdict changed; reassess all observations')
+            run([sys.executable, '-B', 'Scripts/check_quoted_raw_observations.py', '--log', str(output / 'raw-tests.log'),
+                 '--events', str(events), '--output', str(output / 'raw-observation-audit.json')], 'raw-observation-audit')
+            run([sys.executable, '-B', 'Scripts/check_quoted_raw_contract.py', '--log', str(output / 'raw-tests.log'),
+                 '--events', str(events)], 'raw-audit-negative-controls')
         elif args.lane == 'conformance-console':
             run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
             run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')

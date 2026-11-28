@@ -1,0 +1,1001 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "5a0961aaa620e1662034dcd5ac9385f32d96386a",
+  "referenceMatrixSHA256": "02c08497c74922972fb59db110dba32e1be7f95f8c23ee9d97f5c69f0ae50972",
+  "predecessorDifferentialSHA256": "5f44a3ba956d4e4533ed09294b5eef27afd8cccb11e5dbc1b46b68054b414192",
+  "status": "PROPOSED_UNQUALIFIED",
+  "observations": 75,
+  "priorDifferences": 21,
+  "classifications": [
+    "REQUIRED_DOCUMENTED_LANGUAGE_CORRECTION",
+    "SAFE_REFERENCE_BACKED_RECOVERY",
+    "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+    "DIAGNOSTIC_ONLY_DIFFERENCE",
+    "UNRESOLVED_BEHAVIOR"
+  ],
+  "rows": [
+    {
+      "variantID": "lax/single_escaped_closer",
+      "name": "single_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby retains the leading literal and scans past the remaining adjacent fragment. The Swift lexer rejects the unmatched trailing quote; preserving quote ownership around subsequent source is unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/double_escaped_closer",
+      "name": "double_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby retains the leading literal and scans past the remaining adjacent fragment. Double-quote ownership must remain inert across subsequent source; the previous shortcut was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/single_open_lookup",
+      "name": "single_open_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby skips the unmatched single quote and reads the unterminated binding. A recovered root lookup could reach an explicitly registered host object; safe source ownership is unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/double_open_lookup",
+      "name": "double_open_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby skips the unmatched double quote and reads the unterminated binding. A recovered root lookup could reach an explicitly registered host object; safe source ownership is unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/single_open_nested_lookup",
+      "name": "single_open_nested_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby interprets the unmatched fragment as the nested lookup a.n. Reinterpreting the backslash as a lookup separator can invoke a host property; the owned expression range is unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          78,
+          69,
+          83,
+          84,
+          69,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/trailing_quote_before_close",
+      "name": "trailing_quote_before_close",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        98,
+        99,
+        39,
+        32,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby drops the unmatched quote after a completed string. Swift rejects; it is unresolved whether the quote owns later source or is only trailing expression markup.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          98,
+          99
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/unclosed_filter_argument",
+      "name": "unclosed_filter_argument",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        120,
+        39,
+        32,
+        124,
+        32,
+        97,
+        112,
+        112,
+        101,
+        110,
+        100,
+        58,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby parses without an argument then raises a language error on render. Broadly skipping the quote may instead pass a new argument or invoke a registered filter; phase and ownership must be preserved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "render-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::ArgumentError",
+        "message": "Liquid error (line 1): wrong number of arguments (given 1, expected 2)",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/malformed_tail",
+      "name": "malformed_tail",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        118,
+        97,
+        108,
+        117,
+        101,
+        32,
+        33,
+        32,
+        116,
+        114,
+        117,
+        101,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby retains the leading lookup and discards later malformed tokens. Unconditional suffix suppression is forbidden; a bounded grammar and authority for the complete expression are unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          111,
+          107
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=Optional(1) column=Optional(1) message=Unexpected character ! in \"{{ value ! true }}\""
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/assign_unclosed",
+      "name": "assign_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby accepts an unmatched quote on the assignment right side and the following output reads the assigned value. The guarded experiment rejected it; source ownership and callback effects remain unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/assign_escaped_closer",
+      "name": "assign_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby assigns the leading literal then the following output renders it. The trailing quote can interact with later constructs; the guarded experiment rejected this control.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/echo_unclosed",
+      "name": "echo_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby echo uses Variable recovery and reads the unterminated binding. Swift rejects; output/tag ownership and potentially registered host access remain unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/echo_escaped_closer",
+      "name": "echo_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby echo keeps the leading literal despite a malformed trailing quote. Swift rejects; tag-specific recovery must preserve the same bounded source ownership as output.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiline_echo_unclosed",
+      "name": "multiline_echo_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        10,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby liquid-body echo recovers the unmatched quote and reads the binding. Swift tokenizes the outer liquid body before rewriting inner tags; safe per-line ownership is unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiline_assign_escaped",
+      "name": "multiline_assign_escaped",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        120,
+        10,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby liquid-body assign recovers the leading literal and a subsequent echo outputs it. Swift rejects; the guarded experiment exposed the need for per-line source ownership.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          125,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "output",
+        "outputBytes": [
+          125,
+          125
+        ],
+        "description": "output=[125, 125]"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "strict",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict2/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "strict2",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          37,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "output",
+        "outputBytes": [
+          37,
+          125
+        ],
+        "description": "output=[37, 125]"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "strict",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict2/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "strict2",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiple_constructs",
+      "name": "multiple_constructs",
+      "mode": "lax",
+      "sourceBytes": [
+        65,
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125,
+        66,
+        123,
+        123,
+        32,
+        39,
+        99,
+        92,
+        110,
+        39,
+        32,
+        125,
+        125,
+        67
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Ruby recovers the first malformed output and independently renders the next literal output. Existing quote scanning can cross the boundary; distinguishing an independent construct from previously protected markup remains unresolved.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          65,
+          97,
+          92,
+          66,
+          99,
+          92,
+          110,
+          67
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unexpected character '\\'"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    }
+  ]
+}

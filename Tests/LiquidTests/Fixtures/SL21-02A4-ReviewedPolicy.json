@@ -1,0 +1,1163 @@
+{
+  "schemaVersion": 1,
+  "status": "APPROVED_NARROW_SCOPE",
+  "originalFixtureSHA256": "916ca2210913e36f8ebb5fa8c3da90ef243462bcdee85f14c3c491ad6cba597b",
+  "expandedFixtureSHA256": "02c08497c74922972fb59db110dba32e1be7f95f8c23ee9d97f5c69f0ae50972",
+  "observations": {
+    "original": 96,
+    "expanded": 75,
+    "reviewedObservations": 25,
+    "overlappingSourceModePairs": 3,
+    "uniqueReviewedSourceModeIdentities": 22,
+    "approvedFraming": 6,
+    "expandedDeferred": 15,
+    "originalDeferred": 4
+  },
+  "overlap": [
+    {
+      "original": "lax/double_escaped_delimiter",
+      "expanded": "lax/double_escaped_closer",
+      "identityBasis": "mode and exact source bytes",
+      "contextsDistinct": true
+    },
+    {
+      "original": "lax/single_escaped_delimiter",
+      "expanded": "lax/single_escaped_closer",
+      "identityBasis": "mode and exact source bytes",
+      "contextsDistinct": true
+    },
+    {
+      "original": "lax/single_unterminated",
+      "expanded": "lax/single_open_nested_lookup",
+      "identityBasis": "mode and exact source bytes",
+      "contextsDistinct": true
+    }
+  ],
+  "rows": [
+    {
+      "profile": "original",
+      "id": "lax/double_escaped_delimiter",
+      "context": "empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "original",
+      "id": "lax/double_unterminated",
+      "context": "empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "original",
+      "id": "lax/single_escaped_delimiter",
+      "context": "empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "original",
+      "id": "lax/single_unterminated",
+      "context": "empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/single_escaped_closer",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/double_escaped_closer",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/single_open_lookup",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/double_open_lookup",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/single_open_nested_lookup",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          78,
+          69,
+          83,
+          84,
+          69,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/trailing_quote_before_close",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        98,
+        99,
+        39,
+        32,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          98,
+          99
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/unclosed_filter_argument",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        120,
+        39,
+        32,
+        124,
+        32,
+        97,
+        112,
+        112,
+        101,
+        110,
+        100,
+        58,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "render-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::ArgumentError",
+        "message": "Liquid error (line 1): wrong number of arguments (given 1, expected 2)",
+        "line": 1
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/malformed_tail",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        118,
+        97,
+        108,
+        117,
+        101,
+        32,
+        33,
+        32,
+        116,
+        114,
+        117,
+        101,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          111,
+          107
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unexpected character ! in \"{{ value ! true }}\"",
+        "line": 1,
+        "column": 1
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/assign_unclosed",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/assign_escaped_closer",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/echo_unclosed",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/echo_escaped_closer",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/multiline_echo_unclosed",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        10,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/multiline_assign_escaped",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        120,
+        10,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unterminated string literal",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/adjacent_output_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          125,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          125,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "strict/adjacent_output_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          125,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "strict2/adjacent_output_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          125,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/adjacent_tag_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          37,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          37,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "strict/adjacent_tag_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          37,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "strict2/adjacent_tag_delimiter",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          37,
+          125
+        ]
+      },
+      "disposition": "APPROVED_INERT_FRAMING"
+    },
+    {
+      "profile": "expanded",
+      "id": "lax/multiple_constructs",
+      "context": "fixed_lookup_context",
+      "sourceBytes": [
+        65,
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125,
+        66,
+        123,
+        123,
+        32,
+        39,
+        99,
+        92,
+        110,
+        39,
+        32,
+        125,
+        125,
+        67
+      ],
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          65,
+          97,
+          92,
+          66,
+          99,
+          92,
+          110,
+          67
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "phase": "parse",
+        "outcome": "syntax-error",
+        "message": "Unexpected character '\\'",
+        "line": null,
+        "column": null
+      },
+      "disposition": "DEFERRED_RECOVERY"
+    }
+  ]
+}

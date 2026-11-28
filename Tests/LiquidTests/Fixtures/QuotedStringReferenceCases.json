@@ -1,0 +1,2376 @@
+{
+  "schemaVersion": 1,
+  "referenceCommit": "4e39ae4cc3da73921923c0669e0fc84a66b2f696",
+  "referenceVersion": "5.14.0",
+  "sourceConstruction": "explicit UTF-8 byte arrays",
+  "cases": [
+    {
+      "name": "single_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        116,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        116,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        116,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        114,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        114,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        114,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "single_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        113,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "single_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        113,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "single_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        113,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "single_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        92,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "single_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "single_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "single_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "single_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "single_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "single_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        92,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "single_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "single_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ 'a\\'b' }}\"",
+      "line": 1
+    },
+    {
+      "name": "single_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ 'a\\'b' }}\"",
+      "line": 1
+    },
+    {
+      "name": "single_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "single_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ 'a\\n }}\"",
+      "line": 1
+    },
+    {
+      "name": "single_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ 'a\\n }}\"",
+      "line": 1
+    },
+    {
+      "name": "single_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        10,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        10,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        10,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        9,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        9,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        9,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        13,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        13,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "single_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        13,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "single_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        34,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        34,
+        98
+      ]
+    },
+    {
+      "name": "single_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        34,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        34,
+        98
+      ]
+    },
+    {
+      "name": "single_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        34,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        34,
+        98
+      ]
+    },
+    {
+      "name": "single_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "single_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "single_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "single_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "single_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "single_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        39,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "double_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_n",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        110,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        116,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        116,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_t",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        116,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        116,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        114,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        114,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_r",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        114,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        114,
+        98
+      ]
+    },
+    {
+      "name": "double_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        113,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "double_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        113,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "double_unknown_escape",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        113,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        113,
+        98
+      ]
+    },
+    {
+      "name": "double_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_two_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_three_backslashes",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        92,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92,
+        92,
+        98
+      ]
+    },
+    {
+      "name": "double_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "double_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "double_backslash_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "double_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "double_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "double_repeated_before_closer",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        92,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92,
+        92
+      ]
+    },
+    {
+      "name": "double_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        92
+      ]
+    },
+    {
+      "name": "double_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character \" in \"{{ \"a\\\"b\" }}\"",
+      "line": 1
+    },
+    {
+      "name": "double_escaped_delimiter",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character \" in \"{{ \"a\\\"b\" }}\"",
+      "line": 1
+    },
+    {
+      "name": "double_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "double_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character \" in \"{{ \"a\\n }}\"",
+      "line": 1
+    },
+    {
+      "name": "double_unterminated",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "parse",
+      "outcome": "parse-error",
+      "errorClass": "Liquid::SyntaxError",
+      "message": "Liquid syntax error (line 1): Unexpected character \" in \"{{ \"a\\n }}\"",
+      "line": 1
+    },
+    {
+      "name": "double_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        10,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        10,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_newline",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        10,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        10,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        9,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        9,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_tab",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        9,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        9,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        13,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        13,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "double_actual_carriage_return",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        13,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        13,
+        98
+      ]
+    },
+    {
+      "name": "double_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        39,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        39,
+        98
+      ]
+    },
+    {
+      "name": "double_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        39,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        39,
+        98
+      ]
+    },
+    {
+      "name": "double_opposite_quote",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        39,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        97,
+        39,
+        98
+      ]
+    },
+    {
+      "name": "double_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "double_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "double_unicode_backslash",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": [
+        195,
+        169,
+        92,
+        110,
+        240,
+        159,
+        152,
+        128
+      ]
+    },
+    {
+      "name": "double_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "lax",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "double_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    },
+    {
+      "name": "double_empty",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        34,
+        32,
+        125,
+        125
+      ],
+      "mode": "strict2",
+      "phase": "render",
+      "outcome": "output",
+      "outputBytes": []
+    }
+  ]
+}
