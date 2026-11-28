@@ -54,18 +54,20 @@ def source_revision(archive_provenance=None):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline'], default='native')
+    parser.add_argument('--lane', choices=['native', 'safety', 'docs', 'performance', 'reference', 'development', 'platforms', 'archive', 'matched-performance', 'installation', 'liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline'], default='native')
     parser.add_argument('--output-root', type=Path,
                         help='External artifacts root for isolated liquid-spec or conformance-console runs')
     parser.add_argument('--reference-path', type=Path, help='Clean checkout of the pinned Shopify reference (reference or liquid-spec lane)')
     parser.add_argument('--spec-path', type=Path, help='Clean pinned liquid-spec checkout for the opt-in functional lane')
+    parser.add_argument('--historical-matrix', type=Path, help='Retained earlier eligibility matrix for fixture-inventory reconciliation')
+    parser.add_argument('--current-receipt', type=Path, help='Optional clean independent receipt for fresh fixture-materialization comparison')
     parser.add_argument('--archive-provenance', type=Path,
                         help='Inspected producer archive provenance for a Git-free native export')
     args = parser.parse_args()
     if args.archive_provenance is not None and args.lane != 'native':
         parser.error('--archive-provenance is only for native qualification of a source export')
     if args.output_root is not None:
-        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline']:
+        if args.lane not in ['liquid-spec', 'liquid-spec-reviewed', 'conformance-console', 'fixture-inventory', 'method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline']:
             parser.error('--output-root is supported only for isolated conformance lanes')
         if args.output_root.resolve().is_relative_to(ROOT):
             parser.error('--output-root must be outside the source checkout')
@@ -147,6 +149,32 @@ def main():
             run([sys.executable, '-B', 'Scripts/check_workflow_policy.py'], 'workflow-policy-regressions')
             run([sys.executable, '-B', 'Scripts/check_archive_provenance.py'], 'archive-provenance-contract')
             run([sys.executable, '-B', 'Scripts/check_conformance_console.py'], 'console-contract')
+            run(['ruby', 'Tools/LiquidSpecAdapter/check_safe_fixture_preparation.rb'], 'safe-fixture-preparation')
+            run([sys.executable, '-B', 'Scripts/check_sl21_inventory.py'], 'fixture-inventory-identity')
+        elif args.lane == 'fixture-inventory':
+            if not args.spec_path or not args.historical_matrix:
+                raise RuntimeError('fixture-inventory requires --spec-path and --historical-matrix')
+            run(['ruby', 'Tools/LiquidSpecAdapter/check_safe_fixture_preparation.rb'], 'safe-fixture-preparation')
+            run([sys.executable, '-B', 'Scripts/check_sl21_inventory.py'], 'identity-negative-controls')
+            run([sys.executable, '-B', 'Scripts/check_sl21_generator_evidence.py', '--matrix', str(args.historical_matrix),
+                 '--receipt', str(args.historical_matrix.parent.parent / 'receipt.json')], 'generator-evidence')
+            run(['ruby', 'Tools/LiquidSpecAdapter/inventory_fixtures.rb', str(args.spec_path), str(output / 'inventory.json')], 'inventory')
+            run([sys.executable, '-B', 'Scripts/compare_sl21_inventory.py', '--inventory', str(output / 'inventory.json'),
+                 '--earlier-matrix', str(args.historical_matrix), '--output', str(output / 'comparison.json')], 'identity-comparison')
+            materialization_command = [sys.executable, '-B', 'Scripts/compare_sl21_materialization.py', '--inventory', str(output / 'inventory.json'),
+                 '--historical-matrix', str(args.historical_matrix), '--historical-traces', str(args.historical_matrix.parent / 'RPC_TRACES.jsonl'),
+                 '--historical-receipt', str(args.historical_matrix.parent.parent / 'receipt.json'),
+                 '--output', str(output / 'materialization.json')]
+            if args.current_receipt:
+                materialization_command += ['--current-receipt', str(args.current_receipt)]
+            run(materialization_command, 'materialization-comparison')
+            if args.current_receipt:
+                run([sys.executable, '-B', 'Scripts/reconcile_sl21_outcomes.py', '--earlier-receipt', str(args.historical_matrix.parent.parent / 'receipt.json'),
+                     '--current-receipt', str(args.current_receipt), '--output', str(output / 'outcome-comparison.json')], 'outcome-comparison')
+                receipt['outcomeComparisonSHA256'] = hashlib.sha256((output / 'outcome-comparison.json').read_bytes()).hexdigest()
+            receipt['inventorySHA256'] = hashlib.sha256((output / 'inventory.json').read_bytes()).hexdigest()
+            receipt['comparisonSHA256'] = hashlib.sha256((output / 'comparison.json').read_bytes()).hexdigest()
+            receipt['materializationSHA256'] = hashlib.sha256((output / 'materialization.json').read_bytes()).hexdigest()
         elif args.lane in ['method-drop', 'index-drop', 'boolean-drop', 'number-drop', 'string-drop', 'sequence-drop', 'nested-drop', 'nil-drop', 'opaque-drop', 'error-drop', 'error-drop-inline']:
             if not args.spec_path or not args.reference_path:
                 raise RuntimeError(f'{args.lane} requires --spec-path and --reference-path')

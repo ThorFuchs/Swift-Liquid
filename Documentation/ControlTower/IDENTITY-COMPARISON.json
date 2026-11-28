@@ -1,0 +1,4224 @@
+{
+  "schemaVersion": 1,
+  "status": "PARTIAL_COMPARISON",
+  "scope": "425 historical exclusions only. The historical 4,687 selected identities and current complete suite outcome are not compared here. Targeted comparator matches are separate and do not admit cases to the full suite.",
+  "rows": [
+    {
+      "caseID": "basics/specs/basics/drops.yml:19/drop_boolean_true_renders/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:32/drop_boolean_false_renders/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:45/drop_boolean_true_is_truthy/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:58/drop_boolean_false_is_falsy/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:72/drop_number_renders/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "number-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "a541d69593c7810215f24bb12775b4013fb4aa394abecb3f0f4ff0de3527c884"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:85/drop_number_works_with_filters/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "number-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "a541d69593c7810215f24bb12775b4013fb4aa394abecb3f0f4ff0de3527c884"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:101/drop_number_zero_is_truthy/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "number-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "a541d69593c7810215f24bb12775b4013fb4aa394abecb3f0f4ff0de3527c884"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:114/drop_string_renders/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "string-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f0b7ac5d581279d53763cb7264738e1ae61c9657e15b3e5659237ba090fb44d7"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:127/drop_string_works_with_filters/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "string-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f0b7ac5d581279d53763cb7264738e1ae61c9657e15b3e5659237ba090fb44d7"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:143/drop_method_echo/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "method-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "d570edd0678e44a505324ddc74aeb22c97a7655a227d002fef0c28fc53a0fea9"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:154/drop_method_square/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "method-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "d570edd0678e44a505324ddc74aeb22c97a7655a227d002fef0c28fc53a0fea9"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:164/drop_method_double/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "method-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "d570edd0678e44a505324ddc74aeb22c97a7655a227d002fef0c28fc53a0fea9"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:174/drop_method_square_random/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "method-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 100,
+        "reportSHA256": "d570edd0678e44a505324ddc74aeb22c97a7655a227d002fef0c28fc53a0fea9"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:191/drop_method_echo_random/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "method-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1000,
+        "reportSHA256": "d570edd0678e44a505324ddc74aeb22c97a7655a227d002fef0c28fc53a0fea9"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:209/drop_index_integer/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "index-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "ef23b3081ab4a2f8fc11ec3602b73cfa7d301c8b2cd5cceca6826a1afc54e37a"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:219/drop_index_integer_one/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "index-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "ef23b3081ab4a2f8fc11ec3602b73cfa7d301c8b2cd5cceca6826a1afc54e37a"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:229/drop_index_string/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "index-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "ef23b3081ab4a2f8fc11ec3602b73cfa7d301c8b2cd5cceca6826a1afc54e37a"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:242/drop_sequence_iterate/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "sequence-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "c205614447f80f8397e861de2631b951822c6eafb14ffa441c44ea05a6a3ddb3"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:253/drop_sequence_size/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "sequence-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "c205614447f80f8397e861de2631b951822c6eafb14ffa441c44ea05a6a3ddb3"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:263/drop_sequence_first/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "sequence-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "c205614447f80f8397e861de2631b951822c6eafb14ffa441c44ea05a6a3ddb3"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:273/drop_sequence_last/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "sequence-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "c205614447f80f8397e861de2631b951822c6eafb14ffa441c44ea05a6a3ddb3"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:283/drop_sequence_forloop_index/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "sequence-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "c205614447f80f8397e861de2631b951822c6eafb14ffa441c44ea05a6a3ddb3"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:296/drop_nil_renders_empty/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nil-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "cfa2e435cc0e63fe603bea9f5c01688efa706aa6c34cfb7be0662d0dc42a3149"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:307/drop_nil_is_falsy/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nil-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "cfa2e435cc0e63fe603bea9f5c01688efa706aa6c34cfb7be0662d0dc42a3149"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:320/drop_opaque_renders/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "opaque-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "9fbcc45bef78161186b8ca9619b35000fb283a9bc2d0b824af291f14eadc539f"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:331/drop_opaque_is_truthy/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "opaque-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "9fbcc45bef78161186b8ca9619b35000fb283a9bc2d0b824af291f14eadc539f"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:346/drop_error_raises [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "error-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "expected-render-error",
+        "materializations": 1,
+        "reportSHA256": "fbc1f1ad2a041920d7721895b4252973abfd9d8fe9a0df568ec63431b04e7859"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:363/drop_boolean_false_not_empty/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:377/drop_opaque_not_empty/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "opaque-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "9fbcc45bef78161186b8ca9619b35000fb283a9bc2d0b824af291f14eadc539f"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:387/drop_nil_is_falsy_but_not_empty/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nil-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "cfa2e435cc0e63fe603bea9f5c01688efa706aa6c34cfb7be0662d0dc42a3149"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:398/drop_nested_returns_self/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nested-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f70a3b0098f25fa7b289776da7dd6ec19f86511b9c11341b5dd7e8df1ceeeb92"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:410/drop_nested_chained_self/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nested-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f70a3b0098f25fa7b289776da7dd6ec19f86511b9c11341b5dd7e8df1ceeeb92"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:421/drop_nested_square_returns_new_drop/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nested-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f70a3b0098f25fa7b289776da7dd6ec19f86511b9c11341b5dd7e8df1ceeeb92"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:436/drop_nested_square_chained/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nested-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f70a3b0098f25fa7b289776da7dd6ec19f86511b9c11341b5dd7e8df1ceeeb92"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/drops.yml:449/drop_nested_mixed_chain/strict2/raise",
+      "sourceDigest": "df6143b35767d354bc5dde9add93fe0be521d93be6d92f7afef80a8bca77afc4",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "nested-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f70a3b0098f25fa7b289776da7dd6ec19f86511b9c11341b5dd7e8df1ceeeb92"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:12/for_dynamic_range_empty_body_charges_each_item [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:30/tablerow_literal_range_empty_body_charges_each_item [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:65/range_score_is_cumulative_across_isolated_render_partials [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:82/tablerow_capture_output_respects_assign_score_limit [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:97/tablerow_break_final_markup_respects_render_length_limit [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:112/for_nonempty_range_at_render_score_boundary/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:123/for_nonempty_range_over_render_score_boundary [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/range-resource-limits.yml:137/for_offset_range_does_not_charge_skipped_items/strict2/raise",
+      "sourceDigest": "8ef916704aeafaaa1ce6421590ca6be5509146b17e2501a41d242249eed91b59",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/resource-limits.yml:11/cumulative_render_score_across_partials [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "af70942076c630dc0a77667d94f8b6f8bcba746d7bbf36421e95ce196fa04ef0",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/resource-limits.yml:31/cumulative_limits_not_triggered_when_unset/strict2/raise",
+      "sourceDigest": "af70942076c630dc0a77667d94f8b6f8bcba746d7bbf36421e95ce196fa04ef0",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/resource-limits.yml:44/per_template_limit_still_works_with_cumulative [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "af70942076c630dc0a77667d94f8b6f8bcba746d7bbf36421e95ce196fa04ef0",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:156/truthiness_testdrop/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:166/truthiness_stringdrop_with_value_nil/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "string-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f0b7ac5d581279d53763cb7264738e1ae61c9657e15b3e5659237ba090fb44d7"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:176/truthiness_integerdrop_with_value_0/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:186/truthiness_booleandrop_with_value_true/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:197/truthiness_booleandrop_with_value_false/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:208/truthiness_valuedrop_with_value/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:218/truthiness_tosdrop/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "basics/specs/basics/truthiness_matrix.yml:228/truthiness_thingwithvalue/strict2/raise",
+      "sourceDigest": "425cb2464f4b19f7a9ffbd6f7c5b6e14a83890c242678c9f7dd7e92ca3e34d9c",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/range_resource_limits.yml:9/ForTagTest#test_assigned_dynamic_inclusive_and_exclusive_ranges_preserve_slice_semantics_b1b92eca/strict2/raise",
+      "sourceDigest": "c46b6c459265ee342ac1b4b6bc8012ca65e5d99540c03d7997c0c99a8fba6990",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/range_resource_limits.yml:37/TableRowTest#test_assigned_endless_range_with_a_limit_4423c4c9/strict2/raise",
+      "sourceDigest": "c46b6c459265ee342ac1b4b6bc8012ca65e5d99540c03d7997c0c99a8fba6990",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/range_resource_limits.yml:52/TableRowTest#test_assigned_endless_range_with_a_limit_9b47203f/strict2/raise",
+      "sourceDigest": "c46b6c459265ee342ac1b4b6bc8012ca65e5d99540c03d7997c0c99a8fba6990",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/range_resource_limits.yml:67/TableRowTest#test_assigned_endless_range_with_a_limit_cc799bee/strict2/raise",
+      "sourceDigest": "c46b6c459265ee342ac1b4b6bc8012ca65e5d99540c03d7997c0c99a8fba6990",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/range_resource_limits.yml:82/TableRowTest#test_tablerow_assigned_dynamic_and_exclusive_ranges_3afac3d3/strict2/raise",
+      "sourceDigest": "c46b6c459265ee342ac1b4b6bc8012ca65e5d99540c03d7997c0c99a8fba6990",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:37/sec_drop_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:49/sec_drop_blocks_object_id/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:58/sec_drop_blocks_inspect/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:67/sec_drop_blocks_to_s/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:77/sec_drop_blocks_hash/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:86/sec_drop_blocks_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:95/sec_drop_blocks_public_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:104/sec_drop_blocks_private_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:113/sec_drop_blocks_singleton_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:122/sec_drop_blocks_singleton_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:131/sec_drop_blocks_respond_to/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:140/sec_drop_blocks_is_a/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:149/sec_drop_blocks_instance_of/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:158/sec_drop_blocks_nil/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:167/sec_drop_blocks_frozen/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:176/sec_drop_blocks_equal/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:185/sec_drop_blocks_eql/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:194/sec_drop_blocks_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:204/sec_drop_blocks___send__/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:213/sec_drop_blocks_public_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:222/sec_drop_blocks_instance_eval/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:232/sec_drop_blocks_instance_exec/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:241/sec_drop_blocks_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:250/sec_drop_blocks_public_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:259/sec_drop_blocks_singleton_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:268/sec_drop_blocks_instance_variable_get/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:278/sec_drop_blocks_instance_variable_set/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:287/sec_drop_blocks_instance_variable_defined/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:296/sec_drop_blocks_instance_variables/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:305/sec_drop_blocks_freeze/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:314/sec_drop_blocks_clone/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:323/sec_drop_blocks_dup/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:332/sec_drop_blocks_extend/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:341/sec_drop_blocks_define_singleton_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:350/sec_drop_blocks_tap/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:359/sec_drop_blocks_then/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:368/sec_drop_blocks_yield_self/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:377/sec_drop_blocks_enum_for/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:386/sec_drop_blocks_to_enum/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:395/sec_drop_blocks_display/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:406/sec_drop_allows_name/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:416/sec_drop_allows_price/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:425/sec_drop_secret_ivar_not_exposed/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:438/sec_drop_internal_state_ivar_not_exposed/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:452/sec_bracket_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:462/sec_bracket_blocks_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:471/sec_bracket_blocks___send__/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:480/sec_bracket_blocks_instance_eval/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:489/sec_bracket_blocks_instance_variable_get/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:498/sec_bracket_blocks_instance_variables/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:507/sec_bracket_blocks_object_id/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:516/sec_bracket_blocks_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:525/sec_bracket_blocks_public_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:534/sec_bracket_blocks_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:543/sec_bracket_blocks_singleton_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:552/sec_bracket_allows_whitelisted/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:566/sec_chain_nested_allows_safe_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:576/sec_chain_nested_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:585/sec_chain_nested_blocks_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:594/sec_chain_nested_blocks_instance_eval/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:603/sec_chain_nested_blocks_object_id/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:612/sec_chain_array_class_blocked/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:622/sec_chain_safe_method_then_string_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:632/sec_chain_deep_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:646/sec_if_class_is_falsy/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:656/sec_if_send_is_falsy/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:665/sec_if_respond_to_is_falsy/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:674/sec_if_methods_is_falsy/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:683/sec_if_instance_variables_is_falsy/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:692/sec_for_over_methods_yields_nothing/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:702/sec_for_over_instance_variables_yields_nothing/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:711/sec_class_equality_is_false/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:720/sec_methods_contains_is_false/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:729/sec_methods_size_is_zero/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:739/sec_instance_variables_size_is_zero/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:752/sec_assign_class_is_nil/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:761/sec_assign_send_is_nil/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:770/sec_assign_instance_eval_is_nil/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:779/sec_assign_object_id_is_nil/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:788/sec_capture_class_is_empty/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:797/sec_capture_methods_is_empty/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:806/sec_map_class_from_drop_array/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:816/sec_map_name_from_drop_array/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:830/sec_default_filter_on_blocked_property/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:840/sec_default_filter_on_allowed_property/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:849/sec_upcase_on_allowed_property/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:858/sec_upcase_on_blocked_property/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:868/sec_append_on_blocked_property/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:878/sec_size_filter_on_drop/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:988/sec_wide_open_object_name_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1005/sec_wide_open_object_secret_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1018/sec_wide_open_object_system_call_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1031/sec_wide_open_object_class_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1044/sec_wide_open_object_send_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1057/sec_unsafe_hash_like_name_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1071/sec_unsafe_hash_like_secret_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1084/sec_unsafe_hash_like_class_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1097/sec_unsafe_hash_like_send_raises_no_to_liquid [error_mode=strict2]/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1114/sec_to_liquid_hash_exposes_keys/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1124/sec_to_liquid_hash_exposes_second_key/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1133/sec_to_liquid_hash_blocks_object_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1143/sec_to_liquid_hash_blocks_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1152/sec_to_liquid_hash_blocks_instance_eval/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1161/sec_to_liquid_string_size/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1171/sec_to_liquid_array_size/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1180/sec_to_liquid_array_first/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1189/sec_to_liquid_nil_blocks_all/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1199/sec_to_liquid_nil_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1212/sec_fake_drop_blocks_name/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1224/sec_fake_drop_blocks_secret/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1233/sec_fake_drop_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1246/sec_enumerable_drop_allows_defined_method/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1255/sec_enumerable_drop_blocks_class/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1264/sec_enumerable_drop_blocks_send/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/security_drops.yml:1273/sec_enumerable_drop_blocks_methods/strict2/raise",
+      "sourceDigest": "57224205387a61dba9e7670d93a704c7fb844f299d21bc8fe6f34ac149735002",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:1274/ContextTest#test_length_query_294fd3e7/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:1289/ContextTest#test_length_query_8ee139be/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:1321/ContextTest#test_ranges_46e8b42a/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:1871/ExpressionTest#test_range_2c5ffd3f/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:2562/ForTagTest#test_for_with_drop_value_range_52a95a35/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:2681/ForTagTest#test_iterate_with_each_when_no_limit_applied_4b504dbf/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:2713/ForTagTest#test_iterate_with_load_slice_returns_same_results_as_without_e99b5d3d/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:2730/ForTagTest#test_iterate_with_load_slice_when_limit_and_offset_applied_e99b5d3d/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:2747/ForTagTest#test_iterate_with_load_slice_when_limit_applied_fd17a528/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3173/HashRenderingTest#test_render_hash_with_array_values_hash_4362e37f/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3185/HashRenderingTest#test_render_hash_with_hash_key_e0cefbd9/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3209/HashRenderingTest#test_render_hash_with_symbol_keys_and_integer_values_904aa51d/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3233/HashRenderingTest#test_render_recursive_hash_9ab3d795/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3245/HashRenderingTest#test_rendering_hash_with_custom_to_s_method_uses_custom_to_s_c2ef71b8/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:3256/HashRenderingTest#test_rendering_hash_without_custom_to_s_uses_default_inspect_5098df4b/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:4193/IncludeTagTest#test_render_tag_renders_error_with_template_name_c34cdb86/strict2/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:4207/IncludeTagTest#test_render_tag_renders_error_with_template_name_from_template_factory_8842ca42/strict2/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:4974/RenderTagTest#test_render_tag_for_drop_cf2ab489/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5008/RenderTagTest#test_render_tag_renders_error_with_template_name_79f1a430/strict2/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "error-drop-inline",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "recovered-render-error",
+        "materializations": 1,
+        "reportSHA256": "236868029c65cc34c623f8b187bdea030fbaa3f1e8eded377b99caaa9c0b20ec"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5021/RenderTagTest#test_render_tag_renders_error_with_template_name_from_template_factory_dacc144e/strict2/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5063/RenderTagTest#test_render_tag_with_drop_e577945d/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5212/StandardFiltersTest#test_at_least_73914ab2/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5224/StandardFiltersTest#test_at_least_a060ad5f/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5236/StandardFiltersTest#test_at_least_aaf61adc/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5248/StandardFiltersTest#test_at_most_2d96296b/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5260/StandardFiltersTest#test_at_most_5574738c/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5272/StandardFiltersTest#test_at_most_8295a338/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5328/StandardFiltersTest#test_ceil_cb3952da/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5352/StandardFiltersTest#test_default_18953643/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5370/StandardFiltersTest#test_default_ce94fa11/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5388/StandardFiltersTest#test_default_handle_false_b5a82ccc/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5400/StandardFiltersTest#test_default_handle_false_d4715f99/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5430/StandardFiltersTest#test_divided_by_d11a1702/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5512/StandardFiltersTest#test_first_and_last_call_to_liquid_ab31c0ca/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5523/StandardFiltersTest#test_first_and_last_call_to_liquid_e68e43c2/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5566/StandardFiltersTest#test_floor_636680d1/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5748/StandardFiltersTest#test_map_calls_to_liquid_04fbf4cc/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5797/StandardFiltersTest#test_minus_bb1d552b/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5824/StandardFiltersTest#test_modulo_b3186ea4/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:5885/StandardFiltersTest#test_plus_e90b7ed6/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:6005/StandardFiltersTest#test_round_597b1190/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:6025/StandardFiltersTest#test_round_bd878af6/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:6061/StandardFiltersTest#test_sort_works_on_enumerables_83b00155/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:6199/StandardFiltersTest#test_times_02542210/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:6247/StandardFiltersTest#test_truncate_calls_to_liquid_7e3b528b/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:7137/StandardTagTest#test_size_of_hash_f93beacd/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:7333/TableRowTest#test_enumerable_drop_549595e3/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:7543/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_3da5d491/warn/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:7550/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_8c42c394/warn/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:7557/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_c9649632/warn/inline",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8359/VariableTest#test_case_tag_calls_to_liquid_value_b1c40961/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8380/VariableTest#test_double_nested_variable_lookup_b9f99226/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8407/VariableTest#test_dynamic_find_var_with_drop_4ca2f954 [error_mode=strict]/strict/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8407/VariableTest#test_dynamic_find_var_with_drop_4ca2f954 [error_mode=lax]/lax/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8428/VariableTest#test_dynamic_find_var_with_drop_d1fd92c9 [error_mode=strict]/strict/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8428/VariableTest#test_dynamic_find_var_with_drop_d1fd92c9 [error_mode=lax]/lax/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8523/VariableTest#test_if_tag_calls_to_liquid_value_1a8da583/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8537/VariableTest#test_if_tag_calls_to_liquid_value_2159fa48/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8551/VariableTest#test_if_tag_calls_to_liquid_value_2914c337/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8565/VariableTest#test_if_tag_calls_to_liquid_value_5996f88f/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8582/VariableTest#test_if_tag_calls_to_liquid_value_9f617983/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8596/VariableTest#test_if_tag_calls_to_liquid_value_a9e57fd0/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8612/VariableTest#test_if_tag_calls_to_liquid_value_beb794c0/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8629/VariableTest#test_if_tag_calls_to_liquid_value_d3fc1f6e/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8643/VariableTest#test_if_tag_calls_to_liquid_value_e162081a/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8657/VariableTest#test_if_tag_calls_to_liquid_value_ebf53802/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8671/VariableTest#test_if_tag_calls_to_liquid_value_ffebcff7/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8740/VariableTest#test_render_symbol_979c79f5/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8781/VariableTest#test_unless_tag_calls_to_liquid_value_037c21b9/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8795/VariableTest#test_unless_tag_calls_to_liquid_value_33d2b786/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8821/VariableTest#test_variable_lookup_calls_to_liquid_value_00c93c8b/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8838/VariableTest#test_variable_lookup_calls_to_liquid_value_06333239/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8856/VariableTest#test_variable_lookup_calls_to_liquid_value_64e7e768/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8870/VariableTest#test_variable_lookup_calls_to_liquid_value_d8c9669a/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8884/VariableTest#test_variable_lookup_calls_to_liquid_value_e91aed83/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/specs.yml:8937/VariableTest#test_variable_render_calls_to_liquid_162ab771/strict2/raise",
+      "sourceDigest": "afe440dafcdadfd3f85e0a08bb35f49f2825ae889fd422b5316d5e371ed28f55",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:63/StandardFilterTest#test_abs_6ba1148f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:88/StandardFilterTest#test_abs_96155aac/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:110/StandardFilterTest#test_abs_b78aab2f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:125/StandardFilterTest#test_abs_d684b86e/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:152/StandardFilterTest#test_base64_decode_0524bc39/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:167/StandardFilterTest#test_base64_decode_3a53835f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:188/StandardFilterTest#test_base64_encode_05ef1d71/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:217/StandardFilterTest#test_base64_encode_1107ae74/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:288/StandardFilterTest#test_base64_encode_aa1e677f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:324/StandardFilterTest#test_base64_encode_ede76037/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:357/StandardFilterTest#test_base64_url_safe_decode_57dc2594/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:366/StandardFilterTest#test_base64_url_safe_decode_5de5c9e0/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:375/StandardFilterTest#test_base64_url_safe_decode_844ec741/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:390/StandardFilterTest#test_base64_url_safe_encode_266d1c9e/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:450/StandardFilterTest#test_base64_url_safe_encode_4b6afce9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:498/StandardFilterTest#test_base64_url_safe_encode_9475bdaf/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:525/StandardFilterTest#test_base64_url_safe_encode_e58b3bc5/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:541/StandardFilterTest#test_capitalize_0d6f28a1/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:562/StandardFilterTest#test_capitalize_223a986d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:571/StandardFilterTest#test_capitalize_38a9a61f/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:675/StandardFilterTest#test_capitalize_d51d0c95/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:685/StandardFilterTest#test_ceil_1f10ca85/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:694/StandardFilterTest#test_ceil_20e88c97/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:721/StandardFilterTest#test_ceil_3ca96ef2/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:772/StandardFilterTest#test_ceil_c883baf9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:831/StandardFilterTest#test_compact_1c685a84/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:841/StandardFilterTest#test_compact_2b01e238/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:902/StandardFilterTest#test_compact_4b7213b2/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:959/StandardFilterTest#test_compact_e0dc2496/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1006/StandardFilterTest#test_date_1b4f436a/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1097/StandardFilterTest#test_date_917287b4/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1104/StandardFilterTest#test_date_b43c9613/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1160/StandardFilterTest#test_default_2858b76a/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1204/StandardFilterTest#test_default_43dbbb97/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1229/StandardFilterTest#test_default_46899810/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1326/StandardFilterTest#test_default_a8c7a8f0/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1370/StandardFilterTest#test_downcase_0d719d03/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1411/StandardFilterTest#test_downcase_15239390/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1457/StandardFilterTest#test_downcase_86297cb2/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1517/StandardFilterTest#test_downcase_f801a0a9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1532/StandardFilterTest#test_escape_23020003/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1547/StandardFilterTest#test_escape_37b22d4f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1587/StandardFilterTest#test_escape_80764d48/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1616/StandardFilterTest#test_escape_8d927a70/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1636/StandardFilterTest#test_escape_9c32bd69/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1717/StandardFilterTest#test_escape_once_23d17827/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1744/StandardFilterTest#test_escape_once_697ef598/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1805/StandardFilterTest#test_escape_once_a7f64e39/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1814/StandardFilterTest#test_escape_once_ae0ac47d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1858/StandardFilterTest#test_first_06bd56f6/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1874/StandardFilterTest#test_first_1067f918/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1923/StandardFilterTest#test_first_916bafce/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:1985/StandardFilterTest#test_first_d2020706/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2027/StandardFilterTest#test_floor_1efc10a5/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2076/StandardFilterTest#test_floor_78b085eb/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2118/StandardFilterTest#test_floor_9885b994/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2146/StandardFilterTest#test_floor_f89d3c3b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2155/StandardFilterTest#test_h_15d599cb/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2176/StandardFilterTest#test_h_1a4be4f2/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2235/StandardFilterTest#test_h_60dd6e2d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2272/StandardFilterTest#test_h_a316dc8f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2278/StandardFilterTest#test_h_b96bc5dd/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2360/StandardFilterTest#test_join_2b25189e/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2420/StandardFilterTest#test_join_77c17e2e/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2457/StandardFilterTest#test_join_a2cdd87d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2466/StandardFilterTest#test_join_a43bcd49/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2487/StandardFilterTest#test_join_cb69175e/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2549/StandardFilterTest#test_last_1aad0557/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2558/StandardFilterTest#test_last_1b048787/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2607/StandardFilterTest#test_last_9633012b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2669/StandardFilterTest#test_last_faf44a00/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2685/StandardFilterTest#test_lstrip_1db23b1b/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2735/StandardFilterTest#test_lstrip_65d1c7bc/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2798/StandardFilterTest#test_lstrip_f2105bdc/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2825/StandardFilterTest#test_lstrip_fc2aa840/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2888/StandardFilterTest#test_newline_to_br_5b36a66d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2905/StandardFilterTest#test_newline_to_br_83ccb915/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2936/StandardFilterTest#test_newline_to_br_8eedc515/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:2986/StandardFilterTest#test_newline_to_br_f8ffd2fd/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3155/StandardFilterTest#test_reverse_3f288885/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3170/StandardFilterTest#test_reverse_594e414a/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3199/StandardFilterTest#test_reverse_612dbe14/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3241/StandardFilterTest#test_reverse_d714ad07/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3272/StandardFilterTest#test_reverse_fd89e13b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3294/StandardFilterTest#test_round_5ddf32ab/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3312/StandardFilterTest#test_round_64f03f6e/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3333/StandardFilterTest#test_round_8aba8608/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3362/StandardFilterTest#test_round_b6dcafc2/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3416/StandardFilterTest#test_rstrip_036978d1/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3426/StandardFilterTest#test_rstrip_0e32369a/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3475/StandardFilterTest#test_rstrip_7ad0647f/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3557/StandardFilterTest#test_rstrip_f0082356/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3584/StandardFilterTest#test_size_195c1efe/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3608/StandardFilterTest#test_size_4b6a3ab5/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3637/StandardFilterTest#test_size_b7364ced/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3674/StandardFilterTest#test_size_c7f49a2c/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3825/StandardFilterTest#test_slice_9a45fe16/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3839/StandardFilterTest#test_slice_9ae49561/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3861/StandardFilterTest#test_slice_a50bb253/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3911/StandardFilterTest#test_slice_bf11ad61/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3925/StandardFilterTest#test_slice_c717f177/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:3947/StandardFilterTest#test_slice_ceb36ea1/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4036/StandardFilterTest#test_sort_024d7e26/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4119/StandardFilterTest#test_sort_46b0f3a8/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4237/StandardFilterTest#test_sort_efc9f89f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4253/StandardFilterTest#test_sort_fb1e1cd5/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4327/StandardFilterTest#test_sort_natural_48a5142c/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4361/StandardFilterTest#test_sort_natural_7fd0dce9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4370/StandardFilterTest#test_sort_natural_889ad3ca/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4469/StandardFilterTest#test_sort_natural_cbf957fa/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4559/StandardFilterTest#test_squish_0e1e6986/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4594/StandardFilterTest#test_squish_2f7a40bd/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4624/StandardFilterTest#test_squish_56b51f7e/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4642/StandardFilterTest#test_squish_89962bea/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4697/StandardFilterTest#test_strip_1a8b7162/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4741/StandardFilterTest#test_strip_8bb8481a/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4762/StandardFilterTest#test_strip_b7e5355b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4806/StandardFilterTest#test_strip_cc6a0931/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4887/StandardFilterTest#test_strip_html_40ce4cd8/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4958/StandardFilterTest#test_strip_html_9cd554a9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4967/StandardFilterTest#test_strip_html_a3081ea4/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:4991/StandardFilterTest#test_strip_html_da209c4c/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5077/StandardFilterTest#test_strip_newlines_69934cfc/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5120/StandardFilterTest#test_strip_newlines_971cf58c/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5144/StandardFilterTest#test_strip_newlines_b3714b5b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5154/StandardFilterTest#test_strip_newlines_cb41d77d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5290/StandardFilterTest#test_sum_5d1d7992/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5318/StandardFilterTest#test_sum_7973916b/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5344/StandardFilterTest#test_sum_819995f4/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5353/StandardFilterTest#test_sum_81cb6a64/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5414/StandardFilterTest#test_sum_9c500553/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5447/StandardFilterTest#test_sum_a7ee6ebb/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5478/StandardFilterTest#test_sum_b8f14e10/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5498/StandardFilterTest#test_sum_bd1b8229/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5538/StandardFilterTest#test_sum_e7abf7a6/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5574/StandardFilterTest#test_sum_f2dd6156/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5621/StandardFilterTest#test_truncate_3e0e603a/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5638/StandardFilterTest#test_truncate_55ffdcec/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5696/StandardFilterTest#test_truncate_ad1f50ca/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5737/StandardFilterTest#test_truncate_f061a4c6/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5796/StandardFilterTest#test_truncate_f929a304/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5864/StandardFilterTest#test_truncatewords_51d418ae/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5879/StandardFilterTest#test_truncatewords_562358d6/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:5952/StandardFilterTest#test_truncatewords_a9fef756/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6006/StandardFilterTest#test_truncatewords_e98ee040/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6034/StandardFilterTest#test_uniq_0b90eef9/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "string-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f0b7ac5d581279d53763cb7264738e1ae61c9657e15b3e5659237ba090fb44d7"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6101/StandardFilterTest#test_uniq_7a8a52d6/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6126/StandardFilterTest#test_uniq_7c8b4bc8/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6155/StandardFilterTest#test_uniq_879d03c3/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "string-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "f0b7ac5d581279d53763cb7264738e1ae61c9657e15b3e5659237ba090fb44d7"
+      }
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6168/StandardFilterTest#test_uniq_9c0e7ae6/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6210/StandardFilterTest#test_uniq_dcc88f46/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6248/StandardFilterTest#test_uniq_fd41650f/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6270/StandardFilterTest#test_upcase_292e3d8c/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6279/StandardFilterTest#test_upcase_2a366551/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6304/StandardFilterTest#test_upcase_2e46f4ea/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6360/StandardFilterTest#test_upcase_7feb0e13/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6426/StandardFilterTest#test_url_decode_1ef18eac/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6493/StandardFilterTest#test_url_decode_77b13aa7/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6508/StandardFilterTest#test_url_decode_8ba01dcc/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6523/StandardFilterTest#test_url_decode_b76522ca/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6558/StandardFilterTest#test_url_decode_c140db7c/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6618/StandardFilterTest#test_url_encode_250a9d9c/strict2/inline",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6659/StandardFilterTest#test_url_encode_3f8365d8/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6727/StandardFilterTest#test_url_encode_cfe184f6/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6739/StandardFilterTest#test_url_encode_de0e4741/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/standard_filters.yml:6748/StandardFilterTest#test_url_encode_eb214d0d/strict2/raise",
+      "sourceDigest": "ff260a61af8171a43c778b5fe8853920de11d0d5ef59fb2380ada9081884664a",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:160/filter_drop_global_first_last_size/strict2/raise",
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:364/filter_integerdrop_first_last_size/strict2/raise",
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby/specs/liquid_ruby/variable_type_filters.yml:384/filter_booleandrop_first_last_size/strict2/raise",
+      "sourceDigest": "aa8ad569885af2b1083e19d6e048cffd44b164a9a399321fbbbd9fa7e02428ba",
+      "parserMode": "strict2",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/specs.yml:409/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_012a518a/warn/inline",
+      "sourceDigest": "afe50b4677de8b43e8514fff9f5c5cc7b48bb7848abdb60bd0822ba3b2a5f229",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/specs.yml:418/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_5ff6df98/warn/inline",
+      "sourceDigest": "afe50b4677de8b43e8514fff9f5c5cc7b48bb7848abdb60bd0822ba3b2a5f229",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/specs.yml:427/TableRowTest#test_table_row_renders_correct_error_message_for_invalid_parameters_848b46e7/warn/inline",
+      "sourceDigest": "afe50b4677de8b43e8514fff9f5c5cc7b48bb7848abdb60bd0822ba3b2a5f229",
+      "parserMode": "warn",
+      "renderMode": "inline",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:141/lax_filter_drop_global_first_last_size/lax/raise",
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:482/lax_filter_integerdrop_first_last_size/lax/raise",
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": null
+    },
+    {
+      "caseID": "liquid_ruby_lax/specs/liquid_ruby_lax/variable_type_filters.yml:500/lax_filter_booleandrop_first_last_size/lax/raise",
+      "sourceDigest": "1b96874128d4d570fddfb682267bc764b2c9ee6e30e14a7a2d26d49a4cf91f14",
+      "parserMode": "lax",
+      "renderMode": "raise",
+      "historicalFullSuite": "not-executed",
+      "currentFullSuite": "not-run",
+      "targetedEvidence": {
+        "lane": "boolean-drop",
+        "swiftComparator": "matched",
+        "rubyComparator": "matched",
+        "outcome": "matched-fixture-expectation",
+        "materializations": 1,
+        "reportSHA256": "31b574a19f4a6088dbc627b32231f593f01f16be9b49791eafe6d894f7d4c129"
+      }
+    }
+  ]
+}

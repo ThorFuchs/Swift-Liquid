@@ -58,6 +58,23 @@ private func makeIntegerNode(_ value: Int) -> LiquidHostNode {
 
 @Suite("Explicit host objects")
 struct HostObjectTests {
+    @Test func unregisteredHostMembersStayMissingAcrossLiquidOperations() async throws {
+        let accesses = DynamicAccessCounter()
+        let host = LiquidHostObject("d", properties: [
+            LiquidHostProperty("name") { await accesses.record("name"); return "visible" }
+        ])
+        let source = "{{ d.name }}|[{{ d.class }}]|[{{ d['send'] }}]|[{{ d.secret }}]|{% if d.methods %}bad{% else %}missing{% endif %}|{% assign x = d.object_id %}[{{ x }}]|{{ d.instance_eval | default: 'safe' }}|{% for item in d.private_methods %}bad{% else %}empty{% endfor %}"
+        for mode in [LiquidSyntaxMode.lax, .strict, .strict2] {
+            let engine = LiquidEngine()
+            #expect(try await engine.render(template: source, hostObjects: [host], syntaxMode: mode) == "visible|[]|[]|[]|missing|[]|safe|empty")
+        }
+        #expect(await accesses.keys == ["name", "name", "name"])
+
+        // Names are not a denylist: trusted hosts may expose a property explicitly.
+        let explicit = LiquidHostObject("d", properties: [LiquidHostProperty("class") { "registered" }])
+        #expect(try await LiquidEngine().render(template: "{{ d.class }}|{{ d['class'] }}", hostObjects: [explicit]) == "registered|registered")
+    }
+
     @Test func optedInHostWithBindingPreservesPartialRecoveryAndIsolation() async throws {
         let host = LiquidHostObject("source", partialBindingIndexer: LiquidHostIndexer { key in
             if key == .string("visible") { return "yes" }

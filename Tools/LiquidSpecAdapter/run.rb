@@ -15,51 +15,22 @@ options = { suites: %w[basics liquid_ruby liquid_ruby_lax parser_errors partials
 OptionParser.new do |p|
   p.on('--binary PATH') { |v| options[:binary] = v }
   p.on('--output PATH') { |v| options[:output] = v }
+  p.on('--spec-path PATH') { |v| options[:spec_path] = v }
   p.on('--suites LIST') { |v| options[:suites] = v.split(',') }
 end.parse!
 require 'liquid'
 require 'active_support/all'
 require 'liquid/spec'
 require 'liquid/spec/deps/liquid_ruby'
-require 'liquid/spec/cli/runner'
 require_relative 'adapter'
 require_relative 'admission'
+require_relative 'inventory_fixtures'
+require_relative 'safe_runner_spec'
 raise 'Wrong Ruby Liquid version' unless Liquid::VERSION == '5.14.0'
 raise 'Wrong liquid-spec version' unless Liquid::Spec::VERSION == '2.0.0'
+raise 'Only the pinned complete suite selection is supported' unless options[:suites] == LQ1FixtureInventory::SUITES && options[:seed] == 15401
+raise 'A pinned spec checkout is required' unless options[:spec_path]
 output = File.expand_path(options.fetch(:output)); FileUtils.mkdir_p(output)
-LiquidSpec.configure do |config|
-  config.error_modes = LQ1::PARSER_MODES
-  config.render_error_modes = LQ1::RENDER_MODES
-  config.missing_features = LQ1::MISSING_FEATURES.keys
-end
-
-# Strict transport admission, before JSON generation or DropProxy coercion.
-def transport_reason(value, ancestors = Set.new, depth = 0)
-  return 'unsupported: JSON context exceeds adapter depth 64' if depth > 64
-  case value
-  when NilClass, TrueClass, FalseClass then nil
-  when Integer then 'unsupported-by-domain: integer outside signed 64-bit Int' unless (-(2**63)...2**63).cover?(value)
-  when Float then 'unsupported-by-domain: nonfinite float' unless value.finite?
-  when String
-    return "transport-inapplicable: Ruby #{value.class} is not a plain JSON string" unless value.instance_of?(String)
-    'transport-inapplicable: non-UTF8/binary string' unless value.valid_encoding? && (value.encoding == Encoding::UTF_8 || value.ascii_only?)
-  when Array, Hash
-    unless value.instance_of?(Array) || value.instance_of?(Hash)
-      return "transport-inapplicable: Ruby #{value.class} is not a plain JSON container"
-    end
-    return 'transport-inapplicable: cyclic JSON value' if ancestors.include?(value.object_id)
-    path = ancestors.dup.add(value.object_id)
-    items = value.is_a?(Hash) ? value.to_a.flatten(1) : value
-    return 'transport-inapplicable: non-string object key' if value.is_a?(Hash) && value.keys.any? { |key| !key.instance_of?(String) }
-    items.each do |child|
-      reason = transport_reason(child, path, depth + 1)
-      return reason if reason
-    end
-    nil
-  else "transport-inapplicable: Ruby #{value.class} has no JSON value equivalent"
-  end
-end
-
 # Evidence encoding only: never turn binary values into an engine context.
 def receipt_value(value)
   case value
@@ -116,45 +87,43 @@ reference.on_render do |ctx, assigns, render_options|
   end
 end
 reference.ensure_setup!
+Liquid::Spec::ClassRegistry.singleton_class.prepend(LQ1::ForbidFixtureRegistry)
 rows = []; runs = []
 admission = LQ1::Admission.load(File.join(__dir__, 'ExclusionCandidates.json'))
 seen_admissions = Set.new
+LQ1FixtureInventory.run(options.fetch(:spec_path), File.join(output, 'PREPARATION_INVENTORY.json')) do |jobs, inventory|
 Liquid::Spec::TimeFreezer.freeze_spec_time do
   options[:suites].each do |suite|
-    specs = Liquid::Spec::SpecLoader.load_all(suite: suite.to_sym, random_seed: options[:seed])
-    variants = specs.flat_map do |spec|
-      expanded = Liquid::Spec::CLI::Runner.send(:expand_error_mode_variants, [spec])
-      expanded.empty? ? [spec] : expanded # Preserve unsupported :warn records in the matrix.
-    end
+    variants = jobs.select { |job| job[:suite] == suite }
     start = rows.size
-    variants.each_with_index do |spec, index|
+    variants.each_with_index do |job, index|
       bridge.reset_observation
-      relative = spec.source_file.sub(%r{\A.*?/specs/}, 'specs/')
-      key = "#{suite}/#{relative}:#{spec.line_number}/#{spec.name}/#{spec.error_mode}/#{spec.render_errors ? 'inline' : 'raise'}"
+      prepared = job[:row]
+      item = job[:item]
+      selection = prepared[:selection]
+      relative = prepared[:sourceLocation][:file]
+      key = prepared[:caseID]
+      environment = if selection[:selected]
+        LQ1::SafeFixtureValues.materialize_environment(item['environment'] || {}, allow_long: selection[:admission] == 'materialized_long_string')
+      else
+        {}
+      end
+      complexity = item['complexity'] || job[:suiteData]['minimum_complexity'] || job[:metadata]['minimum_complexity'] || job[:metadata]['complexity'] || 1000
+      spec = LQ1::SafeRunnerSpec.new(name: job[:name], template: item['template'], template_name: item['template_name'],
+        expected: item.key?('expected') ? item['expected'] : job[:defaults]['expected'], expected_pattern: item['expected_pattern'],
+        errors: item['errors'] || {}, complexity: complexity, error_mode: job[:mode].to_sym, render_errors: job[:inline],
+        features: job[:tags], source_file: job[:path], line_number: prepared[:sourceLocation][:line],
+        prepared_environment: environment, raw_filesystem: selection[:selected] ? (item['filesystem'] || {}) : {}, raw_resource_limits: {})
       bridge.case_key = key
       row = { caseID: key, suite: suite, case: spec.name, parserMode: spec.error_mode, renderMode: spec.render_errors ? 'inline' : 'raise',
         featureTags: spec.features.map(&:to_s).sort, selected: false, reason: nil, adapterTransport: 'JSON-RPC 2.0 / protocol 1.0 / primitive JSON only',
         expectedCategory: expected_category(spec), observedCategory: nil, sourceLocation: { file: relative, line: spec.line_number },
         expectation: { output: spec.expected, outputPattern: spec.expected_pattern, errors: spec.errors },
         complexity: spec.complexity, sourceDigest: Digest::SHA256.file(spec.source_file).hexdigest, resultDigest: nil }
-      missing = spec.features & LQ1::MISSING_FEATURES.keys
-      admitted = LQ1::Admission.check(admission[key], spec, row[:sourceDigest], missing)
+      admitted = selection[:admission]&.to_sym
       seen_admissions.add(key) if admitted
-      missing = missing - LQ1::Admission.waived_features(admitted)
-      reason = missing.empty? ? nil : missing.map { |feature| "#{feature}: #{LQ1::MISSING_FEATURES.fetch(feature)}" }.join('; ')
-      reason ||= 'unsupported: declared parser mode is outside lax/strict/strict2' unless LQ1::PARSER_MODES.include?(spec.error_mode)
-      unless reason
-        begin
-          reason = transport_reason(spec.instantiate_environment)
-          reason ||= transport_reason(spec.instantiate_filesystem.to_h) if [:unused_filesystem_callback, :comment_only_filesystem_callback, :missing_file_diagnostics].include?(admitted)
-          reason ||= 'transport-inapplicable: custom filesystem error callback' if ![:unused_filesystem_callback, :comment_only_filesystem_callback].include?(admitted) && spec.raw_filesystem.is_a?(Hash) && spec.raw_filesystem.key?('_error-message')
-          reason ||= 'transport-inapplicable: template factory callback' if spec.raw_template_factory
-          reason ||= 'unsupported: Ruby resource-score policy has no verified Swift mapping' unless spec.raw_resource_limits.empty?
-        rescue StandardError => e
-          reason = "operational-error: fixture instantiation failed: #{e.class}: #{e.message}"
-        end
-      end
-      raise "Admitted case failed transport preflight: #{key}: #{reason}" if admitted && reason
+      reason = selection[:reason]
+      row[:expectationMaterialization] = 'deferred-excluded-generator' if item.key?('generate')
       if reason
         row[:reason] = reason
         row[:observedCategory] = if reason.include?('transport-inapplicable:') then 'transport-inapplicable' elsif reason.include?('unsupported-by-domain:') then 'unsupported-by-domain' elsif reason.include?('operational-error:') then 'operational-error' else 'unsupported' end
@@ -187,21 +156,16 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
         row[:actual] = result.output
         row[:expected] = result.expected
         row[:reportedErrors] = bridge.detail
-        if %w[operational-error protocol-error domain-divergence compile].include?(row[:observedCategory])
-          row[:qualificationComparison] = row[:observedCategory] == 'domain-divergence' ? 'domain-divergence' : 'operational-error'
-        elsif %w[parse-error render-error].include?(row[:expectedCategory]) && row[:expectedCategory] != row[:observedCategory]
-          row[:qualificationComparison] = 'mismatched'
-        end
+        row[:qualificationComparison] = LQ1::SafeRunnerVerdict.classify(raw_passed: result.passed?, expected: row[:expectedCategory], observed: row[:observedCategory])
         # Independent pinned-Ruby result, with the same upstream comparator and clock.
         reference_observation.clear
         ref = reference.run_single(spec)
         row[:referenceObservedCategory] = reference_observation[:category]
         row[:referenceReportedErrors] = reference_observation[:error] || reference_observation[:errors]
-        reference_phase_matches = !%w[parse-error render-error].include?(row[:expectedCategory]) || row[:expectedCategory] == reference_observation[:category]
         row[:referenceUpstreamVerdict] = receipt_value({ status: ref.status, passed: ref.passed?, output: ref.output, expected: ref.expected })
         row[:referenceUpstreamVerdict][:sha256] = Digest::SHA256.hexdigest(JSON.generate(row[:referenceUpstreamVerdict]))
         row[:referenceComparison] = ref.passed? ? 'matched' : 'mismatched'
-        row[:referenceQualificationComparison] = ref.passed? && reference_phase_matches ? 'matched' : 'mismatched'
+        row[:referenceQualificationComparison] = LQ1::SafeRunnerVerdict.classify(raw_passed: ref.passed?, expected: row[:expectedCategory], observed: reference_observation[:category])
         row[:referenceActual] = ref.output unless row[:referenceQualificationComparison] == 'matched' && row[:qualificationComparison] == 'matched'
         if row[:qualificationComparison] != 'matched'
           row[:failureCategory] = row[:referenceQualificationComparison] == 'matched' ? 'unresolved' : 'test-suite-concern'
@@ -215,7 +179,8 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
     selected = rows[start..]
     failures = selected.select { |r| r[:selected] && r[:qualificationComparison] != 'matched' }
     first = failures.map { |r| r[:complexity] }.min
-    summary = { suite: suite, loadedSourceCases: specs.size, expandedVariants: variants.size,
+    source_cases = inventory[:files].select { |file| file[:path].start_with?("specs/#{suite}/") }.sum { |file| file[:sourceCases] }
+    summary = { suite: suite, loadedSourceCases: source_cases, expandedVariants: variants.size,
       selected: selected.count { |r| r[:selected] }, qualificationComparisons: selected.map { |r| r[:qualificationComparison] }.tally, comparisons: selected.map { |r| r[:comparison] }.tally,
       observedCategories: selected.map { |r| r[:observedCategory] }.tally,
       lowestFailingEligibleComplexity: first, eligibleCasesClearBelow: first,
@@ -227,6 +192,7 @@ Liquid::Spec::TimeFreezer.freeze_spec_time do
     runs << summary
     warn JSON.generate(summary)
   end
+end
 end
 raise 'Admission candidate membership changed' unless seen_admissions == admission.keys.to_set
 shutdown_error = nil
@@ -240,8 +206,9 @@ ensure
 end
 File.write(File.join(output, 'ELIGIBILITY_MATRIX.json'), JSON.pretty_generate(rows) + "\n")
 report = { schemaVersion: 2, comparatorPolicy: 'comparison/upstreamVerdict preserve original result.passed?; qualificationComparison additionally rejects operational and parse/render-phase failures; supplemental dimensions never create passes', suiteVersion: Liquid::Spec::VERSION, rubyVersion: RUBY_DESCRIPTION, liquidVersion: Liquid::VERSION,
+  fixturePreparation: 'inert-selection-v1; excluded generators remain unevaluated',
   missingFeatures: LQ1::MISSING_FEATURES, featurePolicies: LQ1::FEATURE_POLICIES,
-  numericDomainPolicy: 'Int64 plus finite binary Double; context is preflighted; source-literal/arithmetic mismatches require individual domain review', parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / CLI::Runner.expand_error_mode_variants',
+  numericDomainPolicy: 'Int64 plus finite binary Double; context is preflighted; source-literal/arithmetic mismatches require individual domain review', parserModes: LQ1::PARSER_MODES, renderModes: LQ1::RENDER_MODES, runnerAPI: 'Liquid::Spec::AdapterRunner#run_single / inert fixture preparation',
   shutdownError: shutdown_error, suites: runs, gems: Gem.loaded_specs.transform_values { |s| s.version.to_s }, observedRows: rows.size }
 File.write(File.join(output, 'SPEC_RUNS.json'), JSON.pretty_generate(report) + "\n")
 puts JSON.generate(report.reject { |k, _| k == :missingFeatures })

@@ -5,7 +5,7 @@ from copy import deepcopy
 import json
 import unittest
 
-from review_liquid_spec import POLICY, eligibility_digest, evaluate
+from review_liquid_spec import POLICY, GENERATOR_EVIDENCE, eligibility_digest, historical_eligibility_digest, evaluate
 
 
 def examples():
@@ -62,6 +62,27 @@ class ReviewTests(unittest.TestCase):
         rows, policy = examples(); rows.append(deepcopy(rows[0]))
         with self.assertRaises(ValueError): evaluate(rows, policy)
         rows, policy = examples(); rows[0]['sourceDigest'] = 'changed'
+        with self.assertRaises(ValueError): evaluate(rows, policy)
+
+    def test_deferred_generators_only_project_historical_metadata(self):
+        rows, policy = examples()
+        evidence = json.loads(GENERATOR_EVIDENCE.read_text())
+        for item in evidence['cases']:
+            row = deepcopy(rows[-1])
+            row.update(caseID=item['caseID'], sourceDigest=item['sourceDigest'],
+                       sourceLocation={'file': 'drops', 'line': len(rows)},
+                       expectation={'output': item['expression'], 'outputPattern': None, 'errors': {}},
+                       expectationMaterialization='deferred-excluded-generator')
+            rows.append(row)
+        original = deepcopy(rows)
+        policy['expectedPopulation'] = len(rows)
+        policy['eligibilitySHA256'] = historical_eligibility_digest(rows, policy)[0]
+        result = evaluate(rows, policy)
+        self.assertEqual(rows, original)
+        self.assertEqual(len(result['deferredGeneratorEvidence']['cases']), 2)
+        rows[-1]['expectation']['output'] = 'changed'
+        with self.assertRaises(ValueError): evaluate(rows, policy)
+        rows = deepcopy(original); rows[-1]['selected'] = True
         with self.assertRaises(ValueError): evaluate(rows, policy)
 
 
