@@ -23,6 +23,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--predecessor-differential', type=Path, required=True)
     parser.add_argument('--original-wip-log', type=Path, required=True)
+    parser.add_argument('--prior-original-log', type=Path, required=True)
+    parser.add_argument('--expanded-wip-log', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     if args.output.exists():
@@ -48,6 +50,18 @@ def main():
             raise ValueError('raw reference or Swift observation changed: ' + str(key))
         if row['classification'] not in proposed['classifications'] or not row['reason']:
             raise ValueError('invalid classification: ' + str(key))
+    expanded_actual = {}
+    for line in args.expanded_wip_log.read_text().splitlines():
+        match = re.match(r'RECOVERY (\S+) (\S+) (.*)', line)
+        if match:
+            key = (match[1], match[2])
+            if key in expanded_actual: raise ValueError('duplicate expanded WIP observation')
+            expanded_actual[key] = match[3]
+    if set(expanded_actual) != set(earlier_rows):
+        raise ValueError('current expanded observation identities differ')
+    for key, observation in expanded_actual.items():
+        if observation != earlier_rows[key]['swift']['description']:
+            raise ValueError('current expanded observation changed: ' + str(key))
     originals = unique(json.loads(original.read_bytes())['cases'])
     observed = {}
     for line in args.original_wip_log.read_text().splitlines():
@@ -58,6 +72,15 @@ def main():
             observed[key] = match[3]
     if len(originals) != 96 or set(originals) != set(observed):
         raise ValueError('original 96 identities differ')
+    prior_observed = {}
+    for line in args.prior_original_log.read_text().splitlines():
+        match = re.match(r'QUOTED-STRING (\S+) (\S+) (.*)', line)
+        if match:
+            key = (match[1], match[2])
+            if key in prior_observed: raise ValueError('duplicate prior original observation')
+            prior_observed[key] = match[3]
+    if observed != prior_observed:
+        raise ValueError('current original byte or diagnostic observations differ from WIP evidence')
     original_rows = []
     for key, row in sorted(originals.items()):
         actual = observed[key]
