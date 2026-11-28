@@ -5,7 +5,9 @@ from copy import deepcopy
 import json
 import unittest
 
-from review_liquid_spec import POLICY, GENERATOR_EVIDENCE, eligibility_digest, historical_eligibility_digest, evaluate
+from review_liquid_spec import (POLICY, GENERATOR_EVIDENCE, DROP_EVIDENCE, eligibility_digest,
+                                historical_eligibility_digest, project_standard_drop_admissions,
+                                check_generator_preparation, evaluate)
 
 
 def examples():
@@ -84,6 +86,48 @@ class ReviewTests(unittest.TestCase):
         with self.assertRaises(ValueError): evaluate(rows, policy)
         rows = deepcopy(original); rows[-1]['selected'] = True
         with self.assertRaises(ValueError): evaluate(rows, policy)
+
+    def test_standard_drop_projection_fails_closed(self):
+        evidence = json.loads(DROP_EVIDENCE.read_text())
+        generators = {x['caseID']: x for x in json.loads(GENERATOR_EVIDENCE.read_text())['cases']}
+        rows = []
+        for previous in evidence['cases']:
+            row = deepcopy(previous)
+            row.update(selected=True, admission='guarded_standard_drop', comparison='matched',
+                       qualificationComparison='matched', referenceComparison='matched',
+                       referenceQualificationComparison='matched', upstreamVerdict={'passed': True},
+                       referenceUpstreamVerdict={'passed': True})
+            if row['caseID'] in generators:
+                row['expectation']['output'] = generators[row['caseID']]['historicalSeededOutput']
+                row['expectationMaterialization'] = 'historical-seeded-closed-materialization'
+            rows.append(row)
+        original = deepcopy(rows)
+        projected, info = project_standard_drop_admissions(rows)
+        self.assertEqual(len(info['cases']), 56)
+        self.assertEqual(rows, original)
+        self.assertTrue(all(not row['selected'] for row in projected))
+        for key, value in [('sourceDigest', 'changed'), ('parserMode', 'changed'),
+                           ('referenceQualificationComparison', 'operational-error'), ('selected', False)]:
+            changed = deepcopy(rows); changed[0][key] = value
+            with self.assertRaises(ValueError): project_standard_drop_admissions(changed)
+        changed = deepcopy(rows); changed.pop()
+        with self.assertRaises(ValueError): project_standard_drop_admissions(changed)
+        changed = deepcopy(rows)
+        generated = next(row for row in changed if row['caseID'] in generators)
+        generated['expectation']['output'] = 'wrong'
+        with self.assertRaises(ValueError): project_standard_drop_admissions(changed)
+
+    def test_generator_preparation_requires_exact_selected_cases(self):
+        cases = json.loads(GENERATOR_EVIDENCE.read_text())['cases']
+        rows = [{'caseID': item['caseID'], 'selected': True, 'admission': 'guarded_standard_drop',
+                 'expectationMaterialization': 'historical-seeded-closed-materialization'} for item in cases]
+        runs = {'fixturePreparation': 'inert-selection-v2; guarded standard Drop materialization; fixture expressions remain unevaluated'}
+        check_generator_preparation(runs, rows)
+        with self.assertRaises(ValueError): check_generator_preparation({'fixturePreparation': 'old'}, rows)
+        changed = deepcopy(rows); changed[0]['caseID'] = 'changed'
+        with self.assertRaises(ValueError): check_generator_preparation(runs, changed)
+        changed = deepcopy(rows); changed[0]['selected'] = False
+        with self.assertRaises(ValueError): check_generator_preparation(runs, changed)
 
 
 if __name__ == '__main__':

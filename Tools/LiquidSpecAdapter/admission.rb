@@ -13,6 +13,7 @@ module LQ1
       when :unused_resource_limits then RESOURCE_FEATURES
       when :materialized_long_string then [:ruby_drops]
       when :missing_file_diagnostics then [:shopify_error_format]
+      when :guarded_standard_drop then [:drops]
       else []
       end
     end

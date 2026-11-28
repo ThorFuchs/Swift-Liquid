@@ -59,6 +59,8 @@ def main():
         run([ruby, '-I', str(args.spec_path.resolve() / 'lib'), 'Tools/LiquidSpecAdapter/check_bridge.rb'], 'bridge-tests')
         run([ruby, '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
              'Tools/LiquidSpecAdapter/check_safe_runner.rb', str(args.spec_path.resolve())], 'safe-runner-tests')
+        run([ruby, '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
+             'Tools/LiquidSpecAdapter/check_safe_standard_drops.rb'], 'safe-standard-drop-tests')
         run([sys.executable, '-B', 'Scripts/check_liquid_spec_diagnostics.py'], 'diagnostic-evidence-tests')
         command = [ruby, '-I', str(args.reference_path.resolve() / 'lib'), '-I', str(args.spec_path.resolve() / 'lib'),
                    'Tools/LiquidSpecAdapter/run.rb', '--binary', binary, '--spec-path', str(args.spec_path.resolve()),

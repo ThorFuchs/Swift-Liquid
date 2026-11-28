@@ -17,12 +17,14 @@ from safe_preparation_evidence import check as check_preparation
 POLICY = ROOT / 'Tools/LiquidSpecAdapter/ReviewedConflicts.json'
 CANDIDATES = ROOT / 'Tools/LiquidSpecAdapter/ExclusionCandidates.json'
 GENERATOR_EVIDENCE = ROOT / 'Tools/LiquidSpecAdapter/ExcludedGeneratorEvidence.json'
+DROP_EVIDENCE = ROOT / 'Tools/LiquidSpecAdapter/StandardDropAdmissionEvidence.json'
+DROP_STUDY = ROOT / 'Documentation/LQ1/STANDARD-DROPS-2.1.json'
 REPORTS = ('ELIGIBILITY_MATRIX.json', 'SPEC_RUNS.json',
            'PHASE_AND_DIAGNOSTIC_LEDGER.json', 'RPC_TRACES.jsonl', 'PREPARATION_INVENTORY.json')
 COMMANDS = {'spec-pin.log', 'spec-clean.log', 'ruby-pin.log', 'ruby-clean.log',
             'swift-version.log', 'ruby-version.log', 'adapter-build.log',
             'adapter-location.log', 'protocol-tests.log', 'bridge-tests.log',
-            'safe-runner-tests.log', 'diagnostic-evidence-tests.log', 'liquid-spec-runner.log', 'diagnostic-ledger.log'}
+            'safe-runner-tests.log', 'safe-standard-drop-tests.log', 'diagnostic-evidence-tests.log', 'liquid-spec-runner.log', 'diagnostic-ledger.log'}
 
 
 def sha(path):
@@ -66,10 +68,67 @@ def historical_eligibility_digest(rows, policy):
         'rawEligibilitySHA256': eligibility_digest(rows), 'method': 'Historical seeded metadata projected only for the legacy eligibility checksum; raw excluded expressions and outcomes remain unchanged.'}
 
 
+def project_standard_drop_admissions(rows):
+    """Check exact admissions, then restore their old metadata for the legacy checksum."""
+    evidence = json.loads(DROP_EVIDENCE.read_text())
+    study = json.loads(DROP_STUDY.read_text())
+    old = {item['caseID']: item for item in evidence['cases']}
+    candidates = {item['caseID']: item for item in study['cases']}
+    if (evidence['baselineCommit'] != 'd02485da8a90daf83b3b3293c35ab09c2e11ccb5'
+            or evidence['baselineTree'] != '2d812a3db592e632dee62042aded959e0e76e88b'
+            or len(old) != 56 or len(evidence['cases']) != 56 or set(old) != set(candidates)):
+        raise ValueError('Standard Drop admission evidence changed')
+    admitted = {row['caseID'] for row in rows if row.get('admission') == 'guarded_standard_drop'}
+    if admitted != set(old):
+        raise ValueError('Standard Drop admission membership changed')
+    generators = {item['caseID']: item for item in json.loads(GENERATOR_EVIDENCE.read_text())['cases']}
+    projected = []
+    for row in rows:
+        case = row['caseID']
+        if case not in old:
+            projected.append(row)
+            continue
+        previous = old[case]
+        for field in ('sourceLocation', 'sourceDigest', 'parserMode', 'renderMode', 'featureTags'):
+            if row[field] != previous[field] or row[field] != candidates[case][field]:
+                raise ValueError('Drop admission metadata changed: ' + case)
+        expected = previous['expectation']
+        if case in generators:
+            expected = dict(expected, output=generators[case]['historicalSeededOutput'])
+            if row.get('expectationMaterialization') != 'historical-seeded-closed-materialization':
+                raise ValueError('Generated Drop materialization changed: ' + case)
+        elif row.get('expectationMaterialization') is not None:
+            raise ValueError('Unexpected Drop generator state: ' + case)
+        if (not row['selected'] or row['expectation'] != expected or
+                row['comparison'] != 'matched' or row['qualificationComparison'] != 'matched' or
+                row.get('referenceComparison') != 'matched' or row.get('referenceQualificationComparison') != 'matched' or
+                row.get('upstreamVerdict', {}).get('passed') is not True or
+                row.get('referenceUpstreamVerdict', {}).get('passed') is not True):
+            raise ValueError('Standard Drop admission is not a faithful match: ' + case)
+        copy = dict(row)
+        copy.update(previous)
+        copy.update(comparison='not-executed', qualificationComparison='not-executed')
+        projected.append(copy)
+    return projected, {'cases': sorted(old), 'evidenceSHA256': sha(DROP_EVIDENCE),
+        'rawEligibilitySHA256': eligibility_digest(rows),
+        'method': 'Validated candidate admissions are projected to their retained SL21-01A2 exclusions only for the historical checksum.'}
+
+
+def check_generator_preparation(runs, rows):
+    expected = {case['caseID'] for case in json.loads(GENERATOR_EVIDENCE.read_text())['cases']}
+    generated = [row for row in rows if row.get('expectationMaterialization') == 'historical-seeded-closed-materialization']
+    if (runs.get('fixturePreparation') != 'inert-selection-v2; guarded standard Drop materialization; fixture expressions remain unevaluated'
+            or len(generated) != 2 or {row['caseID'] for row in generated} != expected
+            or any(not row['selected'] or row.get('admission') != 'guarded_standard_drop' for row in generated)
+            or any(row.get('expectationMaterialization') == 'deferred-excluded-generator' for row in rows)):
+        raise ValueError('Safe fixture preparation evidence missing')
+
+
 def evaluate(rows, policy):
     """Fail on a stale conflict, changed population, hidden operation, or new failure."""
     audit(rows)  # Validates unique identities and preserves unmodified raw verdicts.
-    current_digest, deferred_evidence = historical_eligibility_digest(rows, policy)
+    projected, drop_evidence = project_standard_drop_admissions(rows) if len(rows) == 5112 else (rows, None)
+    current_digest, deferred_evidence = historical_eligibility_digest(projected, policy)
     if len(rows) != policy['expectedPopulation'] or current_digest != policy['eligibilitySHA256']:
         raise ValueError('Fixture identities, eligibility, or expectations changed; review required')
     conflicts = {item['caseID']: item for item in policy['conflicts']}
@@ -110,7 +169,8 @@ def evaluate(rows, policy):
             'referenceConcerns': [row['caseID'] for row in rows if row['selected'] and row.get('referenceQualificationComparison') != 'matched'],
             'excludedByCategory': dict(Counter(row['observedCategory'] for row in excluded)),
             'excludedByReason': dict(Counter(row['reason'] for row in excluded)),
-            'issue': policy['issue'], 'deferredGeneratorEvidence': deferred_evidence}
+            'issue': policy['issue'], 'deferredGeneratorEvidence': deferred_evidence,
+            'standardDropAdmissionEvidence': drop_evidence}
 
 
 def main():
@@ -156,8 +216,7 @@ def main():
         runs = json.loads((reports / 'SPEC_RUNS.json').read_text())
         rows = json.loads((reports / 'ELIGIBILITY_MATRIX.json').read_text())
         check_preparation(rows, json.loads((reports / 'PREPARATION_INVENTORY.json').read_text()))
-        if runs.get('fixturePreparation') != 'inert-selection-v1; excluded generators remain unevaluated' or sum(row.get('expectationMaterialization') == 'deferred-excluded-generator' for row in rows) != 2:
-            raise ValueError('Safe fixture preparation evidence missing')
+        check_generator_preparation(runs, rows)
         if (runs['observedRows'] != len(rows) or runs['shutdownError'] is not None
                 or sum(suite['expandedVariants'] for suite in runs['suites']) != len(rows)):
             raise ValueError('Runner population or shutdown incomplete')

@@ -43,12 +43,15 @@ def main():
     if set(before) != set(after):
         raise ValueError('Before/after identities differ')
     holds = {x['caseID'] for x in json.loads((ROOT / 'Documentation/ControlTower/CONFORMANCE-DISPOSITION.json').read_text())['cases']}
+    drops = {x['caseID'] for x in json.loads((ROOT / 'Documentation/LQ1/STANDARD-DROPS-2.1.json').read_text())['cases']}
+    if len(drops) != 56 or not drops.issubset(holds):
+        raise ValueError('Standard Drop candidate population differs')
     conflicts = {x['caseID'] for x in json.loads((ROOT / 'Tools/LiquidSpecAdapter/ReviewedConflicts.json').read_text())['conflicts']}
     fields = ('sourceLocation', 'sourceDigest', 'parserMode', 'renderMode', 'featureTags')
     rows = []
     for case in sorted(after):
         old, new = before[case], after[case]
-        if any(old[key] != new[key] for key in fields) or new['selected'] == (case in holds):
+        if any(old[key] != new[key] for key in fields) or new['selected'] != (case not in holds or case in drops):
             raise ValueError('Identity or historical selection changed: ' + case)
         if case in holds:
             historical = 'excluded-in-425-hold-review'
