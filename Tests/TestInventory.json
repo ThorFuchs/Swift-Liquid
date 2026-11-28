@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "functions": {
+    "LiquidTests.SourceOwnershipSecurityTests/wellFormedLiteralBytesMatchReference(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/unclosedQuoteScansMakeBoundedProgress()": null,
+    "LiquidTests.SourceOwnershipSecurityTests/protectedRegionsStayInertAndIndependentFramesExecute(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/ambiguousQuoteWitnessesFailBeforeAnyHostCapability(mode:)": 3,
+    "LiquidTests.SourceOwnershipSecurityTests/sourceLimitsAndCancellationRemainTerminal()": null,
     "LiquidTests.QuotedMarkupSecurityTests/previouslyQuotedMarkupDoesNotInvokeHostCapabilities(mode:)": 3,
     "LiquidTests.LaxQuoteRecoveryReferenceTests/recoveryPhaseAndBytes(mode:)": 3,
     "LiquidTests.QuotedStringCompatibilityTests/contextualStringsAndInspection(mode:)": 3,

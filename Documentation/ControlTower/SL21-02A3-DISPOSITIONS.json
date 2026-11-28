@@ -1,0 +1,1001 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "5a0961aaa620e1662034dcd5ac9385f32d96386a",
+  "referenceMatrixSHA256": "02c08497c74922972fb59db110dba32e1be7f95f8c23ee9d97f5c69f0ae50972",
+  "predecessorDifferentialSHA256": "5f44a3ba956d4e4533ed09294b5eef27afd8cccb11e5dbc1b46b68054b414192",
+  "status": "PROPOSED_UNQUALIFIED",
+  "observations": 75,
+  "priorDifferences": 21,
+  "classifications": [
+    "REQUIRED_DOCUMENTED_LANGUAGE_CORRECTION",
+    "SAFE_REFERENCE_BACKED_RECOVERY",
+    "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+    "DIAGNOSTIC_ONLY_DIFFERENCE",
+    "UNRESOLVED_BEHAVIOR"
+  ],
+  "rows": [
+    {
+      "variantID": "lax/single_escaped_closer",
+      "name": "single_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/double_escaped_closer",
+      "name": "double_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        97,
+        92,
+        34,
+        98,
+        34,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/single_open_lookup",
+      "name": "single_open_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/double_open_lookup",
+      "name": "double_open_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        34,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/single_open_nested_lookup",
+      "name": "single_open_nested_lookup",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        110,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          78,
+          69,
+          83,
+          84,
+          69,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/trailing_quote_before_close",
+      "name": "trailing_quote_before_close",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        97,
+        98,
+        99,
+        39,
+        32,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          98,
+          99
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/unclosed_filter_argument",
+      "name": "unclosed_filter_argument",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        120,
+        39,
+        32,
+        124,
+        32,
+        97,
+        112,
+        112,
+        101,
+        110,
+        100,
+        58,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "A malformed filter expression can reach a registered callback; error phase and source ownership need a bounded proof before recovery.",
+      "reference": {
+        "phase": "render",
+        "outcome": "render-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::ArgumentError",
+        "message": "Liquid error (line 1): wrong number of arguments (given 1, expected 2)",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/malformed_tail",
+      "name": "malformed_tail",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        118,
+        97,
+        108,
+        117,
+        101,
+        32,
+        33,
+        32,
+        116,
+        114,
+        117,
+        101,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "Discarding unvalidated trailing tokens is not an authorized recovery authority; determine a bounded grammar and source ownership.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          111,
+          107
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=Optional(1) column=Optional(1) message=Unexpected character ! in \"{{ value ! true }}\""
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/assign_unclosed",
+      "name": "assign_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/assign_escaped_closer",
+      "name": "assign_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125,
+        123,
+        123,
+        32,
+        120,
+        32,
+        125,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/echo_unclosed",
+      "name": "echo_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        32,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/echo_escaped_closer",
+      "name": "echo_escaped_closer",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiline_echo_unclosed",
+      "name": "multiline_echo_unclosed",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        117,
+        110,
+        116,
+        101,
+        114,
+        109,
+        105,
+        110,
+        97,
+        116,
+        101,
+        100,
+        10,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          70,
+          79,
+          85,
+          78,
+          68
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiline_assign_escaped",
+      "name": "multiline_assign_escaped",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        108,
+        105,
+        113,
+        117,
+        105,
+        100,
+        10,
+        32,
+        97,
+        115,
+        115,
+        105,
+        103,
+        110,
+        32,
+        120,
+        32,
+        61,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        10,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        120,
+        10,
+        37,
+        125
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The old lexer rejects the malformed expression. Recovery requires an owned expression range and must not expose a host lookup or later construct; the prior heuristic was unsafe.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          97,
+          92
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unterminated string literal"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          125,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "output",
+        "outputBytes": [
+          125,
+          125
+        ],
+        "description": "output=[125, 125]"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "strict",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict2/adjacent_output_delimiter",
+      "name": "adjacent_output_delimiter",
+      "mode": "strict2",
+      "sourceBytes": [
+        123,
+        123,
+        32,
+        39,
+        125,
+        125,
+        39,
+        32,
+        125,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{ '}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "lax",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          39,
+          32,
+          37,
+          125
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "output",
+        "outputBytes": [
+          37,
+          125
+        ],
+        "description": "output=[37, 125]"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "strict",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "strict2/adjacent_tag_delimiter",
+      "name": "adjacent_tag_delimiter",
+      "mode": "strict2",
+      "sourceBytes": [
+        123,
+        37,
+        32,
+        101,
+        99,
+        104,
+        111,
+        32,
+        39,
+        37,
+        125,
+        39,
+        32,
+        37,
+        125
+      ],
+      "classification": "EXPLICIT_SECURITY_PRESERVING_REFERENCE_DIVERGENCE",
+      "reason": "The existing complete quoted span owns the delimiter; reframing its interior can expose previously inert markup to host capabilities. Preserve the Swift outcome and the raw Ruby observation.",
+      "reference": {
+        "phase": "parse",
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "errorClass": "Liquid::SyntaxError",
+        "message": "Liquid syntax error (line 1): Unexpected character ' in \"{{'}}\"",
+        "line": 1
+      },
+      "swift": {
+        "outcome": "parsed-unexpectedly",
+        "outputBytes": null,
+        "description": "parsed-unexpectedly"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    },
+    {
+      "variantID": "lax/multiple_constructs",
+      "name": "multiple_constructs",
+      "mode": "lax",
+      "sourceBytes": [
+        65,
+        123,
+        123,
+        32,
+        39,
+        97,
+        92,
+        39,
+        98,
+        39,
+        32,
+        125,
+        125,
+        66,
+        123,
+        123,
+        32,
+        39,
+        99,
+        92,
+        110,
+        39,
+        32,
+        125,
+        125,
+        67
+      ],
+      "classification": "UNRESOLVED_BEHAVIOR",
+      "reason": "The previous experiment crossed quote and construct boundaries; an independent subsequent frame must be proven without exposing previously protected markup.",
+      "reference": {
+        "phase": "render",
+        "outcome": "output",
+        "outputBytes": [
+          65,
+          97,
+          92,
+          66,
+          99,
+          92,
+          110,
+          67
+        ],
+        "errorClass": null,
+        "message": null,
+        "line": null
+      },
+      "swift": {
+        "outcome": "parse-error",
+        "outputBytes": null,
+        "description": "parse-error line=nil column=nil message=Unexpected character '\\'"
+      },
+      "decision": "PROPOSED_NOT_QUALIFIED"
+    }
+  ]
+}
